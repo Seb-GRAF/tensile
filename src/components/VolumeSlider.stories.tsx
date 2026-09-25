@@ -1,7 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
-import { VolumeSlider } from "./VolumeSlider";
+import { VolumeSlider, type VolumeSliderProps } from "./VolumeSlider";
+
+function StatefulVolumeSlider(props: VolumeSliderProps) {
+  const [value, setValue] = useState(props.value);
+  return (
+    <VolumeSlider
+      {...props}
+      value={value}
+      onValueChange={(value) => {
+        setValue(value);
+        props.onValueChange(value);
+      }}
+    />
+  );
+}
 
 const meta = {
   component: VolumeSlider,
@@ -16,6 +31,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <VolumeSlider {...args} onValueChange={(value) => updateArgs({ value })} />;
+    return <StatefulVolumeSlider {...args} onValueChange={(value) => updateArgs({ value })} />;
   },
 };

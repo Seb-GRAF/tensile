@@ -1,4 +1,5 @@
-import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import { animate, motion } from "motion/react";
+import { useStretch } from "../drag";
 import { snap } from "../springs";
 import { NumberTicker } from "./NumberTicker";
 
@@ -29,10 +30,7 @@ export function NumberStepper({
   decreaseLabel = "Decrease",
   increaseLabel = "Increase",
 }: NumberStepperProps) {
-  const stretch = useMotionValue(0);
-  const width = useTransform(stretch, (s) => WIDTH + Math.abs(s));
-  const height = useTransform(stretch, (s) => HEIGHT * Math.sqrt(WIDTH / (WIDTH + Math.abs(s))));
-  const x = useTransform(stretch, (s) => Math.min(0, s));
+  const [stretch, style] = useStretch(WIDTH, HEIGHT);
 
   function stepTo(target: number) {
     const next = Math.min(max, Math.max(min, target));
@@ -51,7 +49,7 @@ export function NumberStepper({
   return (
     <div role="group" aria-label={label} onKeyDown={onKeyDown} className="relative h-11 w-32">
       <motion.div
-        style={{ width, height, x }}
+        style={style}
         className="absolute top-1/2 left-0 flex -translate-y-1/2 items-center justify-between rounded-full bg-paper px-1 text-[15px] font-medium text-ink shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink"
       >
         <button

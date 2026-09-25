@@ -1,4 +1,5 @@
-import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import { animate, motion, useTransform } from "motion/react";
+import { dragHandlers, rubber, useStretch } from "../drag";
 import { snap, soft } from "../springs";
 
 export type VolumeSliderProps = {
@@ -13,18 +14,10 @@ const HEIGHT = 44;
 const INSET = 4;
 const FILL_MIN = 36; // the fill never gets narrower than the circle around the speaker
 const TRAVEL = WIDTH - 2 * INSET - FILL_MIN;
-const RUBBER = 24; // most the slider stretches, in px, however far it is pulled
 const steps: Record<string, number> = { ArrowRight: 0.05, ArrowUp: 0.05, ArrowLeft: -0.05, ArrowDown: -0.05 };
 
-function rubber(over: number) {
-  return Math.sign(over) * RUBBER * (1 - Math.exp(-Math.abs(over) / RUBBER));
-}
-
 export function VolumeSlider({ value, onValueChange, label = "Volume" }: VolumeSliderProps) {
-  const stretch = useMotionValue(0); // px pulled past an end, negative past the start
-  const width = useTransform(stretch, (s) => WIDTH + Math.abs(s));
-  const height = useTransform(stretch, (s) => HEIGHT * Math.sqrt(WIDTH / (WIDTH + Math.abs(s))));
-  const x = useTransform(stretch, (s) => Math.min(0, s));
+  const [stretch, style] = useStretch(WIDTH, HEIGHT);
   const fill = useTransform(stretch, (s) => FILL_MIN + value * TRAVEL + Math.max(0, s));
 
   function drag(event: React.PointerEvent<HTMLDivElement>) {
@@ -53,20 +46,12 @@ export function VolumeSlider({ value, onValueChange, label = "Volume" }: VolumeS
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(value * 100)}
-      onPointerDown={(event) => {
-        event.currentTarget.setPointerCapture(event.pointerId);
-        drag(event);
-      }}
-      onPointerMove={(event) => {
-        if (event.currentTarget.hasPointerCapture(event.pointerId)) drag(event);
-      }}
-      onPointerUp={release}
-      onPointerCancel={release}
+      {...dragHandlers(drag, release)}
       onKeyDown={onKeyDown}
       className="relative h-11 w-60 cursor-pointer touch-none rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
     >
       <motion.div
-        style={{ width, height, x }}
+        style={style}
         className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-full bg-paper shadow-float"
       >
         <motion.div style={{ width: fill }} className="absolute inset-y-1 left-1 rounded-full bg-ink">

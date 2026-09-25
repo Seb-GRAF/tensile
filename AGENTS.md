@@ -15,7 +15,7 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `MorphButton`: one shape whose width and color follow `status`; blur-swapped content; a spinner; the shared `Check`.
 - `Toggle`: switch; the knob is a `useLiquid` pill; the track color morphs.
 - `SegmentedTabs`: tablist with roving focus and arrow keys; a `useLiquid` pill in percent; the selected label is a second, clipped layer in `paper`.
-- `VolumeSlider`: slider drag with pointer capture; rubber stretch past either end; spring back that keeps the drag's speed; arrow-key steps.
+- `VolumeSlider`: slider drag built on `src/drag.ts`: the value comes from the pointer, the pill stretches past either end with `rubber` and `useStretch`, and springs back with `snap`; arrow-key steps.
 - `MusicPlayer`: an island that expands into a player (width, height, radius); fixed-size centered content layers; play/pause path morph; seek bar.
 - `LineChart`: SVG line that draws itself; hover guide, dot and tooltip glide between points; tooltip text blur-swaps.
 - `CommandPalette`: combobox and listbox built on `src/list.tsx`; rows blur in and out and move on springs as the filter changes; ⌘K.
@@ -29,7 +29,7 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `CopyButton`: an icon pill that widens to a lime `Check` and "Copied" with `useWidth`, then settles back.
 - `Badge`: a white dot that grows into a lime count pill; digits roll with `NumberTicker` and the pill's width follows them; 0 hides it.
 - `StatTile`: an ink card with a `NumberTicker` and a change chip whose color fades lime/paper and whose arrow swings when the change flips sign.
-- `NumberStepper`: a spinbutton between − and +; `NumberTicker` digits; a press past a limit gives the stretch a `snap` velocity, so the pill stretches toward that side and springs back.
+- `NumberStepper`: a spinbutton between − and +; `NumberTicker` digits; a press past a limit gives `useStretch`'s value a `snap` velocity, so the pill stretches toward that side and springs back.
 - `Select`: select-only combobox; a paper pill that grows down into its menu out of a pill-sized wrapper, so the menu overlays; `ListHighlight`; the label blur-swaps on pick; a `Check` marks the choice.
 - `ActionMenu`: menu button; the "More" pill grows right and down into a `role="menu"` with `ListHighlight`; the list layer blurs in and out and stays mounted and `inert` when closed.
 - `TextField`: floating label that moves by transforms only; an error grows the pill into a card and blurs in; the focus ring sits on the shape.
@@ -42,6 +42,7 @@ Shared code (owned by the maintainer, read-only for subagents):
 - `src/Check.tsx`: `<Check size={20} />`, a check in the current text color that draws itself when it mounts, with the stroke worked out from `size`. Put it in a `motion.span` with `swap` to blur it in and out.
 - `src/useWidth.ts`: `const [width, measure] = useWidth();` measures the element you pass `measure` to as its `ref`. Key that element by its content so each new version gets measured, then animate the shape to `width` (see `Toast`).
 - `src/list.tsx`, taken from `CommandPalette`: `ROW` (40 px rows); `filterByWords(items, query)`, the word-prefix filter; `const [active, setActive, onArrowKey] = useActiveIndex(count)`, the highlighted row with ArrowUp/ArrowDown wrapping (call `onArrowKey` from the key handler of whatever holds focus; Enter and Escape stay in the component); `<ListHighlight index={active} />`, the `bg-hover` highlight that slides and stretches behind a row, placed first in a `relative` list.
+- `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed.
 - `src/index.ts`: exports every component and its props type.
 
 ## Motion and look
@@ -95,7 +96,7 @@ export function Select({
   - CSF3 with `satisfies Meta<typeof Name>`.
   - One `Default` story with a one-line JSDoc saying how to interact.
   - `useArgs` so controlled props stay in sync with the Controls panel.
-  - Text inputs are the exception: `updateArgs` lands too late for typing, and keys get lost. Keep the typed value in React state in a small wrapper component in the story file (React's `useState` can't sit next to `useArgs` in one render function) and mirror it to Controls with `updateArgs`; see `TextField.stories.tsx`.
+  - Values that change continuously (typing, dragging) are the exception: `updateArgs` lands too late, so keys get lost and drags lag behind the pointer. Keep the value in React state in a small wrapper component in the story file (React's `useState` can't sit next to `useArgs` in one render function) and mirror it to Controls with `updateArgs`; see `TextField.stories.tsx` and `VolumeSlider.stories.tsx`.
   - `fn()` for callbacks, except ones that fire every frame (see `VolumeSlider.stories.tsx`).
   - Add another story only for a state you can't reach by interacting.
 - Known pitfalls:
