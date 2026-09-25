@@ -134,7 +134,9 @@ def main():
             errors = []
             with sync_playwright() as p:
                 browser = p.chromium.launch()
-                page = browser.new_page(viewport=VIEWPORT, device_scale_factor=2)
+                page = browser.new_page(
+                    viewport=VIEWPORT, device_scale_factor=2, permissions=["clipboard-read", "clipboard-write"]
+                )
                 page.on("console", lambda message: message.type == "error" and errors.append(message.text))
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.goto(f"http://localhost:{port}/iframe.html?id={args.story}&viewMode=story")

@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useState } from "react";
 import { shape, swap } from "../springs";
+import { useWidth } from "../useWidth";
 
 export type ToastProps = {
   status: "loading" | "success";
@@ -8,10 +8,7 @@ export type ToastProps = {
 };
 
 export function Toast({ status, children = "Link copied" }: ToastProps) {
-  const [width, setWidth] = useState<number>();
-  const measure = useCallback((el: HTMLSpanElement | null) => {
-    if (el) setWidth(el.offsetWidth);
-  }, []);
+  const [width, measure] = useWidth();
 
   return (
     <motion.div

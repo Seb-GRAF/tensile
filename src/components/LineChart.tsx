@@ -33,7 +33,7 @@ function curve(points: number[][]) {
 export function LineChart({
   data,
   formatValue = (value: number) => value.toLocaleString("en-US"),
-  label = "Minutes listened per day this week",
+  label = "Line chart",
 }: LineChartProps) {
   const [hover, setHover] = useState<number | null>(null);
   const max = Math.max(...data.map((point) => point.value));

@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
+import { Check } from "../Check";
 import { shape, soft, swap } from "../springs";
 
 export type MorphButtonProps = {
@@ -52,22 +53,9 @@ export function MorphButton({
           </motion.span>
         )}
         {status === "success" && (
-          <motion.svg
-            key="success"
-            {...swap}
-            viewBox="0 0 24 24"
-            className="col-start-1 row-start-1 size-5 fill-none stroke-ink"
-            strokeWidth={1.8}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <motion.path
-              d="M4 12.5l5 5L20 6.5"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ ...soft, delay: 0.15 }}
-            />
-          </motion.svg>
+          <motion.span key="success" {...swap} className="col-start-1 row-start-1 text-ink">
+            <Check size={20} />
+          </motion.span>
         )}
       </AnimatePresence>
     </motion.button>

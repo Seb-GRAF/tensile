@@ -67,6 +67,8 @@ export const Default: Story = {
 
 Only pass args for required props and for demo data; optional props show their defaults in Controls. Add another story only for a state you can't reach by interacting.
 
+A component that only displays its value (a ticker, a progress bar) has no callback to click through. Let the story's `render` change the value on a click, through `updateArgs`, so the change can be exercised in the browser.
+
 ## 5. Check
 
 Run `npx tsc --noEmit`. Fix errors in your files; report errors in other files.
@@ -78,7 +80,7 @@ uv run .claude/skills/morph-component/scripts/check_story.py <story-id> '<steps 
 ```
 
 - The story id is `components-<name in lowercase>--default`, e.g. `components-copybutton--default`.
-- The script starts its own Storybook on a free port, opens the story's `iframe.html` at 800 × 600 (2× pixels), runs the steps, saves `NN-<name>.png` per shot plus `contact.png`, and always stops the server. It exits with 1 if a step fails or the browser console shows an error (React warnings included).
+- The script starts its own Storybook on a free port, opens the story's `iframe.html` at 800 × 600 (2× pixels) with clipboard access granted, runs the steps, saves `NN-<name>.png` per shot plus `contact.png`, and always stops the server. It exits with 1 if a step fails or the browser console shows an error (React warnings included).
 - It takes about 10 s. If Storybook fails to start, read `storybook.log` in the out directory.
 
 Steps, run in order:

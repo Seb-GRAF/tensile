@@ -4,6 +4,7 @@ import { LineChart } from "./LineChart";
 const meta = {
   component: LineChart,
   args: {
+    label: "Minutes listened per day this week",
     formatValue: (minutes) => `${Math.floor(minutes / 60)}h ${minutes % 60}m`,
     data: [
       { label: "Mon", value: 58 },
