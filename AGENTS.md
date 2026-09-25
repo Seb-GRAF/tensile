@@ -41,6 +41,13 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `CompareSlider`: before/after layers, the after layer clipped at the divider; the frame is the drag area; a `role="slider"` knob; the focus ring sits on the frame.
 - `TimeWheel`: hour, minute and AM/PM wheels (`role="spinbutton"`); a flick lands on the row nearest position + velocity × 0.1 s with `snap`; hours and minutes loop, AM/PM stretches with `rubber`.
 - `BottomSheet`: a `role="dialog"` sheet whose offset is a fraction of its height; dragged from its top strip; the release projects position + velocity × 0.2 s to close or spring back; the backdrop's opacity follows the offset.
+- `UnderlineTabs`: SegmentedTabs' tablist with tabs sized to their labels; a `useLiquid` underline in px, measured from the selected tab and again once fonts load.
+- `TabBar`: mobile bottom tablist; a `useLiquid` pill slides behind the selected icon; each item's `icon` blur-swaps to its `activeIcon`.
+- `SidebarNav`: a `nav` list with `aria-current="page"`; SegmentedTabs' ink pill and clipped `paper` layer, turned vertical; ArrowUp/ArrowDown move focus only.
+- `Pagination`: page numbers in fixed slots that blur-swap when the window shifts; SegmentedTabs' pill slides to the current page.
+- `PageDots`: a `role="slider"` row of dots; the active dot is a `useLiquid` pill; a press or drag picks the page under the pointer; past either end the capsule and pill stretch with `rubber`.
+- `WizardSteps`: display-only `<ol>` of steps; one ink line draws between dot centers with `pathLength` on `soft`; a finished dot turns accent with the `Check`.
+- `Breadcrumbs`: middle crumbs collapse into a "…" pill whose width springs out to the hidden crumbs, which blur in; `clip-path: inset(-4px)` keeps each crumb's focus ring.
 
 Shared code (owned by the maintainer, read-only for subagents):
 
@@ -114,7 +121,8 @@ export function Select({
   - SVG attributes can't read CSS variables; use `fill-*` and `stroke-*` classes.
   - Storybook binds ⌘K to its own search, so test keyboard shortcuts in `iframe.html` (`check_story.py` does).
   - Storybook's `updateArgs` re-renders on a later tick (it waits at least 100 ms, plus any running animation); wait about 250 ms before checking the result.
-  - A control inside an `overflow-hidden` shape gets its focus ring clipped. Put the ring on the shape with `has-focus-visible:` (see `Select`, `TextField`).
+  - A control inside an `overflow-hidden` shape gets its focus ring clipped. Put the ring on the shape with `has-focus-visible:` (see `Select`, `TextField`), or clip with `[clip-path:inset(-4px)]` instead of `overflow-hidden` so each child keeps its own ring (see `Breadcrumbs`).
+  - Sizes measured on mount can come from the fallback font; measure again when `document.fonts.ready` resolves (see `UnderlineTabs`).
   - `.focus()` on an element inside an `overflow-hidden` shape can scroll the shape; pass `{ preventScroll: true }`.
   - Set a list's highlight on `onMouseMove`, not `onMouseEnter`: rows that grow in under a resting pointer would otherwise take the highlight from the keyboard.
   - `dragHandlers` capture the pointer on press, so in Chromium the click that follows goes to the dragged element, never to a button inside it. Keep buttons out of the dragged element (see `BottomSheet`'s grab strip).
