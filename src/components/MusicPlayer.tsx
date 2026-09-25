@@ -1,6 +1,7 @@
-import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
-import { shape, soft, swap } from "../springs";
+import { Expand } from "../Expand";
+import { shape, soft } from "../springs";
 
 export type MusicPlayerProps = {
   title: string;
@@ -94,100 +95,85 @@ export function MusicPlayer({
   }
 
   return (
-    <motion.div
-      initial={false}
-      animate={expanded ? { width: 340, height: 150, borderRadius: 32 } : { width: 224, height: 40, borderRadius: 20 }}
-      transition={shape}
-      onKeyDown={(event) => {
-        if (event.key === "Escape") onExpandedChange(false);
-      }}
-      className="relative overflow-hidden bg-ink text-paper shadow-float"
+    <Expand
+      open={expanded}
+      onOpenChange={onExpandedChange}
+      closed={{ width: 224, height: 40, radius: 20 }}
+      opened={{ width: 340, height: 150, radius: 32 }}
+      anchor="center"
+      label={openLabel(title)}
+      trigger={
+        <span className="flex size-full items-center gap-2.5 pr-3.5 pl-2 text-[13px] font-medium">
+          <Art className="size-6" />
+          <span className="truncate">{title}</span>
+          <svg viewBox="0 0 24 24" className="ml-auto size-3 shrink-0 fill-paper stroke-paper" strokeWidth={2.5} strokeLinejoin="round">
+            <motion.path d={d} />
+          </svg>
+        </span>
+      }
+      className="bg-ink text-paper"
     >
-      <AnimatePresence initial={false}>
-        {expanded ? (
-          <motion.div
-            key="player"
-            {...swap}
-            className="absolute top-1/2 left-1/2 h-[150px] w-[340px] -translate-x-1/2 -translate-y-1/2 p-5"
-          >
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                aria-label={minimizeLabel}
-                onClick={() => onExpandedChange(false)}
-                className="shrink-0 rounded-xl outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
-              >
-                <Art className="size-[52px]" />
-              </button>
-              <div className="min-w-0 grow">
-                <p className="truncate text-base font-semibold tracking-[-0.01em]">{title}</p>
-                <p className="truncate text-sm text-paper/55">{artist}</p>
-              </div>
-              <motion.button
-                type="button"
-                aria-label={playing ? pauseLabel : playLabel}
-                onClick={() => setPlaying(!playing)}
-                whileTap={{ scale: 0.85 }}
-                className="grid size-10 shrink-0 place-items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
-              >
-                <svg viewBox="0 0 24 24" className="size-7 fill-paper stroke-paper" strokeWidth={2} strokeLinejoin="round">
-                  <motion.path d={d} />
-                </svg>
-              </motion.button>
-            </div>
-            <div
-              role="slider"
-              tabIndex={0}
-              aria-label={seekLabel}
-              aria-valuemin={0}
-              aria-valuemax={Math.round(duration)}
-              aria-valuenow={Math.round(position)}
-              aria-valuetext={formatTime(position)}
-              onPointerDown={(event) => {
-                event.currentTarget.setPointerCapture(event.pointerId);
-                setScrubbing(true);
-                seek(event);
-              }}
-              onPointerMove={(event) => {
-                if (event.currentTarget.hasPointerCapture(event.pointerId)) seek(event);
-              }}
-              onPointerUp={() => setScrubbing(false)}
-              onPointerCancel={() => setScrubbing(false)}
-              onKeyDown={onSeekKeyDown}
-              className="mt-5 flex h-5 cursor-pointer touch-none items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
-            >
-              <motion.div
-                initial={false}
-                animate={{ height: scrubbing ? 12 : 6 }}
-                transition={shape}
-                className="w-full overflow-hidden rounded-full bg-ink-3"
-              >
-                <div className="h-full bg-paper" style={{ width: `${(position / duration) * 100}%` }} />
-              </motion.div>
-            </div>
-            <div className="mt-1 flex justify-between text-[11px] tabular-nums text-paper/55">
-              <span>{formatTime(position)}</span>
-              <span>−{formatTime(duration - position)}</span>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.button
-            key="island"
-            {...swap}
+      <div className="p-5">
+        <div className="flex items-center gap-3">
+          <button
             type="button"
-            aria-expanded={false}
-            aria-label={openLabel(title)}
-            onClick={() => onExpandedChange(true)}
-            className="absolute top-1/2 left-1/2 flex h-10 w-[224px] -translate-x-1/2 -translate-y-1/2 items-center gap-2.5 pr-3.5 pl-2 text-[13px] font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+            aria-label={minimizeLabel}
+            onClick={() => onExpandedChange(false)}
+            className="shrink-0 rounded-xl outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
           >
-            <Art className="size-6" />
-            <span className="truncate">{title}</span>
-            <svg viewBox="0 0 24 24" className="ml-auto size-3 shrink-0 fill-paper stroke-paper" strokeWidth={2.5} strokeLinejoin="round">
+            <Art className="size-[52px]" />
+          </button>
+          <div className="min-w-0 grow">
+            <p className="truncate text-base font-semibold tracking-[-0.01em]">{title}</p>
+            <p className="truncate text-sm text-paper/55">{artist}</p>
+          </div>
+          <motion.button
+            type="button"
+            aria-label={playing ? pauseLabel : playLabel}
+            onClick={() => setPlaying(!playing)}
+            whileTap={{ scale: 0.85 }}
+            className="grid size-10 shrink-0 place-items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
+          >
+            <svg viewBox="0 0 24 24" className="size-7 fill-paper stroke-paper" strokeWidth={2} strokeLinejoin="round">
               <motion.path d={d} />
             </svg>
           </motion.button>
-        )}
-      </AnimatePresence>
-    </motion.div>
+        </div>
+        <div
+          role="slider"
+          tabIndex={0}
+          aria-label={seekLabel}
+          aria-valuemin={0}
+          aria-valuemax={Math.round(duration)}
+          aria-valuenow={Math.round(position)}
+          aria-valuetext={formatTime(position)}
+          onPointerDown={(event) => {
+            event.currentTarget.setPointerCapture(event.pointerId);
+            setScrubbing(true);
+            seek(event);
+          }}
+          onPointerMove={(event) => {
+            if (event.currentTarget.hasPointerCapture(event.pointerId)) seek(event);
+          }}
+          onPointerUp={() => setScrubbing(false)}
+          onPointerCancel={() => setScrubbing(false)}
+          onKeyDown={onSeekKeyDown}
+          className="mt-5 flex h-5 cursor-pointer touch-none items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
+        >
+          <motion.div
+            initial={false}
+            animate={{ height: scrubbing ? 12 : 6 }}
+            transition={shape}
+            className="w-full overflow-hidden rounded-full bg-ink-3"
+          >
+            <div className="h-full bg-paper" style={{ width: `${(position / duration) * 100}%` }} />
+          </motion.div>
+        </div>
+        <div className="mt-1 flex justify-between text-[11px] tabular-nums text-paper/55">
+          <span>{formatTime(position)}</span>
+          <span>−{formatTime(duration - position)}</span>
+        </div>
+      </div>
+    </Expand>
   );
 }
