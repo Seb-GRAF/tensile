@@ -90,6 +90,7 @@ Steps, run in order:
 | `{"click": "<selector>"}` | clicks the element |
 | `{"focus": "<selector>"}` | focuses the element |
 | `{"press": "<key>"}` | presses a key on the focused element: `"ArrowRight"`, `"Enter"`, `"Space"`, `"Escape"`, `"Shift+Tab"`, `"Meta+k"` |
+| `{"keydown": "<key>"}`, `{"keyup": "<key>"}` | holds a key down and lets it go, for things that react to a held key |
 | `{"type": "<text>"}` | types text into the focused element |
 | `{"hover": "<selector>"}` | moves the mouse to the element's center |
 | `{"down": "<selector>", "at": [x, y]}` | moves the mouse to a point in the element's box and presses the button |

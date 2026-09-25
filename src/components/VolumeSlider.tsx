@@ -21,6 +21,7 @@ export function VolumeSlider({ value, onValueChange, label = "Volume" }: VolumeS
   const fill = useTransform(stretch, (s) => FILL_MIN + value * TRAVEL + Math.max(0, s));
 
   function drag(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.type === "pointerdown") stretch.stop();
     const px = event.clientX - event.currentTarget.getBoundingClientRect().left;
     onValueChange(Math.min(1, Math.max(0, (px - INSET - FILL_MIN) / TRAVEL)));
     const over = px > WIDTH ? px - WIDTH : Math.min(0, px);

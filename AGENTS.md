@@ -34,6 +34,13 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `ActionMenu`: menu button; the "More" pill grows right and down into a `role="menu"` with `ListHighlight`; the list layer blurs in and out and stays mounted and `inert` when closed.
 - `TextField`: floating label that moves by transforms only; an error grows the pill into a card and blurs in; the focus ring sits on the shape.
 - `SearchField`: a round search button whose width springs out into the field; Escape clears, then folds.
+- `RangeSlider`: VolumeSlider's track with two knobs in the ink fill; a press grabs the nearer knob; knobs stop at each other; the track stretches past the grabbed knob's end.
+- `SwipeButton`: the ink fill's end is a knob dragged from where you grab it; reaching the end calls `onConfirm`; a parent-controlled `confirmed` turns it accent with the `Check`; Enter or Space confirms.
+- `HoldButton`: a lime fill grows at a steady rate while held (pointer, Space or Enter), springs back with `snap` if released early; a parent-controlled `done` morphs it into MorphButton's success.
+- `SplitPane`: two panes and a `role="separator"`; the value is a fraction of the width; past `min`/`max` the pane goes `rubber` px further and springs back; the grip grows and turns ink while held.
+- `CompareSlider`: before/after layers, the after layer clipped at the divider; the frame is the drag area; a `role="slider"` knob; the focus ring sits on the frame.
+- `TimeWheel`: hour, minute and AM/PM wheels (`role="spinbutton"`); a flick lands on the row nearest position + velocity × 0.1 s with `snap`; hours and minutes loop, AM/PM stretches with `rubber`.
+- `BottomSheet`: a `role="dialog"` sheet whose offset is a fraction of its height; dragged from its top strip; the release projects position + velocity × 0.2 s to close or spring back; the backdrop's opacity follows the offset.
 
 Shared code (owned by the maintainer, read-only for subagents):
 
@@ -42,7 +49,7 @@ Shared code (owned by the maintainer, read-only for subagents):
 - `src/Check.tsx`: `<Check size={20} />`, a check in the current text color that draws itself when it mounts, with the stroke worked out from `size`. Put it in a `motion.span` with `swap` to blur it in and out.
 - `src/useWidth.ts`: `const [width, measure] = useWidth();` measures the element you pass `measure` to as its `ref`. Key that element by its content so each new version gets measured, then animate the shape to `width` (see `Toast`).
 - `src/list.tsx`, taken from `CommandPalette`: `ROW` (40 px rows); `filterByWords(items, query)`, the word-prefix filter; `const [active, setActive, onArrowKey] = useActiveIndex(count)`, the highlighted row with ArrowUp/ArrowDown wrapping (call `onArrowKey` from the key handler of whatever holds focus; Enter and Escape stay in the component); `<ListHighlight index={active} />`, the `bg-hover` highlight that slides and stretches behind a row, placed first in a `relative` list.
-- `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed.
+- `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed. On press, `stop()` the value: `set()` doesn't stop a spring that's still running from the last release, and the spring would win.
 - `src/index.ts`: exports every component and its props type.
 
 ## Motion and look
@@ -110,6 +117,8 @@ export function Select({
   - A control inside an `overflow-hidden` shape gets its focus ring clipped. Put the ring on the shape with `has-focus-visible:` (see `Select`, `TextField`).
   - `.focus()` on an element inside an `overflow-hidden` shape can scroll the shape; pass `{ preventScroll: true }`.
   - Set a list's highlight on `onMouseMove`, not `onMouseEnter`: rows that grow in under a resting pointer would otherwise take the highlight from the keyboard.
+  - `dragHandlers` capture the pointer on press, so in Chromium the click that follows goes to the dragged element, never to a button inside it. Keep buttons out of the dragged element (see `BottomSheet`'s grab strip).
+  - `whileTap` turns Enter into fake `pointerdown`/`pointerup` events; don't combine it with your own pointer handlers on an element that also handles Enter (see `HoldButton`).
   - Drags need pointer capture and `touch-none`.
 
 ## Working as a subagent

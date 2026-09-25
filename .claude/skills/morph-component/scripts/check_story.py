@@ -67,6 +67,10 @@ def run(page, steps, out):
                 root.locator(step["focus"]).focus()
             elif "press" in step:
                 page.keyboard.press(step["press"])
+            elif "keydown" in step:
+                page.keyboard.down(step["keydown"])
+            elif "keyup" in step:
+                page.keyboard.up(step["keyup"])
             elif "type" in step:
                 page.keyboard.type(step["type"])
             elif "hover" in step:
