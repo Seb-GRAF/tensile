@@ -20,6 +20,13 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `LineChart`: SVG line that draws itself; hover guide, dot and tooltip glide between points; tooltip text blur-swaps.
 - `CommandPalette`: combobox and listbox; word-prefix filter; sliding highlight; rows blur in and out and move on springs; ⌘K.
 - `Toast`: status pill that sizes to its content with `useWidth`; blur swap.
+- `NumberTicker`: digit strips roll on `shape` in the direction the value moved; characters that come or go blur in while their width springs; takes font size, weight, color and line height from its parent.
+- `Checkbox`: a box that fills lime, then the shared `Check` blurs in and draws; the label wraps the box, so clicking it toggles.
+- `RadioGroup`: vertical radiogroup with roving focus; a `useLiquid` dot slides between rings and grows out of the first choice.
+- `ProgressBar`: VolumeSlider's track; one `useLiquid` pill is the fill or, with `value` null, a segment that sweeps end to end.
+- `ProgressRing`: an arc on `soft` (not `shape`, whose overshoot below 0 flashes a full ring); at 1 the disc turns accent and the `Check` draws.
+- `ThemeToggle`: Toggle's switch; the knob's icon is one path that morphs from sun to moon on `shape`.
+- `CopyButton`: an icon pill that widens to a lime `Check` and "Copied" with `useWidth`, then settles back.
 
 Shared code (owned by the maintainer, read-only for subagents):
 
