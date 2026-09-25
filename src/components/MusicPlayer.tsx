@@ -102,6 +102,7 @@ export function MusicPlayer({
       opened={{ width: 340, height: 150, radius: 32 }}
       anchor="center"
       label={openLabel(title)}
+      panelLabel={title}
       trigger={
         <span className="flex size-full items-center gap-2.5 pr-3.5 pl-2 text-[13px] font-medium">
           <Art className="size-6" />

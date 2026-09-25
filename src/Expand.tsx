@@ -13,6 +13,8 @@ export type ExpandProps = {
   anchor: "center" | "top-left";
   /** Accessible name of the closed shape, which is the button that opens it. */
   label: string;
+  /** Accessible name of the open shape; when set, the open shape is a dialog. */
+  panelLabel?: string;
   /** Content of the closed shape. */
   trigger: React.ReactNode;
   /** Content of the open shape. */
@@ -21,8 +23,9 @@ export type ExpandProps = {
   className: string;
 };
 
-/** One shape that springs between a closed and an open size and radius. It takes the closed size in the layout and overlays what's around it when open; its content blur-swaps, focus moves in on open and back on close, and Escape closes it. */
-export function Expand({ open, onOpenChange, closed, opened, anchor, label, trigger, children, className }: ExpandProps) {
+/** One shape that springs between a closed and an open size and radius. It takes the closed size in the layout and overlays what's around it when open; its content blur-swaps, focus moves in on open and back on close (unless it has moved to something else), and Escape closes it. */
+export function Expand({ open, onOpenChange, closed, opened, anchor, label, panelLabel, trigger, children, className }: ExpandProps) {
+  const root = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(open);
@@ -32,12 +35,13 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, trig
   useEffect(() => {
     if (open === wasOpen.current) return;
     wasOpen.current = open;
+    const active = document.activeElement;
     if (open) panel.current!.focus({ preventScroll: true });
-    else button.current!.focus({ preventScroll: true });
+    else if (active === document.body || root.current!.contains(active)) button.current!.focus({ preventScroll: true });
   }, [open]);
 
   return (
-    <div className="relative shrink-0" style={{ width: closed.width, height: closed.height }}>
+    <div ref={root} className="relative shrink-0" style={{ width: closed.width, height: closed.height }}>
       <motion.div
         initial={false}
         animate={{ width: size.width, height: size.height, borderRadius: size.radius }}
@@ -52,6 +56,8 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, trig
             <motion.div
               key="open"
               ref={panel}
+              role={panelLabel ? "dialog" : undefined}
+              aria-label={panelLabel}
               tabIndex={-1}
               {...swap}
               style={{ width: opened.width, height: opened.height }}
@@ -65,6 +71,7 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, trig
               ref={button}
               type="button"
               aria-expanded={false}
+              aria-haspopup={panelLabel ? "dialog" : undefined}
               aria-label={label}
               onClick={() => onOpenChange(true)}
               {...swap}
