@@ -30,7 +30,7 @@ export function MorphButton({
       }}
       transition={{ width: shape, backgroundColor: soft }}
       whileTap={{ scale: 0.96 }}
-      className="grid h-11 place-items-center overflow-hidden rounded-full text-[15px] font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+      className="grid h-11 place-content-center place-items-center overflow-hidden rounded-full text-[15px] font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
     >
       <AnimatePresence initial={false}>
         {status === "idle" && (

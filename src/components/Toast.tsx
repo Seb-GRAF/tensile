@@ -16,7 +16,7 @@ export function Toast({ status, children = "Link copied" }: ToastProps) {
       initial={false}
       animate={{ width }}
       transition={shape}
-      className="grid h-11 place-items-center overflow-hidden rounded-full bg-ink text-sm font-medium text-paper shadow-float"
+      className="grid h-11 place-content-center place-items-center overflow-hidden rounded-full bg-ink text-sm font-medium text-paper shadow-float"
     >
       <AnimatePresence initial={false}>
         <motion.span

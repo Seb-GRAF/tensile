@@ -18,7 +18,7 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `VolumeSlider`: slider drag with pointer capture; rubber stretch past either end; spring back that keeps the drag's speed; arrow-key steps.
 - `MusicPlayer`: an island that expands into a player (width, height, radius); fixed-size centered content layers; play/pause path morph; seek bar.
 - `LineChart`: SVG line that draws itself; hover guide, dot and tooltip glide between points; tooltip text blur-swaps.
-- `CommandPalette`: combobox and listbox; word-prefix filter; sliding highlight; rows blur in and out and move on springs; ⌘K.
+- `CommandPalette`: combobox and listbox built on `src/list.tsx`; rows blur in and out and move on springs as the filter changes; ⌘K.
 - `Toast`: status pill that sizes to its content with `useWidth`; blur swap.
 - `NumberTicker`: digit strips roll on `shape` in the direction the value moved; characters that come or go blur in while their width springs; takes font size, weight, color and line height from its parent.
 - `Checkbox`: a box that fills lime, then the shared `Check` blurs in and draws; the label wraps the box, so clicking it toggles.
@@ -30,10 +30,11 @@ Components in `src/components/`, each with a story. Read the one you start from 
 
 Shared code (owned by the maintainer, read-only for subagents):
 
-- `src/springs.ts`: spring presets `shape`, `soft`, `snap`; the blur swap `swap`; `useLiquid` (two edges on different springs, so a sliding pill stretches ahead and catches up).
+- `src/springs.ts`: spring presets `shape` (size and position), `soft` (color and opacity), `snap` (release after a drag; the only preset that keeps a moving value's speed); the blur swap `swap`; `useLiquid` (two edges on different springs, so a sliding pill stretches ahead and catches up).
 - `src/index.css`: color tokens `canvas ink ink-3 paper accent muted line hover`, shadow `shadow-float`.
 - `src/Check.tsx`: `<Check size={20} />`, a check in the current text color that draws itself when it mounts, with the stroke worked out from `size`. Put it in a `motion.span` with `swap` to blur it in and out.
 - `src/useWidth.ts`: `const [width, measure] = useWidth();` measures the element you pass `measure` to as its `ref`. Key that element by its content so each new version gets measured, then animate the shape to `width` (see `Toast`).
+- `src/list.tsx`, taken from `CommandPalette`: `ROW` (40 px rows); `filterByWords(items, query)`, the word-prefix filter; `const [active, setActive, onArrowKey] = useActiveIndex(count)`, the highlighted row with ArrowUp/ArrowDown wrapping (call `onArrowKey` from the key handler of whatever holds focus; Enter and Escape stay in the component); `<ListHighlight index={active} />`, the `bg-hover` highlight that slides and stretches behind a row, placed first in a `relative` list.
 - `src/index.ts`: exports every component and its props type.
 
 ## Motion and look
@@ -92,6 +93,8 @@ export function Select({
 - Known pitfalls:
   - Motion's `width: "auto"` only animates when the target changes. For pills that size to their content, measure the new content with `useWidth` (see `Toast`).
   - Content layers inside a morphing container get a fixed size and are centered, so nothing reflows mid-morph (see `MusicPlayer`).
+  - Swap layers stacked in a grid (`col-start-1 row-start-1`) need `place-content-center` as well as `place-items-center`; otherwise the track is as wide as the widest layer, hangs off one side, and the other layer jumps off-center mid-morph.
+  - Motion starts springs set by duration (`shape`, `soft`, `useLiquid`) from rest, even when the value is moving. When a release should keep its speed, animate with `snap`.
   - SVG attributes can't read CSS variables; use `fill-*` and `stroke-*` classes.
   - Storybook binds ⌘K to its own search, so test keyboard shortcuts in `iframe.html` (`check_story.py` does).
   - Storybook's `updateArgs` re-renders on a later tick; wait about 250 ms before checking the result.

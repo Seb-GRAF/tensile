@@ -3,7 +3,8 @@ import { useEffect } from "react";
 
 export const shape: Transition = { type: "spring", visualDuration: 0.38, bounce: 0.15 };
 export const soft: Transition = { type: "spring", visualDuration: 0.3, bounce: 0 };
-export const snap: Transition = { type: "spring", visualDuration: 0.35, bounce: 0.25 };
+/** Release after a drag. Motion drops a moving value's speed for springs set by duration, so this one is set by stiffness and damping (the same feel as visualDuration 0.35, bounce 0.25). */
+export const snap: Transition = { type: "spring", stiffness: 224, damping: 22.4 };
 const quick: Transition = { type: "spring", visualDuration: 0.12, bounce: 0 };
 const lead: Transition = { type: "spring", visualDuration: 0.2, bounce: 0.15 };
 const trail: Transition = { type: "spring", visualDuration: 0.42, bounce: 0.1 };

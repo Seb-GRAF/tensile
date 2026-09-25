@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
+import { filterByWords, ListHighlight, ROW, useActiveIndex } from "../list";
 import { shape, soft } from "../springs";
 
 type Command = { label: string; icon?: React.ReactNode };
@@ -12,9 +13,6 @@ export type CommandPaletteProps = {
   listLabel?: string;
   emptyText?: string;
 };
-
-const ROW = 40;
-const moves: Record<string, number> = { ArrowDown: 1, ArrowUp: -1 };
 
 function CommandIcon() {
   return (
@@ -34,15 +32,11 @@ export function CommandPalette({
 }: CommandPaletteProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [active, setActive] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const listId = useId();
 
-  const tokens = query.toLowerCase().split(" ").filter((token) => token);
-  const results = commands.filter((command) => {
-    const words = command.label.toLowerCase().split(" ");
-    return tokens.every((token) => words.some((word) => word.startsWith(token)));
-  });
+  const results = filterByWords(commands, query);
+  const [active, setActive, onArrowKey] = useActiveIndex(results.length);
   const height = open ? 52 + 1 + 12 + Math.max(1, results.length) * ROW : 52;
 
   useEffect(() => {
@@ -76,10 +70,7 @@ export function CommandPalette({
       select(results[active]);
       return;
     }
-    const move = moves[event.key];
-    if (!move || results.length === 0) return;
-    event.preventDefault();
-    setActive((a) => (a + move + results.length) % results.length);
+    onArrowKey(event);
   }
 
   return (
@@ -125,15 +116,7 @@ export function CommandPalette({
       <div inert={!open}>
         <div className="h-px bg-line" />
         <ul id={listId} role="listbox" aria-label={listLabel} className="relative mx-1.5 my-1.5">
-          {results.length > 0 && (
-            <motion.li
-              aria-hidden
-              initial={false}
-              animate={{ y: active * ROW }}
-              transition={shape}
-              className="absolute inset-x-0 top-0 h-10 rounded-[10px] bg-hover"
-            />
-          )}
+          {results.length > 0 && <ListHighlight index={active} />}
           <AnimatePresence initial={false}>
             {results.map((command, i) => (
               <motion.li
