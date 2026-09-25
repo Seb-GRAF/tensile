@@ -129,7 +129,7 @@ export function CommandPalette({
                 exit={{ opacity: 0, filter: "blur(4px)" }}
                 transition={{ y: shape, opacity: soft, filter: soft }}
                 onMouseDown={(event) => event.preventDefault()}
-                onMouseEnter={() => setActive(i)}
+                onMouseMove={() => setActive(i)}
                 onClick={() => select(command)}
                 className="absolute inset-x-0 top-0 flex h-10 cursor-pointer items-center gap-2.5 px-2.5 text-sm text-ink"
               >

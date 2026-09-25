@@ -27,6 +27,13 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `ProgressRing`: an arc on `soft` (not `shape`, whose overshoot below 0 flashes a full ring); at 1 the disc turns accent and the `Check` draws.
 - `ThemeToggle`: Toggle's switch; the knob's icon is one path that morphs from sun to moon on `shape`.
 - `CopyButton`: an icon pill that widens to a lime `Check` and "Copied" with `useWidth`, then settles back.
+- `Badge`: a white dot that grows into a lime count pill; digits roll with `NumberTicker` and the pill's width follows them; 0 hides it.
+- `StatTile`: an ink card with a `NumberTicker` and a change chip whose color fades lime/paper and whose arrow swings when the change flips sign.
+- `NumberStepper`: a spinbutton between − and +; `NumberTicker` digits; a press past a limit gives the stretch a `snap` velocity, so the pill stretches toward that side and springs back.
+- `Select`: select-only combobox; a paper pill that grows down into its menu out of a pill-sized wrapper, so the menu overlays; `ListHighlight`; the label blur-swaps on pick; a `Check` marks the choice.
+- `ActionMenu`: menu button; the "More" pill grows right and down into a `role="menu"` with `ListHighlight`; the list layer blurs in and out and stays mounted and `inert` when closed.
+- `TextField`: floating label that moves by transforms only; an error grows the pill into a card and blurs in; the focus ring sits on the shape.
+- `SearchField`: a round search button whose width springs out into the field; Escape clears, then folds.
 
 Shared code (owned by the maintainer, read-only for subagents):
 
@@ -88,6 +95,7 @@ export function Select({
   - CSF3 with `satisfies Meta<typeof Name>`.
   - One `Default` story with a one-line JSDoc saying how to interact.
   - `useArgs` so controlled props stay in sync with the Controls panel.
+  - Text inputs are the exception: `updateArgs` lands too late for typing, and keys get lost. Keep the typed value in React state in a small wrapper component in the story file (React's `useState` can't sit next to `useArgs` in one render function) and mirror it to Controls with `updateArgs`; see `TextField.stories.tsx`.
   - `fn()` for callbacks, except ones that fire every frame (see `VolumeSlider.stories.tsx`).
   - Add another story only for a state you can't reach by interacting.
 - Known pitfalls:
@@ -97,7 +105,10 @@ export function Select({
   - Motion starts springs set by duration (`shape`, `soft`, `useLiquid`) from rest, even when the value is moving. When a release should keep its speed, animate with `snap`.
   - SVG attributes can't read CSS variables; use `fill-*` and `stroke-*` classes.
   - Storybook binds ⌘K to its own search, so test keyboard shortcuts in `iframe.html` (`check_story.py` does).
-  - Storybook's `updateArgs` re-renders on a later tick; wait about 250 ms before checking the result.
+  - Storybook's `updateArgs` re-renders on a later tick (it waits at least 100 ms, plus any running animation); wait about 250 ms before checking the result.
+  - A control inside an `overflow-hidden` shape gets its focus ring clipped. Put the ring on the shape with `has-focus-visible:` (see `Select`, `TextField`).
+  - `.focus()` on an element inside an `overflow-hidden` shape can scroll the shape; pass `{ preventScroll: true }`.
+  - Set a list's highlight on `onMouseMove`, not `onMouseEnter`: rows that grow in under a resting pointer would otherwise take the highlight from the keyboard.
   - Drags need pointer capture and `touch-none`.
 
 ## Working as a subagent
