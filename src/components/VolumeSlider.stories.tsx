@@ -5,7 +5,7 @@ import { VolumeSlider } from "./VolumeSlider";
 
 const meta = {
   component: VolumeSlider,
-  args: { value: 0.45, label: "Volume", onValueChange: fn() },
+  args: { value: 0.45, onValueChange: fn() },
   argTypes: { value: { control: { type: "range", min: 0, max: 1, step: 0.01 } } },
 } satisfies Meta<typeof VolumeSlider>;
 

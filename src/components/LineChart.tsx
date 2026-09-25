@@ -4,11 +4,11 @@ import { shape, soft, swap } from "../springs";
 
 type Point = { label: string; value: number };
 
-type Props = {
+export type LineChartProps = {
   data: Point[];
-  formatValue: (value: number) => string;
+  formatValue?: (value: number) => string;
   /** Accessible summary of the chart. */
-  label: string;
+  label?: string;
 };
 
 const WIDTH = 320;
@@ -30,7 +30,11 @@ function curve(points: number[][]) {
     .join("");
 }
 
-export function LineChart({ data, formatValue, label }: Props) {
+export function LineChart({
+  data,
+  formatValue = (value: number) => value.toLocaleString("en-US"),
+  label = "Minutes listened per day this week",
+}: LineChartProps) {
   const [hover, setHover] = useState<number | null>(null);
   const max = Math.max(...data.map((point) => point.value));
   const points = data.map((point, i) => [(i * WIDTH) / (data.length - 1), HEIGHT - (point.value / max) * (HEIGHT - TOP)]);

@@ -1,11 +1,11 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { snap, soft } from "../springs";
 
-type Props = {
+export type VolumeSliderProps = {
   /** 0..1 */
   value: number;
   onValueChange: (value: number) => void;
-  label: string;
+  label?: string;
 };
 
 const WIDTH = 240;
@@ -20,7 +20,7 @@ function rubber(over: number) {
   return Math.sign(over) * RUBBER * (1 - Math.exp(-Math.abs(over) / RUBBER));
 }
 
-export function VolumeSlider({ value, onValueChange, label }: Props) {
+export function VolumeSlider({ value, onValueChange, label = "Volume" }: VolumeSliderProps) {
   const stretch = useMotionValue(0); // px pulled past an end, negative past the start
   const width = useTransform(stretch, (s) => WIDTH + Math.abs(s));
   const height = useTransform(stretch, (s) => HEIGHT * Math.sqrt(WIDTH / (WIDTH + Math.abs(s))));

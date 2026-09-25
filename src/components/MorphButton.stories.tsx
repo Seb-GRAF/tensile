@@ -5,7 +5,7 @@ import { MorphButton } from "./MorphButton";
 
 const meta = {
   component: MorphButton,
-  args: { status: "idle", children: "Connect", onClick: fn() },
+  args: { status: "idle", onClick: fn() },
 } satisfies Meta<typeof MorphButton>;
 
 export default meta;

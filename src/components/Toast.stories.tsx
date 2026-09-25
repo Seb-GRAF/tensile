@@ -4,7 +4,7 @@ import { Toast } from "./Toast";
 
 const meta = {
   component: Toast,
-  args: { status: "success", children: "Link copied" },
+  args: { status: "success" },
 } satisfies Meta<typeof Toast>;
 
 export default meta;

@@ -5,7 +5,15 @@ import { SegmentedTabs } from "./SegmentedTabs";
 
 const meta = {
   component: SegmentedTabs,
-  args: { options: ["Day", "Week", "Month"], value: "Week", label: "Range", onValueChange: fn() },
+  args: {
+    options: [
+      { value: "day", label: "Day" },
+      { value: "week", label: "Week" },
+      { value: "month", label: "Month" },
+    ],
+    value: "week",
+    onValueChange: fn(),
+  },
 } satisfies Meta<typeof SegmentedTabs>;
 
 export default meta;

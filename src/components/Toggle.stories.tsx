@@ -5,7 +5,7 @@ import { Toggle } from "./Toggle";
 
 const meta = {
   component: Toggle,
-  args: { checked: false, label: "Spatial audio", onCheckedChange: fn() },
+  args: { checked: false, onCheckedChange: fn() },
 } satisfies Meta<typeof Toggle>;
 
 export default meta;

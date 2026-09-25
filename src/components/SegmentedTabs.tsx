@@ -2,17 +2,17 @@ import { motion, useMotionTemplate } from "motion/react";
 import { useRef } from "react";
 import { useLiquid } from "../springs";
 
-type Props = {
-  options: string[];
+export type SegmentedTabsProps = {
+  options: { value: string; label: string; icon?: React.ReactNode }[];
   value: string;
   onValueChange: (value: string) => void;
-  label: string;
+  label?: string;
 };
 
 const moves: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
 
-export function SegmentedTabs({ options, value, onValueChange, label }: Props) {
-  const index = options.indexOf(value);
+export function SegmentedTabs({ options, value, onValueChange, label = "Range" }: SegmentedTabsProps) {
+  const index = options.findIndex((option) => option.value === value);
   const step = 100 / options.length;
   const [left, right] = useLiquid(index * step, (options.length - 1 - index) * step);
   const indicatorLeft = useMotionTemplate`${left}%`;
@@ -24,7 +24,7 @@ export function SegmentedTabs({ options, value, onValueChange, label }: Props) {
     const move = moves[event.key];
     if (!move) return;
     const next = (index + move + options.length) % options.length;
-    onValueChange(options[next]);
+    onValueChange(options[next].value);
     tabs.current[next]!.focus();
   }
 
@@ -33,7 +33,7 @@ export function SegmentedTabs({ options, value, onValueChange, label }: Props) {
       <div className="relative grid auto-cols-[80px] grid-flow-col">
         {options.map((option, i) => (
           <button
-            key={option}
+            key={option.value}
             ref={(el) => {
               tabs.current[i] = el;
             }}
@@ -41,10 +41,11 @@ export function SegmentedTabs({ options, value, onValueChange, label }: Props) {
             role="tab"
             aria-selected={i === index}
             tabIndex={i === index ? 0 : -1}
-            onClick={() => onValueChange(option)}
-            className="h-8 rounded-full text-[13px] font-medium text-muted outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+            onClick={() => onValueChange(option.value)}
+            className="flex h-8 items-center justify-center gap-1.5 rounded-full text-[13px] font-medium text-muted outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
           >
-            {option}
+            {option.icon}
+            {option.label}
           </button>
         ))}
         <motion.span
@@ -58,8 +59,9 @@ export function SegmentedTabs({ options, value, onValueChange, label }: Props) {
           className="pointer-events-none absolute inset-0 grid auto-cols-[80px] grid-flow-col text-[13px] font-medium text-paper"
         >
           {options.map((option) => (
-            <span key={option} className="grid place-items-center">
-              {option}
+            <span key={option.value} className="flex items-center justify-center gap-1.5">
+              {option.icon}
+              {option.label}
             </span>
           ))}
         </motion.span>

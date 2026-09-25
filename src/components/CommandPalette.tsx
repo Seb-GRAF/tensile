@@ -2,11 +2,15 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { shape, soft } from "../springs";
 
-type Command = { label: string; icon: React.ReactNode };
+type Command = { label: string; icon?: React.ReactNode };
 
-type Props = {
+export type CommandPaletteProps = {
   commands: Command[];
   onSelect: (command: Command) => void;
+  label?: string;
+  placeholder?: string;
+  listLabel?: string;
+  emptyText?: string;
 };
 
 const ROW = 40;
@@ -20,7 +24,14 @@ function CommandIcon() {
   );
 }
 
-export function CommandPalette({ commands, onSelect }: Props) {
+export function CommandPalette({
+  commands,
+  onSelect,
+  label = "Search commands",
+  placeholder = "Search",
+  listLabel = "Commands",
+  emptyText = "No commands found",
+}: CommandPaletteProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -92,11 +103,11 @@ export function CommandPalette({ commands, onSelect }: Props) {
         <input
           ref={input}
           role="combobox"
-          aria-label="Search commands"
+          aria-label={label}
           aria-expanded={open}
           aria-controls={listId}
           aria-activedescendant={open && results[active] ? `${listId}-${active}` : undefined}
-          placeholder="Search"
+          placeholder={placeholder}
           value={query}
           onFocus={() => setOpen(true)}
           onBlur={close}
@@ -113,7 +124,7 @@ export function CommandPalette({ commands, onSelect }: Props) {
       </label>
       <div inert={!open}>
         <div className="h-px bg-line" />
-        <ul id={listId} role="listbox" aria-label="Commands" className="relative mx-1.5 my-1.5">
+        <ul id={listId} role="listbox" aria-label={listLabel} className="relative mx-1.5 my-1.5">
           {results.length > 0 && (
             <motion.li
               aria-hidden
@@ -139,7 +150,7 @@ export function CommandPalette({ commands, onSelect }: Props) {
                 onClick={() => select(command)}
                 className="absolute inset-x-0 top-0 flex h-10 cursor-pointer items-center gap-2.5 px-2.5 text-sm text-ink"
               >
-                <span className="text-muted">{command.icon}</span>
+                {command.icon && <span className="text-muted">{command.icon}</span>}
                 {command.label}
                 {i === active && (
                   <svg
@@ -156,7 +167,7 @@ export function CommandPalette({ commands, onSelect }: Props) {
               </motion.li>
             ))}
           </AnimatePresence>
-          {results.length === 0 && <li className="flex h-10 items-center px-2.5 text-sm text-muted">No commands found</li>}
+          {results.length === 0 && <li className="flex h-10 items-center px-2.5 text-sm text-muted">{emptyText}</li>}
         </ul>
       </div>
     </motion.div>

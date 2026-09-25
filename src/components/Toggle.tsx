@@ -1,13 +1,13 @@
 import { motion } from "motion/react";
 import { soft, useLiquid } from "../springs";
 
-type Props = {
+export type ToggleProps = {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
-  label: string;
+  label?: string;
 };
 
-export function Toggle({ checked, onCheckedChange, label }: Props) {
+export function Toggle({ checked, onCheckedChange, label = "Spatial audio" }: ToggleProps) {
   const [left, right] = useLiquid(checked ? 23 : 3, checked ? 3 : 23);
 
   return (

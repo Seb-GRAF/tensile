@@ -1,19 +1,27 @@
 import { AnimatePresence, motion } from "motion/react";
 import { shape, soft, swap } from "../springs";
 
-type Props = {
+export type MorphButtonProps = {
   status: "idle" | "loading" | "success";
   onClick: () => void;
-  children: string;
+  children?: string;
+  loadingLabel?: string;
+  successLabel?: string;
 };
 
-export function MorphButton({ status, onClick, children }: Props) {
+export function MorphButton({
+  status,
+  onClick,
+  children = "Connect",
+  loadingLabel = "Loading",
+  successLabel = "Done",
+}: MorphButtonProps) {
   return (
     <motion.button
       type="button"
       onClick={onClick}
       disabled={status !== "idle"}
-      aria-label={{ idle: children, loading: "Loading", success: "Done" }[status]}
+      aria-label={{ idle: children, loading: loadingLabel, success: successLabel }[status]}
       initial={false}
       animate={{
         width: status === "idle" ? "auto" : 44,

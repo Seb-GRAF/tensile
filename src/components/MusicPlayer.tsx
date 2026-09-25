@@ -2,13 +2,19 @@ import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "
 import { useEffect, useState } from "react";
 import { shape, soft, swap } from "../springs";
 
-type Props = {
+export type MusicPlayerProps = {
   title: string;
   artist: string;
   /** Track length in seconds. */
   duration: number;
   expanded: boolean;
   onExpandedChange: (expanded: boolean) => void;
+  openLabel?: (title: string) => string;
+  minimizeLabel?: string;
+  playLabel?: string;
+  pauseLabel?: string;
+  seekLabel?: string;
+  formatTime?: (seconds: number) => string;
 };
 
 const PLAY = [[6, 4], [12, 7.7], [12, 16.3], [6, 20], [12, 7.7], [19, 12], [19, 12], [12, 16.3]];
@@ -35,7 +41,19 @@ function Art({ className }: { className: string }) {
   );
 }
 
-export function MusicPlayer({ title, artist, duration, expanded, onExpandedChange }: Props) {
+export function MusicPlayer({
+  title,
+  artist,
+  duration,
+  expanded,
+  onExpandedChange,
+  openLabel = (title: string) => `Open player, ${title}`,
+  minimizeLabel = "Minimize player",
+  playLabel = "Play",
+  pauseLabel = "Pause",
+  seekLabel = "Seek",
+  formatTime = clock,
+}: MusicPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [scrubbing, setScrubbing] = useState(false);
@@ -95,7 +113,7 @@ export function MusicPlayer({ title, artist, duration, expanded, onExpandedChang
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                aria-label="Minimize player"
+                aria-label={minimizeLabel}
                 onClick={() => onExpandedChange(false)}
                 className="shrink-0 rounded-xl outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
               >
@@ -107,7 +125,7 @@ export function MusicPlayer({ title, artist, duration, expanded, onExpandedChang
               </div>
               <motion.button
                 type="button"
-                aria-label={playing ? "Pause" : "Play"}
+                aria-label={playing ? pauseLabel : playLabel}
                 onClick={() => setPlaying(!playing)}
                 whileTap={{ scale: 0.85 }}
                 className="grid size-10 shrink-0 place-items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
@@ -120,11 +138,11 @@ export function MusicPlayer({ title, artist, duration, expanded, onExpandedChang
             <div
               role="slider"
               tabIndex={0}
-              aria-label="Seek"
+              aria-label={seekLabel}
               aria-valuemin={0}
               aria-valuemax={Math.round(duration)}
               aria-valuenow={Math.round(position)}
-              aria-valuetext={clock(position)}
+              aria-valuetext={formatTime(position)}
               onPointerDown={(event) => {
                 event.currentTarget.setPointerCapture(event.pointerId);
                 setScrubbing(true);
@@ -148,8 +166,8 @@ export function MusicPlayer({ title, artist, duration, expanded, onExpandedChang
               </motion.div>
             </div>
             <div className="mt-1 flex justify-between text-[11px] tabular-nums text-paper/55">
-              <span>{clock(position)}</span>
-              <span>−{clock(duration - position)}</span>
+              <span>{formatTime(position)}</span>
+              <span>−{formatTime(duration - position)}</span>
             </div>
           </motion.div>
         ) : (
@@ -158,7 +176,7 @@ export function MusicPlayer({ title, artist, duration, expanded, onExpandedChang
             {...swap}
             type="button"
             aria-expanded={false}
-            aria-label={`Open player, ${title}`}
+            aria-label={openLabel(title)}
             onClick={() => onExpandedChange(true)}
             className="absolute top-1/2 left-1/2 flex h-10 w-[224px] -translate-x-1/2 -translate-y-1/2 items-center gap-2.5 pr-3.5 pl-2 text-[13px] font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
           >

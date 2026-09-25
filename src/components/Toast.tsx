@@ -2,12 +2,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useState } from "react";
 import { shape, swap } from "../springs";
 
-type Props = {
+export type ToastProps = {
   status: "loading" | "success";
-  children: string;
+  children?: string;
 };
 
-export function Toast({ status, children }: Props) {
+export function Toast({ status, children = "Link copied" }: ToastProps) {
   const [width, setWidth] = useState<number>();
   const measure = useCallback((el: HTMLSpanElement | null) => {
     if (el) setWidth(el.offsetWidth);
