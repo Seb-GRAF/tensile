@@ -92,6 +92,7 @@ Steps, run in order:
 | `{"press": "<key>"}` | presses a key on the focused element: `"ArrowRight"`, `"Enter"`, `"Space"`, `"Escape"`, `"Shift+Tab"`, `"Meta+k"` |
 | `{"keydown": "<key>"}`, `{"keyup": "<key>"}` | holds a key down and lets it go, for things that react to a held key |
 | `{"type": "<text>"}` | types text into the focused element |
+| `{"upload": "<selector>", "files": ["photo.jpg"]}` | picks small test files on an `input type="file"` (it may be hidden) |
 | `{"hover": "<selector>"}` | moves the mouse to the element's center |
 | `{"down": "<selector>", "at": [x, y]}` | moves the mouse to a point in the element's box and presses the button |
 | `{"move": "<selector>", "at": [x, y]}` | moves the mouse there (with the button held, a drag; without, a hover) |

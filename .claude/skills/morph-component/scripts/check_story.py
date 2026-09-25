@@ -73,6 +73,9 @@ def run(page, steps, out):
                 page.keyboard.up(step["keyup"])
             elif "type" in step:
                 page.keyboard.type(step["type"])
+            elif "upload" in step:
+                files = [{"name": name, "mimeType": "application/octet-stream", "buffer": b"test"} for name in step["files"]]
+                root.locator(step["upload"]).set_input_files(files)
             elif "hover" in step:
                 root.locator(step["hover"]).hover()
             elif "down" in step:
