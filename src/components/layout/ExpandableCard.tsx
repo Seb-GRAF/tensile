@@ -27,9 +27,9 @@ export function ExpandableCard({
     <Expand
       open={open}
       onOpenChange={onOpenChange}
-      closed={{ width: 280, height: 72, radius: 24 }}
-      opened={{ width: 360, height: 400, radius: 32 }}
-      anchor="top-left"
+      closed={{ width: 280, height: 72, radius: "var(--radius-card)" }}
+      opened={{ width: 360, height: 400, radius: "var(--radius-dialog)" }}
+      anchor="corner"
       label={openLabel(title)}
       panelLabel={title}
       trigger={

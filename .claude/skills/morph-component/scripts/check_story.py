@@ -93,7 +93,9 @@ def run(page, steps, out):
     failures = []
     for i, step in enumerate(steps, 1):
         try:
-            if "click" in step:
+            if "click" in step and "at" in step:
+                page.mouse.click(*point(page, step, "click"))
+            elif "click" in step:
                 find(page, step["click"]).click()
             elif "focus" in step:
                 find(page, step["focus"]).focus()

@@ -8,25 +8,25 @@ What the design system covers, how, and where each piece stands. Status is **don
 |---|---|---|---|
 | Tokens: colors, type, radii, shadow, focus, layers, page width | `src/theme.css`, Foundations/Tokens | 0 | done |
 | Motion speed and reduced motion from CSS | `useSprings` in `src/springs.ts`, `--motion-duration-scale`, Foundations/Motion | 0 | done |
-| Library stylesheet without page styles; opt-in reset | `src/index.css`, `src/reset.css` | 0, 1 | styles done; reset planned |
+| Library stylesheet without page styles; opt-in reset | `src/index.css`, `src/reset.css` | 0, 1 | done |
 | Icons | `Icon`, `src/icons.tsx` | 0 | done |
 | Loading visual | `Spinner` | 0 | done |
 | Measuring for responsive geometry | `src/useSize.ts` | 0 | done |
-| Top layer, placement, outside press | `src/overlay.ts` | 1 | planned |
-| Modal behavior | `src/Modal.tsx` | 1 | planned |
-| Built package and consumer check | `vite.lib.config.ts`, `examples/consumer` | 1 | planned |
+| Top layer, placement, outside press | `src/overlay.ts` | 1 | done |
+| Modal behavior | `src/Modal.tsx` | 1 | done |
+| Built package and consumer check | `vite.lib.config.ts`, `examples/consumer` | 1 | done |
 
 ## Requested coverage
 
 | Requested | Status | Artifact or mapping | Wave |
 |---|---|---|---|
-| Button, IconButton | create | IconButton composes Button | 1 |
-| Link | create | `Link` and `LinkProvider` | 1 |
-| Input, Textarea | create | | 1 |
+| Button, IconButton | done | IconButton shares Button's classes | 1 |
+| Link | done | `Link` and `LinkProvider` | 1 |
+| Input, Textarea | done | | 1 |
 | Spinner | done | | 0 |
-| Field, Fieldset | create | Field exports `useField` | 1 |
+| Field, Fieldset | done | Field exports `useField` | 1 |
 | ButtonGroup | recipe | `div role="group"` with `flex flex-wrap gap-2`; Toolbar for keyboard navigation | docs |
-| Card, Separator | create | | 1 |
+| Card, Separator | done | | 1 |
 | Typography, container, stack, inline, grid, aspect ratio | recipe | token utilities, `max-w-page`, Tailwind layout utilities | docs |
 | Existing components (57) | migrate | batches: actions, inputs and selection, menus, feedback, data display (2); navigation, sliders, dates, layout, dialogs (3); overlays, media (4) | 2–4 |
 | PasswordField | create as `PasswordInput` | Input with a show/hide IconButton, inside Field | 2 |
@@ -40,11 +40,11 @@ What the design system covers, how, and where each piece stands. Status is **don
 | ColorPicker | create | 2D area, hue Slider, hex Input | 5 |
 | EditableText | create | Input-based | 2 |
 | FileUpload | extend | accept, multiple, disabled, responsive; file-list story | 3 |
-| Avatar, AvatarGroup | create | Avatar composes Image | 1 |
-| Chip or Tag | create `Tag` | removable or static; selectable chips are ToggleGroup, counts are Badge, status is StatusBadge | 1 |
-| DescriptionList, Timeline, List | create | display only | 1 |
-| Keyboard shortcut | create `Kbd` | | 1 |
-| Skeleton, StatusBadge | create | | 1 |
+| Avatar, AvatarGroup | done | Avatar composes Image | 1 |
+| Chip or Tag | done: `Tag` | removable or static; selectable chips are ToggleGroup, counts are Badge, status is StatusBadge | 1 |
+| DescriptionList, Timeline, List | done | display only | 1 |
+| Keyboard shortcut | done: `Kbd` | | 1 |
+| Skeleton, StatusBadge | done | | 1 |
 | EmptyState, LoadingState, NotificationList | create | | 3 |
 | Tabs with panels | create `Tabs`, extend the tablists | composes SegmentedTabs or UnderlineTabs | 3 |
 | Toolbar | create | roving focus; the gliding tooltip | 4 |
@@ -59,7 +59,7 @@ What the design system covers, how, and where each piece stands. Status is **don
 | Table | create | | 5 |
 | DataTable | create | controlled; the caller sorts and pages | 5 |
 | TreeView | create | | 5 |
-| Image | create | | 1 |
+| Image | done | | 1 |
 | Carousel | create | PageDots, IconButton, drag | 4 |
 | Responsive media, Lightbox and media controls | extend and recipe | Lightbox on Modal and Image; VideoControls composes VolumeSlider; a `<video>` recipe | 4 |
 | Hero, Features, Pricing, Testimonials, FAQ, CTA | recipe | Examples/Marketing | 6 |

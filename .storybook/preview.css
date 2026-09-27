@@ -1,5 +1,6 @@
 @import "tailwindcss" source("../src");
 @import "../src/theme.css";
+@import "@fontsource-variable/geist";
 
 body {
   background: var(--color-canvas);

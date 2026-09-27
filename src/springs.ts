@@ -1,5 +1,7 @@
-import { animate, useMotionValue, type MotionValue, type Transition } from "motion/react";
+import { animate, useMotionValue, type MotionValue, type TargetAndTransition, type Transition } from "motion/react";
 import { useEffect, useState } from "react";
+
+type Swap = { initial: TargetAndTransition; animate: TargetAndTransition; exit: TargetAndTransition };
 
 /** @deprecated Use `useSprings()`. These ignore `--motion-duration-scale`; they go once every component has moved over. */
 export const shape: Transition = { type: "spring", visualDuration: 0.38, bounce: 0.15 };
@@ -9,7 +11,7 @@ export const soft: Transition = { type: "spring", visualDuration: 0.3, bounce: 0
 export const snap: Transition = { type: "spring", stiffness: 224, damping: 22.4 };
 const quick: Transition = { type: "spring", visualDuration: 0.12, bounce: 0 };
 /** @deprecated Use `useSprings()`. */
-export const swap = {
+export const swap: Swap = {
   initial: { opacity: 0, filter: "blur(4px)", scale: 0.96 },
   animate: { opacity: 1, filter: "blur(0px)", scale: 1, transition: { ...soft, delay: 0.1 } },
   exit: { opacity: 0, filter: "blur(4px)", scale: 0.96, transition: quick },
@@ -34,6 +36,11 @@ export function useSprings() {
 
   const soft = spring(0.3);
   const snap: Transition = scale === 0 ? instant : { type: "spring", stiffness: 224 / scale ** 2, damping: 22.4 / scale };
+  const swap: Swap = {
+    initial: { opacity: 0, filter: "blur(4px)", scale: 0.96 },
+    animate: { opacity: 1, filter: "blur(0px)", scale: 1, transition: { ...soft, delay: 0.1 * scale } },
+    exit: { opacity: 0, filter: "blur(4px)", scale: 0.96, transition: spring(0.12) },
+  };
 
   return {
     scale,
@@ -47,11 +54,7 @@ export function useSprings() {
     /** A line or an arc drawing itself. */
     draw: spring(0.7),
     /** Blur swap for content that changes inside a morphing shape: the old content is gone before the new one enters. */
-    swap: {
-      initial: { opacity: 0, filter: "blur(4px)", scale: 0.96 },
-      animate: { opacity: 1, filter: "blur(0px)", scale: 1, transition: { ...soft, delay: 0.1 * scale } },
-      exit: { opacity: 0, filter: "blur(4px)", scale: 0.96, transition: spring(0.12) },
-    },
+    swap,
   };
 }
 

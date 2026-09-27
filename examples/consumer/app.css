@@ -1,0 +1,23 @@
+:root {
+  --color-accent: #3355ff;
+  --color-on-accent: #ffffff;
+  --radius-control: 12px;
+}
+
+body {
+  background: var(--color-canvas);
+}
+
+.app {
+  display: grid;
+  justify-items: start;
+  gap: 24px;
+  padding: 40px;
+}
+
+.app h1,
+.busy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

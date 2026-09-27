@@ -38,9 +38,9 @@ export function Popover({
       <Expand
         open={open}
         onOpenChange={onOpenChange}
-        closed={{ width: triggerWidth, height: 44, radius: 22 }}
-        opened={{ width: panelWidth, height: panelHeight, radius: 20 }}
-        anchor="top-left"
+        closed={{ width: triggerWidth, height: 44, radius: "var(--radius-control)" }}
+        opened={{ width: panelWidth, height: panelHeight, radius: "var(--radius-overlay)" }}
+        anchor="corner"
         label={label}
         panelLabel={panelLabel}
         trigger={<span className="block truncate px-4 text-sm font-medium">{label}</span>}

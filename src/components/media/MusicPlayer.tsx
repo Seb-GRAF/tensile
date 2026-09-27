@@ -75,8 +75,8 @@ export function MusicPlayer({
     <Expand
       open={expanded}
       onOpenChange={onExpandedChange}
-      closed={{ width: 224, height: 40, radius: 20 }}
-      opened={{ width: 340, height: 150, radius: 32 }}
+      closed={{ width: 224, height: 40, radius: "var(--radius-control)" }}
+      opened={{ width: 340, height: 150, radius: "var(--radius-dialog)" }}
       anchor="center"
       label={openLabel(title)}
       panelLabel={title}

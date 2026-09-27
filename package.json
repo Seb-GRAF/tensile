@@ -2,22 +2,41 @@
   "name": "morph-components",
   "private": true,
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./reset.css": "./dist/reset.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build": "vite build -c vite.lib.config.ts --mode css && vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json",
+    "check:consumer": "sh examples/consumer/check.sh"
   },
-  "dependencies": {
-    "@fontsource-variable/geist": "^5.3.0",
-    "motion": "^13.4.3",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+  "peerDependencies": {
+    "motion": "^13.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
     "@storybook/react-vite": "^10.6.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "motion": "^13.4.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",

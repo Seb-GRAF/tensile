@@ -83,8 +83,8 @@ export function Dialog({
           <Expand
             open={open}
             onOpenChange={onOpenChange}
-            closed={{ width: width ?? 0, height: 44, radius: 22 }}
-            opened={{ width: 360, height, radius: 28 }}
+            closed={{ width: width ?? 0, height: 44, radius: "var(--radius-control)" }}
+            opened={{ width: 360, height, radius: "var(--radius-dialog)" }}
             anchor="center"
             label={label}
             trigger={trigger}

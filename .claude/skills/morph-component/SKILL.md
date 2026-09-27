@@ -115,7 +115,7 @@ Steps, run in order:
 
 | Step | Does |
 |---|---|
-| `{"click": "<selector>"}` | clicks the element |
+| `{"click": "<selector>"}` | clicks the element; with `"at": [x, y]`, clicks that point of its box (a backdrop's corner) |
 | `{"focus": "<selector>"}` | focuses the element |
 | `{"press": "<key>"}` | presses a key on the focused element: `"ArrowRight"`, `"Enter"`, `"Space"`, `"Escape"`, `"Shift+Tab"`, `"Meta+k"` |
 | `{"keydown": "<key>"}`, `{"keyup": "<key>"}` | holds a key down and lets it go, for things that react to a held key |

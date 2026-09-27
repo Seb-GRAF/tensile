@@ -65,8 +65,8 @@ export function Island({
         <Expand
           open={expanded}
           onOpenChange={onExpandedChange}
-          closed={{ width, height: 40, radius: 20 }}
-          opened={{ width: panelWidth, height: panelHeight, radius: 42 }}
+          closed={{ width, height: 40, radius: "20px" }}
+          opened={{ width: panelWidth, height: panelHeight, radius: `${panelHeight / 2}px` }}
           anchor="center"
           label={openLabel(activity)}
           panelLabel={activity}
