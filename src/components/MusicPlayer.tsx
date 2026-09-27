@@ -1,6 +1,7 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
 import { Expand } from "../Expand";
+import { clock, playPausePath } from "../playback";
 import { SeekBar } from "../SeekBar";
 import { soft } from "../springs";
 
@@ -19,18 +20,6 @@ export type MusicPlayerProps = {
   formatTime?: (seconds: number) => string;
 };
 
-const PLAY = [[6, 4], [12, 7.7], [12, 16.3], [6, 20], [12, 7.7], [19, 12], [19, 12], [12, 16.3]];
-const PAUSE = [[6, 4], [10, 4], [10, 20], [6, 20], [14, 4], [18, 4], [18, 20], [14, 20]];
-
-/** Play triangle (0) to pause bars (1): both halves of the triangle turn into bars. */
-function glyph(morph: number) {
-  const points = PLAY.map(([x, y], i) => `${x + (PAUSE[i][0] - x) * morph} ${y + (PAUSE[i][1] - y) * morph}`);
-  return `M${points.slice(0, 4).join("L")}Z M${points.slice(4).join("L")}Z`;
-}
-
-function clock(seconds: number) {
-  return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
-}
 
 function Art({ className }: { className: string }) {
   return (
@@ -59,7 +48,7 @@ export function MusicPlayer({
   const [position, setPosition] = useState(0);
   const [scrubbing, setScrubbing] = useState(false);
   const morph = useMotionValue(0);
-  const d = useTransform(morph, glyph);
+  const d = useTransform(morph, playPausePath);
 
   useEffect(() => {
     animate(morph, playing ? 1 : 0, soft);

@@ -62,6 +62,13 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `TagInput`: chips blur in and out; chips and input slide to new places with Motion's `layout="position"`; the field's height follows the rows.
 - `FileUpload`: a drop-zone button morphs into a progress pill (a lime `useLiquid` fill and a `NumberTicker` percentage), then into MorphButton's success.
 - `DatePicker`: a `role="grid"` month with roving focus; the selected pill's edges ride two `useLiquid` pairs, so it stretches across rows and columns; months blur-swap in the direction of travel; the value is "YYYY-MM-DD".
+- `Alert`: one card whose color moves between the status colors on `soft`; one icon path morphs between i, ! and a check; the text blur-swaps while the height springs.
+- `ToastStack`: toasts stacked by depth (offset, scaled, tinted) fan out into a list on hover or focus; dismissed ones blur out and the rest spring into place.
+- `Island`: `Expand` with a compact width from `useWidth`; `leading`/`trailing` in the pill, `children` in the panel; a new `activity` blur-swaps both and morphs the width.
+- `BarChart`: bars grow in and spring to new data; a `useLiquid` highlight slides behind the hovered or focused bar; the tooltip glides and blur-swaps; arrow keys work.
+- `DonutChart`: arcs spring to their share on a no-bounce spring; the hovered or focused arc thickens outward; the center text blur-swaps.
+- `VideoControls`: a controlled dark bar with the play/pause morph, `SeekBar` and a VolumeSlider-style volume.
+- `WaveformScrubber`: bars filled up to the position by a clipped second row; the drag pieces from `src/drag.ts` make it follow the pointer and stretch past the ends.
 
 Shared code (owned by the maintainer, read-only for subagents):
 
@@ -73,6 +80,7 @@ Shared code (owned by the maintainer, read-only for subagents):
 - `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed. On press, `stop()` the value: `set()` doesn't stop a spring that's still running from the last release, and the spring would win.
 - `src/Expand.tsx`, taken from `MusicPlayer`: `<Expand open onOpenChange closed={{ width, height, radius }} opened={{ … }} anchor="center" | "top-left" label trigger={…} className="bg-ink text-paper">{panel}</Expand>`. One shape springs between the two sizes on `shape`; it takes the closed size in the layout and overlays what's around it when open, growing from the closed shape's center or top-left corner. The closed shape is a button (`label` names it, `trigger` is its content); the open content (`children`) is a fixed-size layer; both blur-swap. With `panelLabel`, the open layer is a named dialog and the button says it opens one. Focus moves into the panel on open and back to the button on close (unless the user has moved it to something else), Escape closes, and the focus ring sits on the shape while the button has it. Clicking outside is up to you.
 - `src/SeekBar.tsx`, taken from `MusicPlayer`: `<SeekBar value={seconds} duration onValueChange onScrubChange label valueText />`, a media progress bar for dark surfaces (`bg-ink-3` track, `bg-paper` fill). While held it follows the pointer, thickens, and stretches past either end with `rubber`, springing back with `snap`; `onScrubChange(true/false)` lets playback wait while scrubbing; ArrowLeft/ArrowRight skip 5 s.
+- `src/playback.ts`: `playPausePath(morph)`, the path from the play triangle (0) to the pause bars (1), and `clock(seconds)`, m:ss (used by `MusicPlayer`, `VideoControls`, `WaveformScrubber`).
 - `src/index.ts`: exports every component and its props type.
 
 ## Motion and look
