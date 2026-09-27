@@ -1,7 +1,8 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
 import { Expand } from "../Expand";
-import { shape, soft } from "../springs";
+import { SeekBar } from "../SeekBar";
+import { soft } from "../springs";
 
 export type MusicPlayerProps = {
   title: string;
@@ -20,7 +21,6 @@ export type MusicPlayerProps = {
 
 const PLAY = [[6, 4], [12, 7.7], [12, 16.3], [6, 20], [12, 7.7], [19, 12], [19, 12], [12, 16.3]];
 const PAUSE = [[6, 4], [10, 4], [10, 20], [6, 20], [14, 4], [18, 4], [18, 20], [14, 20]];
-const seekSteps: Record<string, number> = { ArrowRight: 5, ArrowLeft: -5 };
 
 /** Play triangle (0) to pause bars (1): both halves of the triangle turn into bars. */
 function glyph(morph: number) {
@@ -82,18 +82,6 @@ export function MusicPlayer({
     // position is read once when playback (re)starts; the loop owns it from there
   }, [playing, scrubbing, duration]);
 
-  function seek(event: React.PointerEvent<HTMLDivElement>) {
-    const box = event.currentTarget.getBoundingClientRect();
-    setPosition(duration * Math.min(1, Math.max(0, (event.clientX - box.left) / box.width)));
-  }
-
-  function onSeekKeyDown(event: React.KeyboardEvent) {
-    const step = seekSteps[event.key];
-    if (step === undefined) return;
-    event.preventDefault();
-    setPosition((p) => Math.min(duration, Math.max(0, p + step)));
-  }
-
   return (
     <Expand
       open={expanded}
@@ -140,35 +128,15 @@ export function MusicPlayer({
             </svg>
           </motion.button>
         </div>
-        <div
-          role="slider"
-          tabIndex={0}
-          aria-label={seekLabel}
-          aria-valuemin={0}
-          aria-valuemax={Math.round(duration)}
-          aria-valuenow={Math.round(position)}
-          aria-valuetext={formatTime(position)}
-          onPointerDown={(event) => {
-            event.currentTarget.setPointerCapture(event.pointerId);
-            setScrubbing(true);
-            seek(event);
-          }}
-          onPointerMove={(event) => {
-            if (event.currentTarget.hasPointerCapture(event.pointerId)) seek(event);
-          }}
-          onPointerUp={() => setScrubbing(false)}
-          onPointerCancel={() => setScrubbing(false)}
-          onKeyDown={onSeekKeyDown}
-          className="mt-5 flex h-5 cursor-pointer touch-none items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
-        >
-          <motion.div
-            initial={false}
-            animate={{ height: scrubbing ? 12 : 6 }}
-            transition={shape}
-            className="w-full overflow-hidden rounded-full bg-ink-3"
-          >
-            <div className="h-full bg-paper" style={{ width: `${(position / duration) * 100}%` }} />
-          </motion.div>
+        <div className="mt-5">
+          <SeekBar
+            value={position}
+            duration={duration}
+            onValueChange={setPosition}
+            onScrubChange={setScrubbing}
+            label={seekLabel}
+            valueText={formatTime(position)}
+          />
         </div>
         <div className="mt-1 flex justify-between text-[11px] tabular-nums text-paper/55">
           <span>{formatTime(position)}</span>
