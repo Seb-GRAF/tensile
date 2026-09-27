@@ -10,7 +10,7 @@ A Storybook library of animated React components. Every component is generic: al
 
 ## What exists
 
-Components in `src/components/`, each with a story. Read the one you start from in full and copy its shape.
+Components in `src/components/<category>/`, each with a story. Categories match the Storybook groups: `actions` (Actions), `inputs` (Inputs), `navigation` (Navigation), `feedback` (Feedback), `data-display` (Data display), `layout` (Layout), `overlays` (Overlays), and `media` (Media). Read the one you start from in full and copy its shape.
 
 - `MorphButton`: one shape whose width and color follow `status`; blur-swapped content; a spinner; the shared `Check`.
 - `Toggle`: switch; the knob is a `useLiquid` pill; the track color morphs.
@@ -127,11 +127,11 @@ export function Select({
 
 ## Code conventions
 
-- `src/components/<Name>.tsx` plus `<Name>.stories.tsx`. Named exports, double quotes, semicolons.
+- `src/components/<category>/<Name>.tsx` plus `<Name>.stories.tsx`. Named exports, double quotes, semicolons.
 - No comments except a one-line JSDoc on props whose meaning isn't obvious. No checks for states the types or the parent already rule out.
 - Accessible: the right ARIA role, full keyboard support (arrows, Enter, Space, Escape, as the pattern expects), focus ring `outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink` (`outline-paper` inside dark surfaces, as in `MusicPlayer`).
 - Stories:
-  - CSF3 with `satisfies Meta<typeof Name>`.
+  - CSF3 with `satisfies Meta<typeof Name>`, `title: "<Group>/<Name>"`, and `id: "components-<name in lowercase>"` to keep story URLs stable.
   - One `Default` story with a one-line JSDoc saying how to interact.
   - `useArgs` so controlled props stay in sync with the Controls panel.
   - Values that change continuously (typing, dragging) are the exception: `updateArgs` lands too late, so keys get lost and drags lag behind the pointer. Keep the value in React state in a small wrapper component in the story file (React's `useState` can't sit next to `useArgs` in one render function) and mirror it to Controls with `updateArgs`; see `TextField.stories.tsx` and `VolumeSlider.stories.tsx`.
@@ -156,6 +156,6 @@ export function Select({
 
 ## Working as a subagent
 
-- You own exactly two files: `src/components/<Name>.tsx` and `src/components/<Name>.stories.tsx`. Don't edit anything else. If a shared file (`src/springs.ts`, `src/index.css`, shared hooks, `src/index.ts`, this file) needs a change, propose it in your report.
+- You own exactly two files: `src/components/<category>/<Name>.tsx` and `src/components/<category>/<Name>.stories.tsx`. Don't edit anything else. If a shared file (`src/springs.ts`, `src/index.css`, shared hooks, `src/index.ts`, this file) needs a change, propose it in your report.
 - Follow the `morph-component` skill (`.claude/skills/morph-component/SKILL.md`): plan, build, story, `npx tsc --noEmit`, `check_story.py`, report.
 - Other subagents work in the same tree at the same time. Type errors in files you don't own get reported, not fixed. Don't run `npm run build-storybook`.

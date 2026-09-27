@@ -23,7 +23,7 @@ Read the component named in your brief, in full, and its story. Copy its shape: 
 
 ## 3. Build
 
-`src/components/<Name>.tsx`, named export, `export type <Name>Props`. Check against `AGENTS.md` as you go:
+`src/components/<category>/<Name>.tsx`, named export, `export type <Name>Props`. Check against `AGENTS.md` as you go:
 
 - Controlled value plus callback; temporary UI state (hover, highlight, drag) inside.
 - No hardcoded user-facing text. Text with data in it is a function prop.
@@ -32,7 +32,7 @@ Read the component named in your brief, in full, and its story. Copy its shape: 
 
 ## 4. Story
 
-`src/components/<Name>.stories.tsx`:
+`src/components/<category>/<Name>.stories.tsx`:
 
 ```tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -41,6 +41,8 @@ import { fn } from "storybook/test";
 import { Name } from "./Name";
 
 const meta = {
+  title: "<Group>/Name",
+  id: "components-name",
   component: Name,
   args: { value: "…", onValueChange: fn() },
 } satisfies Meta<typeof Name>;
