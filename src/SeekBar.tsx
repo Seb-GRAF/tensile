@@ -1,7 +1,7 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useState } from "react";
 import { dragHandlers, rubber } from "./drag";
-import { shape, snap } from "./springs";
+import { useSprings } from "./springs";
 
 export type SeekBarProps = {
   /** Position in seconds. */
@@ -20,6 +20,7 @@ const steps: Record<string, number> = { ArrowRight: 5, ArrowLeft: -5 };
 
 /** Media progress bar for dark surfaces: while held it follows the pointer, thickens, and stretches past either end; ArrowLeft and ArrowRight skip 5 s. */
 export function SeekBar({ value, duration, onValueChange, onScrubChange, label, valueText }: SeekBarProps) {
+  const { shape, snap } = useSprings();
   const [scrubbing, setScrubbing] = useState(false);
   const stretch = useMotionValue(0);
   const left = useTransform(stretch, (s) => Math.min(0, s));

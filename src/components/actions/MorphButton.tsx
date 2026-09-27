@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Check } from "../../Check";
-import { shape, soft, swap } from "../../springs";
+import { useSprings } from "../../springs";
+import { Spinner } from "../feedback/Spinner";
 
 export type MorphButtonProps = {
   status: "idle" | "loading" | "success";
@@ -17,6 +18,7 @@ export function MorphButton({
   loadingLabel = "Loading",
   successLabel = "Done",
 }: MorphButtonProps) {
+  const { shape, soft, swap } = useSprings();
   return (
     <motion.button
       type="button"
@@ -40,16 +42,7 @@ export function MorphButton({
         )}
         {status === "loading" && (
           <motion.span key="loading" {...swap} className="col-start-1 row-start-1">
-            <motion.svg
-              viewBox="0 0 24 24"
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-              className="size-[18px] fill-none stroke-current"
-              strokeWidth={2}
-              strokeLinecap="round"
-            >
-              <circle cx="12" cy="12" r="9" pathLength={1} strokeDasharray="0.28 1" />
-            </motion.svg>
+            <Spinner size={18} />
           </motion.span>
         )}
         {status === "success" && (

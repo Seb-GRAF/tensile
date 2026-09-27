@@ -18,6 +18,7 @@ export { DonutChart, type DonutChartProps } from "./components/data-display/Donu
 export { ExpandableCard, type ExpandableCardProps } from "./components/layout/ExpandableCard";
 export { FileUpload, type FileUploadProps } from "./components/inputs/FileUpload";
 export { HoldButton, type HoldButtonProps } from "./components/actions/HoldButton";
+export { Icon, type IconProps } from "./components/data-display/Icon";
 export { Island, type IslandProps } from "./components/overlays/Island";
 export { Lightbox, type LightboxProps } from "./components/media/Lightbox";
 export { LineChart, type LineChartProps } from "./components/data-display/LineChart";
@@ -38,6 +39,7 @@ export { SearchField, type SearchFieldProps } from "./components/inputs/SearchFi
 export { SegmentedTabs, type SegmentedTabsProps } from "./components/navigation/SegmentedTabs";
 export { Select, type SelectProps } from "./components/inputs/Select";
 export { SidebarNav, type SidebarNavProps } from "./components/navigation/SidebarNav";
+export { Spinner, type SpinnerProps } from "./components/feedback/Spinner";
 export { SplitPane, type SplitPaneProps } from "./components/layout/SplitPane";
 export { StatTile, type StatTileProps } from "./components/data-display/StatTile";
 export { SwipeButton, type SwipeButtonProps } from "./components/actions/SwipeButton";

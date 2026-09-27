@@ -1,6 +1,6 @@
 import { animate, motion, useTransform } from "motion/react";
 import { dragHandlers, rubber, useStretch } from "../../drag";
-import { snap, soft } from "../../springs";
+import { useSprings } from "../../springs";
 
 export type VolumeSliderProps = {
   /** 0..1 */
@@ -17,6 +17,7 @@ const TRAVEL = WIDTH - 2 * INSET - FILL_MIN;
 const steps: Record<string, number> = { ArrowRight: 0.05, ArrowUp: 0.05, ArrowLeft: -0.05, ArrowDown: -0.05 };
 
 export function VolumeSlider({ value, onValueChange, label = "Volume" }: VolumeSliderProps) {
+  const { snap, soft } = useSprings();
   const [stretch, style] = useStretch(WIDTH, HEIGHT);
   const fill = useTransform(stretch, (s) => FILL_MIN + value * TRAVEL + Math.max(0, s));
 

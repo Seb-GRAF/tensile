@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef } from "react";
-import { shape, swap } from "./springs";
+import { useSprings } from "./springs";
 
 type Size = { width: number; height: number; radius: number };
 
@@ -25,6 +25,7 @@ export type ExpandProps = {
 
 /** One shape that springs between a closed and an open size and radius. It takes the closed size in the layout and overlays what's around it when open; its content blur-swaps, focus moves in on open and back on close (unless it has moved to something else), and Escape closes it. */
 export function Expand({ open, onOpenChange, closed, opened, anchor, label, panelLabel, trigger, children, className }: ExpandProps) {
+  const { shape, swap } = useSprings();
   const root = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);

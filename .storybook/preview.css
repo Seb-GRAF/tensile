@@ -1,0 +1,22 @@
+@import "tailwindcss" source("../src");
+@import "../src/theme.css";
+
+body {
+  background: var(--color-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="alternate"] {
+  --color-accent: #3355ff;
+  --color-on-accent: #ffffff;
+  --radius-control: 10px;
+  --radius-overlay: 12px;
+  --radius-card: 14px;
+  --radius-dialog: 16px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="alternate"] {
+    --motion-duration-scale: 1.6;
+  }
+}
