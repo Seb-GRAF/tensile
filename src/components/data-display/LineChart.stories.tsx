@@ -23,5 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The line draws itself on load; hover to see each day. */
-export const Default: Story = {};
+/** Hover the line, or Tab in and use arrows, Home or End, to see each day. */
+export const Default: Story = {
+  render: (args) => <div className="w-90 max-w-[calc(100vw-2rem)]"><LineChart {...args} /></div>,
+};

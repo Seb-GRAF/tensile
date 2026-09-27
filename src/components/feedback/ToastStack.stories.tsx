@@ -1,20 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { fn } from "storybook/test";
+import { Button } from "../actions/Button";
+import { Icon } from "../data-display/Icon";
 import { ToastStack, type ToastStackProps } from "./ToastStack";
 
 function Done() {
   return (
-    <svg viewBox="0 0 16 16" className="size-4">
-      <circle cx="8" cy="8" r="8" className="fill-accent" />
-      <path
-        d="M4.75 8.25 7 10.5l4.25-4.5"
-        className="fill-none stroke-ink"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <Icon size={16}>
+      <circle cx="12" cy="12" r="12" className="fill-accent stroke-none" />
+      <path d="M7.125 12.375 10.5 15.75l6.375-6.75" className="stroke-on-accent" />
+    </Icon>
   );
 }
 
@@ -36,7 +32,7 @@ function StatefulToastStack(props: ToastStackProps) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-8">
+    <div className="flex w-80 max-w-full flex-col items-center gap-8">
       <ToastStack
         {...props}
         toasts={toasts}
@@ -45,13 +41,9 @@ function StatefulToastStack(props: ToastStackProps) {
           props.onDismiss(id);
         }}
       />
-      <button
-        type="button"
-        onClick={add}
-        className="h-11 rounded-full bg-paper px-5 text-sm font-medium text-ink shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-      >
+      <Button variant="secondary" onClick={add}>
         Show a toast
-      </button>
+      </Button>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
+import { Button } from "../actions/Button";
 import { DonutChart } from "./DonutChart";
 
 const weeks = [
@@ -42,15 +43,17 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="flex flex-col items-center gap-4">
+      <div className="w-60 max-w-[calc(100vw-2rem)]">
         <DonutChart {...args} />
-        <button
-          type="button"
-          onClick={() => updateArgs({ data: weeks[(weeks.findIndex((week) => week[0].value === args.data[0].value) + 1) % weeks.length] })}
-          className="h-8 rounded-full bg-paper px-4 text-[13px] font-medium text-ink shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-        >
-          Change data
-        </button>
+        <div className="mt-4 text-center">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => updateArgs({ data: weeks[(weeks.findIndex((week) => week[0].value === args.data[0].value) + 1) % weeks.length] })}
+          >
+            Change data
+          </Button>
+        </div>
       </div>
     );
   },

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
+import { Button } from "../actions/Button";
 import { StatTile } from "./StatTile";
 
 const readings = [
@@ -20,18 +21,23 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click the tile to step through four readings; while the change is negative, the chip turns white and its arrow swings down. */
+/** Change the reading; while the change is negative, the chip turns white and its arrow swings down. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <button
-        type="button"
-        onClick={() => updateArgs(readings[(readings.findIndex((reading) => reading.value === args.value) + 1) % readings.length])}
-        className="rounded-3xl text-left outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-      >
+      <div className="w-64 max-w-[calc(100vw-2rem)]">
         <StatTile {...args} />
-      </button>
+        <div className="mt-4 text-center">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => updateArgs(readings[(readings.findIndex((reading) => reading.value === args.value) + 1) % readings.length])}
+          >
+            Change reading
+          </Button>
+        </div>
+      </div>
     );
   },
 };

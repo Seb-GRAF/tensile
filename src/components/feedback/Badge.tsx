@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { shape, soft, swap } from "../../springs";
+import { useSprings } from "../../springs";
 import { NumberTicker } from "../data-display/NumberTicker";
 
 export type BadgeProps = {
@@ -8,13 +8,16 @@ export type BadgeProps = {
   format?: (value: number) => string;
   /** Text for screen readers. */
   label?: (count: number | null) => string;
+  className?: string;
 };
 
 export function Badge({
   count,
   format = (value: number) => value.toLocaleString("en-US"),
   label = (count: number | null) => (count === null ? "New" : `${format(count)} new`),
+  className = "",
 }: BadgeProps) {
+  const { shape, soft, swap } = useSprings();
   return (
     <motion.span
       initial={false}
@@ -26,7 +29,7 @@ export function Badge({
             : { width: "auto", height: 20, opacity: 1, backgroundColor: "var(--color-accent)" }
       }
       transition={{ width: shape, height: shape, opacity: soft, backgroundColor: soft }}
-      className="inline-grid place-content-center place-items-center overflow-hidden rounded-full text-[11px] leading-5 font-semibold text-ink"
+      className={`inline-grid place-content-center place-items-center overflow-hidden rounded-control text-caption leading-5 font-semibold text-on-accent ${className}`}
     >
       {count !== 0 && <span className="sr-only">{label(count)}</span>}
       <AnimatePresence initial={false}>

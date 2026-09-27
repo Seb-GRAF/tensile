@@ -2,55 +2,46 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
-import { SearchField, type SearchFieldProps } from "./SearchField";
 import { Button } from "../actions/Button";
+import { Field } from "./Field";
+import { PasswordInput, type PasswordInputProps } from "./PasswordInput";
 
-function StatefulSearchField(props: SearchFieldProps) {
+function StatefulPasswordInput(props: PasswordInputProps) {
   const [value, setValue] = useState(props.value);
   return (
-    <SearchField
+    <PasswordInput
       {...props}
       value={value}
-      onValueChange={(value) => {
-        setValue(value);
-        props.onValueChange(value);
-      }}
+      onValueChange={(value) => { setValue(value); props.onValueChange(value); }}
     />
   );
 }
 
 const meta = {
-  title: "Inputs/SearchField",
-  id: "components-searchfield",
-  component: SearchField,
-  args: { value: "", onValueChange: fn() },
-} satisfies Meta<typeof SearchField>;
+  title: "Inputs/PasswordInput",
+  id: "components-passwordinput",
+  component: PasswordInput,
+  args: { value: "", onValueChange: fn(), "aria-label": "Password" },
+} satisfies Meta<typeof PasswordInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click the button (or press Enter or Space) and type; Escape clears the text, and Escape on an empty field or leaving it folds it back. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="w-70 max-w-full">
-        <StatefulSearchField
-          {...args}
-          className="flex justify-center"
-          onValueChange={(value) => {
-            args.onValueChange(value);
-            updateArgs({ value });
-          }}
-        />
+      <div className="w-80 max-w-full">
+        <StatefulPasswordInput {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
       </div>
     );
   },
 };
 
-export const InAForm: Story = {
+export const InAFieldInsideAForm: Story = {
   render: function Render(args) {
     const [value, setValue] = useState(args.value);
+    const [disabled, setDisabled] = useState(false);
     const [data, setData] = useState("");
     return (
       <form
@@ -61,10 +52,13 @@ export const InAForm: Story = {
         onReset={() => { setValue(args.value); setData(""); }}
         className="grid w-80 max-w-full gap-4"
       >
-        <SearchField {...args} value={value} onValueChange={setValue} name="query" />
-        <div className="flex gap-2">
-          <Button type="submit">Search</Button>
+        <Field label="Password" description="Your account password." required disabled={disabled}>
+          <PasswordInput {...args} value={value} onValueChange={setValue} name="password" />
+        </Field>
+        <div className="flex flex-wrap gap-2">
+          <Button type="submit">Sign in</Button>
           <Button type="reset" variant="secondary">Reset</Button>
+          <Button variant="secondary" onClick={() => setDisabled(!disabled)}>{disabled ? "Enable" : "Disable"}</Button>
         </div>
         <output className="text-label text-muted">{data}</output>
       </form>

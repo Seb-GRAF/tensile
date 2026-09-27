@@ -1,7 +1,11 @@
 import { animate, motion } from "motion/react";
 import { useStretch } from "../../drag";
-import { snap } from "../../springs";
+import { icons } from "../../icons";
+import { useSprings } from "../../springs";
+import { IconButton } from "../actions/IconButton";
+import { Icon } from "../data-display/Icon";
 import { NumberTicker } from "../data-display/NumberTicker";
+import { useField } from "./Field";
 
 export type NumberStepperProps = {
   value: number;
@@ -13,6 +17,11 @@ export type NumberStepperProps = {
   label?: string;
   decreaseLabel?: string;
   increaseLabel?: string;
+  id?: string;
+  name?: string;
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
 };
 
 const WIDTH = 128;
@@ -29,13 +38,21 @@ export function NumberStepper({
   label = "Quantity",
   decreaseLabel = "Decrease",
   increaseLabel = "Increase",
+  id,
+  name,
+  required = false,
+  disabled = false,
+  className = "",
 }: NumberStepperProps) {
+  const { snap, scale } = useSprings();
+  const field = useField();
+  disabled = field?.disabled || disabled;
   const [stretch, style] = useStretch(WIDTH, HEIGHT);
 
   function stepTo(target: number) {
     const next = Math.min(max, Math.max(min, target));
     if (next !== value) onValueChange(next);
-    else if (target !== value) animate(stretch, 0, { ...snap, velocity: target > value ? KICK : -KICK });
+    else if (target !== value && scale > 0) animate(stretch, 0, { ...snap, velocity: (target > value ? KICK : -KICK) / scale });
   }
 
   function onKeyDown(event: React.KeyboardEvent) {
@@ -47,26 +64,32 @@ export function NumberStepper({
   }
 
   return (
-    <div role="group" aria-label={label} onKeyDown={onKeyDown} className="relative h-11 w-32">
+    <div role="group" aria-label={field?.labelId ? undefined : label} onKeyDown={disabled ? undefined : onKeyDown} className={`relative h-11 w-32 ${disabled ? "opacity-40" : ""} ${className}`}>
+      {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
       <motion.div
         style={style}
-        className="absolute top-1/2 left-0 flex -translate-y-1/2 items-center justify-between rounded-full bg-paper px-1 text-[15px] font-medium text-ink shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink"
+        className="absolute top-1/2 left-0 flex -translate-y-1/2 items-center justify-between rounded-control bg-paper px-1 text-body font-medium text-ink shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
       >
-        <button
-          type="button"
+        <IconButton
+          variant="ghost"
+          size="sm"
           tabIndex={-1}
-          aria-label={decreaseLabel}
+          label={decreaseLabel}
+          disabled={disabled}
           onClick={() => stepTo(value - step)}
-          className="grid size-9 place-items-center rounded-full outline-none"
         >
-          <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeWidth={2.25} strokeLinecap="round">
-            <path d="M5 12h14" />
-          </svg>
-        </button>
+          <Icon size={16}>{icons.minus}</Icon>
+        </IconButton>
         <span
+          id={field?.id ?? id}
           role="spinbutton"
-          tabIndex={0}
-          aria-label={label}
+          tabIndex={disabled ? -1 : 0}
+          aria-label={field?.labelId ? undefined : label}
+          aria-labelledby={field?.labelId}
+          aria-describedby={field?.describedBy}
+          aria-invalid={field?.invalid}
+          aria-required={field?.required || required}
+          aria-disabled={disabled}
           aria-valuenow={value}
           aria-valuemin={min}
           aria-valuemax={max}
@@ -75,17 +98,16 @@ export function NumberStepper({
         >
           <NumberTicker value={value} format={formatValue} />
         </span>
-        <button
-          type="button"
+        <IconButton
+          variant="ghost"
+          size="sm"
           tabIndex={-1}
-          aria-label={increaseLabel}
+          label={increaseLabel}
+          disabled={disabled}
           onClick={() => stepTo(value + step)}
-          className="grid size-9 place-items-center rounded-full outline-none"
         >
-          <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeWidth={2.25} strokeLinecap="round">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-        </button>
+          <Icon size={16}>{icons.plus}</Icon>
+        </IconButton>
       </motion.div>
     </div>
   );

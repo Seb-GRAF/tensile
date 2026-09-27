@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
 import { Rating } from "./Rating";
+import { Button } from "../actions/Button";
+import { Field } from "./Field";
 
 const meta = {
   title: "Inputs/Rating",
@@ -25,6 +28,39 @@ export const Default: Story = {
           updateArgs({ value });
         }}
       />
+    );
+  },
+};
+
+export const ReadOnly: Story = {
+  args: { readOnly: true },
+};
+
+export const InAForm: Story = {
+  render: function Render() {
+    const [value, setValue] = useState(3);
+    const [data, setData] = useState("");
+    return (
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          setData(JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))));
+        }}
+        onReset={() => { setValue(3); setData(""); }}
+        className="grid w-80 max-w-[calc(100vw-2rem)] gap-4"
+      >
+        <Field label="Your rating" description="Choose from zero to five stars." required>
+          <Rating name="rating" value={value} onValueChange={setValue} />
+        </Field>
+        <Field label="Previous rating" disabled>
+          <Rating name="previous" value={2} onValueChange={setValue} />
+        </Field>
+        <div className="flex gap-2">
+          <Button type="submit">Save</Button>
+          <Button type="reset" variant="secondary">Reset</Button>
+        </div>
+        <output className="text-label text-muted">{data}</output>
+      </form>
     );
   },
 };

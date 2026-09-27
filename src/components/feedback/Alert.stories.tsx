@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
+import { Button } from "../actions/Button";
 import { Alert, type AlertProps } from "./Alert";
 
 const alerts: AlertProps[] = [
@@ -27,15 +28,15 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex w-90 max-w-full flex-col items-center gap-4">
         <Alert {...args} />
-        <button
-          type="button"
+        <Button
+          variant="secondary"
+          size="sm"
           onClick={() => updateArgs(alerts[(alerts.findIndex((alert) => alert.status === args.status) + 1) % alerts.length])}
-          className="h-8 rounded-full bg-paper px-4 text-[13px] font-medium text-ink shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
         >
           Next
-        </button>
+        </Button>
       </div>
     );
   },

@@ -36,12 +36,12 @@ Actions:
 
 - `Button`: the ordinary action button, a native `<button>` (`type="button"` unless set), `variant` primary (ink), secondary (paper) or ghost (the current text color), `size` md (44 px) or sm (32 px); `press`, instant hover; exports its `base` and `variants` classes for IconButton.
 - `IconButton`: an icon-only Button, 44 or 32 px square; `label` is its required accessible name.
-- `MorphButton`: one shape whose width and color follow `status`; blur-swapped content; `Spinner`; the shared `Check`.
+- `MorphButton`: native button props (except Motion-conflicting onDrag/onDragStart/onDragEnd/onAnimationStart), with React-node children; one shape follows `status`, content blur-swaps through Spinner and Check; non-idle or explicitly disabled cannot activate.
 - `CopyButton`: an icon pill that widens to a lime `Check` and "Copied" with `useWidth`, then settles back.
 - `HoldButton`: a lime fill grows at a steady rate while held (pointer, Space or Enter), springs back with `snap` if released early; a parent-controlled `done` morphs it into MorphButton's success.
-- `SwipeButton`: the ink fill's end is a knob dragged from where you grab it; reaching the end calls `onConfirm`; a parent-controlled `confirmed` turns it accent with the `Check`; Enter or Space confirms.
-- `ActionMenu`: menu button; the "More" pill grows right and down into a `role="menu"` with `ListHighlight`; the list layer blurs in and out and stays mounted and `inert` when closed.
-- `CommandPalette`: combobox and listbox built on `src/list.tsx`; rows blur in and out and move on springs as the filter changes; ⌘K.
+- `SwipeButton`: measures its container for the knob travel; the ink fill is dragged from where it is grabbed, with rubber at the limits; `onConfirm` at the end, controlled accent success, Enter/Space confirmation.
+- `ActionMenu`: menu button with an optional custom trigger; one shape grows into `Menu` in the top layer, flips up and caps the scrolling list to available room; disabled actions, arrows, Home/End, typeahead and focus return; list stays mounted and inert when closed.
+- `CommandPalette`: full-width inline combobox and scrolling listbox built on `src/list.tsx`; rows blur in and out as filtering changes; arrows, Home/End and ⌘K; `Kbd` shortcut hint.
 
 Inputs:
 
@@ -49,19 +49,23 @@ Inputs:
 - `Textarea`: a native `<textarea>` as its own `rounded-overlay` surface that grows with its content from `rows`; reads `useField()`.
 - `Field`: a visible label, the control, a description and an error that blur-swaps; `useField()` gives controls `{ id, labelId, describedBy, invalid, required, disabled }` (null outside a Field; only `disabled` directly inside a Fieldset).
 - `Fieldset`: a native `<fieldset>` with a legend, description and error; its `disabled` reaches native controls through the element and div-based ones through `useField()`.
-- `Toggle`: switch; the knob is a `useLiquid` pill; the track color morphs.
-- `ThemeToggle`: Toggle's switch; the knob's icon is one path that morphs from sun to moon on `shape`.
-- `Checkbox`: a box that fills lime, then the shared `Check` blurs in and draws; the label wraps the box, so clicking it toggles.
-- `RadioGroup`: vertical radiogroup with roving focus; a `useLiquid` dot slides between rings and grows out of the first choice.
-- `ColorSwatches`: a radiogroup of swatches; one ink ring with a paper lining slides between them with `useLiquid`, visible over any color.
-- `Rating`: a `role="slider"` of 1.5 px star outlines; a lime fill cut to the star shapes slides on `useLiquid` to the hovered star and back to the value.
-- `TextField`: floating label that moves by transforms only; an error grows the pill into a card and blurs in; the focus ring sits on the shape.
-- `SearchField`: a round search button whose width springs out into the field; Escape clears, then folds.
-- `Select`: select-only combobox; a paper pill that grows down into its menu out of a pill-sized wrapper, so the menu overlays; `ListHighlight`; the label blur-swaps on pick; a `Check` marks the choice.
-- `Combobox`: Select's pill as a text input; typing filters with `filterByWords`, rows blur in and out and slide on springs, the empty row blurs in too.
-- `TagInput`: chips blur in and out; chips and input slide to new places with Motion's `layout="position"`; the field's height follows the rows.
-- `OTPInput`: one input per cell (`autoComplete="one-time-code"`); one ring slides between cells with `useLiquid`; digits blur in; paste fills every cell.
-- `NumberStepper`: a spinbutton between − and +; `NumberTicker` digits; a press past a limit gives `useStretch`'s value a `snap` velocity, so the pill stretches toward that side and springs back.
+- `Toggle`: native checkbox with `role="switch"` over the track; a `useLiquid` knob and a morphing track; native form props and Field context; Space toggles.
+- `ThemeToggle`: composes Toggle, with one sun/moon path in its knob; the dark track scopes the accent token; `name` and `disabled` reach the checkbox.
+- `Checkbox`: native checkbox with a visible wrapping label, an accent fill and the shared `Check`; `indeterminate` sets the native property and shows a dash; native form props.
+- `CheckboxGroup`: named group of Checkboxes with a controlled string array; native repeated named values, Field/Fieldset context and disabled options.
+- `RadioGroup`: native radios sharing a name, with native keyboard navigation and optional disabled options; a `useLiquid` dot slides between rings; Field/Fieldset naming and form props.
+- `ColorSwatches`: native radios sharing a name; one ink ring with a paper lining slides between swatches with `useLiquid`; Field/Fieldset naming and form props.
+- `Rating`: liquid accent fill clipped to star outlines; interactive slider with Field/form props, or a noninteractive named image when readOnly.
+- `TextField`: native input props with its own floating label (no placeholder prop); full-width shape, with className/style on that shape; error grows it into a card and blur-swaps; no enclosing Field.
+- `PasswordInput`: Input with a ghost IconButton that toggles password visibility; eye paths blur-swap; Input props and current-password autocomplete by default.
+- `SearchField`: round search trigger expands to its container width; Escape clears, then folds; an IconButton clears the value and returns input focus; optional native name.
+- `Select`: full-width select-only combobox with Field context and a hidden named input; its top-layer menu flips up, scrolls within available room and escapes clipping; arrows, Home/End, typeahead, blur-swapped value and a selected `Check`.
+- `Combobox`: Select’s form and top-layer behavior with a text input; `filterByWords` filters rows, which blur and slide as results change; Enter picks without submitting the form.
+- `TagInput`: composes removable Tags, with chips/input sliding through layout position and height measured by useSize; repeated hidden named inputs, Field context and disabled state.
+- `OTPInput`: one input per digit with one-time-code autocomplete, a shared liquid focus ring and blur-swapped digits; paste fills the cells; hidden named code, disabled and Field error/required wiring.
+- `EditableText`: a display Button morphs into an Input with measured content width; Enter/blur commit, Escape cancels, focus returns to the display.
+- `NumberInput`: Input-based numeric entry with raw draft text while focused and formatted display on blur; Enter/blur commit and clamp, arrows step; empty becomes null, invalid input keeps the prior value; plain hidden form value.
+- `NumberStepper`: Field-aware spinbutton with NumberTicker between ghost IconButtons; hidden named value and disabled state; a step beyond a limit gives useStretch a scale-adjusted snap kick.
 - `RangeSlider`: VolumeSlider's track with two knobs in the ink fill; a press grabs the nearer knob; knobs stop at each other; the track stretches past the grabbed knob's end.
 - `TimeWheel`: hour, minute and AM/PM wheels (`role="spinbutton"`); a flick lands on the row nearest position + velocity × 0.1 s with `snap`; hours and minutes loop, AM/PM stretches with `rubber`.
 - `DatePicker`: a `role="grid"` month with roving focus; the selected pill's edges ride two `useLiquid` pairs, so it stretches across rows and columns; months blur-swap in the direction of travel; the value is "YYYY-MM-DD".
@@ -85,11 +89,11 @@ Feedback:
 - `StatusBadge`: a 24 px status pill (info ink, success accent, warning paper with an ink icon and a line rim, neutral hover tone); a new status fades the color on `soft`, blur-swaps the label, and the width follows it.
 - `Skeleton`: an `aria-hidden` placeholder with the `animate-shimmer` pulse; the caller's `className` sizes and rounds it.
 - `Spinner`: `<Spinner size={16} />`, a turning arc in the current text color; decorative, so the busy control or region carries the name; stops at motion scale 0.
-- `Toast`: status pill that sizes to its content with `useWidth`; blur swap.
-- `ToastStack`: toasts stacked by depth (offset, scaled, tinted) fan out into a list on hover or focus; dismissed ones blur out and the rest spring into place.
-- `Alert`: one card whose color moves between the status colors on `soft`; one icon path morphs between i, ! and a check; the text blur-swaps while the height springs.
+- `Toast`: status pill sized by `useWidth`, with a blur swap and `Spinner` while loading.
+- `ToastStack`: full-width stack that fans out while hovered or focused; `IconButton` dismissals hand focus to a remaining toast; rows blur out and spring into place.
+- `Alert`: full-width `rounded-overlay` card measured by `useSize`; status color fades, one icon path morphs and text blur-swaps as height springs; success uses `text-on-accent`.
 - `Badge`: a white dot that grows into a lime count pill; digits roll with `NumberTicker` and the pill's width follows them; 0 hides it.
-- `ProgressBar`: VolumeSlider's track; one `useLiquid` pill is the fill or, with `value` null, a segment that sweeps end to end.
+- `ProgressBar`: measured full-width track; a `useLiquid` fill or an indeterminate segment that sweeps end to end; at motion scale 0 the segment rests centered.
 - `ProgressRing`: an arc on `soft` (not `shape`, whose overshoot below 0 flashes a full ring); at 1 the disc turns accent and the `Check` draws.
 
 Data display:
@@ -103,10 +107,10 @@ Data display:
 - `AvatarGroup`: overlapping avatars with paper rings and a "+N" circle past `max`; a list named by `label`.
 - `Icon`: `<Icon size={16}>{shapes}</Icon>`, shapes on a 24 grid in the current text color; the stroke follows `size`, so lines render at 1.5 px; `aria-hidden`.
 - `NumberTicker`: digit strips roll on `shape` in the direction the value moved; characters that come or go blur in while their width springs; takes font size, weight, color and line height from its parent.
-- `StatTile`: an ink card with a `NumberTicker` and a change chip whose color fades lime/paper and whose arrow swings when the change flips sign.
-- `LineChart`: SVG line that draws itself; hover guide, dot and tooltip glide between points; tooltip text blur-swaps.
-- `BarChart`: bars grow in and spring to new data; a `useLiquid` highlight slides behind the hovered or focused bar; the tooltip glides and blur-swaps; arrow keys work.
-- `DonutChart`: arcs spring to their share on a no-bounce spring; the hovered or focused arc thickens outward; the center text blur-swaps.
+- `StatTile`: full-width `Card tone="ink"` with `NumberTicker`; a change chip fades between accent and paper while its arrow turns and its text follows the fill.
+- `LineChart`: full-width ink Card with an SVG line drawing on `draw`; guide and tooltip glide between points with pointer or ArrowLeft/Right/Home/End; live status reports the point.
+- `BarChart`: full-width ink Card with springing bars; `useLiquid` hover/focus highlight and a gliding tooltip; a named group with arrow/Home/End keys and a live status.
+- `DonutChart`: full-width ink Card with arcs on `draw`; hovered or focused arcs thicken outward and the center text blur-swaps.
 
 Layout:
 
@@ -142,7 +146,8 @@ Shared code (owned by the lead; read-only for subagents unless a brief assigns a
 - `src/Check.tsx`: `<Check size={20} />`, a check in the current text color that draws itself when it mounts, with the stroke worked out from `size`. Put it in a `motion.span` with `swap` to blur it in and out.
 - `src/useWidth.ts`: `const [width, measure] = useWidth();` measures the element you pass `measure` to as its `ref` (again once fonts have loaded). Key that element by its content so each new version gets measured, then animate the shape to `width` (see `Toast`).
 - `src/useSize.ts`: `const [size, ref] = useSize();` width and height of the element you pass `ref` to, measured on mount and on every resize. For geometry that follows the container: a slider's travel, a chart's slots. `size` is undefined until the first measurement.
-- `src/list.tsx`, taken from `CommandPalette`: `ROW` (40 px rows); `filterByWords(items, query)`, the word-prefix filter; `const [active, setActive, onArrowKey] = useActiveIndex(count)`, the highlighted row with ArrowUp/ArrowDown wrapping (call `onArrowKey` from the key handler of whatever holds focus; Enter and Escape stay in the component); `<ListHighlight index={active} />`, the `bg-hover` highlight that slides and stretches behind a row, placed first in a `relative` list.
+- `src/list.tsx`, taken from `CommandPalette`: `ROW` (40 px rows); `filterByWords(items, query)`, the word-prefix filter; `const [active, setActive, onArrowKey] = useActiveIndex(count)`, the highlighted row with ArrowUp/ArrowDown wrapping and Home/End (call `onArrowKey` from the key handler of whatever holds focus; Enter and Escape stay in the component); `<ListHighlight index={active} />`, the `bg-hover` highlight that slides and stretches behind a row, placed first in a `relative` list. `useTypeahead(items, active, setActive)` matches label prefixes with a 700 ms timeout; `scrollToRow(list, index)` scrolls only the list, keeping the enclosing morph stable.
+- `src/Menu.tsx`: shared action/context menu rows, highlight, disabled actions, keyboard selection and typeahead; focuses its list on open and calls `onClose(restoreFocus)` on dismissal. The owner supplies placement, trigger and focus return.
 - `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed. On press, `stop()` the value: `set()` doesn't stop a spring that's still running from the last release, and the spring would win.
 - `src/overlay.ts`: `const { room, settle } = useTopLayer(frame, open)` lifts `frame` — a transparent `absolute inset-0` box inside a shape's `relative` wrapper — into the browser's top layer while `open`, exactly over the wrapper and following it every frame, until you call `settle` from the shape's `onAnimationComplete`; the shape inside keeps its own position, overlays everything, and escapes `overflow: hidden` and transformed ancestors, while DOM order and Tab order stay put. `room` (`above`, `below`, `left`, `right` in px, measured when it opened) is for opening upward or capping a menu's height. `useOutsidePress(ref, open, onPress)` calls `onPress` on a pointer press outside `ref` while open.
 - `src/Modal.tsx`: `<Modal open onClose aria-label>{layers}</Modal>`, the modal base for dialogs, sheets and the lightbox: a native `<dialog>` shown with `showModal()` in a portal on `document.body`, so the page behind is inert, Tab stays inside, Escape calls `onClose`, and the page doesn't scroll. Its children are the layers that animate in and out (a backdrop, a panel), each with an `exit`; mark the element to focus first with `data-autofocus` (not React's `autoFocus`, which fires before the dialog opens). When `open` turns false it closes the dialog at once, so focus returns to the opener and the page is usable immediately, and it keeps the layers painted until their exit animations end. Nothing renders on the server. Portaled content is outside the story root; `check_story.py` finds it anyway.

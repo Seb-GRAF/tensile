@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
+import { useArgs } from "storybook/preview-api";
+import { Button } from "../actions/Button";
 import { Toast } from "./Toast";
 
 const meta = {
@@ -12,7 +14,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+/** Click Next, or press Enter or Space, to swap between sharing and success; the pill follows its content. */
+export const Default: Story = {
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <Toast {...args} />
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => updateArgs(args.status === "success" ? { status: "loading", children: "Sharing…" } : { status: "success", children: "Link copied" })}
+        >
+          Next
+        </Button>
+      </div>
+    );
+  },
+};
 
 /** Loading and success take turns every 1.2 s, like a toast that follows a request. */
 export const Sharing: Story = {

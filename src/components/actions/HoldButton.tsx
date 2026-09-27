@@ -1,7 +1,7 @@
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect } from "react";
 import { Check } from "../../Check";
-import { shape, snap, soft, swap } from "../../springs";
+import { useSprings } from "../../springs";
 
 export type HoldButtonProps = {
   done: boolean;
@@ -11,6 +11,7 @@ export type HoldButtonProps = {
   doneLabel?: string;
   /** How long to hold, in ms. */
   duration?: number;
+  className?: string;
 };
 
 const holdKeys = [" ", "Enter"];
@@ -21,9 +22,11 @@ export function HoldButton({
   children = "Hold to delete",
   doneLabel = "Deleted",
   duration = 1500,
+  className = "",
 }: HoldButtonProps) {
+  const { shape, snap, soft, swap } = useSprings();
   const progress = useMotionValue(0);
-  const clip = useTransform(progress, (p) => `inset(0 ${(1 - p) * 100}% 0 -100% round 999px)`);
+  const clip = useTransform(progress, (p) => `inset(0 ${(1 - p) * 100}% 0 -100% round var(--radius-control))`);
 
   useEffect(() => {
     if (!done) progress.set(0);
@@ -65,7 +68,7 @@ export function HoldButton({
           backgroundColor: done ? "var(--color-accent)" : "var(--color-ink)",
         }}
         transition={{ width: shape, backgroundColor: soft }}
-        className="relative grid h-11 place-content-center place-items-center overflow-hidden rounded-full text-[15px] font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+        className={`relative grid h-11 place-content-center place-items-center overflow-hidden rounded-control text-body font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
       >
         <AnimatePresence initial={false}>
           {!done && (
@@ -77,15 +80,16 @@ export function HoldButton({
         <motion.span style={{ clipPath: clip }} className="absolute inset-0 bg-accent" />
         <AnimatePresence initial={false}>
           {done ? (
-            <motion.span key="done" {...swap} className="relative col-start-1 row-start-1 text-ink">
+            <motion.span key="done" {...swap} className="relative col-start-1 row-start-1 text-on-accent">
               <Check size={20} />
             </motion.span>
           ) : (
             <motion.span
               key="idle"
+              aria-hidden
               {...swap}
               style={{ clipPath: clip }}
-              className="absolute inset-0 grid place-content-center whitespace-nowrap text-ink"
+              className="absolute inset-0 grid place-content-center whitespace-nowrap text-on-accent"
             >
               {children}
             </motion.span>

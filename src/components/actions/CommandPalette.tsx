@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
-import { filterByWords, ListHighlight, ROW, useActiveIndex } from "../../list";
-import { shape, soft, swap } from "../../springs";
+import { filterByWords, ListHighlight, scrollToRow, ROW, useActiveIndex } from "../../list";
+import { useSprings } from "../../springs";
+import { icons } from "../../icons";
+import { Icon } from "../data-display/Icon";
+import { Kbd } from "../data-display/Kbd";
 
 type Command = { label: string; icon?: React.ReactNode };
 
@@ -12,15 +15,8 @@ export type CommandPaletteProps = {
   placeholder?: string;
   listLabel?: string;
   emptyText?: string;
+  className?: string;
 };
-
-function CommandIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-3 fill-none stroke-current" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-    </svg>
-  );
-}
 
 export function CommandPalette({
   commands,
@@ -29,7 +25,10 @@ export function CommandPalette({
   placeholder = "Search",
   listLabel = "Commands",
   emptyText = "No commands found",
+  className = "",
 }: CommandPaletteProps) {
+  const { shape, soft, swap } = useSprings();
+  const list = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const input = useRef<HTMLInputElement>(null);
@@ -37,7 +36,12 @@ export function CommandPalette({
 
   const results = filterByWords(commands, query);
   const [active, setActive, onArrowKey] = useActiveIndex(results.length);
-  const height = open ? 52 + 1 + 12 + Math.max(1, results.length) * ROW : 52;
+  const contentHeight = Math.max(1, results.length) * ROW;
+  const height = open ? 65 + Math.min(contentHeight, 320) : 52;
+
+  useEffect(() => {
+    if (open && results[active]) scrollToRow(list.current!, active);
+  }, [open, active, query, listId]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -63,11 +67,14 @@ export function CommandPalette({
 
   function onKeyDown(event: React.KeyboardEvent) {
     if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
       input.current!.blur();
       return;
     }
-    if (event.key === "Enter" && results[active]) {
-      select(results[active]);
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (results[active]) select(results[active]);
       return;
     }
     onArrowKey(event);
@@ -76,24 +83,16 @@ export function CommandPalette({
   return (
     <motion.div
       initial={false}
-      animate={{ height, borderRadius: open ? 20 : 26 }}
+      animate={{ height, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)" }}
       transition={shape}
-      className="w-[360px] overflow-hidden bg-paper shadow-float"
+      className={`overflow-hidden bg-paper shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${className}`}
     >
-      <label className="flex h-[52px] cursor-text items-center gap-2.5 px-4">
-        <svg
-          viewBox="0 0 24 24"
-          className="size-4 shrink-0 fill-none stroke-muted"
-          strokeWidth={2.25}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
+      <label className="flex h-13 cursor-text items-center gap-2.5 px-4">
+        <Icon className="shrink-0 text-muted">{icons.search}</Icon>
         <input
           ref={input}
           role="combobox"
+          aria-autocomplete="list"
           aria-label={label}
           aria-expanded={open}
           aria-controls={listId}
@@ -107,15 +106,15 @@ export function CommandPalette({
             setActive(0);
           }}
           onKeyDown={onKeyDown}
-          className="h-full min-w-0 grow bg-transparent text-[15px] text-ink outline-none placeholder:text-muted"
+          className="h-full min-w-0 grow bg-transparent text-body text-ink outline-none placeholder:text-muted"
         />
-        <kbd className="flex h-[22px] items-center gap-px rounded-md border border-line px-1.5 font-sans text-[11px] text-muted">
-          <CommandIcon />K
-        </kbd>
+        <Kbd>
+          <Icon size={12}><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" /></Icon>K
+        </Kbd>
       </label>
       <div inert={!open}>
         <div className="h-px bg-line" />
-        <ul id={listId} role="listbox" aria-label={listLabel} className="relative mx-1.5 my-1.5">
+        <ul ref={list} id={listId} role="listbox" aria-label={listLabel} style={{ height: contentHeight, maxHeight: 320 }} className="relative m-1.5 overflow-y-auto overscroll-contain">
           {results.length > 0 && <ListHighlight index={active} />}
           <AnimatePresence initial={false}>
             {results.map((command, i) => (
@@ -134,18 +133,12 @@ export function CommandPalette({
                 className="absolute inset-x-0 top-0 flex h-10 cursor-pointer items-center gap-2.5 px-2.5 text-sm text-ink"
               >
                 {command.icon && <span className="text-muted">{command.icon}</span>}
-                {command.label}
+                <span className="truncate">{command.label}</span>
                 {i === active && (
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="ml-auto size-3.5 fill-none stroke-muted"
-                    strokeWidth={2.6}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+                  <Icon size={14} className="ml-auto shrink-0 text-muted">
                     <path d="m9 10-5 5 5 5" />
                     <path d="M20 4v7a4 4 0 0 1-4 4H4" />
-                  </svg>
+                  </Icon>
                 )}
               </motion.li>
             ))}

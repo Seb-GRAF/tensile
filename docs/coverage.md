@@ -28,17 +28,17 @@ What the design system covers, how, and where each piece stands. Status is **don
 | ButtonGroup | recipe | `div role="group"` with `flex flex-wrap gap-2`; Toolbar for keyboard navigation | docs |
 | Card, Separator | done | | 1 |
 | Typography, container, stack, inline, grid, aspect ratio | recipe | token utilities, `max-w-page`, Tailwind layout utilities | docs |
-| Existing components (57) | migrate | batches: actions, inputs and selection, menus, feedback, data display (2); navigation, sliders, dates, layout, dialogs (3); overlays, media (4) | 2–4 |
-| PasswordField | create as `PasswordInput` | Input with a show/hide IconButton, inside Field | 2 |
-| NumberInput | create | typed entry; NumberStepper stays the stepping control | 2 |
+| Existing components (57) | in progress | actions, selection, text/numbers, menus, feedback and charts migrated in Wave2; navigation, sliders, dates, layout and dialogs in Wave3; overlays/media in Wave4 | 2–4 |
+| PasswordField | done: `PasswordInput` | Input with a show/hide IconButton, inside Field | 2 |
+| NumberInput | done | typed entry; NumberStepper stays the stepping control | 2 |
 | Slider | create | shares `SliderTrack` with RangeSlider | 3 |
 | MultiSelect | create | Select's shape and list with checks | 4 |
-| CheckboxGroup | create | composes Checkbox | 2 |
+| CheckboxGroup | done | composes Checkbox | 2 |
 | ToggleGroup | create | pressed buttons; also the selectable-chip pattern | 4 |
 | DateRangePicker | create | shares `calendar.ts` and `Calendar` with DatePicker | 3 |
 | TimePicker | create | Popover with TimeWheel | 5 |
 | ColorPicker | create | 2D area, hue Slider, hex Input | 5 |
-| EditableText | create | Input-based | 2 |
+| EditableText | done | Input-based | 2 |
 | FileUpload | extend | accept, multiple, disabled, responsive; file-list story | 3 |
 | Avatar, AvatarGroup | done | Avatar composes Image | 1 |
 | Chip or Tag | done: `Tag` | removable or static; selectable chips are ToggleGroup, counts are Badge, status is StatusBadge | 1 |
@@ -78,3 +78,13 @@ What the design system covers, how, and where each piece stands. Status is **don
 ## Deferred
 
 Rich-text and code editors, maps, scheduling and booking, diagram and canvas editors, spreadsheet grids, payments, backend authentication, upload and storage services, domain workflows. Also: HoverCard, dark mode, runtime control-size tokens, right-to-left layout, virtualized lists, async option loading in Combobox, and a date field with a popover calendar (a recipe instead).
+
+## Verification record
+
+Browser checks use Chromium through `check_story.py`. “Alternate” means the blue accent, white on-accent text, smaller radii and slower motion; “reduced” emulates the reduced-motion preference. Phone-width checks use 390px CSS viewports, not physical devices. Screen-reader speech and other browser engines remain unverified.
+
+Wave1: primitive contracts, native form props, labels, focus and rendering checked. Package typecheck, Storybook build, consumer build and server rendering passed. Artifacts: `/tmp/morph-wave1-*-report.txt`, `/tmp/morph-shots/`.
+
+Wave2: each changed component has default, alternate and reduced browser evidence. Form stories exercise submitted values and controlled reset; menus cover keyboard selection, scrolling, upward placement and clipping escape. Responsive controls/charts have 390px checks. Reports preserve exact commands and any superseded failed attempts: `/tmp/morph-wave2{A,B,C,D,E,F,G}-report.txt`; screenshots and videos under `/tmp/morph-shots/<Name>/`. New public exports are also covered by the consumer server-render cases.
+
+The extra 240px SwipeButton fixture test remains outside acceptance: its centered 280px demo wrapper did not shrink. The required 390px run passes; no claim is made about layouts too narrow for its 36px knob plus 8px inset and supplied label.

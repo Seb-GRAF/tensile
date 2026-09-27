@@ -3,36 +3,37 @@ import { Check } from "../../Check";
 import { useSprings } from "../../springs";
 import { Spinner } from "../feedback/Spinner";
 
-export type MorphButtonProps = {
+export type MorphButtonProps = Omit<React.ComponentProps<"button">, "onDrag" | "onDragStart" | "onDragEnd" | "onAnimationStart"> & {
   status: "idle" | "loading" | "success";
-  onClick: () => void;
-  children?: string;
   loadingLabel?: string;
   successLabel?: string;
 };
 
 export function MorphButton({
   status,
-  onClick,
   children = "Connect",
   loadingLabel = "Loading",
   successLabel = "Done",
+  type = "button",
+  disabled = false,
+  className = "",
+  "aria-label": label,
+  ...props
 }: MorphButtonProps) {
   const { shape, soft, swap } = useSprings();
   return (
     <motion.button
-      type="button"
-      onClick={onClick}
-      disabled={status !== "idle"}
-      aria-label={{ idle: children, loading: loadingLabel, success: successLabel }[status]}
+      {...props}
+      type={type}
+      disabled={disabled || status !== "idle"}
+      aria-label={status === "idle" ? label : status === "loading" ? loadingLabel : successLabel}
       initial={false}
       animate={{
         width: status === "idle" ? "auto" : 44,
         backgroundColor: status === "success" ? "var(--color-accent)" : "var(--color-ink)",
       }}
       transition={{ width: shape, backgroundColor: soft }}
-      whileTap={{ scale: 0.96 }}
-      className="grid h-11 place-content-center place-items-center overflow-hidden rounded-full text-[15px] font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+      className={`grid h-11 place-content-center place-items-center overflow-hidden rounded-control text-body font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus enabled:press ${disabled ? "opacity-40" : ""} ${className}`}
     >
       <AnimatePresence initial={false}>
         {status === "idle" && (
@@ -46,7 +47,7 @@ export function MorphButton({
           </motion.span>
         )}
         {status === "success" && (
-          <motion.span key="success" {...swap} className="col-start-1 row-start-1 text-ink">
+          <motion.span key="success" {...swap} className="col-start-1 row-start-1 text-on-accent">
             <Check size={20} />
           </motion.span>
         )}

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { soft, swap, useLiquid } from "../../springs";
+import { useSprings, useLiquid } from "../../springs";
+import { useField } from "./Field";
 
 export type OTPInputProps = {
   value: string;
@@ -10,6 +11,11 @@ export type OTPInputProps = {
   label?: string;
   /** Names each cell, given its position from 1 and the number of digits. */
   cellLabel?: (position: number, length: number) => string;
+  id?: string;
+  name?: string;
+  disabled?: boolean;
+  required?: boolean;
+  className?: string;
 };
 
 const STEP = 52;
@@ -21,7 +27,15 @@ export function OTPInput({
   length = 6,
   label = "Verification code",
   cellLabel = (position: number, length: number) => `Digit ${position} of ${length}`,
+  id,
+  name,
+  disabled = false,
+  required = false,
+  className = "",
 }: OTPInputProps) {
+  const { soft, swap } = useSprings();
+  const field = useField();
+  const isDisabled = field?.disabled || disabled;
   const [active, setActive] = useState<number | null>(null);
   const index = active ?? Math.min(value.length, length - 1);
   const [left, right] = useLiquid(index * STEP, (length - 1 - index) * STEP);
@@ -63,7 +77,10 @@ export function OTPInput({
   return (
     <div
       role="group"
-      aria-label={label}
+      id={field?.id ?? id}
+      aria-label={field?.labelId ? undefined : label}
+      aria-labelledby={field?.labelId}
+      aria-describedby={field?.describedBy}
       onPaste={(event) => {
         event.preventDefault();
         fill(event.clipboardData.getData("text"));
@@ -71,8 +88,9 @@ export function OTPInput({
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setActive(null);
       }}
-      className="relative flex gap-2"
+      className={`relative flex w-fit gap-2 ${isDisabled ? "opacity-40" : ""} ${className}`}
     >
+      {name && <input type="hidden" name={name} value={value} disabled={isDisabled} />}
       {Array.from({ length }, (_, i) => {
         const digit = value.charAt(i);
         return (
@@ -82,9 +100,12 @@ export function OTPInput({
                 cells.current[i] = el;
               }}
               value={digit}
+              disabled={isDisabled}
               inputMode="numeric"
               autoComplete="one-time-code"
               aria-label={cellLabel(i + 1, length)}
+              aria-invalid={field?.invalid}
+              aria-required={field?.required || required}
               tabIndex={i === index ? 0 : -1}
               onMouseDown={(event) => {
                 event.preventDefault();
@@ -93,7 +114,7 @@ export function OTPInput({
               onFocus={() => setActive(i)}
               onChange={(event) => onChange(event, i)}
               onKeyDown={(event) => onKeyDown(event, i)}
-              className="col-start-1 row-start-1 h-13 w-11 rounded-xl bg-paper text-center text-xl text-transparent shadow-float outline-none selection:bg-transparent"
+              className="col-start-1 row-start-1 h-13 w-11 rounded-[calc(var(--radius-card)/2)] bg-paper text-center text-xl text-transparent shadow-float outline-none selection:bg-transparent"
             />
             <AnimatePresence initial={false}>
               {digit && (
@@ -116,7 +137,7 @@ export function OTPInput({
         animate={{ opacity: active === null ? 0 : 1 }}
         transition={soft}
         style={{ left, right }}
-        className="pointer-events-none absolute inset-y-0 rounded-xl outline-2 outline-offset-2 outline-ink"
+        className="pointer-events-none absolute inset-y-0 rounded-[calc(var(--radius-card)/2)] outline-2 outline-offset-2 outline-focus"
       />
     </div>
   );

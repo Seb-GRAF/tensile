@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
 import { TextField, type TextFieldProps } from "./TextField";
+import { Button } from "../actions/Button";
 
 function StatefulTextField(props: TextFieldProps) {
   const [value, setValue] = useState(props.value);
@@ -22,6 +23,7 @@ const meta = {
   title: "Inputs/TextField",
   id: "components-textfield",
   component: TextField,
+  argTypes: { disabled: { control: "boolean" } },
   args: { value: "", onValueChange: fn() },
 } satisfies Meta<typeof TextField>;
 
@@ -33,13 +35,41 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <StatefulTextField
-        {...args}
-        onValueChange={(value) => {
-          args.onValueChange(value);
-          updateArgs({ value, error: value.includes(" ") ? "Email addresses can't contain spaces" : undefined });
-        }}
-      />
+      <div className="w-90 max-w-[calc(100vw-2rem)]">
+        <StatefulTextField
+          {...args}
+          onValueChange={(value) => {
+            args.onValueChange(value);
+            updateArgs({ value, error: value.includes(" ") ? "Email addresses can't contain spaces" : undefined });
+          }}
+        />
+      </div>
     );
   },
 };
+
+export const InAForm: Story = {
+  render: function Render(args) {
+    const [value, setValue] = useState(args.value);
+    const [data, setData] = useState("");
+    return (
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          setData(JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))));
+        }}
+        onReset={() => { setValue(args.value); setData(""); }}
+        className="grid w-90 max-w-[calc(100vw-2rem)] gap-4"
+      >
+        <TextField {...args} value={value} onValueChange={setValue} type="email" name="email" autoComplete="email" required />
+        <div className="flex gap-2">
+          <Button type="submit">Save</Button>
+          <Button type="reset" variant="secondary">Reset</Button>
+        </div>
+        <output className="text-label text-muted">{data}</output>
+      </form>
+    );
+  },
+};
+
+export const Disabled: Story = { ...Default, args: { disabled: true } };

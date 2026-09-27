@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
-import { shape, soft, swap } from "../../springs";
+import { useSprings } from "../../springs";
+import { useSize } from "../../useSize";
+import { Icon } from "../data-display/Icon";
 
 export type AlertProps = {
   status: "info" | "warning" | "success";
   title?: string;
   description?: string;
+  className?: string;
 };
 
 const glyphs = {
@@ -18,45 +20,33 @@ export function Alert({
   status,
   title = "Heads up",
   description = "Check the details before you continue.",
+  className = "",
 }: AlertProps) {
-  const [height, setHeight] = useState<number>();
-  const row = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new ResizeObserver(() => setHeight(row.current!.offsetHeight));
-    observer.observe(row.current!);
-    return () => observer.disconnect();
-  }, []);
+  const { shape, soft, swap } = useSprings();
+  const [size, row] = useSize();
 
   return (
     <motion.div
       role={status === "warning" ? "alert" : "status"}
       initial={false}
       animate={{
-        height,
+        height: size?.height,
         backgroundColor: { info: "var(--color-ink)", warning: "var(--color-paper)", success: "var(--color-accent)" }[status],
-        color: status === "info" ? "var(--color-paper)" : "var(--color-ink)",
+        color: { info: "var(--color-paper)", warning: "var(--color-ink)", success: "var(--color-on-accent)" }[status],
       }}
       transition={{ height: shape, backgroundColor: soft, color: soft }}
-      className="w-[360px] overflow-hidden rounded-[20px] shadow-float"
+      className={`w-full overflow-hidden rounded-overlay shadow-float ${className}`}
     >
       <div ref={row} className="flex gap-3 p-4">
-        <svg
-          aria-hidden
-          viewBox="0 0 24 24"
-          className="size-5 shrink-0 fill-none stroke-current"
-          strokeWidth={1.8}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
+        <Icon size={20}>
           <circle cx="12" cy="12" r="10" />
           <motion.path initial={false} animate={{ d: glyphs[status] }} transition={shape} />
-        </svg>
+        </Icon>
         <div className="relative flex-1">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.div key={`${status} ${title} ${description}`} {...swap} className="origin-left">
               <p className="text-sm font-medium">{title}</p>
-              <p className="text-[13px] leading-5 opacity-65">{description}</p>
+              <p className={`text-label ${status === "success" ? "" : "opacity-65"}`}>{description}</p>
             </motion.div>
           </AnimatePresence>
         </div>

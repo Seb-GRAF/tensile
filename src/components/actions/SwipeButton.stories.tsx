@@ -40,6 +40,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <StatefulSwipeButton {...args} onConfirmedChange={(confirmed) => updateArgs({ confirmed })} />;
+    return (
+      <div className="w-70 max-w-full">
+        <StatefulSwipeButton {...args} onConfirmedChange={(confirmed) => updateArgs({ confirmed })} />
+      </div>
+    );
   },
 };

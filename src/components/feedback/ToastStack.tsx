@@ -1,6 +1,9 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { shape, soft, swap } from "../../springs";
+import { icons } from "../../icons";
+import { useSprings } from "../../springs";
+import { IconButton } from "../actions/IconButton";
+import { Icon } from "../data-display/Icon";
 
 export type ToastStackProps = {
   /** Oldest first: the last toast is in front. */
@@ -8,6 +11,7 @@ export type ToastStackProps = {
   onDismiss: (id: string) => void;
   label?: string;
   dismissLabel?: (label: string) => string;
+  className?: string;
 };
 
 const HEIGHT = 44;
@@ -20,7 +24,9 @@ export function ToastStack({
   onDismiss,
   label = "Notifications",
   dismissLabel = (label: string) => `Dismiss ${label}`,
+  className = "",
 }: ToastStackProps) {
+  const { shape, soft, swap } = useSprings();
   const [expanded, setExpanded] = useState(false);
   const region = useRef<HTMLElement>(null);
 
@@ -37,14 +43,12 @@ export function ToastStack({
       aria-label={label}
       tabIndex={-1}
       onMouseMove={() => setExpanded(true)}
-      onMouseLeave={() => setExpanded(false)}
+      onMouseLeave={(event) => setExpanded(event.currentTarget.contains(document.activeElement))}
       onFocus={() => setExpanded(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setExpanded(false);
-      }}
-      className="outline-none"
+      onBlur={(event) => setExpanded(event.currentTarget.contains(event.relatedTarget) || event.currentTarget.matches(":hover"))}
+      className={`w-full outline-none [--color-focus:var(--color-paper)] ${className}`}
     >
-      <ol className="relative h-11 w-80">
+      <ol role="list" className="relative h-11">
         <AnimatePresence initial={false}>
           {toasts.map((toast, i) => {
             const depth = toasts.length - 1 - i;
@@ -62,12 +66,12 @@ export function ToastStack({
                 transition={{ y: shape, scale: shape, opacity: soft }}
                 className="absolute inset-x-0 bottom-0 pt-2"
               >
-                <div className="relative flex h-11 items-center rounded-full bg-ink text-sm font-medium text-paper shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink">
+                <div className="relative flex h-11 items-center rounded-control bg-ink text-sm font-medium text-paper shadow-float">
                   <motion.span
                     initial={false}
                     animate={{ opacity: expanded ? 0 : place * 0.12 }}
                     transition={soft}
-                    className="absolute inset-0 rounded-full bg-paper"
+                    className="absolute inset-0 rounded-control bg-paper"
                   />
                   <motion.div
                     initial={swap.initial}
@@ -78,23 +82,15 @@ export function ToastStack({
                     <span role="status" className="min-w-0 flex-1 truncate">
                       {toast.label}
                     </span>
-                    <button
-                      type="button"
-                      aria-label={dismissLabel(toast.label)}
+                    <IconButton
+                      variant="ghost"
+                      size="sm"
+                      label={dismissLabel(toast.label)}
                       onClick={(event) => dismiss(event, toast.id)}
-                      className="grid size-8 shrink-0 place-items-center rounded-full text-paper/55 outline-none"
+                      className="shrink-0 text-paper/55"
                     >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="size-3.5 fill-none stroke-current"
-                        strokeWidth={2.6}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M18 6 6 18" />
-                        <path d="m6 6 12 12" />
-                      </svg>
-                    </button>
+                      <Icon size={14}>{icons.close}</Icon>
+                    </IconButton>
                   </motion.div>
                 </div>
               </motion.li>

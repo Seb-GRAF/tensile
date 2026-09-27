@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
-import { shape, soft, swap } from "../../springs";
+import { icons } from "../../icons";
+import { useSprings } from "../../springs";
+import { IconButton } from "../actions/IconButton";
+import { Icon } from "../data-display/Icon";
 
 export type SearchFieldProps = {
   value: string;
@@ -10,6 +13,8 @@ export type SearchFieldProps = {
   placeholder?: string;
   openLabel?: string;
   clearLabel?: string;
+  name?: string;
+  className?: string;
 };
 
 export function SearchField({
@@ -19,7 +24,10 @@ export function SearchField({
   placeholder = "Search",
   openLabel = "Open search",
   clearLabel = "Clear search",
+  name,
+  className = "",
 }: SearchFieldProps) {
+  const { shape, soft, swap } = useSprings();
   const [open, setOpen] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -35,81 +43,74 @@ export function SearchField({
   }
 
   return (
-    <motion.div
-      initial={false}
-      animate={{ width: open ? 280 : 44 }}
-      transition={shape}
-      className="relative h-11 rounded-full bg-paper shadow-float"
-    >
-      <motion.svg
-        viewBox="0 0 24 24"
+    <div className={className}>
+      <motion.div
         initial={false}
-        animate={{ color: open ? "var(--color-muted)" : "var(--color-ink)" }}
-        transition={soft}
-        className="absolute top-3.5 left-3.5 size-4 fill-none stroke-current"
-        strokeWidth={2.25}
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        animate={{ width: open ? "100%" : 44 }}
+        transition={shape}
+        className="relative h-11 rounded-control bg-paper shadow-float outline-offset-2 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-focus"
       >
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.3-4.3" />
-      </motion.svg>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.input
-            key="input"
-            ref={input}
-            {...swap}
-            role="searchbox"
-            aria-label={label}
-            placeholder={placeholder}
-            value={value}
-            onChange={(event) => onValueChange(event.target.value)}
-            onBlur={() => {
-              if (!value) setOpen(false);
-            }}
-            onKeyDown={onKeyDown}
-            className="absolute inset-0 bg-transparent px-10 text-[15px] text-ink outline-none placeholder:text-muted"
-          />
-        )}
-        {value && (
-          <motion.button
-            key="clear"
-            {...swap}
+        <motion.span
+          initial={false}
+          animate={{ color: open ? "var(--color-muted)" : "var(--color-ink)" }}
+          transition={soft}
+          className="absolute top-3.5 left-3.5"
+        >
+          <Icon>{icons.search}</Icon>
+        </motion.span>
+        <AnimatePresence initial={false}>
+          {open && (
+            <motion.input
+              key="input"
+              ref={input}
+              {...swap}
+              role="searchbox"
+              name={name}
+              aria-label={label}
+              placeholder={placeholder}
+              value={value}
+              onChange={(event) => onValueChange(event.target.value)}
+              onBlur={() => {
+                if (!value) setOpen(false);
+              }}
+              onKeyDown={onKeyDown}
+              className="absolute inset-0 w-full bg-transparent px-10 text-body text-ink outline-none placeholder:text-muted"
+            />
+          )}
+          {value && (
+            <motion.span
+              key="clear"
+              {...swap}
+              className="absolute top-1.5 right-1.5 text-muted"
+            >
+              <IconButton
+                label={clearLabel}
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  onValueChange("");
+                  input.current!.focus();
+                }}
+              >
+                <Icon>{icons.close}</Icon>
+              </IconButton>
+            </motion.span>
+          )}
+        </AnimatePresence>
+        {!open && (
+          <button
+            ref={button}
             type="button"
-            aria-label={clearLabel}
+            aria-expanded={false}
+            aria-label={openLabel}
             onClick={() => {
-              onValueChange("");
+              flushSync(() => setOpen(true));
               input.current!.focus();
             }}
-            className="absolute top-2 right-2 grid size-7 place-items-center rounded-full text-muted outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="size-4 fill-none stroke-current"
-              strokeWidth={2.25}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </motion.button>
+            className="absolute inset-0 rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
+          />
         )}
-      </AnimatePresence>
-      {!open && (
-        <button
-          ref={button}
-          type="button"
-          aria-expanded={false}
-          aria-label={openLabel}
-          onClick={() => {
-            flushSync(() => setOpen(true));
-            input.current!.focus();
-          }}
-          className="absolute inset-0 rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-        />
-      )}
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

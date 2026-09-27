@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
+import { Button } from "../actions/Button";
 import { ProgressRing } from "./ProgressRing";
 
 const meta = {
@@ -13,18 +14,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click to add 25%; at 100% the ring closes into a check, and the next click starts over from 0. */
+/** Click Next, or press Enter or Space, to add 25%; at 100% the ring closes into a check, then starts over from 0. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <button
-        type="button"
-        onClick={() => updateArgs({ value: args.value === 1 ? 0 : Math.min(1, args.value + 0.25) })}
-        className="rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-      >
+      <div className="flex flex-col items-center gap-4">
         <ProgressRing {...args} />
-      </button>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => updateArgs({ value: args.value === 1 ? 0 : Math.min(1, args.value + 0.25) })}
+        >
+          Next
+        </Button>
+      </div>
     );
   },
 };

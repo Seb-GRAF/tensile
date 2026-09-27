@@ -1,13 +1,17 @@
 import { AnimatePresence, motion } from "motion/react";
-import { shape, swap } from "../../springs";
+import { useSprings } from "../../springs";
 import { useWidth } from "../../useWidth";
+import { Icon } from "../data-display/Icon";
+import { Spinner } from "./Spinner";
 
 export type ToastProps = {
   status: "loading" | "success";
   children?: string;
+  className?: string;
 };
 
-export function Toast({ status, children = "Link copied" }: ToastProps) {
+export function Toast({ status, children = "Link copied", className = "" }: ToastProps) {
+  const { shape, swap } = useSprings();
   const [width, measure] = useWidth();
 
   return (
@@ -16,7 +20,7 @@ export function Toast({ status, children = "Link copied" }: ToastProps) {
       initial={false}
       animate={{ width }}
       transition={shape}
-      className="grid h-11 place-content-center place-items-center overflow-hidden rounded-full bg-ink text-sm font-medium text-paper shadow-float"
+      className={`grid h-11 place-content-center place-items-center overflow-hidden rounded-control bg-ink text-sm font-medium text-paper shadow-float ${className}`}
     >
       <AnimatePresence initial={false}>
         <motion.span
@@ -26,27 +30,12 @@ export function Toast({ status, children = "Link copied" }: ToastProps) {
           className="col-start-1 row-start-1 flex items-center gap-2 whitespace-nowrap px-5"
         >
           {status === "loading" ? (
-            <motion.svg
-              viewBox="0 0 24 24"
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-              className="size-3.5 fill-none stroke-current"
-              strokeWidth={2.6}
-              strokeLinecap="round"
-            >
-              <circle cx="12" cy="12" r="9" pathLength={1} strokeDasharray="0.28 1" />
-            </motion.svg>
+            <Spinner size={14} />
           ) : (
-            <svg viewBox="0 0 16 16" className="size-4">
-              <circle cx="8" cy="8" r="8" className="fill-accent" />
-              <path
-                d="M4.75 8.25 7 10.5l4.25-4.5"
-                className="fill-none stroke-ink"
-                strokeWidth={1.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Icon size={16}>
+              <circle cx="12" cy="12" r="12" className="fill-accent stroke-none" />
+              <path d="M7.125 12.375 10.5 15.75l6.375-6.75" className="stroke-on-accent" />
+            </Icon>
           )}
           {children}
         </motion.span>

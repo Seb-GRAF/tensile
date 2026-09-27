@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
+import { Button } from "../actions/Button";
 import { BarChart } from "./BarChart";
 
 const weeks = [
@@ -54,16 +55,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Hover the bars, or tab to the chart and use the arrow keys; click it to switch weeks. */
+/** Hover the bars, or Tab in and use the arrow keys; Change data switches weeks. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div
-        onClick={() => updateArgs(weeks[(weeks.findIndex((week) => week.label === args.label) + 1) % weeks.length])}
-        className="cursor-pointer"
-      >
+      <div className="w-90 max-w-[calc(100vw-2rem)]">
         <BarChart {...args} />
+        <div className="mt-4 text-center">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => updateArgs(weeks[(weeks.findIndex((week) => week.label === args.label) + 1) % weeks.length])}
+          >
+            Change data
+          </Button>
+        </div>
       </div>
     );
   },

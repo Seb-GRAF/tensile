@@ -1,6 +1,7 @@
-import { AnimatePresence, motion, type Transition } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { shape, swap } from "../../springs";
+import { useSprings } from "../../springs";
+import { Card } from "../layout/Card";
 
 type Segment = { label: string; value: number };
 
@@ -13,6 +14,7 @@ export type DonutChartProps = {
   totalLabel?: string;
   /** Read out for a segment, given its label and formatted value. */
   segmentLabel?: (label: string, value: string) => string;
+  className?: string;
 };
 
 const SIZE = 200;
@@ -22,7 +24,6 @@ const LIFT = 6;
 const GAP = 3 / (2 * Math.PI * RADIUS);
 const colors = ["stroke-accent", "stroke-paper", "stroke-muted", "stroke-ink-3"];
 const moves: Record<string, number> = { ArrowUp: -1, ArrowLeft: -1, ArrowDown: 1, ArrowRight: 1 };
-const draw: Transition = { type: "spring", visualDuration: 0.7, bounce: 0 };
 
 export function DonutChart({
   data,
@@ -30,7 +31,9 @@ export function DonutChart({
   label = "Donut chart",
   totalLabel = "Total",
   segmentLabel = (label: string, value: string) => `${label}, ${value}`,
+  className = "",
 }: DonutChartProps) {
+  const { shape, swap, draw } = useSprings();
   const [active, setActive] = useState<number | null>(null);
   const [focused, setFocused] = useState(0);
   const segments = useRef<(SVGCircleElement | null)[]>([]);
@@ -47,17 +50,18 @@ export function DonutChart({
   }
 
   return (
-    <div
+    <Card
+      tone="ink"
       role="group"
       aria-label={label}
       onKeyDown={onKeyDown}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setActive(null);
       }}
-      className="w-fit rounded-3xl bg-ink p-5 shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink"
+      className={`p-5 outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${className}`}
     >
       <div className="relative">
-        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} onPointerLeave={() => setActive(null)} className="block size-50 -rotate-90">
+        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} onPointerLeave={() => setActive(null)} className="block w-full -rotate-90">
           {data.map((segment, i) => {
             const share = segment.value / total;
             const offset = start;
@@ -99,12 +103,12 @@ export function DonutChart({
               {...swap}
               className="col-start-1 row-start-1 flex flex-col items-center"
             >
-              <span className="text-[13px] font-medium text-paper/55">{caption}</span>
+              <span className="text-label font-medium text-paper/55">{caption}</span>
               <span className="text-2xl font-semibold text-paper tabular-nums">{text}</span>
             </motion.div>
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

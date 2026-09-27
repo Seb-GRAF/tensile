@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Check } from "../../Check";
-import { soft, swap } from "../../springs";
+import { useSprings } from "../../springs";
 
 export type ProgressRingProps = {
   /** 0..1 */
@@ -9,6 +9,7 @@ export type ProgressRingProps = {
   formatValue?: (value: number) => string;
   /** Read out instead of the value once it reaches 1. */
   doneLabel?: string;
+  className?: string;
 };
 
 export function ProgressRing({
@@ -16,7 +17,9 @@ export function ProgressRing({
   label = "Progress",
   formatValue = (value: number) => value.toLocaleString("en-US", { style: "percent" }),
   doneLabel = "Done",
+  className = "",
 }: ProgressRingProps) {
+  const { soft, swap } = useSprings();
   const done = value === 1;
 
   return (
@@ -30,7 +33,7 @@ export function ProgressRing({
       initial={false}
       animate={{ backgroundColor: done ? "var(--color-accent)" : "var(--color-ink)" }}
       transition={soft}
-      className="grid size-11 place-items-center rounded-full shadow-float"
+      className={`grid size-11 place-items-center rounded-full shadow-float ${className}`}
     >
       <motion.svg
         viewBox="0 0 28 28"
@@ -54,7 +57,7 @@ export function ProgressRing({
       </motion.svg>
       <AnimatePresence initial={false}>
         {done && (
-          <motion.span key="done" {...swap} className="col-start-1 row-start-1 text-ink">
+          <motion.span key="done" {...swap} className="col-start-1 row-start-1 text-on-accent">
             <Check size={20} />
           </motion.span>
         )}

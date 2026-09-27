@@ -1,11 +1,16 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect } from "react";
-import { shape, soft, useLiquid } from "../../springs";
+import { useSprings } from "../../springs";
+import { Icon } from "../data-display/Icon";
+import { Toggle } from "./Toggle";
 
 export type ThemeToggleProps = {
   value: "light" | "dark";
   onValueChange: (value: "light" | "dark") => void;
   label?: string;
+  name?: string;
+  disabled?: boolean;
+  className?: string;
 };
 
 const s = Math.SQRT1_2;
@@ -28,9 +33,16 @@ function glyph(morph: number) {
   return disc + RAYS.map(([a, b]) => `M${point(from * a, from * b)}L${point(to * a, to * b)}`).join("");
 }
 
-export function ThemeToggle({ value, onValueChange, label = "Dark mode" }: ThemeToggleProps) {
+export function ThemeToggle({
+  value,
+  onValueChange,
+  label = "Dark mode",
+  name,
+  disabled = false,
+  className = "",
+}: ThemeToggleProps) {
+  const { shape } = useSprings();
   const dark = value === "dark";
-  const [left, right] = useLiquid(dark ? 23 : 3, dark ? 3 : 23);
   const morph = useMotionValue(dark ? 1 : 0);
   const d = useTransform(morph, glyph);
 
@@ -39,28 +51,17 @@ export function ThemeToggle({ value, onValueChange, label = "Dark mode" }: Theme
   }, [dark, morph]);
 
   return (
-    <motion.button
-      type="button"
-      role="switch"
-      aria-checked={dark}
-      aria-label={label}
-      onClick={() => onValueChange(dark ? "light" : "dark")}
-      initial={false}
-      animate={{ backgroundColor: dark ? "var(--color-ink-3)" : "var(--color-paper)" }}
-      transition={soft}
-      className="relative h-8 w-13 rounded-full shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+    <Toggle
+      checked={dark}
+      onCheckedChange={(checked) => onValueChange(checked ? "dark" : "light")}
+      label={label}
+      name={name}
+      disabled={disabled}
+      className={`[--color-accent:var(--color-ink-3)] ${className}`}
     >
-      <motion.span style={{ left, right }} className="absolute inset-y-[3px] grid place-items-center rounded-full bg-ink">
-        <svg
-          viewBox="0 0 24 24"
-          className="size-4 fill-none stroke-paper"
-          strokeWidth={2.25}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <motion.path d={d} />
-        </svg>
-      </motion.span>
-    </motion.button>
+      <Icon>
+        <motion.path d={d} />
+      </Icon>
+    </Toggle>
   );
 }

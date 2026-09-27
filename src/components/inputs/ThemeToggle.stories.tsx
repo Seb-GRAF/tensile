@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click the switch or press Space or Enter: the sun draws its rays in and turns into a moon, and back. */
+/** Click the switch or press Space: the sun draws its rays in and turns into a moon, and back. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

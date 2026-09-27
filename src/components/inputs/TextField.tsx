@@ -1,15 +1,30 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId, useState } from "react";
-import { shape, swap } from "../../springs";
+import { icons } from "../../icons";
+import { useSprings } from "../../springs";
+import { Icon } from "../data-display/Icon";
 
-export type TextFieldProps = {
+export type TextFieldProps = Omit<React.ComponentProps<"input">, "value" | "onChange" | "placeholder"> & {
   value: string;
   onValueChange: (value: string) => void;
   label?: string;
   error?: string;
 };
 
-export function TextField({ value, onValueChange, label = "Email", error }: TextFieldProps) {
+export function TextField({
+  value,
+  onValueChange,
+  label = "Email",
+  error,
+  onFocus,
+  onBlur,
+  "aria-describedby": describedBy,
+  "aria-invalid": invalid,
+  className = "",
+  style,
+  ...props
+}: TextFieldProps) {
+  const { shape, swap } = useSprings();
   const [focused, setFocused] = useState(false);
   const errorId = useId();
   const floated = focused || value !== "";
@@ -17,27 +32,29 @@ export function TextField({ value, onValueChange, label = "Email", error }: Text
   return (
     <motion.div
       initial={false}
-      animate={{ height: error ? "auto" : 52, borderRadius: error ? 20 : 26 }}
+      animate={{ height: error ? "auto" : 52, borderRadius: error ? "var(--radius-overlay)" : "var(--radius-control)" }}
       transition={shape}
-      className="w-[360px] overflow-hidden bg-paper shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink"
+      style={style}
+      className={`overflow-hidden bg-paper shadow-float outline-offset-2 has-[input:disabled]:opacity-40 has-focus-visible:outline-2 has-focus-visible:outline-focus ${className}`}
     >
       <label className="relative block">
         <motion.span
           initial={false}
           animate={{ y: floated ? -10 : 0, scale: floated ? 11 / 15 : 1 }}
           transition={shape}
-          className="pointer-events-none absolute top-0 left-5 origin-left text-[15px] leading-[52px] text-muted"
+          className="pointer-events-none absolute top-0 left-5 origin-left text-body leading-13 text-muted"
         >
           {label}
         </motion.span>
         <input
+          {...props}
           value={value}
-          aria-invalid={!!error}
-          aria-describedby={error ? errorId : undefined}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          aria-invalid={!!error || invalid}
+          aria-describedby={[error && errorId, describedBy].filter(Boolean).join(" ") || undefined}
+          onFocus={(event) => { setFocused(true); onFocus?.(event); }}
+          onBlur={(event) => { setFocused(false); onBlur?.(event); }}
           onChange={(event) => onValueChange(event.target.value)}
-          className="block h-[52px] w-full bg-transparent px-5 pt-6 pb-2 text-[15px] text-ink outline-none"
+          className="block h-13 w-full bg-transparent px-5 pt-6 pb-2 text-body text-ink outline-none"
         />
       </label>
       <div className="h-px bg-line" />
@@ -47,19 +64,9 @@ export function TextField({ value, onValueChange, label = "Email", error }: Text
             <motion.p
               key={error}
               {...swap}
-              className="col-start-1 row-start-1 flex origin-left items-center gap-2 px-5 py-2.5 text-[13px] leading-5 text-ink"
+              className="col-start-1 row-start-1 flex origin-left items-center gap-2 px-5 py-2.5 text-label text-ink"
             >
-              <svg
-                viewBox="0 0 24 24"
-                className="size-3.5 shrink-0 fill-none stroke-current"
-                strokeWidth={2.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 8v4" />
-                <path d="M12 16h.01" />
-              </svg>
+              <Icon size={14}>{icons.alert}</Icon>
               {error}
             </motion.p>
           )}

@@ -1,15 +1,17 @@
 import { AnimatePresence, animate, motion, useMotionValue, useTransform, wrap } from "motion/react";
 import { useEffect, useRef } from "react";
-import { shape, swap } from "../../springs";
+import { useSprings } from "../../springs";
 
 export type NumberTickerProps = {
   value: number;
   format?: (value: number) => string;
+  className?: string;
 };
 
 const STRIP = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 function Digit({ value, digit }: { value: number; digit: number }) {
+  const { shape } = useSprings();
   const previous = useRef(value);
   const target = useRef(digit);
   const position = useMotionValue(digit);
@@ -33,12 +35,13 @@ function Digit({ value, digit }: { value: number; digit: number }) {
   );
 }
 
-export function NumberTicker({ value, format = (value: number) => value.toLocaleString("en-US") }: NumberTickerProps) {
+export function NumberTicker({ value, format = (value: number) => value.toLocaleString("en-US"), className = "" }: NumberTickerProps) {
+  const { shape, swap } = useSprings();
   const text = format(value);
   const parts = text.match(/\d|\D+/g)!;
 
   return (
-    <span className="inline-flex whitespace-pre tabular-nums">
+    <span className={`inline-flex whitespace-pre tabular-nums ${className}`}>
       <span className="sr-only">{text}</span>
       <AnimatePresence initial={false}>
         {parts.map((part, i) => {
@@ -48,13 +51,12 @@ export function NumberTicker({ value, format = (value: number) => value.toLocale
             <motion.span
               key={isDigit ? fromEnd : i === 0 ? part : `${part}${fromEnd}`}
               aria-hidden
-              initial={{ width: 0 }}
-              animate={{ width: "auto" }}
-              exit={{ width: 0 }}
-              transition={shape}
+              initial={{ ...swap.initial, width: 0 }}
+              animate={{ ...swap.animate, width: "auto", transition: { ...swap.animate.transition, width: shape } }}
+              exit={{ ...swap.exit, width: 0, transition: { ...swap.exit.transition, width: shape } }}
               className="flex justify-end overflow-x-clip"
             >
-              <motion.span {...swap}>{isDigit ? <Digit value={value} digit={Number(part)} /> : part}</motion.span>
+              {isDigit ? <Digit value={value} digit={Number(part)} /> : part}
             </motion.span>
           );
         })}

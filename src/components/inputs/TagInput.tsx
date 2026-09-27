@@ -1,6 +1,9 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
-import { shape, swap } from "../../springs";
+import { useRef, useState } from "react";
+import { useSprings } from "../../springs";
+import { useSize } from "../../useSize";
+import { Tag } from "../data-display/Tag";
+import { useField } from "./Field";
 
 export type TagInputProps = {
   value: string[];
@@ -8,6 +11,11 @@ export type TagInputProps = {
   label?: string;
   placeholder?: string;
   removeLabel?: (tag: string) => string;
+  id?: string;
+  name?: string;
+  disabled?: boolean;
+  required?: boolean;
+  className?: string;
 };
 
 export function TagInput({
@@ -16,17 +24,18 @@ export function TagInput({
   label = "Tags",
   placeholder = "Add a tag",
   removeLabel = (tag: string) => `Remove ${tag}`,
+  id,
+  name,
+  disabled = false,
+  required = false,
+  className = "",
 }: TagInputProps) {
+  const { shape, swap } = useSprings();
+  const field = useField();
   const [query, setQuery] = useState("");
-  const [height, setHeight] = useState<number>();
-  const row = useRef<HTMLDivElement>(null);
+  const [size, row] = useSize();
   const input = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const observer = new ResizeObserver(() => setHeight(row.current!.offsetHeight));
-    observer.observe(row.current!);
-    return () => observer.disconnect();
-  }, []);
+  const isDisabled = field?.disabled || disabled;
 
   function onKeyDown(event: React.KeyboardEvent) {
     if (event.key === "Enter" || event.key === ",") {
@@ -45,12 +54,13 @@ export function TagInput({
   return (
     <motion.div
       initial={false}
-      animate={{ height }}
+      animate={{ height: size?.height }}
       transition={shape}
-      className="w-[360px] overflow-hidden rounded-[26px] bg-paper shadow-float outline-offset-2 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-ink"
+      className={`overflow-hidden rounded-control bg-paper shadow-float outline-offset-2 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-focus ${isDisabled ? "opacity-40" : ""} ${className}`}
     >
-      <div ref={row} className="relative flex flex-wrap gap-1.5 p-3">
-        <ul className="contents">
+      {name && value.map((tag) => <input key={tag} type="hidden" name={name} value={tag} disabled={isDisabled} />)}
+      <div ref={row} inert={isDisabled} className="relative flex flex-wrap gap-1.5 p-3">
+        <ul role="list" className="contents">
           <AnimatePresence mode="popLayout" initial={false}>
             {value.map((tag) => (
               <motion.li
@@ -59,29 +69,16 @@ export function TagInput({
                 layoutDependency={value}
                 {...swap}
                 transition={{ layout: shape }}
-                className="flex h-7 items-center gap-0.5 rounded-full bg-hover pr-1 pl-3 text-[13px] font-medium text-ink outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink"
+                className="flex"
               >
-                {tag}
-                <button
-                  type="button"
-                  aria-label={removeLabel(tag)}
-                  onClick={() => {
+                <Tag
+                  label={tag}
+                  removeLabel={removeLabel}
+                  onRemove={() => {
                     onValueChange(value.filter((other) => other !== tag));
                     input.current!.focus();
                   }}
-                  className="grid size-5 place-items-center rounded-full text-muted outline-none"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="size-3 fill-none stroke-current"
-                    strokeWidth={3}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
-                </button>
+                />
               </motion.li>
             ))}
           </AnimatePresence>
@@ -91,12 +88,18 @@ export function TagInput({
           layout="position"
           layoutDependency={value}
           transition={{ layout: shape }}
-          aria-label={label}
+          id={field?.id ?? id}
+          disabled={isDisabled}
+          aria-label={field?.labelId ? undefined : label}
+          aria-labelledby={field?.labelId}
+          aria-describedby={field?.describedBy}
+          aria-invalid={field?.invalid}
+          aria-required={field?.required || required}
           placeholder={placeholder}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={onKeyDown}
-          className="h-7 min-w-24 flex-1 bg-transparent px-1 text-[15px] text-ink outline-none placeholder:text-muted"
+          className="h-7 min-w-24 flex-1 bg-transparent px-1 text-body text-ink outline-none placeholder:text-muted"
         />
       </div>
     </motion.div>

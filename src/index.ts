@@ -10,6 +10,7 @@ export { Breadcrumbs, type BreadcrumbsProps } from "./components/navigation/Brea
 export { Button, type ButtonProps } from "./components/actions/Button";
 export { Card, type CardProps } from "./components/layout/Card";
 export { Checkbox, type CheckboxProps } from "./components/inputs/Checkbox";
+export { CheckboxGroup, type CheckboxGroupProps } from "./components/inputs/CheckboxGroup";
 export { CollapsibleSidebar, type CollapsibleSidebarProps } from "./components/navigation/CollapsibleSidebar";
 export { ColorSwatches, type ColorSwatchesProps } from "./components/inputs/ColorSwatches";
 export { Combobox, type ComboboxProps } from "./components/inputs/Combobox";
@@ -20,6 +21,7 @@ export { DatePicker, type DatePickerProps } from "./components/inputs/DatePicker
 export { DescriptionList, type DescriptionListProps } from "./components/data-display/DescriptionList";
 export { Dialog, type DialogProps } from "./components/overlays/Dialog";
 export { DonutChart, type DonutChartProps } from "./components/data-display/DonutChart";
+export { EditableText, type EditableTextProps } from "./components/inputs/EditableText";
 export { ExpandableCard, type ExpandableCardProps } from "./components/layout/ExpandableCard";
 export { Field, type FieldProps } from "./components/inputs/Field";
 export { Fieldset, type FieldsetProps } from "./components/inputs/Fieldset";
@@ -37,11 +39,13 @@ export { Link, LinkProvider, type LinkProps, type LinkProviderProps } from "./co
 export { List, type ListProps } from "./components/data-display/List";
 export { MorphButton, type MorphButtonProps } from "./components/actions/MorphButton";
 export { MusicPlayer, type MusicPlayerProps } from "./components/media/MusicPlayer";
+export { NumberInput, type NumberInputProps } from "./components/inputs/NumberInput";
 export { NumberStepper, type NumberStepperProps } from "./components/inputs/NumberStepper";
 export { NumberTicker, type NumberTickerProps } from "./components/data-display/NumberTicker";
 export { OTPInput, type OTPInputProps } from "./components/inputs/OTPInput";
 export { PageDots, type PageDotsProps } from "./components/navigation/PageDots";
 export { Pagination, type PaginationProps } from "./components/navigation/Pagination";
+export { PasswordInput, type PasswordInputProps } from "./components/inputs/PasswordInput";
 export { Popover, type PopoverProps } from "./components/overlays/Popover";
 export { ProgressBar, type ProgressBarProps } from "./components/feedback/ProgressBar";
 export { ProgressRing, type ProgressRingProps } from "./components/feedback/ProgressRing";
