@@ -1,12 +1,14 @@
 import { motion, useTransform } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
-import { soft, useLiquid } from "../../springs";
+import { useLiquid, useSprings } from "../../springs";
 
 export type UnderlineTabsProps = {
   options: { value: string; label: string; icon?: React.ReactNode }[];
   value: string;
   onValueChange: (value: string) => void;
   label?: string;
+  id?: string;
+  className?: string;
 };
 
 function Underline({ left, right }: { left: number; right: number }) {
@@ -21,7 +23,8 @@ function Underline({ left, right }: { left: number; right: number }) {
   );
 }
 
-export function UnderlineTabs({ options, value, onValueChange, label = "Sections" }: UnderlineTabsProps) {
+export function UnderlineTabs({ options, value, onValueChange, label = "Sections", id, className = "" }: UnderlineTabsProps) {
+  const { soft } = useSprings();
   const index = options.findIndex((option) => option.value === value);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const [edges, setEdges] = useState<{ left: number; right: number }>();
@@ -44,7 +47,7 @@ export function UnderlineTabs({ options, value, onValueChange, label = "Sections
   }
 
   return (
-    <div role="tablist" aria-label={label} onKeyDown={onKeyDown} className="rounded-full bg-paper px-3 py-[3px] shadow-float">
+    <div id={id} role="tablist" aria-label={label} onKeyDown={onKeyDown} className={`inline-block max-w-full rounded-control bg-paper px-3 py-[3px] shadow-float ${className}`}>
       <div className="relative flex">
         {options.map((option, i) => (
           <motion.button
@@ -54,16 +57,18 @@ export function UnderlineTabs({ options, value, onValueChange, label = "Sections
             }}
             type="button"
             role="tab"
+            id={id ? `${id}-${i}` : undefined}
+            aria-controls={id ? `${id}-${i}-panel` : undefined}
             aria-selected={i === index}
             tabIndex={i === index ? 0 : -1}
             onClick={() => onValueChange(option.value)}
             initial={false}
             animate={{ color: i === index ? "var(--color-ink)" : "var(--color-muted)" }}
             transition={soft}
-            className="flex h-8 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+            className="flex h-8 min-w-0 items-center gap-1.5 rounded-control px-3 text-label font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
           >
             {option.icon}
-            {option.label}
+            <span className="truncate">{option.label}</span>
           </motion.button>
         ))}
         {edges && <Underline {...edges} />}

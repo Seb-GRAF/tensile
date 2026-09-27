@@ -1,5 +1,9 @@
 import { AnimatePresence, motion, useMotionTemplate } from "motion/react";
-import { soft, swap, useLiquid } from "../../springs";
+import { useSprings, useLiquid } from "../../springs";
+import { icons } from "../../icons";
+import { IconButton } from "../actions/IconButton";
+import { Icon } from "../data-display/Icon";
+import { useLinkClick } from "./Link";
 
 export type PaginationProps = {
   /** Number of pages. */
@@ -14,6 +18,9 @@ export type PaginationProps = {
   previousLabel?: string;
   nextLabel?: string;
   pageLabel?: (page: number) => string;
+  /** Makes the numbered pages links; previous and next remain buttons. */
+  pageHref?: (page: number) => string;
+  className?: string;
 };
 
 function slotItems(count: number, page: number, slots: number): (number | "gap")[] {
@@ -30,9 +37,9 @@ function slotItems(count: number, page: number, slots: number): (number | "gap")
 
 function Ellipsis() {
   return (
-    <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeWidth={2.25} strokeLinecap="round">
+    <Icon size={16}>
       <path d="M5 12h.01M12 12h.01M19 12h.01" />
-    </svg>
+    </Icon>
   );
 }
 
@@ -46,69 +53,69 @@ export function Pagination({
   previousLabel = "Previous page",
   nextLabel = "Next page",
   pageLabel = (page: number) => `Page ${page}`,
+  pageHref,
+  className = "",
 }: PaginationProps) {
+  const { swap } = useSprings();
+  const linkClick = useLinkClick();
   const items = slotItems(count, value, slots);
   const index = items.indexOf(value);
   const step = 100 / items.length;
   const [left, right] = useLiquid(index * step, (items.length - 1 - index) * step);
   const indicatorLeft = useMotionTemplate`${left}%`;
   const indicatorRight = useMotionTemplate`${right}%`;
-  const clip = useMotionTemplate`inset(0 ${right}% 0 ${left}% round 999px)`;
+  const clip = useMotionTemplate`inset(0 ${right}% 0 ${left}% round var(--radius-control))`;
 
   return (
-    <nav aria-label={label} className="flex rounded-full bg-paper p-[3px] shadow-float">
-      <motion.button
-        type="button"
-        aria-label={previousLabel}
+    <nav aria-label={label} className={`flex rounded-control bg-paper p-[3px] shadow-float ${className}`}>
+      <IconButton
+        size="sm"
+        variant="ghost"
+        label={previousLabel}
         disabled={value === 1}
         onClick={() => onValueChange(value - 1)}
-        initial={false}
-        animate={{ opacity: value === 1 ? 0.3 : 1 }}
-        transition={soft}
-        className="grid size-8 place-items-center rounded-full text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="size-4 fill-none stroke-current"
-          strokeWidth={2.25}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="m14.5 7-5 5 5 5" />
-        </svg>
-      </motion.button>
-      <div className="relative grid auto-cols-[32px] grid-flow-col text-[13px] font-medium">
-        {items.map((item, i) => (
-          <span key={i} className="grid place-content-center place-items-center text-muted">
+        <Icon size={16}>{icons.chevronLeft}</Icon>
+      </IconButton>
+      <div className="relative grid auto-cols-[32px] grid-flow-col text-label font-medium">
+        {items.map((item, i) => {
+          const props = item === "gap" ? undefined : {
+            ...swap,
+            "aria-label": pageLabel(item),
+            "aria-current": item === value ? "page" as const : undefined,
+            className: "col-start-1 row-start-1 grid size-8 place-content-center place-items-center rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus",
+          };
+          const content = item !== "gap" && (
             <AnimatePresence initial={false}>
-              {item === "gap" ? (
-                <motion.span key="gap" aria-hidden {...swap} className="col-start-1 row-start-1">
-                  <Ellipsis />
-                </motion.span>
-              ) : (
-                <motion.button
-                  key="page"
-                  {...swap}
-                  type="button"
-                  aria-label={pageLabel(item)}
-                  aria-current={item === value ? "page" : undefined}
-                  onClick={() => onValueChange(item)}
-                  className="col-start-1 row-start-1 grid size-8 place-content-center place-items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-                >
-                  <AnimatePresence initial={false}>
-                    <motion.span key={item} {...swap} className="col-start-1 row-start-1">
-                      {formatPage(item)}
-                    </motion.span>
-                  </AnimatePresence>
-                </motion.button>
-              )}
+              <motion.span key={item} {...swap} className="col-start-1 row-start-1">
+                {formatPage(item)}
+              </motion.span>
             </AnimatePresence>
-          </span>
-        ))}
+          );
+          return (
+            <span key={i} className="grid place-content-center place-items-center text-muted">
+              <AnimatePresence initial={false}>
+                {item === "gap" ? (
+                  <motion.span key="gap" aria-hidden {...swap} className="col-start-1 row-start-1">
+                    <Ellipsis />
+                  </motion.span>
+                ) : pageHref ? (
+                  <motion.a key="page" {...props} href={pageHref(item)} onClick={(event) => { onValueChange(item); linkClick(event); }}>
+                    {content}
+                  </motion.a>
+                ) : (
+                  <motion.button key="page" {...props} type="button" onClick={() => onValueChange(item)}>
+                    {content}
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </span>
+          );
+        })}
         <motion.span
           aria-hidden
           style={{ left: indicatorLeft, right: indicatorRight }}
-          className="pointer-events-none absolute inset-y-0 rounded-full bg-ink"
+          className="pointer-events-none absolute inset-y-0 rounded-control bg-ink"
         />
         <motion.span
           aria-hidden
@@ -126,26 +133,15 @@ export function Pagination({
           ))}
         </motion.span>
       </div>
-      <motion.button
-        type="button"
-        aria-label={nextLabel}
+      <IconButton
+        size="sm"
+        variant="ghost"
+        label={nextLabel}
         disabled={value === count}
         onClick={() => onValueChange(value + 1)}
-        initial={false}
-        animate={{ opacity: value === count ? 0.3 : 1 }}
-        transition={soft}
-        className="grid size-8 place-items-center rounded-full text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="size-4 fill-none stroke-current"
-          strokeWidth={2.25}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="m9.5 7 5 5-5 5" />
-        </svg>
-      </motion.button>
+        <Icon size={16}>{icons.chevronRight}</Icon>
+      </IconButton>
     </nav>
   );
 }

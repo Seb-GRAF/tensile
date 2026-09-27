@@ -1,7 +1,7 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useRef, useState } from "react";
 import { dragHandlers, rubber } from "../../drag";
-import { shape, snap, soft } from "../../springs";
+import { useSprings } from "../../springs";
 
 export type SplitPaneProps = {
   left: React.ReactNode;
@@ -12,11 +12,13 @@ export type SplitPaneProps = {
   min?: number;
   max?: number;
   label?: string;
+  className?: string;
 };
 
 const GAP = 16;
 
-export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 0.8, label = "Resize panes" }: SplitPaneProps) {
+export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 0.8, label = "Resize panes", className = "" }: SplitPaneProps) {
+  const { shape, snap, soft } = useSprings();
   const root = useRef<HTMLDivElement>(null);
   const grab = useRef(0);
   const [held, setHeld] = useState(false);
@@ -50,8 +52,8 @@ export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 
   }
 
   return (
-    <div ref={root} className="flex size-full">
-      <motion.div style={{ width }} className="overflow-hidden rounded-3xl bg-paper shadow-float">
+    <div ref={root} className={`flex size-full ${className}`}>
+      <motion.div style={{ width }} className="overflow-hidden rounded-card bg-paper shadow-float">
         {left}
       </motion.div>
       <div
@@ -74,10 +76,10 @@ export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 
               : { width: 4, height: 32, backgroundColor: "var(--color-muted)" }
           }
           transition={{ width: shape, height: shape, backgroundColor: soft }}
-          className="rounded-full outline-offset-2 group-focus-visible:outline-2 group-focus-visible:outline-ink"
+          className="rounded-full outline-offset-2 group-focus-visible:outline-2 group-focus-visible:outline-focus"
         />
       </div>
-      <div className="flex-1 overflow-hidden rounded-3xl bg-paper shadow-float">{right}</div>
+      <div className="flex-1 overflow-hidden rounded-card bg-paper shadow-float">{right}</div>
     </div>
   );
 }

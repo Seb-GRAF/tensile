@@ -1,14 +1,17 @@
 import { motion } from "motion/react";
 import { useId, useRef } from "react";
-import { shape, swap } from "../../springs";
+import { useSprings } from "../../springs";
+import { Icon } from "../data-display/Icon";
 
 export type AccordionProps = {
   items: { value: string; label: string; content: React.ReactNode; icon?: React.ReactNode }[];
   value: string | null;
   onValueChange: (value: string | null) => void;
+  className?: string;
 };
 
-export function Accordion({ items, value, onValueChange }: AccordionProps) {
+export function Accordion({ items, value, onValueChange, className = "" }: AccordionProps) {
+  const { shape, swap } = useSprings();
   const id = useId();
   const headers = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -21,16 +24,16 @@ export function Accordion({ items, value, onValueChange }: AccordionProps) {
   }
 
   return (
-    <div className="grid w-[360px] gap-2">
+    <div className={`grid w-full gap-2 ${className}`}>
       {items.map((item, i) => {
         const open = item.value === value;
         return (
           <motion.div
             key={item.value}
             initial={false}
-            animate={{ height: open ? "auto" : 44, borderRadius: open ? 20 : 22 }}
+            animate={{ height: open ? "auto" : 44, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)" }}
             transition={shape}
-            className="overflow-hidden bg-paper shadow-float outline-offset-2 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-ink"
+            className="overflow-hidden bg-paper shadow-float outline-offset-2 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus"
           >
             <button
               ref={(el) => {
@@ -46,18 +49,9 @@ export function Accordion({ items, value, onValueChange }: AccordionProps) {
             >
               {item.icon && <span className="text-muted">{item.icon}</span>}
               {item.label}
-              <motion.svg
-                viewBox="0 0 24 24"
-                initial={false}
-                animate={{ rotate: open ? 180 : 0 }}
-                transition={shape}
-                className="ml-auto size-4 shrink-0 fill-none stroke-muted"
-                strokeWidth={2.25}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="m6 9 6 6 6-6" />
-              </motion.svg>
+              <motion.span initial={false} animate={{ rotate: open ? 180 : 0 }} transition={shape} className="ml-auto shrink-0 text-muted">
+                <Icon size={16}><path d="m6 9 6 6 6-6" /></Icon>
+              </motion.span>
             </button>
             <motion.div
               id={`${id}-${i}-panel`}
@@ -66,7 +60,7 @@ export function Accordion({ items, value, onValueChange }: AccordionProps) {
               inert={!open}
               initial={false}
               animate={open ? swap.animate : swap.exit}
-              className="origin-top px-4 pb-4 text-[13px] leading-5 text-muted"
+              className="origin-top px-4 pb-4 text-label text-muted"
             >
               {item.content}
             </motion.div>

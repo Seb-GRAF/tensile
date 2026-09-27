@@ -1,21 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
 import { TabBar } from "./TabBar";
+import { LinkProvider } from "./Link";
+import { Icon } from "../data-display/Icon";
 
-function Icon({ paths, filled = false }: { paths: string[]; filled?: boolean }) {
+function NavIcon({ paths, filled = false }: { paths: string[]; filled?: boolean }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className={`size-5 stroke-current ${filled ? "fill-current" : "fill-none"}`}
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <Icon size={20}>
       {paths.map((d) => (
-        <path key={d} d={d} />
+        <path key={d} d={d} className={filled ? "fill-current" : ""} />
       ))}
-    </svg>
+    </Icon>
   );
 }
 
@@ -38,10 +35,10 @@ const meta = {
   parameters: { layout: "fullscreen" },
   args: {
     items: [
-      { value: "home", label: "Home", icon: <Icon paths={home} />, activeIcon: <Icon paths={home} filled /> },
-      { value: "browse", label: "Browse", icon: <Icon paths={browse} />, activeIcon: <Icon paths={browse} filled /> },
-      { value: "liked", label: "Liked", icon: <Icon paths={liked} />, activeIcon: <Icon paths={liked} filled /> },
-      { value: "profile", label: "Profile", icon: <Icon paths={profile} />, activeIcon: <Icon paths={profile} filled /> },
+      { value: "home", label: "Home", icon: <NavIcon paths={home} />, activeIcon: <NavIcon paths={home} filled /> },
+      { value: "browse", label: "Browse", icon: <NavIcon paths={browse} />, activeIcon: <NavIcon paths={browse} filled /> },
+      { value: "liked", label: "Liked", icon: <NavIcon paths={liked} />, activeIcon: <NavIcon paths={liked} filled /> },
+      { value: "profile", label: "Profile", icon: <NavIcon paths={profile} />, activeIcon: <NavIcon paths={profile} filled /> },
     ],
     value: "home",
     onValueChange: fn(),
@@ -51,13 +48,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click a tab, or Tab in and use the arrow keys: the pill slides behind the icons and the outline icon blurs into the filled one. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
       <div className="grid min-h-screen place-items-center">
-        <div className="flex h-[600px] w-[390px] flex-col justify-end bg-paper p-4">
+        <div className="flex h-[600px] w-full max-w-[390px] flex-col justify-end bg-paper p-4">
           <TabBar
             {...args}
             onValueChange={(value) => {
@@ -66,6 +62,27 @@ export const Default: Story = {
             }}
           />
         </div>
+      </div>
+    );
+  },
+};
+
+export const WithLinks: Story = {
+  render: function Render(args) {
+    const [value, setValue] = useState(args.value);
+    const [destination, setDestination] = useState("");
+    return (
+      <div className="grid min-h-screen place-content-center gap-4 px-4">
+        <LinkProvider navigate={(href) => { setDestination(href); setValue(href.slice(1)); }}>
+          <TabBar
+            {...args}
+            items={args.items.map((item, i) => ({ ...item, href: i < 3 ? `/${item.value}` : undefined }))}
+            value={value}
+            onValueChange={(value) => { args.onValueChange(value); setValue(value); setDestination(value); }}
+            className="w-80 max-w-[calc(100vw-2rem)]"
+          />
+        </LinkProvider>
+        <output className="text-label text-muted">{destination}</output>
       </div>
     );
   },

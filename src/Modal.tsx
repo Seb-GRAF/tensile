@@ -47,6 +47,7 @@ export function Modal({ open, onClose, children, className = "", ...props }: Mod
   return createPortal(
     <dialog
       ref={dialog}
+      inert={!open}
       onCancel={(event) => {
         event.preventDefault();
         onClose();

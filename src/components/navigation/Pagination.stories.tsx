@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
 import { Pagination } from "./Pagination";
+import { useState } from "react";
+import { LinkProvider } from "./Link";
 
 const meta = {
   title: "Navigation/Pagination",
@@ -25,6 +27,26 @@ export const Default: Story = {
           updateArgs({ value });
         }}
       />
+    );
+  },
+};
+
+export const WithLinks: Story = {
+  render: function Render(args) {
+    const [value, setValue] = useState(args.value);
+    const [path, setPath] = useState("/");
+    return (
+      <LinkProvider navigate={setPath}>
+        <div className="grid justify-items-center gap-4">
+          <Pagination
+            {...args}
+            value={value}
+            pageHref={(page) => `/page/${page}`}
+            onValueChange={(next) => { args.onValueChange(next); setValue(next); }}
+          />
+          <output className="text-label text-muted">{value} {path}</output>
+        </div>
+      </LinkProvider>
     );
   },
 };

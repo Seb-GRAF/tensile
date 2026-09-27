@@ -5,17 +5,25 @@ export type ListProps = {
   className?: string;
 };
 
+export function ListContent({ item }: { item: ListProps["items"][number] }) {
+  return (
+    <>
+      {item.leading && <div className="text-muted">{item.leading}</div>}
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-ink">{item.title}</p>
+        {item.description && <div className="text-label text-muted">{item.description}</div>}
+      </div>
+      {item.trailing && <div className="text-label text-muted">{item.trailing}</div>}
+    </>
+  );
+}
+
 export function List({ items, label, className = "" }: ListProps) {
   return (
     <ul role="list" aria-label={label} className={`divide-y divide-line ${className}`}>
       {items.map((item) => (
         <li key={item.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
-          {item.leading && <div className="text-muted">{item.leading}</div>}
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-ink">{item.title}</p>
-            {item.description && <div className="text-label text-muted">{item.description}</div>}
-          </div>
-          {item.trailing && <div className="text-label text-muted">{item.trailing}</div>}
+          <ListContent item={item} />
         </li>
       ))}
     </ul>

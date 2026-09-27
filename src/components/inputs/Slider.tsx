@@ -1,15 +1,14 @@
 import { SliderTrack } from "../../SliderTrack";
 import { useField } from "./Field";
 
-export type RangeSliderProps = {
-  value: [number, number];
-  onValueChange: (value: [number, number]) => void;
+export type SliderProps = {
+  value: number;
+  onValueChange: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
   formatValue?: (value: number) => string;
-  lowerLabel?: string;
-  upperLabel?: string;
+  label?: string;
   id?: string;
   name?: string;
   required?: boolean;
@@ -17,33 +16,32 @@ export type RangeSliderProps = {
   className?: string;
 };
 
-export function RangeSlider({
+export function Slider({
   value,
   onValueChange,
   min = 0,
   max = 100,
   step = 1,
   formatValue = (value: number) => value.toLocaleString("en-US"),
-  lowerLabel = "Minimum",
-  upperLabel = "Maximum",
+  label = "Value",
   id,
   name,
   required = false,
   disabled = false,
   className = "",
-}: RangeSliderProps) {
+}: SliderProps) {
   const field = useField();
   const isDisabled = field?.disabled || disabled;
   return (
     <>
       <SliderTrack
-        value={value}
-        onValueChange={(i, next) => onValueChange(i === 0 ? [next, value[1]] : [value[0], next])}
+        value={[value]}
+        onValueChange={(_, next) => onValueChange(next)}
         min={min}
         max={max}
         step={step}
         formatValue={formatValue}
-        labels={[lowerLabel, upperLabel]}
+        labels={[label]}
         id={field?.id ?? id}
         labelledBy={field?.labelId}
         describedBy={field?.describedBy}
@@ -52,7 +50,7 @@ export function RangeSlider({
         disabled={isDisabled}
         className={className}
       />
-      {name && value.map((v, i) => <input key={i} type="hidden" name={name} value={v} disabled={isDisabled} />)}
+      {name && <input type="hidden" name={name} value={value} disabled={isDisabled} />}
     </>
   );
 }

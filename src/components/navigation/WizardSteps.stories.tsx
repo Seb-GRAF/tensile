@@ -1,23 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Icon } from "../data-display/Icon";
 import { useArgs } from "storybook/preview-api";
+import { Button } from "../actions/Button";
 import { WizardSteps } from "./WizardSteps";
 
-function Icon({ paths }: { paths: string[] }) {
+function NavIcon({ paths }: { paths: string[] }) {
   return (
-    <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeWidth={2.25} strokeLinecap="round" strokeLinejoin="round">
+    <Icon size={16}>
       {paths.map((d) => (
         <path key={d} d={d} />
       ))}
-    </svg>
+    </Icon>
   );
 }
 
 const steps = [
-  { label: "Account", icon: <Icon paths={["M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", "M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0"]} /> },
+  { label: "Account", icon: <NavIcon paths={["M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", "M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0"]} /> },
   {
     label: "Shipping",
     icon: (
-      <Icon
+      <NavIcon
         paths={[
           "M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2",
           "M15 18H9",
@@ -30,12 +32,12 @@ const steps = [
   },
   {
     label: "Payment",
-    icon: <Icon paths={["M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z", "M2 10h20"]} />,
+    icon: <NavIcon paths={["M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z", "M2 10h20"]} />,
   },
   {
     label: "Review",
     icon: (
-      <Icon
+      <NavIcon
         paths={[
           "M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0",
           "M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
@@ -61,27 +63,33 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="flex flex-col items-center gap-4">
-        <WizardSteps {...args} />
+      <div className="flex w-96 max-w-[calc(100vw-32px)] flex-col items-center gap-4">
+        <WizardSteps {...args} className="w-full" />
         <div className="flex gap-2">
-          <button
-            type="button"
+          <Button
+            size="sm"
             disabled={args.value === 0}
             onClick={() => updateArgs({ value: args.value - 1 })}
-            className="h-8 rounded-full bg-paper px-4 text-[13px] font-medium text-ink shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink disabled:opacity-30"
+            variant="secondary"
           >
             Back
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            size="sm"
             disabled={args.value === args.steps.length - 1}
             onClick={() => updateArgs({ value: args.value + 1 })}
-            className="h-8 rounded-full bg-ink px-4 text-[13px] font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink disabled:opacity-30"
           >
             Next
-          </button>
+          </Button>
         </div>
       </div>
     );
+  },
+};
+
+export const LongLabels: Story = {
+  ...Default,
+  args: {
+    steps: steps.map((step, index) => ({ ...step, label: index === 1 ? "Delivery and international shipping" : index === 2 ? "Payment authorization details" : step.label })),
   },
 };

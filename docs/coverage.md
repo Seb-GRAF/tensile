@@ -31,29 +31,29 @@ What the design system covers, how, and where each piece stands. Status is **don
 | Existing components (57) | in progress | actions, selection, text/numbers, menus, feedback and charts migrated in Wave2; navigation, sliders, dates, layout and dialogs in Wave3; overlays/media in Wave4 | 2–4 |
 | PasswordField | done: `PasswordInput` | Input with a show/hide IconButton, inside Field | 2 |
 | NumberInput | done | typed entry; NumberStepper stays the stepping control | 2 |
-| Slider | create | shares `SliderTrack` with RangeSlider | 3 |
+| Slider | done | shares `SliderTrack` with RangeSlider | 3 |
 | MultiSelect | create | Select's shape and list with checks | 4 |
 | CheckboxGroup | done | composes Checkbox | 2 |
 | ToggleGroup | create | pressed buttons; also the selectable-chip pattern | 4 |
-| DateRangePicker | create | shares `calendar.ts` and `Calendar` with DatePicker | 3 |
+| DateRangePicker | done | shares `calendar.ts` and `CalendarView` with DatePicker | 3 |
 | TimePicker | create | Popover with TimeWheel | 5 |
 | ColorPicker | create | 2D area, hue Slider, hex Input | 5 |
 | EditableText | done | Input-based | 2 |
-| FileUpload | extend | accept, multiple, disabled, responsive; file-list story | 3 |
+| FileUpload | done | accept, multiple, disabled, responsive; file-list story | 3 |
 | Avatar, AvatarGroup | done | Avatar composes Image | 1 |
 | Chip or Tag | done: `Tag` | removable or static; selectable chips are ToggleGroup, counts are Badge, status is StatusBadge | 1 |
 | DescriptionList, Timeline, List | done | display only | 1 |
 | Keyboard shortcut | done: `Kbd` | | 1 |
 | Skeleton, StatusBadge | done | | 1 |
-| EmptyState, LoadingState, NotificationList | create | | 3 |
-| Tabs with panels | create `Tabs`, extend the tablists | composes SegmentedTabs or UnderlineTabs | 3 |
+| EmptyState, LoadingState, NotificationList | done | | 3 |
+| Tabs with panels | done | composes SegmentedTabs or UnderlineTabs | 3 |
 | Toolbar | create | roving focus; the gliding tooltip | 4 |
-| Navigation links and active states | extend | SidebarNav, CollapsibleSidebar, Breadcrumbs, Pagination, TabBar | 3 |
-| PageHeader | create | | 3 |
+| Navigation links and active states | done | SidebarNav, CollapsibleSidebar, Breadcrumbs, Pagination, TabBar | 3 |
+| PageHeader | done | | 3 |
 | Header, Footer, AppShell | create | | 5 |
 | Tooltip, Popover, Dialog, BottomSheet | extend | Tooltip's API changes | 3–4 |
 | Drawer | create | shares `Sheet` with BottomSheet | 4 |
-| AlertDialog | create | composes Dialog | 3 |
+| AlertDialog | done | composes Dialog | 3 |
 | ContextMenu | create | shares `Menu` with ActionMenu | 4 |
 | HoverCard | defer | Popover covers rich content on click, Tooltip covers hover hints; hover-only rich previews are hard to reach by keyboard | |
 | Table | create | | 5 |
@@ -88,3 +88,7 @@ Wave1: primitive contracts, native form props, labels, focus and rendering check
 Wave2: each changed component has default, alternate and reduced browser evidence. Form stories exercise submitted values and controlled reset; menus cover keyboard selection, scrolling, upward placement and clipping escape. Responsive controls/charts have 390px checks. Reports preserve exact commands and any superseded failed attempts: `/tmp/morph-wave2{A,B,C,D,E,F,G}-report.txt`; screenshots and videos under `/tmp/morph-shots/<Name>/`. New public exports are also covered by the consumer server-render cases.
 
 The extra 240px SwipeButton fixture test remains outside acceptance: its centered 280px demo wrapper did not shrink. The required 390px run passes; no claim is made about layouts too narrow for its 36px knob plus 8px inset and supplied label.
+
+Wave3: navigation, tabs/panels, sliders, date/range/time controls, layout, upload/states and dialogs checked by pointer and keyboard, with alternate tokens, reduced motion and representative 390px runs. Native forms cover controlled reset, disabled values and Field naming/errors. Seven calendar arithmetic tests pass. Dialog checks include focus return, immediate Tab safety during exit, scrollable content and rapid reopen; AlertDialog starts on Cancel and ignores backdrop dismissal. Reports: `/tmp/morph-wave3{A,B,C,D,E,F,G}-report.txt` and `/tmp/morph-wave3F-states-report.txt`; exact command files are linked in those reports. The package consumer covers all 91 exports.
+
+Wave3 limits: expanded Breadcrumbs retains its intrinsic width and can overflow at 390px. FileUpload picking is browser-tested; HTML5 file-drop dispatch is code-reviewed only. Resetting an unfinished DateRangePicker from null to the same null requires a caller remount. Calendar inputs retain the valid local ISO-date contract.

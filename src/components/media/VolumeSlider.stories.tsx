@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
+import { Card } from "../layout/Card";
 import { VolumeSlider, type VolumeSliderProps } from "./VolumeSlider";
 
 function StatefulVolumeSlider(props: VolumeSliderProps) {
@@ -33,6 +34,22 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <StatefulVolumeSlider {...args} onValueChange={(value) => updateArgs({ value })} />;
+    return (
+      <div className="w-60 max-w-full">
+        <StatefulVolumeSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+      </div>
+    );
+  },
+};
+
+export const OnInk: Story = {
+  args: { tone: "ink", formatValue: (value) => `${Math.round(value * 100)} percent volume` },
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+    return (
+      <Card tone="ink" className="w-80 max-w-full p-6">
+        <StatefulVolumeSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+      </Card>
+    );
   },
 };

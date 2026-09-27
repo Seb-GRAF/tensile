@@ -5,12 +5,12 @@ import { fn } from "storybook/test";
 import { Button } from "../actions/Button";
 import { Field } from "./Field";
 import { Fieldset } from "./Fieldset";
-import { RangeSlider, type RangeSliderProps } from "./RangeSlider";
+import { Slider, type SliderProps } from "./Slider";
 
-function StatefulRangeSlider(props: RangeSliderProps) {
+function StatefulSlider(props: SliderProps) {
   const [value, setValue] = useState(props.value);
   return (
-    <RangeSlider
+    <Slider
       {...props}
       value={value}
       onValueChange={(value) => {
@@ -21,7 +21,7 @@ function StatefulRangeSlider(props: RangeSliderProps) {
   );
 }
 
-function RangeForm(props: RangeSliderProps) {
+function SliderForm(props: SliderProps) {
   const [value, setValue] = useState(props.value);
   const [data, setData] = useState("");
   return (
@@ -29,12 +29,12 @@ function RangeForm(props: RangeSliderProps) {
       className="w-80 max-w-full space-y-4"
       onSubmit={(event) => {
         event.preventDefault();
-        setData(JSON.stringify(new FormData(event.currentTarget).getAll("budget")));
+        setData(JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))));
       }}
       onReset={() => { setValue(props.value); setData(""); }}
     >
-      <Field label="Budget" description="Choose a minimum and maximum." error="Review this range." required>
-        <RangeSlider {...props} name="budget" value={value} onValueChange={setValue} />
+      <Field label="Temperature" description="Adjust in half-degree steps." error="Review this temperature." required>
+        <Slider {...props} name="temperature" value={value} onValueChange={setValue} />
       </Field>
       <div className="flex gap-2">
         <Button type="submit">Submit</Button>
@@ -46,11 +46,11 @@ function RangeForm(props: RangeSliderProps) {
 }
 
 const meta = {
-  title: "Inputs/RangeSlider",
-  id: "components-rangeslider",
-  component: RangeSlider,
-  args: { value: [20, 80], onValueChange: fn() },
-} satisfies Meta<typeof RangeSlider>;
+  title: "Inputs/Slider",
+  id: "components-slider",
+  component: Slider,
+  args: { value: 40, onValueChange: fn() },
+} satisfies Meta<typeof Slider>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -60,21 +60,21 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-60 max-w-full">
-        <StatefulRangeSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
       </div>
     );
   },
 };
 
 export const InAForm: Story = {
-  args: { min: 10, step: 5, formatValue: (value) => `$${value.toLocaleString("en-US")}` },
-  render: (args) => <RangeForm {...args} />,
+  args: { value: 18, min: -20, max: 40, step: 0.5, formatValue: (value) => `${value.toLocaleString("en-US")}°C` },
+  render: (args) => <SliderForm {...args} />,
 };
 
 export const Disabled: Story = {
   render: (args) => (
-    <Fieldset legend="Budget" disabled className="w-60 max-w-full">
-      <RangeSlider {...args} name="budget" />
+    <Fieldset legend="Temperature" disabled className="w-60 max-w-full">
+      <Slider {...args} name="temperature" />
     </Fieldset>
   ),
 };

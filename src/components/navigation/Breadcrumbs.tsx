@@ -1,10 +1,13 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
-import { shape, soft, swap } from "../../springs";
+import { useSprings } from "../../springs";
 import { useWidth } from "../../useWidth";
+import { icons } from "../../icons";
+import { Icon } from "../data-display/Icon";
+import { useLinkClick } from "./Link";
 
-type Crumb = { label: string; icon?: React.ReactNode };
+type Crumb = { label: string; icon?: React.ReactNode; href?: string };
 
 export type BreadcrumbsProps = {
   /** The trail from the root; the last item is the current page. */
@@ -16,19 +19,11 @@ export type BreadcrumbsProps = {
   itemsBeforeCollapse?: number;
   /** Items shown after the "…" pill, the current page included. */
   itemsAfterCollapse?: number;
+  className?: string;
 };
 
 const separator = (
-  <svg
-    aria-hidden
-    viewBox="0 0 24 24"
-    className="mx-0.5 size-3.5 fill-none stroke-current text-muted/50"
-    strokeWidth={2.6}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="m9 18 6-6-6-6" />
-  </svg>
+  <Icon size={14} className="mx-0.5 text-muted/50">{icons.chevronRight}</Icon>
 );
 
 export function Breadcrumbs({
@@ -38,14 +33,17 @@ export function Breadcrumbs({
   expandLabel = "Show full path",
   itemsBeforeCollapse = 1,
   itemsAfterCollapse = 2,
+  className = "",
 }: BreadcrumbsProps) {
+  const { shape, soft, swap } = useSprings();
+  const linkClick = useLinkClick();
   const end = items.length - itemsAfterCollapse;
   const hidden = items.slice(itemsBeforeCollapse, end);
   const hiddenPath = hidden.map((item) => item.label).join("/");
   const [expandedPath, setExpandedPath] = useState<string>();
   const expanded = expandedPath === hiddenPath;
   const [width, measure] = useWidth();
-  const firstHidden = useRef<HTMLButtonElement>(null);
+  const firstHidden = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
 
   function expand() {
     flushSync(() => setExpandedPath(hiddenPath));
@@ -61,16 +59,17 @@ export function Breadcrumbs({
         </span>
       );
     }
-    return (
-      <button
-        ref={i === itemsBeforeCollapse ? firstHidden : undefined}
-        type="button"
-        onClick={() => onNavigate(item)}
-        className="flex h-8 items-center gap-1.5 rounded-full px-1.5 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-      >
-        {item.icon}
-        {item.label}
-      </button>
+    const props = {
+      ref: (element: HTMLButtonElement | HTMLAnchorElement | null) => {
+        if (i === itemsBeforeCollapse) firstHidden.current = element;
+      },
+      className: "flex h-8 items-center gap-1.5 rounded-control px-1.5 outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus",
+    };
+    const content = <>{item.icon}{item.label}</>;
+    return item.href ? (
+      <a {...props} href={item.href} onClick={(event) => { onNavigate(item); linkClick(event); }}>{content}</a>
+    ) : (
+      <button {...props} type="button" onClick={() => onNavigate(item)}>{content}</button>
     );
   }
 
@@ -79,11 +78,11 @@ export function Breadcrumbs({
       initial={false}
       animate={{ width, backgroundColor: expanded ? "var(--color-paper)" : "var(--color-hover)" }}
       transition={{ width: shape, backgroundColor: soft }}
-      className="grid h-8 items-center justify-items-start rounded-full [clip-path:inset(-4px)]"
+      className="grid h-8 items-center justify-items-start rounded-control [clip-path:inset(-4px)]"
     >
       <AnimatePresence initial={false}>
         {expanded ? (
-          <motion.ol key="expanded" ref={measure} {...swap} className="col-start-1 row-start-1 flex">
+          <motion.ol key="expanded" ref={measure} {...swap} role="list" className="col-start-1 row-start-1 flex">
             {hidden.map((item, j) => (
               <li key={j} className="flex items-center">
                 {j > 0 && separator}
@@ -100,13 +99,13 @@ export function Breadcrumbs({
             aria-label={expandLabel}
             aria-expanded={false}
             onClick={expand}
-            className="col-start-1 row-start-1 grid h-8 place-items-center rounded-full px-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+            className="col-start-1 row-start-1 grid h-8 place-items-center rounded-control px-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
           >
-            <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeWidth={2.25} strokeLinecap="round">
+            <Icon size={16}>
               <circle cx="5" cy="12" r="1" />
               <circle cx="12" cy="12" r="1" />
               <circle cx="19" cy="12" r="1" />
-            </svg>
+            </Icon>
           </motion.button>
         )}
       </AnimatePresence>
@@ -114,8 +113,8 @@ export function Breadcrumbs({
   );
 
   return (
-    <nav aria-label={label}>
-      <ol className="flex w-fit items-center rounded-full bg-paper px-1.5 py-1 text-[13px] font-medium whitespace-nowrap text-muted shadow-float">
+    <nav aria-label={label} className={className}>
+      <ol role="list" className="flex w-fit items-center rounded-control bg-paper px-1.5 py-1 text-label font-medium whitespace-nowrap text-muted shadow-float">
         {items.map((item, i) =>
           i > itemsBeforeCollapse && i < end ? null : (
             <li key={i} className="flex items-center">

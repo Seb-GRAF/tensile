@@ -25,8 +25,8 @@ const meta = {
   args: {
     left: (
       <div className="p-5">
-        <p className="text-[11px] font-medium text-muted">Playlists</p>
-        <ul className="mt-3 space-y-2 text-[15px] font-medium text-ink">
+        <p className="text-caption font-medium text-muted">Playlists</p>
+        <ul role="list" className="mt-3 space-y-2 text-body font-medium text-ink">
           <li className="truncate">Morning run</li>
           <li className="truncate">Deep focus</li>
           <li className="truncate">Late drive</li>
@@ -35,9 +35,9 @@ const meta = {
     ),
     right: (
       <div className="p-5">
-        <p className="text-[11px] font-medium text-muted">Playlist</p>
-        <p className="mt-3 text-[15px] font-semibold text-ink">Deep focus</p>
-        <p className="mt-1 text-[13px] text-muted">Long, quiet tracks without vocals. 42 songs, 2 h 51 min.</p>
+        <p className="text-caption font-medium text-muted">Playlist</p>
+        <p className="mt-3 text-body font-semibold text-ink">Deep focus</p>
+        <p className="mt-1 text-label text-muted">Long, quiet tracks without vocals. 42 songs, 2 h 51 min.</p>
       </div>
     ),
     value: 0.4,
@@ -54,7 +54,7 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="h-80 w-[560px]">
+      <div className="h-80 w-[560px] max-w-[calc(100vw-2rem)]">
         <StatefulSplitPane {...args} onValueChange={(value) => updateArgs({ value })} />
       </div>
     );

@@ -6,6 +6,7 @@ A React design system of animated components, shown in Storybook. Every componen
 
 - React 19, TypeScript (strict), Motion (`motion/react`), Tailwind 4, Storybook 10 (react-vite), Geist.
 - `npx tsc --noEmit` type-checks everything.
+- `npm test` runs the pure calendar and other business-logic tests with Node's test runner.
 - `npm run storybook` and `npm run build-storybook` are for the lead. Subagents check stories with the `morph-component` skill's `check_story.py`, which starts its own server. Never stop a Storybook you didn't start.
 - `npm run build` builds the package into `dist/` (`index.js`, type declarations, `styles.css`, the opt-in `reset.css`); `npm run check:consumer` builds it and checks `examples/consumer` against it (types, a Vite build without Tailwind, server rendering of every export). Both are for the lead.
 
@@ -66,29 +67,35 @@ Inputs:
 - `EditableText`: a display Button morphs into an Input with measured content width; Enter/blur commit, Escape cancels, focus returns to the display.
 - `NumberInput`: Input-based numeric entry with raw draft text while focused and formatted display on blur; Enter/blur commit and clamp, arrows step; empty becomes null, invalid input keeps the prior value; plain hidden form value.
 - `NumberStepper`: Field-aware spinbutton with NumberTicker between ghost IconButtons; hidden named value and disabled state; a step beyond a limit gives useStretch a scale-adjusted snap kick.
-- `RangeSlider`: VolumeSlider's track with two knobs in the ink fill; a press grabs the nearer knob; knobs stop at each other; the track stretches past the grabbed knob's end.
-- `TimeWheel`: hour, minute and AM/PM wheels (`role="spinbutton"`); a flick lands on the row nearest position + velocity × 0.1 s with `snap`; hours and minutes loop, AM/PM stretches with `rubber`.
-- `DatePicker`: a `role="grid"` month with roving focus; the selected pill's edges ride two `useLiquid` pairs, so it stretches across rows and columns; months blur-swap in the direction of travel; the value is "YYYY-MM-DD".
-- `FileUpload`: a drop-zone button morphs into a progress pill (a lime `useLiquid` fill and a `NumberTicker` percentage), then into MorphButton's success.
+- `Slider`: a measured SliderTrack with one knob, min/max/step, keyboard arrows/Home/End and rubber overdrag; Field context and hidden named value.
+- `RangeSlider`: SliderTrack with two knobs that stop at each other; a press grabs the nearer knob; Field context and two hidden values in low/high order.
+- `TimeWheel`: fixed hour, minute and AM/PM spinbutton wheels; flicks project position + velocity × 0.1 s, then settle with snap; Field/disabled state and a hidden HH:MM form value.
+- `DatePicker`: nullable ISO date on CalendarView; the selected pill uses two liquid edge pairs, months blur-swap in the travel direction; full width, min/max, Field and form props.
+- `DateRangePicker`: CalendarView with a local first pick and hover/focus preview; the second pick emits an ordered complete range; liquid row bands with clipped paper labels, separate startName/endName values.
+- `FileUpload`: full-width native picker/drop target with accept, multiple and disabled; morphs into a progress pill with NumberTicker, then a success Check; the caller owns uploading.
 
 Navigation:
 
 - `Link`: a native `<a>` in the current text color with a light underline; inside `LinkProvider navigate={…}`, plain left clicks on same-origin links call `navigate(href)` instead of loading the page. `useLinkClick()` (from `Link.tsx`) gives the same click handling to components that render their own `<a>`.
-- `SegmentedTabs`: tablist with roving focus and arrow keys; a `useLiquid` pill in percent; the selected label is a second, clipped layer in `paper`.
-- `UnderlineTabs`: SegmentedTabs' tablist with tabs sized to their labels; a `useLiquid` underline in px, measured from the selected tab and again once fonts load.
-- `TabBar`: mobile bottom tablist; a `useLiquid` pill slides behind the selected icon; each item's `icon` blur-swaps to its `activeIcon`.
-- `SidebarNav`: a `nav` list with `aria-current="page"`; SegmentedTabs' ink pill and clipped `paper` layer, turned vertical; ArrowUp/ArrowDown move focus only.
-- `CollapsibleSidebar`: an icon rail whose width springs into the sidebar (pushing the content, not overlaying); labels blur in after it widens and out before it narrows; SidebarNav's pill grows with it.
-- `Breadcrumbs`: middle crumbs collapse into a "…" pill whose width springs out to the hidden crumbs, which blur in; `clip-path: inset(-4px)` keeps each crumb's focus ring.
-- `Pagination`: page numbers in fixed slots that blur-swap when the window shifts; SegmentedTabs' pill slides to the current page.
+- `SegmentedTabs`: equal intrinsic columns based on the widest label; roving arrows/Home/End, liquid selected pill and clipped paper labels; optional id wires tab/panel ids.
+- `UnderlineTabs`: label-sized tabs with a measured liquid underline, remeasured after fonts load; roving keys and the same optional id contract.
+- `Tabs`: composes either tablist and one focusable tabpanel; only current content mounts, with inert, hidden exiting content during the blur swap.
+- `TabBar`: named navigation with href links or action buttons and aria-current; arrows move focus only; liquid icon pill and active-icon blur swap. Link selection follows the caller/router.
+- `SidebarNav`: links or buttons with aria-current, focus-only vertical arrows and a liquid ink pill; collapsed labels stay named; leading content allows CollapsibleSidebar to supply its toggle.
+- `CollapsibleSidebar`: composes SidebarNav and an IconButton inside a width spring from a 48 px rail to a 208 px sidebar; pushes adjacent content.
+- `Breadcrumbs`: links for href items, buttons for actions and a nonlinked current page; the middle trail expands from a measured pill with focus-ring-safe clipping. Its expanded intrinsic trail can exceed a narrow viewport.
+- `Pagination`: fixed slots blur-swap around a liquid selected pill; IconButton arrows, optional numbered page links through pageHref; navigation callbacks still run.
 - `PageDots`: a `role="slider"` row of dots; the active dot is a `useLiquid` pill; a press or drag picks the page under the pointer; past either end the capsule and pill stretch with `rubber`.
-- `WizardSteps`: display-only `<ol>` of steps; one ink line draws between dot centers with `pathLength` on `soft`; a finished dot turns accent with the `Check`.
+- `WizardSteps`: display-only list of equal-width columns, truncated labels with full accessible text, drawing progress line and accent Check dots.
 
 Feedback:
 
 - `StatusBadge`: a 24 px status pill (info ink, success accent, warning paper with an ink icon and a line rim, neutral hover tone); a new status fades the color on `soft`, blur-swaps the label, and the width follows it.
 - `Skeleton`: an `aria-hidden` placeholder with the `animate-shimmer` pulse; the caller's `className` sizes and rounds it.
 - `Spinner`: `<Spinner size={16} />`, a turning arc in the current text color; decorative, so the busy control or region carries the name; stops at motion scale 0.
+- `EmptyState`: title with optional description, icon and action content; ordinary structure without its own card or animation.
+- `LoadingState`: named status with Spinner and an optional description.
+- `NotificationList`: shares ListContent, Avatar, IconButton and EmptyState; controlled read/dismiss actions, inert blur-out rows, springing positions and measured height; focus moves to a remaining action or the region.
 - `Toast`: status pill sized by `useWidth`, with a blur swap and `Spinner` while loading.
 - `ToastStack`: full-width stack that fans out while hovered or focused; `IconButton` dismissals hand focus to a remaining toast; rows blur out and spring into place.
 - `Alert`: full-width `rounded-overlay` card measured by `useSize`; status color fades, one icon path morphs and text blur-swaps as height springs; success uses `text-on-accent`.
@@ -100,7 +107,7 @@ Data display:
 
 - `Tag`: a 28 px `bg-hover` pill with a label and optional icon; with `onRemove`, a remove button beside the text, and the focus ring on the pill.
 - `Kbd`: a native `<kbd>` key cap, 22 px, inline in text.
-- `List`: a bare `<ul role="list">` of rows (leading slot, truncating title, description, trailing slot) separated by `line` rules; display only.
+- `List`: a bare `<ul role="list">` of rows (leading slot, truncating title, description, trailing slot) separated by line rules; display only. Its internal ListContent is shared with NotificationList, not exported from the package.
 - `DescriptionList`: a `<dl>` of label/value pairs, side by side from 384 px of its own width (a container query), stacked below.
 - `Timeline`: an `<ol role="list">` of events joined by a line through dots or icon circles; title, time and description.
 - `Avatar`: a circle with an `Image`, or ink initials when there's no image or it fails; `size` sm, md or lg (24, 32, 44 px); named by `name`.
@@ -116,22 +123,25 @@ Layout:
 
 - `Card`: a surface (`rounded-card`, `shadow-float`), `tone` paper or ink, no padding of its own; the ink tone sets the focus ring to paper and `line` to ink-3 inside.
 - `Separator`: a native `<hr>` rule in `line`, horizontal or vertical (stretching to its flex or grid row).
-- `Accordion`: each item is a paper pill whose height springs to `auto` to hold its panel; the panel stays mounted and `inert` when closed and blur-swaps; one item open at a time.
-- `ExpandableCard`: `Expand` with `anchor="corner"`: a 280 × 72 card grows into a 360 × 400 detail view.
-- `SplitPane`: two panes and a `role="separator"`; the value is a fraction of the width; past `min`/`max` the pane goes `rubber` px further and springs back; the grip grows and turns ink while held.
+- `Accordion`: full-width paper disclosures with token radii; one item opens at a time, content stays mounted and inert when closed; Icon chevrons and blur-swapped panels; arrow/Home/End focus navigation.
+- `ExpandableCard`: `Expand` with a corner anchor; a 280 × 72 card grows into a 360 × 400 detail view with an IconButton close action; token radii and outer placement className.
+- `SplitPane`: two full-size panes with a keyboard-accessible separator; the fraction controls their widths, overdrag stretches with rubber and releases with snap; the grip grows and turns ink while held.
+
+- `PageHeader`: h1, optional description, breadcrumbs and actions; actions wrap below the title in narrow containers.
 
 Overlays:
 
 - `Popover`: `Expand` with `anchor="corner"`: the trigger pill grows into a non-modal dialog toward the side with room; a window `pointerdown` listener closes it on a click outside.
 - `Tooltip`: one ink tooltip shared by a `role="toolbar"` of buttons; it glides between targets on `shape`, its width follows its text, the text blur-swaps; 400 ms before the first show.
-- `Dialog`: `Expand` inside a layer that flies to the middle of the viewport on `shape` while it grows; modal, with a backdrop, Tab kept inside, focus back to the button.
+- `Dialog`: Modal with a measured Button trigger (`trigger={null}` omits it); one paper shape flies from that box to a centered panel, up to 420 px wide and viewport-capped, with a scrolling body; Escape/backdrop close and native focus return. `role="alertdialog"` disables backdrop dismissal and lets its child mark initial focus.
+- `AlertDialog`: Dialog with alertdialog semantics and a described confirmation message; Cancel gets initial focus, backdrop does not dismiss, and Confirm calls the action then closes.
 - `BottomSheet`: a `role="dialog"` sheet whose offset is a fraction of its height; dragged from its top strip; the release projects position + velocity × 0.2 s to close or spring back; the backdrop's opacity follows the offset.
 - `Island`: `Expand` with a compact width from `useWidth`; `leading`/`trailing` in the pill, `children` in the panel; a new `activity` blur-swaps both and morphs the width.
 
 Media:
 
 - `Image`: a native `<img>` in a box the caller sizes and rounds; a `bg-hover` placeholder until it loads, then it fades in on `soft`; on error, `fallback` blurs in instead.
-- `VolumeSlider`: slider drag built on `src/drag.ts`: the value comes from the pointer, the pill stretches past either end with `rubber` and `useStretch`, and springs back with `snap`; arrow-key steps.
+- `VolumeSlider`: measured full-width speaker slider with paper or ink tone; direct pointer value, rubber overdrag, snap release and arrow/Home/End keys; formatValue names the value.
 - `MusicPlayer`: an island that expands into a player, built on `Expand`; play/pause path morph; `SeekBar`.
 - `VideoControls`: a controlled dark bar with the play/pause morph, `SeekBar` and a VolumeSlider-style volume.
 - `WaveformScrubber`: bars filled up to the position by a clipped second row; the drag pieces from `src/drag.ts` make it follow the pointer and stretch past the ends.
@@ -148,9 +158,11 @@ Shared code (owned by the lead; read-only for subagents unless a brief assigns a
 - `src/useSize.ts`: `const [size, ref] = useSize();` width and height of the element you pass `ref` to, measured on mount and on every resize. For geometry that follows the container: a slider's travel, a chart's slots. `size` is undefined until the first measurement.
 - `src/list.tsx`, taken from `CommandPalette`: `ROW` (40 px rows); `filterByWords(items, query)`, the word-prefix filter; `const [active, setActive, onArrowKey] = useActiveIndex(count)`, the highlighted row with ArrowUp/ArrowDown wrapping and Home/End (call `onArrowKey` from the key handler of whatever holds focus; Enter and Escape stay in the component); `<ListHighlight index={active} />`, the `bg-hover` highlight that slides and stretches behind a row, placed first in a `relative` list. `useTypeahead(items, active, setActive)` matches label prefixes with a 700 ms timeout; `scrollToRow(list, index)` scrolls only the list, keeping the enclosing morph stable.
 - `src/Menu.tsx`: shared action/context menu rows, highlight, disabled actions, keyboard selection and typeahead; focuses its list on open and calls `onClose(restoreFocus)` on dismissal. The owner supplies placement, trigger and focus return.
+- `src/SliderTrack.tsx`: shared measured geometry, pointer capture, nearest-knob picking, keyboard bounds and rubber release for Slider and RangeSlider; one or two values with Field wiring supplied by the owner.
+- `src/calendar.ts`: pure local ISO-date parsing/formatting, month grids, month and keyboard arithmetic, bounds and range ordering; tested with Node. `src/CalendarView.tsx` shares the header, month swap, roving day grid and selection slot. Its distinct filename avoids a Calendar.tsx/calendar.ts collision on case-insensitive filesystems and in generated declarations.
 - `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed. On press, `stop()` the value: `set()` doesn't stop a spring that's still running from the last release, and the spring would win.
 - `src/overlay.ts`: `const { room, settle } = useTopLayer(frame, open)` lifts `frame` — a transparent `absolute inset-0` box inside a shape's `relative` wrapper — into the browser's top layer while `open`, exactly over the wrapper and following it every frame, until you call `settle` from the shape's `onAnimationComplete`; the shape inside keeps its own position, overlays everything, and escapes `overflow: hidden` and transformed ancestors, while DOM order and Tab order stay put. `room` (`above`, `below`, `left`, `right` in px, measured when it opened) is for opening upward or capping a menu's height. `useOutsidePress(ref, open, onPress)` calls `onPress` on a pointer press outside `ref` while open.
-- `src/Modal.tsx`: `<Modal open onClose aria-label>{layers}</Modal>`, the modal base for dialogs, sheets and the lightbox: a native `<dialog>` shown with `showModal()` in a portal on `document.body`, so the page behind is inert, Tab stays inside, Escape calls `onClose`, and the page doesn't scroll. Its children are the layers that animate in and out (a backdrop, a panel), each with an `exit`; mark the element to focus first with `data-autofocus` (not React's `autoFocus`, which fires before the dialog opens). When `open` turns false it closes the dialog at once, so focus returns to the opener and the page is usable immediately, and it keeps the layers painted until their exit animations end. Nothing renders on the server. Portaled content is outside the story root; `check_story.py` finds it anyway.
+- `src/Modal.tsx`: `<Modal open onClose aria-label>{layers}</Modal>`, the modal base for dialogs, sheets and the lightbox: a native `<dialog>` shown with `showModal()` in a portal on `document.body`, so the page behind is inert, Tab stays inside, Escape calls `onClose`, and the page doesn't scroll. Its children are the layers that animate in and out (a backdrop, a panel), each with an `exit`; mark the element to focus first with `data-autofocus` (not React's `autoFocus`, which fires before the dialog opens). When `open` turns false it closes the dialog at once, so focus returns to the opener and the page is usable immediately, and it keeps the layers painted and inert until their exit animations end. Nothing renders on the server. Portaled content is outside the story root; `check_story.py` finds it anyway.
 - `src/Expand.tsx`, taken from `MusicPlayer`: `<Expand open onOpenChange closed={{ width, height, radius }} opened={{ … }} anchor="center" | "corner" label trigger={…} className="bg-ink text-paper">{panel}</Expand>`. One shape springs between the two sizes on `shape`; the radii are CSS lengths, usually tokens (`"var(--radius-control)"` closed, `"var(--radius-overlay)"` or `"var(--radius-dialog)"` open). It takes the closed size in the layout and, lifted with `useTopLayer`, overlays everything when open, growing from the closed shape's center or from the corner that leaves it the most room in the viewport, shifting horizontally when neither side fits. The closed shape is a button (`label` names it, `trigger` is its content); the open content (`children`) is a fixed-size layer; both blur-swap. With `panelLabel`, the open layer is a named dialog and the button says it opens one. Focus moves into the panel on open and back to the button on close (unless the user has moved it to something else), Escape closes, and the focus ring sits on the shape while the button has it. Clicking outside is up to you (`useOutsidePress`).
 - `src/SeekBar.tsx`, taken from `MusicPlayer`: `<SeekBar value={seconds} duration onValueChange onScrubChange label valueText />`, a media progress bar for dark surfaces (`bg-ink-3` track, `bg-paper` fill). While held it follows the pointer, thickens, and stretches past either end with `rubber`, springing back with `snap`; `onScrubChange(true/false)` lets playback wait while scrubbing; ArrowLeft/ArrowRight skip 5 s.
 - `src/playback.ts`: `playPausePath(morph)`, the path from the play triangle (0) to the pause bars (1), and `clock(seconds)`, m:ss (used by `MusicPlayer`, `VideoControls`, `WaveformScrubber`).

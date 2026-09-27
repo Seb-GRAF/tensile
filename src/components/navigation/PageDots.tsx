@@ -1,6 +1,6 @@
 import { animate, motion, useTransform } from "motion/react";
 import { dragHandlers, rubber, useStretch } from "../../drag";
-import { snap, useLiquid } from "../../springs";
+import { useSprings, useLiquid } from "../../springs";
 
 export type PageDotsProps = {
   count: number;
@@ -10,6 +10,7 @@ export type PageDotsProps = {
   label?: string;
   /** Text for the current page; `page` counts from 1. */
   pageLabel?: (page: number, count: number) => string;
+  className?: string;
 };
 
 const HEIGHT = 32;
@@ -22,7 +23,9 @@ export function PageDots({
   onValueChange,
   label = "Pages",
   pageLabel = (page: number, count: number) => `Page ${page} of ${count}`,
+  className = "",
 }: PageDotsProps) {
+  const { snap } = useSprings();
   const width = HEIGHT + (count - 1) * SLOT;
   const [stretch, style] = useStretch(width, HEIGHT);
   const start = (HEIGHT - DOT) / 2 + value * SLOT;
@@ -74,9 +77,9 @@ export function PageDots({
       {...dragHandlers(drag, release)}
       onKeyDown={onKeyDown}
       style={{ width }}
-      className="relative flex h-8 cursor-pointer touch-none items-center gap-2 rounded-full px-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
+      className={`relative flex h-8 cursor-pointer touch-none items-center gap-2 rounded-control px-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
     >
-      <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 rounded-full bg-paper shadow-float" />
+      <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 rounded-control bg-paper shadow-float" />
       {Array.from({ length: count }, (_, i) => (
         <span key={i} className="relative size-2 rounded-full bg-muted/40" />
       ))}

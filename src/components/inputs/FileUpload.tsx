@@ -1,7 +1,9 @@
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useIsPresent, useMotionTemplate } from "motion/react";
 import { useRef, useState } from "react";
 import { Check } from "../../Check";
-import { shape, soft, swap, useLiquid } from "../../springs";
+import { useLiquid, useSprings } from "../../springs";
+import { useSize } from "../../useSize";
+import { Icon } from "../data-display/Icon";
 import { NumberTicker } from "../data-display/NumberTicker";
 
 export type FileUploadProps = {
@@ -14,69 +16,75 @@ export type FileUploadProps = {
   uploadingLabel?: (name: string) => string;
   formatProgress?: (progress: number) => string;
   doneLabel?: string;
+  accept?: string;
+  multiple?: boolean;
+  disabled?: boolean;
+  className?: string;
 };
 
-const WIDTH = 320;
 const INSET = 4;
 const FILL_MIN = 36;
-const TRAVEL = WIDTH - 2 * INSET - FILL_MIN;
 
-const shapes = {
-  idle: { width: WIDTH, height: 128, backgroundColor: "var(--color-paper)" },
-  over: { width: WIDTH + 16, height: 144, backgroundColor: "var(--color-accent)" },
-  uploading: { width: WIDTH, height: 44, backgroundColor: "var(--color-paper)" },
-  done: { width: 44, height: 44, backgroundColor: "var(--color-accent)" },
-};
+function UploadTrigger({ disabled, ...props }: React.ComponentProps<typeof motion.button>) {
+  const { swap } = useSprings();
+  const present = useIsPresent();
+  return <motion.button {...props} {...swap} disabled={disabled || !present} aria-hidden={!present} inert={!present} />;
+}
 
-export function FileUpload({
-  status,
-  progress,
-  onFiles,
-  label = "Drop a file or click to upload",
-  uploadingLabel = (name: string) => `Uploading ${name}`,
-  formatProgress = (progress: number) => progress.toLocaleString("en-US", { style: "percent" }),
-  doneLabel = "Uploaded",
-}: FileUploadProps) {
+function UploadShape({
+  status, progress, onFiles, label, uploadingLabel, formatProgress, doneLabel,
+  accept, multiple, disabled, width,
+}: Required<Omit<FileUploadProps, "accept" | "className">> & { accept?: string; width: number }) {
+  const { shape, soft, swap } = useSprings();
   const input = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [name, setName] = useState("");
-  const [left, right] = useLiquid(INSET, INSET + (1 - progress) * TRAVEL);
+  const [left, right] = useLiquid(INSET, INSET + (1 - progress) * (width - 2 * INSET - FILL_MIN));
+  const clipPath = useMotionTemplate`inset(0px ${right}px 0px ${left}px round var(--radius-control))`;
+  const shapes = {
+    idle: { width, height: 128, borderRadius: "var(--radius-card)", backgroundColor: "var(--color-paper)" },
+    over: { width: width + 16, height: 144, borderRadius: "var(--radius-card)", backgroundColor: "var(--color-accent)" },
+    uploading: { width, height: 44, borderRadius: "var(--radius-control)", backgroundColor: "var(--color-paper)" },
+    done: { width: 44, height: 44, borderRadius: "var(--radius-control)", backgroundColor: "var(--color-accent)" },
+  };
+  const content = (
+    <>
+      <span className="min-w-0 flex-1 truncate">{uploadingLabel(name)}</span>
+      <NumberTicker value={progress} format={formatProgress} />
+    </>
+  );
 
   function take(fileList: FileList) {
     const files = Array.from(fileList);
-    setName(files.map((file) => file.name).join(", "));
-    onFiles(files);
+    const selected = multiple ? files : files.slice(0, 1);
+    setName(selected.map((file) => file.name).join(", "));
+    onFiles(selected);
   }
 
   function allowDrop(event: React.DragEvent) {
     event.preventDefault();
-    setOver(true);
+    if (!disabled) setOver(true);
   }
 
   return (
-    <div className="grid h-32 w-80 place-content-center place-items-center">
+    <>
       <motion.div
         initial={false}
         animate={shapes[over ? "over" : status]}
-        transition={{ width: shape, height: shape, backgroundColor: soft }}
-        className="relative grid place-content-center place-items-center overflow-hidden rounded-[22px] shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink"
+        transition={{ width: shape, height: shape, borderRadius: shape, backgroundColor: soft }}
+        className="relative grid place-content-center place-items-center overflow-hidden shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
       >
         <AnimatePresence initial={false}>
           {status !== "idle" && (
-            <motion.span
-              key="fill"
-              {...swap}
-              style={{ left, right }}
-              className="absolute inset-y-0 my-auto h-9 rounded-full bg-accent"
-            />
+            <motion.span key="fill" {...swap} style={{ left, right }} className="absolute inset-y-0 my-auto h-9 rounded-control bg-accent" />
           )}
         </AnimatePresence>
         <AnimatePresence initial={false}>
           {status === "idle" && (
-            <motion.button
+            <UploadTrigger
               key="idle"
-              {...swap}
               type="button"
+              disabled={disabled}
               onClick={() => input.current!.click()}
               onDragEnter={allowDrop}
               onDragOver={allowDrop}
@@ -86,24 +94,18 @@ export function FileUpload({
               onDrop={(event) => {
                 event.preventDefault();
                 setOver(false);
-                take(event.dataTransfer.files);
+                if (!disabled) take(event.dataTransfer.files);
               }}
               className="absolute inset-0 grid place-content-center place-items-center outline-none"
             >
-              <span className="flex w-80 flex-col items-center gap-2.5 px-6 text-center text-[15px] font-medium text-ink">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="size-6 fill-none stroke-current"
-                  strokeWidth={1.5}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+              <span style={{ width }} className={`flex flex-col items-center gap-2.5 px-6 text-center text-body font-medium ${over ? "text-on-accent" : "text-ink"}`}>
+                <Icon size={24}>
                   <path d="M12 15V4m-5 5 5-5 5 5" />
                   <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
-                </svg>
+                </Icon>
                 {label}
               </span>
-            </motion.button>
+            </UploadTrigger>
           )}
           {status === "uploading" && (
             <motion.div
@@ -115,14 +117,15 @@ export function FileUpload({
               aria-valuemax={100}
               aria-valuenow={Math.round(progress * 100)}
               aria-valuetext={formatProgress(progress)}
-              className="relative col-start-1 row-start-1 flex h-11 w-80 items-center gap-3 pr-4 pl-13 text-sm font-medium text-ink"
+              style={{ width }}
+              className="relative col-start-1 row-start-1 h-11 text-sm font-medium"
             >
-              <span className="min-w-0 flex-1 truncate">{uploadingLabel(name)}</span>
-              <NumberTicker value={progress} format={formatProgress} />
+              <span className="absolute inset-0 flex items-center gap-3 pr-4 pl-13 text-ink">{content}</span>
+              <motion.span aria-hidden style={{ clipPath }} className="absolute inset-0 flex items-center gap-3 pr-4 pl-13 text-on-accent">{content}</motion.span>
             </motion.div>
           )}
           {status === "done" && (
-            <motion.span key="done" {...swap} className="relative col-start-1 row-start-1 text-ink">
+            <motion.span key="done" {...swap} className="relative col-start-1 row-start-1 text-on-accent">
               <Check size={20} />
             </motion.span>
           )}
@@ -132,14 +135,36 @@ export function FileUpload({
         ref={input}
         type="file"
         hidden
+        accept={accept}
+        multiple={multiple}
+        disabled={disabled}
         onChange={(event) => {
           take(event.target.files!);
           event.target.value = "";
         }}
       />
-      <span role="status" className="sr-only">
-        {status === "done" && doneLabel}
-      </span>
+      <span role="status" className="sr-only">{status === "done" && doneLabel}</span>
+    </>
+  );
+}
+
+export function FileUpload({
+  status,
+  progress,
+  onFiles,
+  label = "Drop a file or click to upload",
+  uploadingLabel = (name: string) => `Uploading ${name}`,
+  formatProgress = (progress: number) => progress.toLocaleString("en-US", { style: "percent" }),
+  doneLabel = "Uploaded",
+  accept,
+  multiple = false,
+  disabled = false,
+  className = "",
+}: FileUploadProps) {
+  const [size, measure] = useSize();
+  return (
+    <div ref={measure} className={`grid h-32 w-full place-content-center place-items-center ${disabled ? "opacity-40" : ""} ${className}`}>
+      {size && <UploadShape width={size.width} status={status} progress={progress} onFiles={onFiles} label={label} uploadingLabel={uploadingLabel} formatProgress={formatProgress} doneLabel={doneLabel} accept={accept} multiple={multiple} disabled={disabled} />}
     </div>
   );
 }

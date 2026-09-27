@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
+import { Button } from "../actions/Button";
 import { ExpandableCard } from "./ExpandableCard";
 
 const tracks = [
@@ -26,10 +27,10 @@ const meta = {
     ),
     children: (
       <>
-        <p className="text-[13px] text-muted">Long, quiet tracks without vocals, for reading, writing and late nights.</p>
-        <ol className="mt-5">
+        <p className="text-label text-muted">Long, quiet tracks without vocals, for reading, writing and late nights.</p>
+        <ol role="list" className="mt-5">
           {tracks.map(({ title, artist, time }, i) => (
-            <li key={title} className="flex h-10 items-center gap-3 text-[13px]">
+            <li key={title} className="flex h-10 items-center gap-3 text-label">
               <span className="w-3 text-muted tabular-nums">{i + 1}</span>
               <span className="min-w-0 grow truncate font-medium">{title}</span>
               <span className="text-muted">{artist}</span>
@@ -37,12 +38,7 @@ const meta = {
             </li>
           ))}
         </ol>
-        <button
-          type="button"
-          className="mt-5 h-11 w-full rounded-full bg-ink text-sm font-medium text-paper outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-        >
-          Play
-        </button>
+        <Button className="mt-5 w-full">Play</Button>
       </>
     ),
     open: false,
@@ -58,7 +54,7 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="h-[400px] w-[360px]">
+      <div className="h-[400px] w-[360px] max-w-[calc(100vw-2rem)]">
         <ExpandableCard
           {...args}
           onOpenChange={(open) => {
