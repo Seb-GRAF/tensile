@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { filterByWords, ListHighlight, ROW, useActiveIndex } from "../list";
-import { shape, soft } from "../springs";
+import { shape, soft, swap } from "../springs";
 
 type Command = { label: string; icon?: React.ReactNode };
 
@@ -150,7 +150,13 @@ export function CommandPalette({
               </motion.li>
             ))}
           </AnimatePresence>
-          {results.length === 0 && <li className="flex h-10 items-center px-2.5 text-sm text-muted">{emptyText}</li>}
+          <AnimatePresence initial={false}>
+            {results.length === 0 && (
+              <motion.li key="empty" {...swap} className="flex h-10 origin-left items-center px-2.5 text-sm text-muted">
+                {emptyText}
+              </motion.li>
+            )}
+          </AnimatePresence>
         </ul>
       </div>
     </motion.div>

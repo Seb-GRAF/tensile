@@ -55,6 +55,13 @@ Components in `src/components/`, each with a story. Read the one you start from 
 - `ExpandableCard`: `Expand` with `anchor="top-left"`: a 280 × 72 card grows into a 360 × 400 detail view.
 - `Lightbox`: a thumbnail row; the clicked thumbnail's measured box springs (left, top, size, radius) into a 3:2 full view over a backdrop and back; arrows blur-swap the picture.
 - `CollapsibleSidebar`: an icon rail whose width springs into the sidebar (pushing the content, not overlaying); labels blur in after it widens and out before it narrows; SidebarNav's pill grows with it.
+- `Combobox`: Select's pill as a text input; typing filters with `filterByWords`, rows blur in and out and slide on springs, the empty row blurs in too.
+- `OTPInput`: one input per cell (`autoComplete="one-time-code"`); one ring slides between cells with `useLiquid`; digits blur in; paste fills every cell.
+- `Rating`: a `role="slider"` of 1.5 px star outlines; a lime fill cut to the star shapes slides on `useLiquid` to the hovered star and back to the value.
+- `ColorSwatches`: a radiogroup of swatches; one ink ring with a paper lining slides between them with `useLiquid`, visible over any color.
+- `TagInput`: chips blur in and out; chips and input slide to new places with Motion's `layout="position"`; the field's height follows the rows.
+- `FileUpload`: a drop-zone button morphs into a progress pill (a lime `useLiquid` fill and a `NumberTicker` percentage), then into MorphButton's success.
+- `DatePicker`: a `role="grid"` month with roving focus; the selected pill's edges ride two `useLiquid` pairs, so it stretches across rows and columns; months blur-swap in the direction of travel; the value is "YYYY-MM-DD".
 
 Shared code (owned by the maintainer, read-only for subagents):
 
@@ -136,6 +143,7 @@ export function Select({
   - `dragHandlers` capture the pointer on press, so in Chromium the click that follows goes to the dragged element, never to a button inside it. Keep buttons out of the dragged element (see `BottomSheet`'s grab strip).
   - `whileTap` turns Enter into fake `pointerdown`/`pointerup` events; don't combine it with your own pointer handlers on an element that also handles Enter (see `HoldButton`).
   - Drags need pointer capture and `touch-none`.
+  - A grid row whose cells are all empty collapses to 0 px; give rows a fixed height when positions assume a fixed row count (see `DatePicker`).
 
 ## Working as a subagent
 
