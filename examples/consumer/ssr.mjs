@@ -18,11 +18,14 @@ const data = [
   { label: "Wed", value: 4 },
 ];
 
+const table = { columns: [{ key: "name", header: "Name" }], rows: [{ name: "Report" }], rowKey: (row) => row.name, caption: "Files" };
+
 const cases = {
   Accordion: { items: [{ value: "a", label: "First", content: "Text" }], value: null, onValueChange: noop },
   ActionMenu: { actions: [{ label: "Rename" }], onAction: noop },
   Alert: { status: "info" },
   AlertDialog: { open: false, onOpenChange: noop, title: "Confirm", description: "Continue?", onConfirm: noop, trigger: "Confirm" },
+  AppShell: { children: "Main" },
   Avatar: { name: "Maya Chen" },
   AvatarGroup: { people: [{ name: "Maya Chen" }, { name: "Leo Park" }] },
   Badge: { count: 3 },
@@ -35,12 +38,14 @@ const cases = {
   Checkbox: { checked: false, onCheckedChange: noop },
   CheckboxGroup: { options, value: ["a"], onValueChange: noop },
   CollapsibleSidebar: { items: nav, value: "a", onValueChange: noop, expanded: true, onExpandedChange: noop },
+  ColorPicker: { value: "#3a7bd5", onValueChange: noop },
   ColorSwatches: { options: [{ value: "ink", label: "Ink", color: "#111110" }], value: "ink", onValueChange: noop },
   Combobox: { options, value: null, onValueChange: noop },
   CommandPalette: { commands: [{ label: "Open" }], onSelect: noop },
   CompareSlider: { before: "Before", after: "After", value: 0.5, onValueChange: noop },
   ContextMenu: { actions: [{ label: "Rename" }], onAction: noop, children: "Target" },
   CopyButton: { value: "text" },
+  DataTable: { ...table, sort: null, onSortChange: noop, selection: [], onSelectionChange: noop, page: 1, pageCount: 1, onPageChange: noop },
   DatePicker: { value: "2026-09-18", onValueChange: noop },
   DateRangePicker: { value: { start: "2026-09-18", end: "2026-09-22" }, onValueChange: noop },
   DescriptionList: { items: [{ label: "Status", value: "Shipped" }] },
@@ -53,6 +58,8 @@ const cases = {
   Field: { label: "Email", children: h(ui.Input, { value: "", onValueChange: noop }) },
   Fieldset: { legend: "Contact", children: "Fields" },
   FileUpload: { status: "idle", progress: 0, onFiles: noop },
+  Footer: { groups: [{ title: "Product", links: [{ label: "Docs", href: "/docs" }] }] },
+  Header: { brand: "Brand", links: [{ label: "Home", href: "/" }], value: "/" },
   HoldButton: { done: false, onDone: noop },
   Icon: { children: h("path", { d: "M5 12h14" }) },
   IconButton: { label: "Close", children: icon },
@@ -96,6 +103,7 @@ const cases = {
   StatTile: { value: 1200, change: 0.12 },
   StatusBadge: { status: "success", label: "Done" },
   SwipeButton: { confirmed: false, onConfirm: noop },
+  Table: table,
   Tabs: { items: [{ value: "a", label: "First", content: "Panel" }], value: "a", onValueChange: noop },
   TabBar: { items: nav, value: "a", onValueChange: noop },
   Tag: { label: "Design", onRemove: noop },
@@ -104,6 +112,7 @@ const cases = {
   TextField: { value: "", onValueChange: noop },
   ThemeToggle: { value: "light", onValueChange: noop },
   Timeline: { items: [{ id: "1", title: "Created" }] },
+  TimePicker: { value: null, onValueChange: noop },
   TimeWheel: { value: { hours: 9, minutes: 30 }, onValueChange: noop },
   Toast: { status: "success" },
   ToastStack: { toasts: [{ id: "1", label: "Saved" }], onDismiss: noop },
@@ -111,6 +120,7 @@ const cases = {
   ToggleGroup: { options, value: ["a"], onValueChange: noop },
   Toolbar: { label: "Actions", children: h(ui.Button, {}, "Copy") },
   Tooltip: { label: "Copy", children: (trigger) => h(ui.Button, trigger, "Copy") },
+  TreeView: { items: [{ value: "a", label: "First", children: [{ value: "b", label: "Second" }] }], value: "b", onValueChange: noop, expanded: ["a"], onExpandedChange: noop },
   UnderlineTabs: { options, value: "a", onValueChange: noop },
   VideoControls: {
     duration: 60,

@@ -21,6 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Click a segment, or Tab in and use the arrow keys, Home and End: the ink pill slides to it. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

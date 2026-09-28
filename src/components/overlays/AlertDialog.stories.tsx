@@ -20,6 +20,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Click Delete playlist: focus starts on Cancel; Escape or Cancel closes it, Confirm runs the action; the backdrop doesn't dismiss it. */
 export const Default: Story = {
   render: function Render(args) {
     const [open, setOpen] = useState(args.open);

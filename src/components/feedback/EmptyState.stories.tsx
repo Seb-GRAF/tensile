@@ -19,4 +19,5 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+/** An empty view's title, description, icon and action; the action is an ordinary Button. */
 export const Default: Story = {};

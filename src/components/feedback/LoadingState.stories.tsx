@@ -12,4 +12,5 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+/** A named loading status with a spinner; there is nothing to interact with. */
 export const Default: Story = {};

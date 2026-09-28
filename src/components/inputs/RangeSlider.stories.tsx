@@ -55,6 +55,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Drag either knob or press the track to move the nearer one; Tab to a knob and use the arrow keys, Home and End. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

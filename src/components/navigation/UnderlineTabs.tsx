@@ -11,7 +11,8 @@ export type UnderlineTabsProps = {
   className?: string;
 };
 
-function Underline({ left, right }: { left: number; right: number }) {
+/** The liquid underline under the current item of a row, between the `left` and `right` edges measured from the row. */
+export function Underline({ left, right }: { left: number; right: number }) {
   const [l, r] = useLiquid(left, -right);
   const width = useTransform(() => -r.get() - l.get());
   return (

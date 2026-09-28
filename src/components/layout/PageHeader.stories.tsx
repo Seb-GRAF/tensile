@@ -18,4 +18,5 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+/** A page title with its description, breadcrumbs and actions; in a narrow container the actions wrap below the title. */
 export const Default: Story = {};

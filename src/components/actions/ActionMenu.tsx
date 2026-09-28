@@ -12,24 +12,32 @@ export type ActionMenuProps = {
   label?: string;
   menuLabel?: string;
   trigger?: React.ReactNode;
+  /** `sm` is the 32 px trigger for dense rows, e.g. an icon trigger in a table. */
+  size?: "md" | "sm";
   className?: string;
 };
 
-export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Actions", trigger, className = "" }: ActionMenuProps) {
+const sizes = {
+  md: { height: 44, box: "h-11", trigger: "px-4 text-sm" },
+  sm: { height: 32, box: "h-8", trigger: "px-2 text-label" },
+};
+
+export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Actions", trigger, size = "md", className = "" }: ActionMenuProps) {
   const { shape, swap } = useSprings();
   const [open, setOpen] = useState(false);
   const [initialIndex, setInitialIndex] = useState(0);
-  const [size, measure] = useSize();
+  const [triggerSize, measure] = useSize();
   const button = useRef<HTMLButtonElement>(null);
   const frame = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const { room, settle } = useTopLayer(frame, open);
   useOutsidePress(frame, open, () => setOpen(false));
-  const width = size?.width;
+  const width = triggerSize?.width;
   const menuWidth = Math.max(224, width ?? 0);
   const up = room !== undefined && room.below < 13 + actions.length * ROW && room.above > room.below;
   const maxHeight = room === undefined ? actions.length * ROW : Math.max(0, (up ? room.above : room.below) - 13);
-  const height = open ? 57 + Math.min(actions.length * ROW, maxHeight) : 44;
+  const closed = sizes[size].height;
+  const height = open ? closed + 13 + Math.min(actions.length * ROW, maxHeight) : closed;
   const x = open && room ? Math.min(0, room.right - menuWidth + (width ?? 0)) : 0;
 
   function show(index: number) {
@@ -43,7 +51,7 @@ export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Act
   }
 
   return (
-    <div className={`relative h-11 ${className}`} style={{ width }}>
+    <div className={`relative ${sizes[size].box} ${className}`} style={{ width }}>
       <div ref={frame} className="absolute inset-0">
         <motion.div
           key={width === undefined ? "measuring" : "measured"}
@@ -67,9 +75,9 @@ export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Act
               event.preventDefault();
               show(event.key === "ArrowDown" ? 0 : actions.length - 1);
             }}
-            className="flex h-11 shrink-0 items-center text-sm font-medium text-ink outline-none"
+            className={`flex ${sizes[size].box} shrink-0 items-center font-medium text-ink outline-none`}
           >
-            <span ref={measure} className="inline-flex items-center whitespace-nowrap px-4">{trigger ?? label}</span>
+            <span ref={measure} className={`inline-flex items-center whitespace-nowrap ${sizes[size].trigger}`}>{trigger ?? label}</span>
           </button>
           <motion.div
             inert={!open}

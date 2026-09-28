@@ -48,6 +48,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Click an item, or Tab in, move focus with the arrow keys and press Enter: the pill slides and the icon swaps. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

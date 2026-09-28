@@ -3,14 +3,13 @@ import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
 import { Button } from "../actions/Button";
+import { ColorPicker, type ColorPickerProps } from "./ColorPicker";
 import { Field } from "./Field";
-import { Fieldset } from "./Fieldset";
-import { Slider, type SliderProps } from "./Slider";
 
-function StatefulSlider(props: SliderProps) {
+function StatefulColorPicker(props: ColorPickerProps) {
   const [value, setValue] = useState(props.value);
   return (
-    <Slider
+    <ColorPicker
       {...props}
       value={value}
       onValueChange={(value) => {
@@ -21,7 +20,7 @@ function StatefulSlider(props: SliderProps) {
   );
 }
 
-function SliderForm(props: SliderProps) {
+function ColorPickerForm(props: ColorPickerProps) {
   const [value, setValue] = useState(props.value);
   const [data, setData] = useState("");
   return (
@@ -33,11 +32,11 @@ function SliderForm(props: SliderProps) {
       }}
       onReset={() => { setValue(props.value); setData(""); }}
     >
-      <Field label="Temperature" description="Adjust in half-degree steps." error="Review this temperature." required>
-        <Slider {...props} name="temperature" value={value} onValueChange={setValue} />
+      <Field label="Brand color" description="Used for primary buttons, links and focus highlights across the workspace.">
+        <ColorPicker {...props} name="brand" value={value} onValueChange={setValue} />
       </Field>
       <div className="flex gap-2">
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Save</Button>
         <Button type="reset" variant="secondary">Reset</Button>
       </div>
       <output className="block text-label text-ink">{data}</output>
@@ -46,36 +45,27 @@ function SliderForm(props: SliderProps) {
 }
 
 const meta = {
-  title: "Inputs/Slider",
-  id: "components-slider",
-  component: Slider,
-  args: { value: 40, onValueChange: fn() },
-} satisfies Meta<typeof Slider>;
+  title: "Inputs/ColorPicker",
+  id: "components-colorpicker",
+  component: ColorPicker,
+  args: { value: "#3a7bd5", onValueChange: fn() },
+} satisfies Meta<typeof ColorPicker>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Drag the knob or press the track; Tab to it and use the arrow keys, Home and End; past either end it stretches and springs back. */
+/** Drag in the area or move its knob with the arrow keys, slide the hue, or type a hex and press Enter. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="w-60 max-w-full">
-        <StatefulSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+      <div className="w-80 max-w-full">
+        <StatefulColorPicker {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
       </div>
     );
   },
 };
 
 export const InAForm: Story = {
-  args: { value: 18, min: -20, max: 40, step: 0.5, formatValue: (value) => `${value.toLocaleString("en-US")}°C` },
-  render: (args) => <SliderForm {...args} />,
-};
-
-export const Disabled: Story = {
-  render: (args) => (
-    <Fieldset legend="Temperature" disabled className="w-60 max-w-full">
-      <Slider {...args} name="temperature" />
-    </Fieldset>
-  ),
+  render: (args) => <ColorPickerForm {...args} />,
 };

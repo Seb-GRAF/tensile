@@ -27,6 +27,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Type a password, then press the eye button (or Tab to it and press Enter) to show or hide it. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

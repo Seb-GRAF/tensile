@@ -25,7 +25,7 @@ export function Tabs({ items, value, onValueChange, label = "Sections", variant 
   const TabList = variant === "segmented" ? SegmentedTabs : UnderlineTabs;
 
   return (
-    <div className={`grid gap-4 ${className}`}>
+    <div className={`grid grid-cols-1 gap-4 ${className}`}>
       <TabList id={id} options={items} value={value} onValueChange={onValueChange} label={label} className="justify-self-start" />
       <div id={`${id}-${index}-panel`} role="tabpanel" aria-labelledby={`${id}-${index}`} tabIndex={0} className="rounded-overlay outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus">
         <AnimatePresence initial={false} mode="wait">

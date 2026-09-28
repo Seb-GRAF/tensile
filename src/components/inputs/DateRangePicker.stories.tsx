@@ -16,6 +16,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Pick a start and an end day by click, or with the arrow keys and Enter; the range previews while you hover or move focus; PageUp and PageDown change the month. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

@@ -101,11 +101,7 @@ export function Breadcrumbs({
             onClick={expand}
             className="col-start-1 row-start-1 grid h-8 place-items-center rounded-control px-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
           >
-            <Icon size={16}>
-              <circle cx="5" cy="12" r="1" />
-              <circle cx="12" cy="12" r="1" />
-              <circle cx="19" cy="12" r="1" />
-            </Icon>
+            <Icon size={16}>{icons.more}</Icon>
           </motion.button>
         )}
       </AnimatePresence>

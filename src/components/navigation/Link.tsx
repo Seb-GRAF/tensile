@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 const LinkContext = createContext<((href: string) => void) | undefined>(undefined);
 
 export type LinkProviderProps = {
-  /** Gets the link's `href` on a plain left click on a same-origin link, instead of the page loading it. */
+  /** Gets the link's `href` on a plain left click on a same-origin link, instead of the page loading it; links to a `#fragment` of the page keep scrolling natively. */
   navigate: (href: string) => void;
   children: React.ReactNode;
 };
@@ -12,7 +12,7 @@ export function LinkProvider({ navigate, children }: LinkProviderProps) {
   return <LinkContext value={navigate}>{children}</LinkContext>;
 }
 
-/** The click handler for components that render their own `<a>`: inside a `LinkProvider`, a plain left click on a same-origin link (no `target` other than `_self`, no `download`) calls `navigate(href)` instead of loading the page. Call it after the link's own `onClick`; a click that one prevented is left alone. */
+/** The click handler for components that render their own `<a>`: inside a `LinkProvider`, a plain left click on a same-origin link (no `target` other than `_self`, no `download`, not a `#fragment` of this page) calls `navigate(href)` instead of loading the page. Call it after the link's own `onClick`; a click that one prevented is left alone. */
 export function useLinkClick() {
   const navigate = useContext(LinkContext);
   return (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -27,6 +27,7 @@ export function useLinkClick() {
       event.altKey ||
       (link.target && link.target !== "_self") ||
       link.hasAttribute("download") ||
+      link.getAttribute("href")!.startsWith("#") ||
       link.origin !== window.location.origin
     )
       return;

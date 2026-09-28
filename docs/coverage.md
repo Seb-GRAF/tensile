@@ -38,8 +38,8 @@ What the design system covers, how, and where each piece stands. Status is **don
 | CheckboxGroup | done | composes Checkbox | 2 |
 | ToggleGroup | done | pressed buttons; also the selectable-chip pattern | 4 |
 | DateRangePicker | done | shares `calendar.ts` and `CalendarView` with DatePicker | 3 |
-| TimePicker | create | Popover with TimeWheel | 5 |
-| ColorPicker | create | 2D area, hue Slider, hex Input | 5 |
+| TimePicker | done | Popover with TimeWheel | 5 |
+| ColorPicker | done | 2D area, hue Slider, hex Input; conversions tested in `color.ts` | 5 |
 | EditableText | done | Input-based | 2 |
 | FileUpload | done | accept, multiple, disabled, responsive; file-list story | 3 |
 | Avatar, AvatarGroup | done | Avatar composes Image | 1 |
@@ -52,15 +52,15 @@ What the design system covers, how, and where each piece stands. Status is **don
 | Toolbar | done | roving focus; the gliding tooltip | 4 |
 | Navigation links and active states | done | SidebarNav, CollapsibleSidebar, Breadcrumbs, Pagination, TabBar | 3 |
 | PageHeader | done | | 3 |
-| Header, Footer, AppShell | create | | 5 |
+| Header, Footer, AppShell | done | Header's mobile nav is a left Drawer; AppShell's skip link uses native fragment navigation | 5 |
 | Tooltip, Popover, Dialog, BottomSheet | done | Tooltip takes a render-function trigger; Popover measures and takes six preferred placements; BottomSheet covers the viewport | 3–4 |
 | Drawer | done | shares `Sheet` with BottomSheet | 4 |
 | AlertDialog | done | composes Dialog | 3 |
 | ContextMenu | done | shares `Menu` with ActionMenu | 4 |
 | HoverCard | defer | Popover covers rich content on click, Tooltip covers hover hints; hover-only rich previews are hard to reach by keyboard | |
-| Table | create | | 5 |
-| DataTable | create | controlled; the caller sorts and pages | 5 |
-| TreeView | create | | 5 |
+| Table | done | | 5 |
+| DataTable | done | controlled; the caller sorts and pages | 5 |
+| TreeView | done | | 5 |
 | Image | done | | 1 |
 | Carousel | done | PageDots, IconButton, drag | 4 |
 | Responsive media, Lightbox and media controls | done; recipe in docs | Lightbox on Modal; VideoControls composes VolumeSlider; the `<video>` recipe is in the README | 4, 6 |
@@ -68,14 +68,136 @@ What the design system covers, how, and where each piece stands. Status is **don
 
 ## Composed examples
 
-| Example | Story | Wave |
-|---|---|---|
-| Settings form | Examples/Settings form | 5 |
-| Authentication form | Examples/Authentication | 5 |
-| Detail page | Examples/Detail page | 5 |
-| Theme and motion | Examples/Theme and motion | 5 |
-| Data management page | Examples/Data management | 6 |
-| Marketing page | Examples/Marketing | 6 |
+Examples import only from `src/index.ts`; mock data and simulated network activity live in the stories.
+
+| Example | Story id | Composes | Checked | Wave |
+|---|---|---|---|---|
+| Settings form | `examples-settings-form` | PageHeader, Card, Fieldset, Field, Input, PasswordInput, NumberInput, Select, MultiSelect, Toggle, MorphButton, Button, AlertDialog | keyboard through every control, invalid submit (errors, `aria-invalid`, focus on the first invalid control), valid FormData, save timeline, reset, AlertDialog focus; 390 px, alternate, reduced | 5 |
+| Authentication | `examples-authentication` | Card, Field, Input, PasswordInput, Link, MorphButton, OTPInput, Button | full sign-in → code → done flow by keyboard, validation and a failed password, pasted code, focus at each step; 390 px, alternate, reduced | 5 |
+| Detail page | `examples-detail-page` | see its report | see its report | 5 |
+| Theme and motion | `examples-theme-and-motion` | PageHeader, SegmentedTabs, Card, Button, Spinner, Toggle, Select, VolumeSlider, List, StatusBadge, Tabs, Popover, Dialog, Field, Input | local theme switch by pointer and keyboard (`data-theme`, the scale readout 1 / 1.6 / 0), overlays at both speeds, StatusBadge cycle; 390, 800 and 1280 px, alternate, reduced | 5 |
+| Data management | `examples-data-management` | see its report | see its report | 6 |
+| Marketing | `examples-marketing` | see its report | see its report | 6 |
+
+## Components
+
+Every public component, with its story (the Controls panel shows the full API and defaults), what it builds on, how it was checked, and what remains open. "W" is the wave that last changed it; checks ran in Chromium through `check_story.py`.
+
+| Component | Story | Composes | Checked | Open issues |
+|---|---|---|---|---|
+| Accordion | `components-accordion` (Default) | Icon | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ActionMenu | `components-actionmenu` (Default, IconTrigger) | Menu, outside press, top layer | W2; W4: first measure, alternate; W5: sm size | A shifted open menu sits flush with the viewport edge. |
+| Alert | `components-alert` (Default) | Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| AlertDialog | `components-alertdialog` (Default, WithTrigger) | Button, Dialog | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| AppShell | `components-appshell` (Default) | — | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | Bottom padding fits a 64 px mobile nav; no safe-area inset. |
+| Avatar | `components-avatar` (Default, Initials) | Image | W1: rendering, native props, labels, focus; W4: shadow ring | An empty or oddly spaced `name` gives odd initials. |
+| AvatarGroup | `components-avatargroup` (Default) | Avatar | W1: rendering, native props, labels, focus; W4: shadow ring | The "+N" count isn't formatted. |
+| Badge | `components-badge` (Default) | NumberTicker | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| BarChart | `components-barchart` (Default) | Card | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| BottomSheet | `components-bottomsheet` (Default, LongContent) | Sheet, Button | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| Breadcrumbs | `components-breadcrumbs` (Default, WithLinks) | Icon | W3; W5: shared icon | The expanded trail keeps its intrinsic width and can overflow at 390 px. |
+| Button | `components-button` (Default, Disabled, InAForm) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| Card | `components-card` (Default, Ink) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| Carousel | `components-carousel` (Default, InteractiveContent) | drag.ts, IconButton, Icon, PageDots | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | A hard flick can skip a slide; arrows don't announce the new slide. |
+| Checkbox | `components-checkbox` (Default, Indeterminate, InAForm) | Check, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| CheckboxGroup | `components-checkboxgroup` (Default, InAFieldsetInsideAForm) | Checkbox | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| CollapsibleSidebar | `components-collapsiblesidebar` (Default, LongLabels) | IconButton, Icon, SidebarNav | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ColorPicker | `components-colorpicker` (Default, InAForm) | drag.ts, Input, Slider | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | A gray hex typed or set from outside resets the hue to 0; knob keys are arrows only. |
+| ColorSwatches | `components-colorswatches` (Default, InAForm) | — | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Combobox | `components-combobox` (Default, InAForm) | Check, list.tsx, outside press, top layer, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| CommandPalette | `components-commandpalette` (Default) | list.tsx, Icon, Kbd | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| CompareSlider | `components-compareslider` (Default) | drag.ts, Icon | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| ContextMenu | `components-contextmenu` (Default, LongListAtTheEdge, InsideAClippingCard, InsideADialog) | Menu, outside press, top layer | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | iOS relies on its 500 ms timer; a Windows pen long press may also click; square focus outline around rounded content. |
+| CopyButton | `components-copybutton` (Default) | Check, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| DataTable | `components-datatable` (Default, Loading, Empty, WithRowActions) | ActionMenu, EmptyState, Checkbox, Pagination, Icon, Table | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | Five placeholder rows while loading; widths follow visible rows; `select`/`actions` column keys are reserved. |
+| DatePicker | `components-datepicker` (Default, InAFieldInsideAForm) | CalendarView | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | Inputs must be valid local ISO dates. |
+| DateRangePicker | `components-daterangepicker` (Default, InAFieldInsideAForm) | CalendarView | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | Resetting an unfinished range from null to null needs a remount; inputs must be valid ISO dates. |
+| DescriptionList | `components-descriptionlist` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| Dialog | `components-dialog` (Default, LongContent, WithoutTrigger) | Modal, Button, IconButton, Icon | W3; W4: entrance, centered content, scroll fade, focus, alternate, reduced, 390 px | — |
+| DonutChart | `components-donutchart` (Default) | Card | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Drawer | `components-drawer` (Default, Left, LongContent) | Sheet, IconButton, Icon | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| EditableText | `components-editabletext` (Default, Empty) | Button, Input | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| EmptyState | `components-emptystate` (Default) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ExpandableCard | `components-expandablecard` (Default) | Expand, IconButton, Icon | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Field | `components-field` (Default, InAForm) | Icon | W1: rendering, native props, labels, focus; W4: shadow ring | Errors are described, not announced live. |
+| Fieldset | `components-fieldset` (Default, Disabled) | Icon | W1: rendering, native props, labels, focus; W4: shadow ring | A Fieldset nested in a disabled one reports `disabled: false` to div-based controls. |
+| FileUpload | `components-fileupload` (Default, WithFileList, Disabled) | Check, Icon, NumberTicker | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | Drag-and-drop file dispatch is code-reviewed only. |
+| Footer | `components-footer` (Default) | Separator | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | — |
+| Header | `components-header` (Default) | IconButton, Icon, Underline, Drawer | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | The drawer's current pill jumps to the chosen link while the drawer slides out. |
+| HoldButton | `components-holdbutton` (Default) | Check | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Icon | `components-icon` (Default) | — | W0: rendering, size-derived strokes, reduced motion | — |
+| IconButton | `components-iconbutton` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | Its type still accepts `aria-label`; `label` wins at runtime. |
+| Image | `components-image` (Default, Fallback) | — | W1: rendering, native props, labels, focus; W4: shadow ring | Keeps its loaded or failed state when `src` changes; key it by `src`. |
+| Input | `components-input` (Default, WithIcons, DisabledAndReadOnly) | — | W1: rendering, native props, labels, focus; W4: shadow ring | Clicking the pill's padding or leading icon doesn't focus the input. |
+| Island | `components-island` (Default) | Expand, outside press | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| Kbd | `components-kbd` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| Lightbox | `components-lightbox` (Default) | Modal, IconButton, Icon | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | Its 76 px inset makes the full view small at 390 px. |
+| LineChart | `components-linechart` (Default) | Card | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Link | `components-link` (Default, WithLinkProvider) | — | W1; W5: fragment links | — |
+| List | `components-list` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| LoadingState | `components-loadingstate` (Default) | Spinner | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| MorphButton | `components-morphbutton` (Default, InAForm, Disabled) | Check, Spinner | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | It disables itself while busy, so a focused submit button drops focus to the page; `aria-disabled` with a cancelled click would keep focus and still block resubmits. |
+| MultiSelect | `components-multiselect` (Default, Empty, InAFieldInsideAForm, LongListNearTheBottom, InsideAClippingCard) | Check, list.tsx, outside press, top layer, Icon | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | Disabling it while open leaves it open until blur. |
+| MusicPlayer | `components-musicplayer` (Default) | Expand, SeekBar, IconButton, Icon | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| NotificationList | `components-notificationlist` (Default, Empty) | IconButton, Avatar, Icon, ListContent, EmptyState | W3; W4: exit frames, alternate, reduced, 390 px | — |
+| NumberInput | `components-numberinput` (Default, InAForm) | Input | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | Commit clamps to min/max, so an out-of-range value never reaches the form and a range error can't show. |
+| NumberStepper | `components-numberstepper` (Default, InAForm) | IconButton, Icon, NumberTicker | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| NumberTicker | `components-numberticker` (Default) | — | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| OTPInput | `components-otpinput` (Default, InAFieldInsideAForm) | — | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | Takes no `ref` or `autoFocus`; focus its first cell with a selector. |
+| PageDots | `components-pagedots` (Default) | drag.ts | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| PageHeader | `components-pageheader` (Default) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Pagination | `components-pagination` (Default, WithLinks) | IconButton, Icon | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| PasswordInput | `components-passwordinput` (Default, InAFieldInsideAForm) | IconButton, Icon, Input | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Popover | `components-popover` (Default, Placements, NearTheEdges, InsideAClippingCard, InsideDialog) | Expand, outside press | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | Flip decided at open; an outside click closes it and focus follows the click. |
+| ProgressBar | `components-progressbar` (Default, Indeterminate) | — | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ProgressRing | `components-progressring` (Default) | Check | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| RadioGroup | `components-radiogroup` (Default, Disabled, InAForm) | — | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| RangeSlider | `components-rangeslider` (Default, InAForm, Disabled) | SliderTrack | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Rating | `components-rating` (Default, ReadOnly, InAForm) | Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| SearchField | `components-searchfield` (Default, InAForm) | IconButton, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| SegmentedTabs | `components-segmentedtabs` (Default, LongLabels) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Select | `components-select` (Default, Empty, InAForm, LongList, NearTheBottom, InsideAClippingCard) | Check, list.tsx, outside press, top layer, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Separator | `components-separator` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| SidebarNav | `components-sidebarnav` (Default, Collapsed, LongLabels, WithLinks) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Skeleton | `components-skeleton` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| Slider | `components-slider` (Default, InAForm, Disabled) | SliderTrack | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Spinner | `components-spinner` (Default) | — | W0: rendering, size-derived strokes, reduced motion | — |
+| SplitPane | `components-splitpane` (Default) | drag.ts | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| StatTile | `components-stattile` (Default) | Card, Icon, NumberTicker | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| StatusBadge | `components-statusbadge` (Default) | Icon | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| SwipeButton | `components-swipebutton` (Default) | Check, drag.ts, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | Layouts narrower than its 280 px demo are unverified. |
+| TabBar | `components-tabbar` (Default, WithLinks) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Table | `components-table` (Default, Wide) | Skeleton, Card | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | The header sticks only when the caller gives the table a height. |
+| Tabs | `components-tabs` (Default, Segmented) | SegmentedTabs, UnderlineTabs | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Tag | `components-tag` (Default, Removable) | Icon | W1: rendering, native props, labels, focus; W4: shadow ring | Labels don't truncate. |
+| TagInput | `components-taginput` (Default, InAFieldInsideAForm) | Tag | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Textarea | `components-textarea` (Default) | — | W1; W4: surface growth, alternate, reduced | — |
+| TextField | `components-textfield` (Default, InAForm, Disabled) | Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ThemeToggle | `components-themetoggle` (Default) | Icon, Toggle | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Timeline | `components-timeline` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
+| TimePicker | `components-timepicker` (Default, InAFieldInsideAForm) | Popover, TimeWheel | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | Enter without a change keeps null; the trigger can't say it's required. |
+| TimeWheel | `components-timewheel` (Default, InAFieldInsideAForm) | drag.ts | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Toast | `components-toast` (Default, Sharing) | Icon, Spinner | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ToastStack | `components-toaststack` (Default) | IconButton, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Toggle | `components-toggle` (Default, InAForm) | — | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ToggleGroup | `components-togglegroup` (Default, Formatting, InAFieldInsideAForm) | Button, IconButton | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | Shrinking `options` below the focused index drops it from the Tab order. |
+| Toolbar | `components-toolbar` (Default, Vertical, WithDisabledAction) | TooltipGroup | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| Tooltip | `components-tooltip` (Default, NearTheEdges, InsideAClippingCard) | top layer | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | Viewport clamping decided when it shows. |
+| TreeView | `components-treeview` (Default, SelectionInClosedFolder) | list.tsx, Icon | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | ArrowRight on an open, empty folder at the end throws; values must be unique across the tree. |
+| UnderlineTabs | `components-underlinetabs` (Default) | — | W3; W5: shared underline regression | — |
+| VideoControls | `components-videocontrols` (Default) | SeekBar, IconButton, Icon, VolumeSlider | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| VolumeSlider | `components-volumeslider` (Default, OnInk) | drag.ts, Icon | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| WaveformScrubber | `components-waveformscrubber` (Default) | drag.ts, SeekBar | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| WizardSteps | `components-wizardsteps` (Default, LongLabels) | Check | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+
+## Justified duplication
+
+- Menu rows (`Menu`), listbox options (Select, Combobox, MultiSelect, CommandPalette), nav links and table rows keep their own markup and roles; they share the highlight (`ListHighlight`), keys (`useActiveIndex`) and typeahead from `src/list.tsx`, not a row component.
+- MultiSelect repeats Select's top-layer orchestration (placement, height cap, keys, typeahead, list markup) instead of a generic select abstraction, as approved; multiple selection changes picking, the summary, Enter and the hidden inputs.
+- Dialog's trigger flight and Lightbox's thumbnail flight stay separate: the Dialog panel measures its content and grows from a pill; the Lightbox animates a fixed 3:2 box with a different inset and radius.
+- Field and Fieldset repeat about 12 lines of description and error markup; share them if a third consumer appears.
+- Header measures its current link the way UnderlineTabs measures its tab (6 lines each) and shares UnderlineTabs' `Underline` for the drawing.
+- ColorPicker and TimePicker both wrap their inner controls in `FieldContext value={{ disabled }}` (the Fieldset pattern) so the Field's label and id stay on the outer control.
 
 ## Deferred
 
@@ -99,3 +221,7 @@ Wave4: sheets, anchored surfaces, tooltips, media, selection sets and the contex
 
 Wave4 limits: a hard Carousel flick can skip a slide (projection as specified); Carousel arrows don't announce the new slide live; ContextMenu relies on the unscaled timer on iOS (no touch `contextmenu`) and draws a square focus outline around rounded caller content; Popover's flip and Tooltip's viewport clamping are decided when they open (both follow scrolling), so a resize while open doesn't re-place them; `--shadow-float` is compiled into the `shadow-float` utility, so an app can't override the shadow by redefining the variable (the ring's `--color-line` does follow overrides).
 
+
+Wave5: tables, tree, app layout, pickers and the Settings, Authentication, Detail page and Theme examples. Each new component has pointer, keyboard, alternate, reduced-motion and 390px evidence (layout also at 1280px); forms check submitted FormData, reset and error wiring; `npm test` runs 14 tests (calendar and color). Found and fixed while composing: Tabs' panel column now shrinks to its container (the Detail page overflowed at 390px), Header shares UnderlineTabs' underline and draws none for an unmatched `value` instead of crashing, ActionMenu got a 32px size for table rows, the three-dots shape moved to `icons.more`, and fragment links bypass LinkProvider. The package consumer server-renders 105 exports. Reports: `/tmp/morph-wave5{A,B,C,D,E,F,G}-report.txt` (5D covers ColorPicker and TimePicker).
+
+Wave5 limits: after an outside press TimePicker's focus follows the click; ColorPicker resets the hue for a gray set from outside; TreeView throws on ArrowRight at an open, empty folder at the end; DataTable's loading placeholders are fixed at five rows; AppShell's bottom padding fits a 64px mobile nav; Breadcrumbs requires `onNavigate` even when every item has an `href`; ActionMenu's 224px minimum truncates long action labels and a shifted menu sits flush with the viewport edge; MorphButton drops focus while busy (see its row).

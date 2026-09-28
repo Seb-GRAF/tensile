@@ -31,6 +31,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Choose a tab by click or with the arrow keys: the panel blur-swaps, and Tab moves into it. */
 export const Default: Story = {};
 
 export const Segmented: Story = { args: { variant: "segmented" } };

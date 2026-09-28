@@ -41,7 +41,7 @@ Actions:
 - `CopyButton`: an icon pill that widens to a lime `Check` and "Copied" with `useWidth`, then settles back.
 - `HoldButton`: a lime fill grows at a steady rate while held (pointer, Space or Enter), springs back with `snap` if released early; a parent-controlled `done` morphs it into MorphButton's success.
 - `SwipeButton`: measures its container for the knob travel; the ink fill is dragged from where it is grabbed, with rubber at the limits; `onConfirm` at the end, controlled accent success, Enter/Space confirmation.
-- `ActionMenu`: menu button with an optional custom trigger; one shape grows into `Menu` in the top layer, flips up and caps the scrolling list to available room; disabled actions, arrows, Home/End, typeahead and focus return; list stays mounted and inert when closed.
+- `ActionMenu`: menu button with an optional custom trigger; one shape grows into `Menu` in the top layer, flips up and caps the scrolling list to available room; disabled actions, arrows, Home/End, typeahead and focus return; list stays mounted and inert when closed; `size="sm"` is the 32 px trigger for dense rows.
 - `CommandPalette`: full-width inline combobox and scrolling listbox built on `src/list.tsx`; rows blur in and out as filtering changes; arrows, Home/End and ⌘K; `Kbd` shortcut hint.
 - `Toolbar`: `role="toolbar"` named by `label`, one Tab stop with roving focus among its enabled buttons (arrows along `orientation`, Home/End); its Tooltips share one bubble that glides between buttons.
 
@@ -73,13 +73,15 @@ Inputs:
 - `Slider`: a measured SliderTrack with one knob, min/max/step, keyboard arrows/Home/End and rubber overdrag; Field context and hidden named value.
 - `RangeSlider`: SliderTrack with two knobs that stop at each other; a press grabs the nearer knob; Field context and two hidden values in low/high order.
 - `TimeWheel`: fixed hour, minute and AM/PM spinbutton wheels; flicks project position + velocity × 0.1 s, then settle with snap; Field/disabled state and a hidden HH:MM form value.
+- `TimePicker`: Popover whose trigger shows the formatted time or the placeholder and grows into a TimeWheel; named by its label and value, Field wiring on the trigger, a hidden "HH:MM" value; the first wheel change commits, Enter and Escape close and return focus; TimeWheel's labels pass through.
+- `ColorPicker`: a saturation/brightness area (2D drag, arrow keys on its `role="slider"` knob), a hue `Slider` and a hex `Input` that commits on Enter or blur and reverts an invalid entry; conversions in `src/color.ts`; keeps hue and saturation while the color is gray; a hidden hex value and Field naming.
 - `DatePicker`: nullable ISO date on CalendarView; the selected pill uses two liquid edge pairs, months blur-swap in the travel direction; full width, min/max, Field and form props.
 - `DateRangePicker`: CalendarView with a local first pick and hover/focus preview; the second pick emits an ordered complete range; liquid row bands with clipped paper labels, separate startName/endName values.
 - `FileUpload`: full-width native picker/drop target with accept, multiple and disabled; morphs into a progress pill with NumberTicker, then a success Check; the caller owns uploading.
 
 Navigation:
 
-- `Link`: a native `<a>` in the current text color with a light underline; inside `LinkProvider navigate={…}`, plain left clicks on same-origin links call `navigate(href)` instead of loading the page. `useLinkClick()` (from `Link.tsx`) gives the same click handling to components that render their own `<a>`.
+- `Link`: a native `<a>` in the current text color with a light underline; inside `LinkProvider navigate={…}`, plain left clicks on same-origin links call `navigate(href)` instead of loading the page, except `#fragment` links, which scroll natively. `useLinkClick()` (from `Link.tsx`) gives the same click handling to components that render their own `<a>`.
 - `SegmentedTabs`: equal intrinsic columns based on the widest label; roving arrows/Home/End, liquid selected pill and clipped paper labels; optional id wires tab/panel ids.
 - `UnderlineTabs`: label-sized tabs with a measured liquid underline, remeasured after fonts load; roving keys and the same optional id contract.
 - `Tabs`: composes either tablist and one focusable tabpanel; only current content mounts, with inert, hidden exiting content during the blur swap.
@@ -121,6 +123,9 @@ Data display:
 - `LineChart`: full-width ink Card with an SVG line drawing on `draw`; guide and tooltip glide between points with pointer or ArrowLeft/Right/Home/End; live status reports the point.
 - `BarChart`: full-width ink Card with springing bars; `useLiquid` hover/focus highlight and a gliding tooltip; a named group with arrow/Home/End keys and a live status.
 - `DonutChart`: full-width ink Card with arcs on `draw`; hovered or focused arcs thicken outward and the center text blur-swaps.
+- `Table`: a native `<table>` on a Card surface that fills its container, with a hidden caption, column headers, optional row headers, end-aligned tabular numbers and row hover; its scroll container becomes a focusable region named by the caption only when the table overflows; the header sticks when the caller gives it a height; `sort`, `loading` (Skeleton rows, `aria-busy`) and `empty` are for DataTable.
+- `DataTable`: composes Table with sortable header buttons (`aria-sort`), a Checkbox column whose header is checked or indeterminate for the shown rows, Pagination, Skeleton loading, an EmptyState and a compact icon ActionMenu per row; everything controlled, and it never reorders or slices rows.
+- `TreeView`: `role="tree"` of fixed-height treeitems with levels, the APG keys and typeahead; a `useLiquid` ink pill with a clipped paper label layer marks the selection, following rows that open or close above it and resting on the nearest visible ancestor of a hidden selection; children open and close by height with blur-swapped rows.
 
 Layout:
 
@@ -131,6 +136,9 @@ Layout:
 - `SplitPane`: two full-size panes with a keyboard-accessible separator; the fraction controls their widths, overdrag stretches with rubber and releases with snap; the grip grows and turns ink while held.
 
 - `PageHeader`: h1, optional description, breadcrumbs and actions; actions wrap below the title in narrow containers.
+- `Header`: a sticky paper bar (`z-(--layer-sticky)`, `max-w-page` content) with a brand, links and actions; from `md` up the links are inline with `aria-current` and UnderlineTabs' liquid underline (none when `value` matches no link); below `md` a menu IconButton opens them in a left Drawer.
+- `Footer`: a `<footer>` of titled link groups in columns that stack in narrow containers (a container query), plus a note.
+- `AppShell`: a skip link first (native fragment navigation to `main`, which takes focus), the header, a sidebar from `lg` up and a mobile nav fixed to the bottom below it, with `main` padded to clear it; no animation of its own.
 
 Overlays:
 
@@ -158,13 +166,15 @@ Shared code (owned by the lead; read-only for subagents unless a brief assigns a
 
 - `src/theme.css`: the tokens (see Tokens), the `press` utility, the `animate-spinner` and `animate-shimmer` animations, and the `scroll-fade` utility for a scroll body: its content fades toward an edge while more of it is hidden past that edge (scroll-driven; no fade in browsers without scroll timelines). `src/index.css` is the library stylesheet built from it; Storybook loads `.storybook/preview.css`, which adds the page background and the alternate theme.
 - `src/springs.ts`: `useSprings()` and `useLiquid` (see Motion).
-- `src/icons.tsx`: `icons.close`, `icons.chevronLeft`, `icons.chevronRight`, `icons.chevronsUpDown`, `icons.search`, `icons.alert`, `icons.plus`, `icons.minus`: shapes more than one component draws, used as `<Icon size={16}>{icons.close}</Icon>`. A shape one component draws stays in that component; propose moving it here when a second one needs it.
+- `src/icons.tsx`: `icons.close`, `icons.chevronLeft`, `icons.chevronRight`, `icons.chevronsUpDown`, `icons.search`, `icons.alert`, `icons.more`, `icons.plus`, `icons.minus`: shapes more than one component draws, used as `<Icon size={16}>{icons.close}</Icon>`. A shape one component draws stays in that component; propose moving it here when a second one needs it.
 - `src/Check.tsx`: `<Check size={20} />`, a check in the current text color that draws itself when it mounts, with the stroke worked out from `size`. Put it in a `motion.span` with `swap` to blur it in and out.
 - `src/useWidth.ts`: `const [width, measure] = useWidth();` measures the element you pass `measure` to as its `ref` (again once fonts have loaded). Key that element by its content so each new version gets measured, then animate the shape to `width` (see `Toast`).
 - `src/useSize.ts`: `const [size, ref] = useSize();` width and height of the element you pass `ref` to, measured on mount and on every resize. For geometry that follows the container: a slider's travel, a chart's slots. `size` is undefined until the first measurement.
 - `src/list.tsx`, taken from `CommandPalette`: `ROW` (40 px rows); `filterByWords(items, query)`, the word-prefix filter; `const [active, setActive, onArrowKey] = useActiveIndex(count)`, the highlighted row with ArrowUp/ArrowDown wrapping and Home/End (call `onArrowKey` from the key handler of whatever holds focus; Enter and Escape stay in the component); `<ListHighlight index={active} />`, the `bg-hover` highlight that slides and stretches behind a row, placed first in a `relative` list. `useTypeahead(items, active, setActive)` matches label prefixes with a 700 ms timeout; `scrollToRow(list, index)` scrolls only the list, keeping the enclosing morph stable.
 - `src/Menu.tsx`: shared action/context menu rows, highlight, disabled actions, keyboard selection and typeahead; focuses its list on open and calls `onClose(restoreFocus)` on dismissal. The owner supplies placement, trigger and focus return.
 - `src/SliderTrack.tsx`: shared measured geometry, pointer capture, nearest-knob picking, keyboard bounds and rubber release for Slider and RangeSlider; one or two values with Field wiring supplied by the owner.
+- `src/color.ts`: pure hex/RGB/HSV conversions and hex parsing (`#rgb` or `#rrggbb`, any case, with or without `#`); tested with Node in `src/color.test.ts`.
+- `UnderlineTabs.tsx` exports `Underline`, the liquid underline between measured `left` and `right` edges, shared with `Header`.
 - `src/calendar.ts`: pure local ISO-date parsing/formatting, month grids, month and keyboard arithmetic, bounds and range ordering; tested with Node. `src/CalendarView.tsx` shares the header, month swap, roving day grid and selection slot. Its distinct filename avoids a Calendar.tsx/calendar.ts collision on case-insensitive filesystems and in generated declarations.
 - `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed. On press, `stop()` the value: `set()` doesn't stop a spring that's still running from the last release, and the spring would win.
 - `src/overlay.ts`: `const { room, settle } = useTopLayer(frame, open)` lifts `frame` — a transparent `absolute inset-0` box inside a shape's `relative` wrapper — into the browser's top layer while `open`, exactly over the wrapper and following it every frame, until you call `settle` from the shape's `onAnimationComplete`; the shape inside keeps its own position, overlays everything, and escapes `overflow: hidden` and transformed ancestors, while DOM order and Tab order stay put. `room` (`above`, `below`, `left`, `right` in px, measured when it opened) is for opening upward or capping a menu's height. `useOutsidePress(ref, open, onPress)` calls `onPress` on a pointer press outside `ref` while open.
@@ -207,7 +217,7 @@ The tokens are CSS custom properties defined once, in `src/theme.css`. Use the u
 | `--motion-duration-scale` | 1 (0 under reduced motion) | multiplies every animation's duration and delay | see Motion |
 
 - Text on `paper` is `ink`, secondary `muted`; on `ink` it's `paper`, secondary `paper/55` (both pass WCAG AA); on `accent` it's `on-accent`, never an assumed ink, since an app's accent can be dark. Accent on ink is for icons, lines and large text.
-- Focus ring: `outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`, or `has-focus-visible:` on the shape. A dark surface sets `[--color-focus:var(--color-paper)]` on its root instead of using another outline color.
+- Focus ring: `outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`, or `has-focus-visible:` on the shape. A dark surface sets `[--color-focus:var(--color-paper)]` on its root instead of using another outline color, and `[--color-line:var(--color-ink-3)]` so separators and the `shadow-float` ring stay dark on it (see `Card tone="ink"`).
 - `rounded-control` stays a full pill up to 52 px tall, because CSS caps a radius at half the height. Circles stay `rounded-full`: knobs, dots, avatars, rings. A shape that morphs animates its radius between `"var(--radius-…)"` strings; Motion resolves them when an animation starts, so the morph follows overrides.
 - Sizes are a fixed scale, not tokens, because geometry is computed from them: compact controls `h-8` (32 px, as in `Toggle` and `SegmentedTabs`), buttons, fields and sliders `h-11` (44 px, as in `MorphButton` and `VolumeSlider`), large fields `h-13` (52 px), list rows `h-10`, chips `h-7`, badges `h-6`. Don't override `--spacing`.
 - No `text-[…px]`, no arbitrary radii for these roles. Numbers that are geometry (SVG coordinates, pointer math, measured sizes, percentages) stay numbers.
@@ -312,7 +322,7 @@ export function Select({
   - `dragHandlers` capture the pointer on press, so in Chromium the click that follows goes to the dragged element, never to a button inside it. Keep buttons out of the dragged element, or capture only once the pointer has moved a few px (see `src/Sheet.tsx`), so a tap stays a click.
   - A shape that animates to a measured size or position starts from the unmeasured values on its first measurement (a slide from the side, a width that shrinks on load). Key the animated element by the measurement (`key={size ? "placed" : "measuring"}`, see `Tooltip`, `ActionMenu`) so it mounts at the measured values; the measuring render is replaced before paint. Don't do this around something that has focus, which a remount drops: compute the start from values known at mount instead (see `Dialog`).
   - `first:`/`last:` padding and `divide-y` switch to the next row only when an exiting row leaves the DOM, so the neighbors jump at the end of the exit. Give rows uniform padding (the list's negative margin absorbs the outer ones) and draw dividers only between rows that stay: exiting rows are `inert`, so `[li:not([inert])~&]:border-t` (see `NotificationList`).
-  - `check_story.py`'s `hover` goes to the element's center and ignores `at`; move the pointer away with `{"move": "body", "at": [0.02, 0.02]}`.
+  - `check_story.py`'s `hover` goes to the element's center and ignores `at`; move the pointer away with `{"move": "body", "at": [0.02, 0.02]}`. Storybook's URL args (`--args`) drop values with characters like `/`; use plain words.
   - `whileTap` turns Enter into fake `pointerdown`/`pointerup` events and uses Motion's default spring; use the `press` utility instead.
   - Drags need pointer capture and `touch-none`.
   - Safari with VoiceOver drops list semantics from a `ul` or `ol` whose `list-style` is `none`, which the reset sets. Give a list that is content (not a menu or listbox) `role="list"` (see `List`).
