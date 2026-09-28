@@ -1,10 +1,26 @@
 @import "tailwindcss" source("../src");
 @import "../src/theme.css";
 @import "@fontsource-variable/geist";
+@source "../docs";
 
 body {
   background: var(--color-canvas);
   -webkit-font-smoothing: antialiased;
+}
+
+.sbdocs-wrapper {
+  font-family: var(--font-sans);
+}
+
+.sbdocs-content :not(pre) > code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.sbdocs-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 [data-theme="alternate"] {

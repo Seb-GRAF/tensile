@@ -88,7 +88,7 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, 
               onOpenChange(false);
             }
           }}
-          className={`absolute overflow-hidden shadow-float outline-offset-2 has-[>button:disabled]:opacity-40 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus ${place} ${className}`}
+          className={`absolute overflow-hidden shadow-control transition-shadow duration-[calc(300ms*var(--motion-duration-scale))] ${open ? "[--shadow-control-drop:initial]" : ""} outline-offset-2 has-[>button:disabled]:opacity-40 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus ${place} ${className}`}
         >
           <AnimatePresence initial={false}>
             {open ? (
@@ -100,7 +100,7 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, 
                 tabIndex={-1}
                 {...swap}
                 style={{ width: opened.width, height: opened.height }}
-                className={`absolute outline-none ${place}`}
+                className={`absolute surface outline-none ${place}`}
               >
                 {children}
               </motion.div>

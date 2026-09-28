@@ -89,7 +89,7 @@ function SheetPanel({ side, header, children, onClose, className }: Pick<SheetPr
         tabIndex={-1}
         data-autofocus
         style={vertical ? { y: position } : { x: position }}
-        className={`absolute flex flex-col bg-paper text-ink shadow-float outline-none ${panels[side]} ${className}`}
+        className={`absolute flex flex-col bg-paper text-ink shadow-float surface outline-none ${panels[side]} ${className}`}
       >
         <div className={`absolute bg-paper ${extensions[side]}`} />
         <div

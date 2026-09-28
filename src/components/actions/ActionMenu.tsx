@@ -59,7 +59,7 @@ export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Act
           animate={{ width: open ? menuWidth : width, height, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)", x }}
           transition={shape}
           onAnimationComplete={settle}
-          className={`absolute left-0 flex overflow-hidden bg-paper shadow-float outline-offset-2 has-[button:focus-visible]:outline-2 has-[button:focus-visible]:outline-focus ${up ? "bottom-0 flex-col-reverse" : "top-0 flex-col"}`}
+          className={`absolute left-0 flex overflow-hidden bg-paper shadow-control transition-shadow duration-[calc(300ms*var(--motion-duration-scale))] ${open ? "[--shadow-control-drop:initial]" : ""} outline-offset-2 has-[button:focus-visible]:outline-2 has-[button:focus-visible]:outline-focus ${up ? "bottom-0 flex-col-reverse" : "top-0 flex-col"}`}
         >
           <button
             ref={button}

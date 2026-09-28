@@ -67,7 +67,7 @@ export function WaveformScrubber({
   }
 
   return (
-    <div className={`rounded-card bg-ink px-6 py-4 shadow-float [--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)] ${className}`}>
+    <div className={`rounded-card bg-ink px-6 py-4 shadow-float surface [--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)] ${className}`}>
       <div
         role="slider"
         tabIndex={0}

@@ -72,7 +72,7 @@ function UploadShape({
         initial={false}
         animate={shapes[over ? "over" : status]}
         transition={{ width: shape, height: shape, borderRadius: shape, backgroundColor: soft }}
-        className="relative grid place-content-center place-items-center overflow-hidden shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
+        className="relative grid place-content-center place-items-center overflow-hidden shadow-control outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
       >
         <AnimatePresence initial={false}>
           {status !== "idle" && (

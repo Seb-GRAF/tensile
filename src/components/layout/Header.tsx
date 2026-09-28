@@ -51,7 +51,7 @@ export function Header({
   }, [index, links, navSize]);
 
   return (
-    <header className={`sticky top-0 z-(--layer-sticky) bg-paper shadow-float ${className}`}>
+    <header className={`sticky top-0 z-(--layer-sticky) bg-paper shadow-float surface ${className}`}>
       <div className="mx-auto flex h-16 max-w-page items-center gap-4 px-6">
         <IconButton
           label={menuLabel}

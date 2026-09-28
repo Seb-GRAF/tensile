@@ -3,3 +3,5 @@ storybook-static
 .DS_Store
 .idea
 dist
+site-dist
+*.tgz

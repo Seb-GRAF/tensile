@@ -1,0 +1,51 @@
+import { Meta, Canvas, Controls, Source } from "@storybook/addon-docs/blocks";
+import * as Stories from "./MorphButton.stories";
+import source from "../../../docs/examples/MorphButtonExample.tsx?raw";
+
+<Meta of={Stories} />
+
+<a href="../" target="_top">← Tensile</a>
+
+# MorphButton
+
+A button whose shape follows a controlled action status. Use it when an action has an idle, loading, and success state. Use Button for ordinary actions.
+
+## Try it
+
+Click Save changes. The example simulates a request, then returns to idle. It sends no data.
+
+<Canvas of={Stories.Usage} sourceState="none" />
+
+## Usage
+
+Load `tensile/styles.css` at your app entry. This example is the same source used on the landing page and is type-checked against the packed package.
+
+<Source code={source} language="tsx" />
+
+Replace the timer with your application's request. Your application owns validation, failures, and status changes.
+
+## Props
+
+<Controls of={Stories.Default} />
+
+`status` is required: `"idle" | "loading" | "success"`. Children default to `"Connect"`; `loadingLabel` defaults to `"Loading"` and `successLabel` to `"Done"`. The native button type defaults to `"button"`.
+
+Native button props pass through except the Motion-conflicting `onDrag`, `onDragStart`, `onDragEnd`, and `onAnimationStart` callbacks. Use `type="submit"` inside a form.
+
+## Interaction
+
+Enter and Space activate the idle button. Loading, success, and an explicitly disabled button cannot activate. The accessible label follows its status.
+
+The native disabled state can drop keyboard focus while busy. Choose an appropriate focus destination after completion in your application. This example's status message is separate from the button.
+
+Motion uses the shared duration scale, including reduced motion; the simulated request duration stays the same.
+
+## In a form
+
+Submit with the button or Enter in the field. Field and Input supply the label and value; the parent controls the action.
+
+<Canvas of={Stories.InAForm} />
+
+## Disabled
+
+<Canvas of={Stories.Disabled} />

@@ -10,6 +10,8 @@ export type SidebarNavProps = {
   label?: string;
   collapsed?: boolean;
   leading?: React.ReactNode;
+  /** Pinned to the bottom, e.g. the account. */
+  trailing?: React.ReactNode;
   className?: string;
 };
 
@@ -23,6 +25,7 @@ export function SidebarNav({
   label = "Main",
   collapsed = false,
   leading,
+  trailing,
   className = "",
 }: SidebarNavProps) {
   const { swap } = useSprings();
@@ -40,7 +43,7 @@ export function SidebarNav({
   }
 
   return (
-    <nav aria-label={label} className={`flex flex-col gap-2 rounded-card bg-paper p-2 shadow-float ${className}`}>
+    <nav aria-label={label} className={`flex flex-col gap-2 rounded-card bg-paper p-2 shadow-float surface ${className}`}>
       {leading}
       <ul role="list" className="relative grid gap-2">
         {items.map((item, i) => {
@@ -95,6 +98,7 @@ export function SidebarNav({
           ))}
         </motion.li>
       </ul>
+      {trailing && <div className="mt-auto flex flex-col gap-2">{trailing}</div>}
     </nav>
   );
 }

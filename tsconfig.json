@@ -9,7 +9,9 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": ["vite/client"],
+    "paths": { "tensile": ["./src/index.ts"] }
   },
-  "include": ["src", ".storybook", "vite.config.ts", "vite.lib.config.ts"]
+  "include": ["src", ".storybook", "site", "docs/examples", "vite.config.ts", "vite.lib.config.ts"]
 }

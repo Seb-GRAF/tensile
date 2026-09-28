@@ -9,21 +9,25 @@ import {
   DataTable,
   EmptyState,
   Icon,
+  Input,
   LinkProvider,
   PageHeader,
-  SearchField,
+  SelectionBar,
+  StatTile,
   StatusBadge,
   TabBar,
-  Tag,
   ToggleGroup,
   type TableSort,
 } from "../index";
 
 const PAGE = 8;
+const today = new Date(2026, 8, 28);
+const monthAgo = new Date(2026, 7, 28);
 
-const tones = { Open: "info", Paid: "success", Overdue: "warning" } as const;
+const tones = { Open: "neutral", Paid: "success", Overdue: "warning" } as const;
 const statusOptions = Object.keys(tones).map((status) => ({ value: status, label: status }));
 const chf = new Intl.NumberFormat("en-US", { style: "currency", currency: "CHF" });
+const wholeChf = new Intl.NumberFormat("en-US", { style: "currency", currency: "CHF", maximumFractionDigits: 0 });
 const date = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
 type Invoice = {
@@ -49,13 +53,16 @@ const customers = [
   "Lagos Creative Studio",
 ];
 
-const mockInvoices: Invoice[] = Array.from({ length: 48 }, (_, i) => ({
-  number: `INV-${2048 - i}`,
-  customer: customers[(i * 5) % customers.length],
-  due: new Date(2026, 9, 26 - i * 4),
-  status: i < 8 ? "Open" : i % 6 === 2 ? "Overdue" : "Paid",
-  amount: 480 + ((i * 7919 * 13) % 1200000) / 100,
-}));
+const mockInvoices: Invoice[] = Array.from({ length: 48 }, (_, i) => {
+  const due = new Date(2026, 9, 12 - i * 3);
+  return {
+    number: `INV-${2048 - i}`,
+    customer: customers[(i * 5) % customers.length],
+    due,
+    status: due > today ? "Open" : i % 8 === 5 && i < 20 ? "Overdue" : "Paid",
+    amount: 480 + ((i * 7919 * 13) % 1200000) / 100,
+  };
+});
 
 const rowActions = [{ label: "View" }, { label: "Duplicate" }, { label: "Delete" }];
 
@@ -70,6 +77,10 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function total(invoices: Invoice[]) {
+  return invoices.reduce((sum, invoice) => sum + invoice.amount, 0);
+}
+
 function NavIcon({ paths, size, filled = false }: { paths: string[]; size: number; filled?: boolean }) {
   return (
     <Icon size={size}>
@@ -80,6 +91,17 @@ function NavIcon({ paths, size, filled = false }: { paths: string[]; size: numbe
   );
 }
 
+const brand = (
+  <span className="flex h-10 items-center gap-2.5 overflow-hidden px-1.5 text-body font-semibold whitespace-nowrap text-ink">
+    <Icon size={20} className="shrink-0">
+      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+      <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
+      <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" />
+    </Icon>
+    Ledger
+  </span>
+);
+
 function Invoices() {
   const [invoices, setInvoices] = useState(mockInvoices);
   const [query, setQuery] = useState("");
@@ -88,7 +110,7 @@ function Invoices() {
   const [page, setPage] = useState(1);
   const [selection, setSelection] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [deleting, setDeleting] = useState<Invoice>();
+  const [deleting, setDeleting] = useState<Invoice[]>([]);
   const [confirming, setConfirming] = useState(false);
   const request = useRef(0);
 
@@ -122,6 +144,11 @@ function Invoices() {
     loadFirstPage();
   }
 
+  function confirmDelete(chosen: Invoice[]) {
+    setDeleting(chosen);
+    setConfirming(true);
+  }
+
   return (
     <div className="grid gap-6">
       <PageHeader
@@ -129,16 +156,42 @@ function Invoices() {
         description="Send, track and follow up on invoices for every customer."
         actions={<Button>New invoice</Button>}
       />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <StatTile
+          label="Outstanding"
+          value={total(invoices.filter((invoice) => invoice.status !== "Paid"))}
+          change={0.12}
+          formatValue={(value) => wholeChf.format(value)}
+        />
+        <StatTile
+          label="Overdue"
+          value={total(invoices.filter((invoice) => invoice.status === "Overdue"))}
+          change={-0.04}
+          formatValue={(value) => wholeChf.format(value)}
+        />
+        <StatTile
+          label="Paid in the last 30 days"
+          value={total(invoices.filter((invoice) => invoice.status === "Paid" && invoice.due > monthAgo))}
+          change={0.18}
+          formatValue={(value) => wholeChf.format(value)}
+        />
+      </div>
       <div className="grid gap-4">
         <div className="flex flex-wrap items-center gap-3">
-          <SearchField
+          <Input
             value={query}
             onValueChange={(value) => {
               setQuery(value);
               loadFirstPage();
             }}
-            label="Search invoices"
+            aria-label="Search invoices"
             placeholder="Search by customer or number"
+            leading={
+              <Icon size={16} className="shrink-0">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </Icon>
+            }
             className="min-w-0 flex-1 basis-64"
           />
           <ToggleGroup
@@ -151,55 +204,21 @@ function Invoices() {
             }}
           />
         </div>
-        {(query !== "" || statuses.length > 0) && (
-          <div className="flex flex-wrap items-center gap-2">
-            <ul role="list" aria-label="Active filters" className="flex flex-wrap gap-2">
-              {query !== "" && (
-                <li>
-                  <Tag
-                    label={`Search: ${query}`}
-                    onRemove={() => {
-                      setQuery("");
-                      loadFirstPage();
-                    }}
-                  />
-                </li>
-              )}
-              {statuses.map((status) => (
-                <li key={status}>
-                  <Tag
-                    label={`Status: ${status}`}
-                    onRemove={() => {
-                      setStatuses(statuses.filter((item) => item !== status));
-                      loadFirstPage();
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
-            <Button variant="ghost" size="sm" onClick={clearFilters}>
-              Clear filters
-            </Button>
-          </div>
-        )}
-        <div className="flex items-center justify-between gap-4">
-          <output className="text-label text-muted">{selection.length} selected</output>
-          <Button
-            variant="secondary"
-            size="sm"
-            disabled={selection.length === 0}
-            onClick={() =>
-              setInvoices(invoices.map((invoice) => (selection.includes(invoice.number) ? { ...invoice, status: "Paid" } : invoice)))
-            }
-          >
-            Mark as paid
-          </Button>
-        </div>
         <DataTable
           caption="Invoices"
           columns={[
             { key: "number", header: "Invoice", rowHeader: true, sortable: true },
-            { key: "customer", header: "Customer", sortable: true, cell: (row) => <div className="min-w-48 whitespace-normal">{row.customer}</div> },
+            {
+              key: "customer",
+              header: "Customer",
+              sortable: true,
+              cell: (row) => (
+                <span className="flex min-w-56 items-center gap-3 whitespace-normal">
+                  <Avatar name={row.customer} size="sm" className="shrink-0" />
+                  {row.customer}
+                </span>
+              ),
+            },
             { key: "due", header: "Due", sortable: true, cell: (row) => date.format(row.due) },
             { key: "status", header: "Status", cell: (row) => <StatusBadge status={tones[row.status]} label={row.status} /> },
             { key: "amount", header: "Amount", align: "end", sortable: true, cell: (row) => chf.format(row.amount) },
@@ -230,23 +249,42 @@ function Invoices() {
           }
           rowActions={() => rowActions}
           onRowAction={(row, action) => {
-            if (action.label === "Delete") {
-              setDeleting(row);
-              setConfirming(true);
-            }
+            if (action.label === "Delete") confirmDelete([row]);
           }}
         />
       </div>
-      {deleting && (
+      <SelectionBar
+        count={selection.length}
+        onClear={() => setSelection([])}
+        className="fixed inset-x-0 bottom-24 z-(--layer-sticky) mx-auto w-fit lg:bottom-6"
+      >
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() =>
+            setInvoices(invoices.map((invoice) => (selection.includes(invoice.number) ? { ...invoice, status: "Paid" } : invoice)))
+          }
+        >
+          Mark as paid
+        </Button>
+        <Button variant="ghost" size="sm" onClick={() => confirmDelete(invoices.filter((invoice) => selection.includes(invoice.number)))}>
+          Delete
+        </Button>
+      </SelectionBar>
+      {deleting.length > 0 && (
         <AlertDialog
           open={confirming}
           onOpenChange={setConfirming}
-          title={`Delete ${deleting.number}?`}
-          description={`The ${chf.format(deleting.amount)} invoice for ${deleting.customer} will be deleted. You can't undo this.`}
-          confirmLabel="Delete invoice"
+          title={deleting.length === 1 ? `Delete ${deleting[0].number}?` : `Delete ${deleting.length} invoices?`}
+          description={
+            deleting.length === 1
+              ? `The ${chf.format(deleting[0].amount)} invoice for ${deleting[0].customer} will be deleted. You can't undo this.`
+              : `${deleting.length} invoices worth ${chf.format(total(deleting))} in total will be deleted. You can't undo this.`
+          }
+          confirmLabel={deleting.length === 1 ? "Delete invoice" : "Delete invoices"}
           onConfirm={() => {
-            setInvoices(invoices.filter((invoice) => invoice.number !== deleting.number));
-            setSelection(selection.filter((key) => key !== deleting.number));
+            setInvoices(invoices.filter((invoice) => !deleting.includes(invoice)));
+            setSelection(selection.filter((key) => !deleting.some((invoice) => invoice.number === key)));
           }}
         />
       )}
@@ -262,18 +300,9 @@ function DataPage() {
     <LinkProvider navigate={setPath}>
       <AppShell
         header={
-          <header className="bg-paper shadow-float">
-            <div className="mx-auto flex h-16 max-w-page items-center justify-between px-6">
-              <span className="flex items-center gap-2 text-body font-semibold text-ink">
-                <Icon size={20}>
-                  <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
-                  <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
-                  <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" />
-                </Icon>
-                Ledger
-              </span>
-              <Avatar name="Maya Chen" />
-            </div>
+          <header className="flex h-16 items-center justify-between px-6 lg:hidden">
+            {brand}
+            <Avatar name="Maya Chen" />
           </header>
         }
         sidebar={
@@ -288,6 +317,17 @@ function DataPage() {
             onValueChange={setPath}
             expanded={expanded}
             onExpandedChange={setExpanded}
+            leading={brand}
+            trailing={
+              <span className="flex items-center gap-2.5 overflow-hidden whitespace-nowrap">
+                <Avatar name="Maya Chen" className="shrink-0" />
+                <span className="min-w-0">
+                  <span className="block truncate text-label font-medium text-ink">Maya Chen</span>
+                  <span className="block truncate text-caption text-muted">Finance</span>
+                </span>
+              </span>
+            }
+            className="h-full"
           />
         }
         mobileNav={
@@ -319,7 +359,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Search, toggle the status chips or remove a filter tag (each change loads for 600 ms), sort by a column header, check rows on several pages and mark them as paid; a row's menu deletes it after a confirmation. */
+/** Search or toggle the status chips (each change loads for 600 ms), sort by a column header, check rows on several pages: the selection bar rises with a count; Mark as paid rolls the totals, and Delete (or a row's menu) asks for a confirmation. */
 export const Default: Story = {
   render: () => <DataPage />,
 };

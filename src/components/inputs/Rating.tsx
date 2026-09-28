@@ -84,7 +84,7 @@ export function Rating({
       aria-valuetext={readOnly ? undefined : valueLabel(value, count)}
       onKeyDown={interactive ? onKeyDown : undefined}
       onPointerLeave={interactive ? () => setHover(null) : undefined}
-      className={`inline-block rounded-control bg-paper p-[3px] shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${interactive ? "cursor-pointer" : ""} ${disabled ? "opacity-40" : ""} ${className}`}
+      className={`inline-block rounded-control bg-paper p-[3px] shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${interactive ? "cursor-pointer" : ""} ${disabled ? "opacity-40" : ""} ${className}`}
     >
       {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
       <div className="relative grid auto-cols-[32px] grid-flow-col">

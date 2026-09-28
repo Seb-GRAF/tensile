@@ -48,6 +48,7 @@ export const Default: Story = {
   },
 };
 
+/** The label rests inside the field and floats up while it's focused or has tags or text; removing every tag shows the error inside the field. Save prints the submitted genres, Reset restores them and Disable dims the field. */
 export const InAFieldInsideAForm: Story = {
   render: function Render(args) {
     const [value, setValue] = useState(args.value);
@@ -74,4 +75,13 @@ export const InAFieldInsideAForm: Story = {
       </form>
     );
   },
+};
+
+/** With `labelPlacement="above"` on the Field, its label sits above the field and the field looks as it does on its own. */
+export const LabelAbove: Story = {
+  render: (args) => (
+    <Field label="Genres" description="Press Enter to add a genre." labelPlacement="above" className="w-90 max-w-[calc(100vw-2rem)]">
+      <StatefulTagInput {...args} />
+    </Field>
+  ),
 };

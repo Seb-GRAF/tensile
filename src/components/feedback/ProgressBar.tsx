@@ -53,7 +53,7 @@ export function ProgressBar({
       aria-valuemax={100}
       aria-valuenow={value === null ? undefined : Math.round(value * 100)}
       aria-valuetext={value === null ? undefined : formatValue(value)}
-      className={`relative h-11 w-full rounded-control bg-paper shadow-float ${className}`}
+      className={`relative h-11 w-full rounded-control bg-paper shadow-control ${className}`}
     >
       {size && <ProgressFill value={value} width={size.width} />}
     </div>

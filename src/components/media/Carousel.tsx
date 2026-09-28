@@ -12,6 +12,14 @@ export type CarouselProps = {
   /** The selected slide, from 0. */
   value: number;
   onValueChange: (value: number) => void;
+  /** CSS width of each slide; "80%" or "min(320px, 80%)" shows the neighbours. */
+  slideWidth?: string;
+  /** Where the current slide sits when it's narrower than the carousel. */
+  align?: "center" | "start";
+  /** "visible" keeps the slides past the carousel's edges visible; the page is expected to clip them. */
+  overflow?: "clip" | "visible";
+  /** "center": arrows around the dots below; "end": dots at the start of the row below, arrows at its end; "sides": arrows over the current slide's edges. */
+  controls?: "center" | "end" | "sides";
   label?: string;
   previousLabel?: string;
   nextLabel?: string;
@@ -20,12 +28,17 @@ export type CarouselProps = {
   className?: string;
 };
 
+const GAP = 16;
 const moves: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
 
 export function Carousel({
   slides,
   value,
   onValueChange,
+  slideWidth = "86%",
+  align = "start",
+  overflow = "clip",
+  controls = "center",
   label = "Carousel",
   previousLabel = "Previous slide",
   nextLabel = "Next slide",
@@ -34,9 +47,12 @@ export function Carousel({
 }: CarouselProps) {
   const { snap } = useSprings();
   const position = useMotionValue(value);
-  const x = useTransform(position, (p) => `${-p * 100}%`);
+  const left = align === "center" ? `(100% - ${slideWidth}) / 2` : "0px";
+  const x = useTransform(position, (p) => `calc(${left} - ${p} * (${slideWidth} + ${GAP}px))`);
   const start = useRef<{ pointer: number; position: number } | null>(null);
   const panels = useRef<(HTMLDivElement | null)[]>([]);
+  const area = useRef<HTMLDivElement>(null);
+  const wheel = useRef<{ from: number; offset: number; timer: number }>(null);
   const last = slides.length - 1;
 
   useEffect(() => { animate(position, value, snap); }, [position, value]);
@@ -45,6 +61,33 @@ export function Carousel({
       panels.current[value]!.focus({ preventScroll: true });
     }
   }, [value]);
+  useEffect(() => {
+    function onWheel(event: WheelEvent) {
+      const delta = event.shiftKey ? event.deltaX || event.deltaY : Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : 0;
+      if (event.ctrlKey || delta === 0) return;
+      event.preventDefault();
+      if (!wheel.current) {
+        position.stop();
+        wheel.current = { from: value, offset: 0, timer: 0 };
+      }
+      const gesture = wheel.current;
+      const step = panels.current[0]!.getBoundingClientRect().width + GAP;
+      gesture.offset = Math.min(step, Math.max(-step, gesture.offset + delta));
+      const raw = gesture.from + gesture.offset / step;
+      const bounded = Math.min(last, Math.max(0, raw));
+      position.set(bounded + rubber((raw - bounded) * step) / step);
+      clearTimeout(gesture.timer);
+      gesture.timer = window.setTimeout(() => {
+        wheel.current = null;
+        const next = Math.min(last, Math.max(0, Math.abs(gesture.offset) < 4 ? gesture.from : gesture.from + Math.sign(gesture.offset)));
+        animate(position, next, snap);
+        moveTo(next);
+      }, 120);
+    }
+    const element = area.current!;
+    element.addEventListener("wheel", onWheel, { passive: false });
+    return () => element.removeEventListener("wheel", onWheel);
+  }, [value, last, onValueChange]);
 
   function moveTo(slide: number) {
     const next = Math.min(last, Math.max(0, slide));
@@ -56,10 +99,10 @@ export function Carousel({
       position.stop();
       start.current = { pointer: event.clientX, position: position.get() };
     }
-    const width = event.currentTarget.getBoundingClientRect().width;
-    const raw = start.current!.position + (start.current!.pointer - event.clientX) / width;
+    const step = panels.current[0]!.getBoundingClientRect().width + GAP;
+    const raw = start.current!.position + (start.current!.pointer - event.clientX) / step;
     const bounded = Math.min(last, Math.max(0, raw));
-    position.set(bounded + rubber((raw - bounded) * width) / width);
+    position.set(bounded + rubber((raw - bounded) * step) / step);
   }
 
   function release() {
@@ -78,9 +121,21 @@ export function Carousel({
   }
 
   const handlers = dragHandlers(drag, release);
+  const previousButton = (
+    <IconButton label={previousLabel} variant="secondary" size="sm" disabled={value === 0} onClick={() => moveTo(value - 1)}>
+      <Icon>{icons.chevronLeft}</Icon>
+    </IconButton>
+  );
+  const nextButton = (
+    <IconButton label={nextLabel} variant="secondary" size="sm" disabled={value === last} onClick={() => moveTo(value + 1)}>
+      <Icon>{icons.chevronRight}</Icon>
+    </IconButton>
+  );
+  const dots = <PageDots count={slides.length} value={value} onValueChange={onValueChange} label={label} pageLabel={slideLabel} />;
   return (
     <div role="region" aria-roledescription="carousel" aria-label={label} className={className}>
       <div
+        ref={area}
         tabIndex={0}
         {...handlers}
         onPointerDown={(event) => {
@@ -88,31 +143,57 @@ export function Carousel({
         }}
         onDragStart={(event) => event.preventDefault()}
         onKeyDown={onKeyDown}
-        className="touch-pan-y select-none overflow-clip contain-inline-size rounded-card bg-paper text-ink shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
+        className="group relative flow-root touch-pan-y select-none contain-inline-size outline-none"
       >
-        <motion.div style={{ x }} className="flex">
-          {slides.map((slide, i) => (
-            <div
-              key={slide.label}
-              ref={(el) => { panels.current[i] = el; }}
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${slide.label}, ${slideLabel(i + 1, slides.length)}`}
-              aria-hidden={i !== value}
-              inert={i !== value}
-              tabIndex={-1}
-              className="w-full shrink-0 outline-none"
-            >
-              {slide.content}
-            </div>
-          ))}
-        </motion.div>
+        <div className={`pointer-events-none ${overflow === "clip" ? "-mx-4 -mt-2 -mb-8 overflow-clip px-4 pt-2 pb-8 mask-x-from-[calc(100%-16px)]" : ""}`}>
+          <motion.div style={{ x }} className="flex gap-4">
+            {slides.map((slide, i) => (
+              <div
+                key={slide.label}
+                ref={(el) => { panels.current[i] = el; }}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${slide.label}, ${slideLabel(i + 1, slides.length)}`}
+                aria-hidden={i !== value}
+                inert={i !== value}
+                tabIndex={-1}
+                style={{ width: slideWidth }}
+                className="pointer-events-auto shrink-0 overflow-clip rounded-card bg-paper text-ink shadow-float surface outline-none"
+              >
+                {slide.content}
+              </div>
+            ))}
+          </motion.div>
+        </div>
+        <div
+          style={{ left: `calc(${left})`, width: slideWidth }}
+          className="pointer-events-none absolute inset-y-0 flex items-center justify-between rounded-card px-3 outline-offset-2 group-focus-visible:outline-2 group-focus-visible:outline-focus *:pointer-events-auto"
+        >
+          {controls === "sides" && (
+            <>
+              {previousButton}
+              {nextButton}
+            </>
+          )}
+        </div>
       </div>
-      <div className="mt-3 flex items-center justify-center gap-3">
-        <IconButton label={previousLabel} variant="secondary" disabled={value === 0} onClick={() => moveTo(value - 1)}><Icon>{icons.chevronLeft}</Icon></IconButton>
-        <PageDots count={slides.length} value={value} onValueChange={onValueChange} label={label} pageLabel={slideLabel} />
-        <IconButton label={nextLabel} variant="secondary" disabled={value === last} onClick={() => moveTo(value + 1)}><Icon>{icons.chevronRight}</Icon></IconButton>
-      </div>
+      {controls === "center" && (
+        <div className="relative mt-3 flex items-center justify-center gap-3">
+          {previousButton}
+          {dots}
+          {nextButton}
+        </div>
+      )}
+      {controls === "end" && (
+        <div className="relative mt-3 flex items-center justify-between">
+          {dots}
+          <div className="flex gap-3">
+            {previousButton}
+            {nextButton}
+          </div>
+        </div>
+      )}
+      {controls === "sides" && <div className="relative mt-3 flex justify-center">{dots}</div>}
     </div>
   );
 }

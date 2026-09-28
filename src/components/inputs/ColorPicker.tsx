@@ -97,7 +97,7 @@ export function ColorPicker({
         >
           <div
             style={{ background: `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${rgbToHex(hsvToRgb({ h: hsv.h, s: 1, v: 1 }))})` }}
-            className="absolute inset-0 rounded-card shadow-float"
+            className="absolute inset-0 rounded-card shadow-control"
           />
           <div
             ref={knob}

@@ -3,10 +3,13 @@ import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import {
   ActionMenu,
+  AppShell,
+  Avatar,
   Breadcrumbs,
   Button,
   Card,
   Carousel,
+  CollapsibleSidebar,
   DescriptionList,
   Drawer,
   Field,
@@ -19,11 +22,16 @@ import {
   MorphButton,
   PageHeader,
   Select,
+  Separator,
+  StatusBadge,
+  TabBar,
   Tabs,
   Textarea,
   Timeline,
+  ToastStack,
   Toggle,
   type MorphButtonProps,
+  type StatusBadgeProps,
 } from "../index";
 
 function Scene({ colors, sun }: { colors: string[]; sun: number[] }) {
@@ -40,6 +48,16 @@ function Scene({ colors, sun }: { colors: string[]; sun: number[] }) {
   );
 }
 
+function NavIcon({ paths, size, filled = false }: { paths: string[]; size: number; filled?: boolean }) {
+  return (
+    <Icon size={size}>
+      {paths.map((d) => (
+        <path key={d} d={d} className={filled ? "fill-current" : ""} />
+      ))}
+    </Icon>
+  );
+}
+
 const photos = [
   { label: "View from the terrace at dawn", colors: ["#e8ddd7", "#f6d2bb", "#c3b5b6", "#a89b9f", "#857a80"], sun: [120, 168] },
   { label: "The valley in the morning, after the fog lifts over Le Châble", colors: ["#dae6ea", "#fbeaa8", "#b0c3bd", "#93aba5", "#647d77"], sun: [170, 112] },
@@ -48,21 +66,20 @@ const photos = [
   { label: "The ridge at dusk", colors: ["#d9c7cb", "#f2bb9a", "#a495a2", "#827483", "#4f4554"], sun: [360, 150] },
 ];
 
+const sections = [
+  { href: "/listings", label: "Listings", paths: ["M3.5 10 12 3.5l8.5 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4v-6h-6v6H5A1.5 1.5 0 0 1 3.5 19Z"] },
+  { href: "/viewings", label: "Viewings", paths: ["M8 2v4", "M16 2v4", "M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z", "M3 10h18"] },
+  { href: "/clients", label: "Clients", paths: ["M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2Z"] },
+  { href: "/reports", label: "Reports", paths: ["M3 3v16a2 2 0 0 0 2 2h16", "M7 16V11", "M12 16V7", "M17 16v-3"] },
+];
+
 const trail = [
-  {
-    label: "Home",
-    href: "/",
-    icon: (
-      <Icon size={14}>
-        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-        <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      </Icon>
-    ),
-  },
   { label: "Listings", href: "/listings" },
   { label: "Valais", href: "/listings/valais" },
   { label: "Verbier", href: "/listings/valais/verbier" },
 ];
+
+const detailPath = "/listings/valais/verbier/chalet-bellevue";
 
 const moreActions = [
   { label: "Duplicate listing" },
@@ -78,13 +95,22 @@ const statuses = [
   { value: "sold", label: "Sold" },
 ];
 
+const statusTones: Record<string, StatusBadgeProps["status"]> = { draft: "neutral", listed: "success", reserved: "warning", sold: "info" };
+
+const figures = [
+  { label: "Rooms", value: "4.5" },
+  { label: "Living area", value: "118 m²" },
+  { label: "Terrace", value: "24 m²" },
+  { label: "Built", value: "1934" },
+];
+
 const facts = [
   { label: "Address", value: "Chemin des Vernes 12, 1936 Verbier, Switzerland" },
-  { label: "Asking price", value: "CHF 1,250,000" },
-  { label: "Rooms", value: "4.5: three bedrooms, a living room with a wood stove and a study on the mezzanine" },
-  { label: "Living area", value: "118 m² on two floors, plus a 24 m² terrace" },
-  { label: "Built", value: "1934, renovated in 2021" },
-  { label: "Agent", value: "Maya Chen" },
+  { label: "Rooms", value: "Three bedrooms, a living room with a wood stove and a study on the mezzanine" },
+  { label: "Heating", value: "Air-to-water heat pump, 2021, and the original wood stove" },
+  { label: "Parking", value: "One garage space and one outdoor space" },
+  { label: "Renovated", value: "2021: roof, windows, kitchen and both bathrooms" },
+  { label: "Available", value: "From December 1, 2026" },
 ];
 
 const events = [
@@ -112,7 +138,18 @@ const files = [
   { id: "invoices", title: "Renovation invoices 2021.zip", description: "ZIP archive · 24 MB" },
 ];
 
+const brand = (
+  <span className="flex h-10 items-center gap-2.5 overflow-hidden px-1.5 text-body font-semibold whitespace-nowrap text-ink">
+    <Icon size={20} className="shrink-0">
+      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+    </Icon>
+    Alpina Estates
+  </span>
+);
+
 function DetailPage() {
+  const [path, setPath] = useState(detailPath);
+  const [expanded, setExpanded] = useState(true);
   const [listing, setListing] = useState({
     name: "Chalet Bellevue",
     description:
@@ -127,9 +164,17 @@ function DetailPage() {
   const [tab, setTab] = useState("overview");
   const [slide, setSlide] = useState(0);
   const [photo, setPhoto] = useState<number | null>(null);
-  const [action, setAction] = useState("None");
+  const [toasts, setToasts] = useState<{ id: string; label: string }[]>([]);
+  const toastCount = useRef(0);
   const nameInput = useRef<HTMLInputElement>(null);
   const nameError = draft.name === "" ? "Enter a name for the listing" : undefined;
+
+  function notify(label: string) {
+    toastCount.current += 1;
+    const id = String(toastCount.current);
+    setToasts((current) => [...current, { id, label }]);
+    setTimeout(() => setToasts((current) => current.filter((toast) => toast.id !== id)), 4000);
+  }
 
   function edit() {
     setDraft(listing);
@@ -153,39 +198,61 @@ function DetailPage() {
     setTimeout(() => setEditing(false), 2000);
   }
 
-  return (
-    <LinkProvider navigate={(href) => setAction(`Navigate to ${href}`)}>
-      <main className="mx-auto grid max-w-page grid-cols-1 gap-6 px-4 py-8 sm:px-8">
-        <PageHeader
-          breadcrumbs={<Breadcrumbs items={[...trail, { label: listing.name }]} onNavigate={() => {}} />}
-          title={listing.name}
-          description={listing.description}
-          actions={
-            <div role="group" aria-label="Listing actions" className="flex flex-wrap gap-2">
-              <Button aria-haspopup="dialog" aria-expanded={editing} onClick={edit}>
-                Edit
-              </Button>
-              <Button variant="secondary" onClick={() => setAction("Share")}>
-                Share
-              </Button>
-              <ActionMenu
-                label="More actions"
-                trigger={
-                  <Icon>
-                    <circle cx="5" cy="12" r="1" />
-                    <circle cx="12" cy="12" r="1" />
-                    <circle cx="19" cy="12" r="1" />
-                  </Icon>
-                }
-                actions={moreActions}
-                onAction={(chosen) => setAction(chosen.label)}
-              />
+  const listingPage = (
+    <div className="grid gap-6">
+      <PageHeader
+        breadcrumbs={<Breadcrumbs items={[...trail, { label: listing.name }]} onNavigate={() => {}} />}
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            {listing.name}
+            <StatusBadge status={statusTones[listing.status]} label={statuses.find((status) => status.value === listing.status)!.label} />
+          </span>
+        }
+        description="Chemin des Vernes 12, 1936 Verbier"
+        actions={
+          <div role="group" aria-label="Listing actions" className="flex flex-wrap gap-2">
+            <Button variant="secondary" onClick={() => notify("Link to the listing copied")}>
+              Share
+            </Button>
+            <Button aria-haspopup="dialog" aria-expanded={editing} onClick={edit}>
+              Edit
+            </Button>
+            <ActionMenu
+              label="More actions"
+              trigger={
+                <Icon>
+                  <circle cx="5" cy="12" r="1" />
+                  <circle cx="12" cy="12" r="1" />
+                  <circle cx="19" cy="12" r="1" />
+                </Icon>
+              }
+              actions={moreActions}
+              onAction={(chosen) => notify(chosen.label)}
+            />
+          </div>
+        }
+      />
+      <Carousel
+        label="Photos"
+        value={slide}
+        onValueChange={setSlide}
+        slideWidth="min(760px, 86%)"
+        align="start"
+        overflow="visible"
+        controls="end"
+        slides={photos.map((item) => ({
+          label: item.label,
+          content: (
+            <div className="relative aspect-16/10">
+              <Scene colors={item.colors} sun={item.sun} />
+              <p className="absolute bottom-3 left-3 max-w-[calc(100%-24px)] truncate rounded-control bg-paper px-3 py-1 text-label font-medium text-ink">
+                {item.label}
+              </p>
             </div>
-          }
-        />
-        <p className="text-label text-muted">
-          Last action: <output className="text-ink">{action}</output>
-        </p>
+          ),
+        }))}
+      />
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <Tabs
           value={tab}
           onValueChange={setTab}
@@ -194,10 +261,19 @@ function DetailPage() {
               value: "overview",
               label: "Overview",
               content: (
-                <Card className="p-5">
+                <Card className="grid gap-6 p-6">
+                  <p className="text-body text-ink">{listing.description}</p>
+                  <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                    {figures.map((figure) => (
+                      <div key={figure.label}>
+                        <dt className="text-label text-muted">{figure.label}</dt>
+                        <dd className="mt-1 text-2xl font-semibold tracking-tight text-ink">{figure.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <Separator />
                   <DescriptionList
                     items={[
-                      { label: "Status", value: statuses.find((status) => status.value === listing.status)!.label },
                       { label: "On the website", value: listing.published ? "Shown" : "Hidden" },
                       ...facts,
                     ]}
@@ -206,39 +282,23 @@ function DetailPage() {
               ),
             },
             {
-              value: "media",
-              label: "Media",
+              value: "photos",
+              label: "All photos",
               content: (
-                <div className="grid items-start gap-6 md:grid-cols-[3fr_2fr]">
-                  <Carousel
-                    label="Photos"
-                    value={slide}
-                    onValueChange={setSlide}
-                    slides={photos.map((item) => ({
-                      label: item.label,
-                      content: (
-                        <div className="relative aspect-3/2">
-                          <Scene colors={item.colors} sun={item.sun} />
-                          <p className="absolute bottom-3 left-3 max-w-[calc(100%-24px)] truncate rounded-control bg-paper px-3 py-1 text-label font-medium text-ink">
-                            {item.label}
-                          </p>
-                        </div>
-                      ),
-                    }))}
-                  />
+                <Card className="p-6">
                   <Lightbox
                     value={photo}
                     onValueChange={setPhoto}
                     images={photos.map((item) => ({ label: item.label, image: <Scene colors={item.colors} sun={item.sun} /> }))}
                   />
-                </div>
+                </Card>
               ),
             },
             {
               value: "activity",
               label: "Activity",
               content: (
-                <Card className="p-5">
+                <Card className="p-6">
                   <Timeline items={events} />
                 </Card>
               ),
@@ -247,7 +307,7 @@ function DetailPage() {
               value: "files",
               label: "Files",
               content: (
-                <Card className="p-5">
+                <Card className="p-6">
                   <List
                     items={files.map((file) => ({
                       ...file,
@@ -258,7 +318,7 @@ function DetailPage() {
                         </Icon>
                       ),
                       trailing: (
-                        <IconButton label={`Download ${file.title}`} variant="ghost" size="sm" onClick={() => setAction(`Download ${file.title}`)}>
+                        <IconButton label={`Download ${file.title}`} variant="ghost" size="sm" onClick={() => notify(`Downloading ${file.title}`)}>
                           <Icon>
                             <path d="M12 15V3" />
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -273,7 +333,86 @@ function DetailPage() {
             },
           ]}
         />
-      </main>
+        <Card className="grid gap-5 p-6 lg:sticky lg:top-6 lg:mt-13.5">
+          <div>
+            <p className="text-label text-muted">Asking price</p>
+            <p className="mt-1 text-3xl font-semibold tracking-tight text-ink tabular-nums">CHF 1,250,000</p>
+            <p className="mt-1 text-label text-muted">CHF 10,593 per m² of living area</p>
+          </div>
+          <Separator />
+          <div className="flex items-center gap-3">
+            <Avatar name="Maya Chen" size="lg" className="shrink-0" />
+            <div className="min-w-0">
+              <p className="truncate text-body font-medium text-ink">Maya Chen</p>
+              <p className="truncate text-label text-muted">Listing agent, Verbier office</p>
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Button onClick={() => notify("Viewing request sent to the owner")}>Schedule a viewing</Button>
+            <Button variant="secondary" onClick={() => notify("Calling Maya Chen")}>
+              Call Maya
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+
+  return (
+    <LinkProvider navigate={setPath}>
+      <AppShell
+        header={
+          <header className="flex h-16 items-center justify-between px-6 lg:hidden">
+            {brand}
+            <Avatar name="Maya Chen" />
+          </header>
+        }
+        sidebar={
+          <CollapsibleSidebar
+            items={sections.map((section) => ({
+              value: section.href,
+              href: section.href,
+              label: section.label,
+              icon: <NavIcon paths={section.paths} size={16} />,
+            }))}
+            value={sections.find((section) => path.startsWith(section.href))!.href}
+            onValueChange={setPath}
+            expanded={expanded}
+            onExpandedChange={setExpanded}
+            leading={brand}
+            trailing={
+              <span className="flex items-center gap-2.5 overflow-hidden whitespace-nowrap">
+                <Avatar name="Maya Chen" className="shrink-0" />
+                <span className="min-w-0">
+                  <span className="block truncate text-label font-medium text-ink">Maya Chen</span>
+                  <span className="block truncate text-caption text-muted">Verbier office</span>
+                </span>
+              </span>
+            }
+            className="h-full"
+          />
+        }
+        mobileNav={
+          <TabBar
+            items={sections.map((section) => ({
+              value: section.href,
+              href: section.href,
+              label: section.label,
+              icon: <NavIcon paths={section.paths} size={20} />,
+              activeIcon: <NavIcon paths={section.paths} size={20} filled />,
+            }))}
+            value={sections.find((section) => path.startsWith(section.href))!.href}
+            onValueChange={setPath}
+          />
+        }
+      >
+        {path === detailPath ? listingPage : <PageHeader title={[...sections, ...trail].find((page) => page.href === path)!.label} />}
+      </AppShell>
+      <ToastStack
+        toasts={toasts}
+        onDismiss={(id) => setToasts(toasts.filter((toast) => toast.id !== id))}
+        className="fixed right-4 bottom-24 z-(--layer-sticky) w-80 max-w-[calc(100vw-2rem)] lg:right-6 lg:bottom-6"
+      />
       <Drawer open={editing} onOpenChange={setEditing} title="Edit listing">
         <form noValidate onSubmit={save} className="grid gap-5 px-5 pb-5">
           <Field label="Name" required error={validated ? nameError : undefined}>
@@ -311,7 +450,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Tab through the breadcrumbs, the actions and the tabs (arrows switch tabs); Edit opens a drawer whose Save updates the page, and links and actions print below the header. */
+/** Drag or flick the photos, switch tabs (arrows switch too), open a photo in the lightbox; Edit opens a drawer whose Save updates the page, and the actions confirm with a toast. The sidebar and breadcrumb links switch pages without loading. */
 export const Default: Story = {
   render: () => <DetailPage />,
 };

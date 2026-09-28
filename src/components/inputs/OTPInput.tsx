@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
+import { useFocusSource } from "../../focus";
 import { useSprings, useLiquid } from "../../springs";
 import { useField } from "./Field";
 
@@ -35,6 +36,7 @@ export function OTPInput({
 }: OTPInputProps) {
   const { soft, swap } = useSprings();
   const field = useField();
+  useFocusSource();
   const isDisabled = field?.disabled || disabled;
   const [active, setActive] = useState<number | null>(null);
   const index = active ?? Math.min(value.length, length - 1);
@@ -114,7 +116,7 @@ export function OTPInput({
               onFocus={() => setActive(i)}
               onChange={(event) => onChange(event, i)}
               onKeyDown={(event) => onKeyDown(event, i)}
-              className="col-start-1 row-start-1 h-13 w-11 rounded-[calc(var(--radius-card)/2)] bg-paper text-center text-xl text-transparent shadow-float outline-none selection:bg-transparent"
+              className="col-start-1 row-start-1 h-13 w-11 rounded-[calc(var(--radius-card)/2)] bg-paper text-center text-xl text-transparent shadow-control outline-none selection:bg-transparent"
             />
             <AnimatePresence initial={false}>
               {digit && (
@@ -137,7 +139,7 @@ export function OTPInput({
         animate={{ opacity: active === null ? 0 : 1 }}
         transition={soft}
         style={{ left, right }}
-        className="pointer-events-none absolute inset-y-0 rounded-[calc(var(--radius-card)/2)] outline-2 outline-offset-2 outline-focus"
+        className="pointer-events-none absolute inset-y-0 rounded-[calc(var(--radius-card)/2)] outline-2 outline-offset-2 outline-focus [:root[data-pointer]_&]:outline-focus/20"
       />
     </div>
   );

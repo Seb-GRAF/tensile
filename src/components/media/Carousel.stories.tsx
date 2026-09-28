@@ -60,7 +60,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Drag or flick the photos, press the arrows or the dots, or Tab to the photos and use ArrowLeft and ArrowRight; past the first and last photo the track stretches and springs back. */
+/** Drag or flick the photos, swipe sideways on a trackpad or Shift-scroll a mouse wheel, press the arrows or the dots, or Tab to the photos and use ArrowLeft and ArrowRight; past the first and last photo the track stretches and springs back. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
@@ -113,3 +113,32 @@ export const InteractiveContent: Story = {
     );
   },
 };
+
+/** Drag, flick or use the arrows and dots: the current photo stays centered while its neighbours peek in at both sides. */
+export const Peek: Story = { ...Default, args: { slideWidth: "80%", align: "center" } };
+
+/** Drag, flick or use the arrows and dots: the cards line up from the start and run past the carousel's right edge, where the page clips them. */
+export const Rail: Story = {
+  args: { slideWidth: "min(280px, 70%)", align: "start", overflow: "visible" },
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+    return (
+      <div className="w-150 max-w-[calc(100vw-32px)] overflow-x-clip px-10">
+        <Carousel
+          {...args}
+          className="max-w-100"
+          onValueChange={(value) => {
+            args.onValueChange(value);
+            updateArgs({ value });
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+/** Press the arrows at the end of the row, or drag the dots at its start. */
+export const ArrowsAtEnd: Story = { ...Default, args: { controls: "end" } };
+
+/** Press the arrows over the photo's edges, or drag the photo; the dots below follow. */
+export const ArrowsOnSides: Story = { ...Default, args: { controls: "sides" } };

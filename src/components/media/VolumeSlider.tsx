@@ -59,7 +59,7 @@ function VolumeTrack({ value, onValueChange, label, tone, formatValue, width }: 
     >
       <motion.div
         style={style}
-        className={`absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control shadow-float ${tone === "ink" ? "bg-ink-3" : "bg-paper"}`}
+        className={`absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control shadow-control ${tone === "ink" ? "bg-ink-3" : "bg-paper"}`}
       >
         <motion.div style={{ width: fill }} className={`absolute inset-y-1 left-1 rounded-control ${tone === "ink" ? "bg-paper text-ink" : "bg-ink text-paper"}`}>
           <Icon size={16} className="absolute top-1/2 left-2.5 -translate-y-1/2">

@@ -38,7 +38,7 @@ export function CopyButton({ value, label = "Copy", copiedLabel = "Copied", clas
         initial={false}
         animate={{ width: copied ? width : 44 }}
         transition={shape}
-        className={`grid h-11 place-content-center place-items-center overflow-hidden rounded-control bg-ink text-body font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus press ${className}`}
+        className={`grid h-11 place-content-center place-items-center overflow-hidden rounded-control bg-ink text-body font-medium text-paper shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus press ${className}`}
       >
         <AnimatePresence initial={false}>
           {copied ? (

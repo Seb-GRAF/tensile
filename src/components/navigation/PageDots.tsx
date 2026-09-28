@@ -79,7 +79,7 @@ export function PageDots({
       style={{ width }}
       className={`relative flex h-8 cursor-pointer touch-none items-center gap-2 rounded-control px-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
     >
-      <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 rounded-control bg-paper shadow-float" />
+      <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 rounded-control bg-paper shadow-control" />
       {Array.from({ length: count }, (_, i) => (
         <span key={i} className="relative size-2 rounded-full bg-muted/40" />
       ))}

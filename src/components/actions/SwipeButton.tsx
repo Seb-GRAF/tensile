@@ -55,7 +55,7 @@ function SwipeTrack({ confirmed, onConfirm, label, confirmedLabel, width }: Swip
       initial={false}
       animate={{ backgroundColor: confirmed ? "var(--color-accent)" : "var(--color-paper)" }}
       transition={soft}
-      className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control shadow-float"
+      className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control shadow-control"
     >
       <AnimatePresence initial={false}>
         {!confirmed && (

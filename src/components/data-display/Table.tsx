@@ -1,3 +1,6 @@
+import { AnimatePresence, motion, useIsPresent } from "motion/react";
+import { useRef } from "react";
+import { useSprings } from "../../springs";
 import { useSize } from "../../useSize";
 import { Skeleton } from "../feedback/Skeleton";
 import { Card } from "../layout/Card";
@@ -29,6 +32,42 @@ export type TableProps<Row> = {
 
 const aligns = { start: "text-start", end: "text-end tabular-nums" };
 
+function TableRow<Row>({ row, columns, ref }: { row: Row; columns: TableProps<Row>["columns"]; ref?: (element: HTMLTableRowElement | null) => void }) {
+  const { shape, swap } = useSprings();
+  const present = useIsPresent();
+  const element = useRef<HTMLTableRowElement>(null);
+  const widths = present ? undefined : Array.from(element.current!.cells, (cell) => cell.offsetWidth);
+  return (
+    <motion.tr
+      ref={(tr) => {
+        element.current = tr;
+        ref!(tr);
+      }}
+      aria-hidden={!present}
+      inert={!present}
+      layout="position"
+      {...swap}
+      transition={{ layout: shape }}
+      className="hover:bg-hover"
+    >
+      {columns.map((column, i) => {
+        const style = widths && { width: widths[i] };
+        const content = column.cell ? column.cell(row) : (row as Record<string, React.ReactNode>)[column.key];
+        const align = aligns[column.align ?? "start"];
+        return column.rowHeader ? (
+          <th key={column.key} scope="row" style={style} className={`h-12 whitespace-nowrap border-line px-4 py-1 font-medium [tr:not([inert])~tr>&]:border-t ${align}`}>
+            {content}
+          </th>
+        ) : (
+          <td key={column.key} style={style} className={`h-12 whitespace-nowrap border-line px-4 py-1 [tr:not([inert])~tr>&]:border-t ${align}`}>
+            {content}
+          </td>
+        );
+      })}
+    </motion.tr>
+  );
+}
+
 export function Table<Row>({
   columns,
   rows,
@@ -39,6 +78,7 @@ export function Table<Row>({
   empty,
   className = "",
 }: TableProps<Row>) {
+  const { shape, swap } = useSprings();
   const [box, measureBox] = useSize();
   const [table, measureTable] = useSize();
   const scrolls = box && table && table.width > box.width;
@@ -51,58 +91,50 @@ export function Table<Row>({
       aria-label={scrolls ? caption : undefined}
       className={`overflow-auto outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
     >
-      <table ref={measureTable} aria-busy={loading || undefined} className="w-full text-sm">
-        <caption className="sr-only">{caption}</caption>
-        <thead className="sticky top-0 z-(--layer-raised) bg-paper">
-          <tr>
-            {columns.map((column) => (
-              <th
-                key={column.key}
-                scope="col"
-                aria-sort={sort?.key === column.key ? sort.direction : undefined}
-                className={`h-10 whitespace-nowrap px-4 text-label font-medium text-muted shadow-[inset_0_-1px_var(--color-line)] ${aligns[column.align ?? "start"]}`}
-              >
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-line">
-          {loading ? (
-            Array.from({ length: 5 }, (_, i) => (
-              <tr key={i}>
-                {columns.map((column) => (
-                  <td key={column.key} className="h-12 px-4">
-                    <Skeleton className="h-4 rounded-full" />
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : rows.length > 0 ? (
-            rows.map((row) => (
-              <tr key={rowKey(row)} className="hover:bg-hover">
-                {columns.map((column) => {
-                  const content = column.cell ? column.cell(row) : (row as Record<string, React.ReactNode>)[column.key];
-                  const align = aligns[column.align ?? "start"];
-                  return column.rowHeader ? (
-                    <th key={column.key} scope="row" className={`h-12 whitespace-nowrap px-4 py-1 font-medium ${align}`}>
-                      {content}
-                    </th>
-                  ) : (
-                    <td key={column.key} className={`h-12 whitespace-nowrap px-4 py-1 ${align}`}>
-                      {content}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))
-          ) : (
+      <motion.div initial={false} animate={{ height: table?.height }} transition={shape} className="overflow-y-clip">
+        <table ref={measureTable} aria-busy={loading || undefined} className="relative w-full border-separate border-spacing-0 text-sm">
+          <caption className="sr-only">{caption}</caption>
+          <thead className="sticky top-0 z-(--layer-raised) bg-paper">
             <tr>
-              <td colSpan={columns.length}>{empty}</td>
+              {columns.map((column) => (
+                <th
+                  key={column.key}
+                  scope="col"
+                  aria-sort={sort?.key === column.key ? sort.direction : undefined}
+                  className={`h-10 whitespace-nowrap px-4 text-label font-medium text-muted shadow-[inset_0_-1px_var(--color-line)] ${aligns[column.align ?? "start"]}`}
+                >
+                  {column.header}
+                </th>
+              ))}
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <AnimatePresence initial={false} mode="wait">
+            <motion.tbody key={loading ? "loading" : rows.length > 0 ? "rows" : "empty"} {...swap}>
+              {loading ? (
+                Array.from({ length: 5 }, (_, i) => (
+                  <tr key={i}>
+                    {columns.map((column) => (
+                      <td key={column.key} className="h-12 border-line px-4 [tr~tr>&]:border-t">
+                        <Skeleton className="h-4 rounded-full" />
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : rows.length > 0 ? (
+                <AnimatePresence initial={false} mode="popLayout">
+                  {rows.map((row) => (
+                    <TableRow key={rowKey(row)} row={row} columns={columns} />
+                  ))}
+                </AnimatePresence>
+              ) : (
+                <tr>
+                  <td colSpan={columns.length}>{empty}</td>
+                </tr>
+              )}
+            </motion.tbody>
+          </AnimatePresence>
+        </table>
+      </motion.div>
     </Card>
   );
 }

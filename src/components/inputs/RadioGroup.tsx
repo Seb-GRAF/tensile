@@ -57,7 +57,7 @@ export function RadioGroup({
       aria-describedby={field?.describedBy}
       aria-invalid={field?.invalid}
       aria-required={field?.required || required}
-      className={`rounded-card bg-paper p-2 shadow-float ${className}`}
+      className={`rounded-card bg-paper p-2 shadow-control ${className}`}
     >
       <div className="relative grid">
         {options.map((option) => (

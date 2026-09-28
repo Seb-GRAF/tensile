@@ -33,7 +33,7 @@ export function ProgressRing({
       initial={false}
       animate={{ backgroundColor: done ? "var(--color-accent)" : "var(--color-ink)" }}
       transition={soft}
-      className={`grid size-11 place-items-center rounded-full shadow-float ${className}`}
+      className={`grid size-11 place-items-center rounded-full shadow-control ${className}`}
     >
       <motion.svg
         viewBox="0 0 28 28"

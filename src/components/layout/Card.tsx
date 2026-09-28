@@ -9,5 +9,5 @@ const tones = {
 };
 
 export function Card({ tone = "paper", className = "", ...props }: CardProps) {
-  return <div {...props} className={`rounded-card shadow-float ${tones[tone]} ${className}`} />;
+  return <div {...props} className={`rounded-card shadow-float surface ${tones[tone]} ${className}`} />;
 }

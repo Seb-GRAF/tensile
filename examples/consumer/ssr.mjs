@@ -1,6 +1,6 @@
 import { createElement as h } from "react";
 import { renderToString } from "react-dom/server";
-import * as ui from "morph-components";
+import * as ui from "tensile";
 
 const noop = () => {};
 const options = [
@@ -94,6 +94,7 @@ const cases = {
   SearchField: { value: "", onValueChange: noop },
   SegmentedTabs: { options, value: "a", onValueChange: noop },
   Select: { options, value: null, onValueChange: noop },
+  SelectionBar: { count: 2, onClear: noop, children: h(ui.Button, {}, "Archive") },
   Separator: {},
   SidebarNav: { items: nav, value: "a", onValueChange: noop },
   Slider: { value: 50, onValueChange: noop },

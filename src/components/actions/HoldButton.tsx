@@ -68,7 +68,7 @@ export function HoldButton({
           backgroundColor: done ? "var(--color-accent)" : "var(--color-ink)",
         }}
         transition={{ width: shape, backgroundColor: soft }}
-        className={`relative grid h-11 place-content-center place-items-center overflow-hidden rounded-control text-body font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+        className={`relative grid h-11 place-content-center place-items-center overflow-hidden rounded-control text-body font-medium text-paper shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
       >
         <AnimatePresence initial={false}>
           {!done && (

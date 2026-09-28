@@ -8,8 +8,8 @@ export const base =
   "inline-flex items-center justify-center whitespace-nowrap rounded-control font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus enabled:press disabled:opacity-40";
 
 export const variants = {
-  primary: "bg-ink text-paper shadow-float enabled:hover:bg-ink-3",
-  secondary: "bg-paper text-ink shadow-float enabled:hover:bg-hover",
+  primary: "bg-ink text-paper shadow-control enabled:hover:bg-ink-3",
+  secondary: "bg-paper text-ink shadow-control enabled:hover:bg-hover",
   ghost: "enabled:hover:bg-current/10",
 };
 

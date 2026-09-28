@@ -42,7 +42,7 @@ export function ColorSwatches({
       aria-describedby={field?.describedBy}
       aria-invalid={field?.invalid}
       aria-required={field?.required || required}
-      className={`w-fit rounded-control bg-paper p-[3px] shadow-float has-[:disabled]:opacity-40 ${className}`}
+      className={`w-fit rounded-control bg-paper p-[3px] shadow-control has-[:disabled]:opacity-40 ${className}`}
     >
       <div className="relative grid auto-cols-[32px] grid-flow-col gap-1">
         {options.map((option) => (

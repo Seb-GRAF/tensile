@@ -10,5 +10,5 @@
     "skipLibCheck": true,
     "types": []
   },
-  "include": ["main.tsx", "App.tsx", "vite.config.ts"]
+  "include": ["main.tsx", "App.tsx", "vite.config.ts", "docs-examples"]
 }

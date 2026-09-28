@@ -67,7 +67,7 @@ export function Pagination({
   const clip = useMotionTemplate`inset(0 ${right}% 0 ${left}% round var(--radius-control))`;
 
   return (
-    <nav aria-label={label} className={`flex rounded-control bg-paper p-[3px] shadow-float ${className}`}>
+    <nav aria-label={label} className={`flex rounded-control bg-paper p-[3px] shadow-control ${className}`}>
       <IconButton
         size="sm"
         variant="ghost"

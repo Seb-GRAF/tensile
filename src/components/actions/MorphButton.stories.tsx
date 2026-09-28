@@ -5,11 +5,14 @@ import { fn } from "storybook/test";
 import { Field } from "../inputs/Field";
 import { Input } from "../inputs/Input";
 import { MorphButton, type MorphButtonProps } from "./MorphButton";
+import { MorphButtonExample } from "../../../docs/examples/MorphButtonExample";
+import exampleSource from "../../../docs/examples/MorphButtonExample.tsx?raw";
 
 const meta = {
   title: "Actions/MorphButton",
   id: "components-morphbutton",
   component: MorphButton,
+  tags: ["!autodocs"],
   args: { status: "idle", onClick: fn() },
 } satisfies Meta<typeof MorphButton>;
 
@@ -68,3 +71,8 @@ export const InAForm: Story = {
 
 /** Disabled while idle: pointer and keyboard presses do not start the request. */
 export const Disabled: Story = { args: { disabled: true } };
+
+export const Usage: Story = {
+  render: () => <MorphButtonExample />,
+  parameters: { docs: { source: { code: exampleSource, language: "tsx" } } },
+};

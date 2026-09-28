@@ -10,6 +10,10 @@ export type CollapsibleSidebarProps = {
   onValueChange: (value: string) => void;
   expanded: boolean;
   onExpandedChange: (expanded: boolean) => void;
+  /** At the top, e.g. the brand; clipped to the rail while collapsed. */
+  leading?: React.ReactNode;
+  /** At the bottom, above the collapse button, e.g. the account; clipped to the rail while collapsed. */
+  trailing?: React.ReactNode;
   label?: string;
   expandLabel?: string;
   collapseLabel?: string;
@@ -22,6 +26,8 @@ export function CollapsibleSidebar({
   onValueChange,
   expanded,
   onExpandedChange,
+  leading,
+  trailing,
   label = "Main",
   expandLabel = "Expand sidebar",
   collapseLabel = "Collapse sidebar",
@@ -41,21 +47,25 @@ export function CollapsibleSidebar({
         onValueChange={onValueChange}
         label={label}
         collapsed={!expanded}
-        className="h-full"
-        leading={
-          <IconButton
-            size="sm"
-            variant="ghost"
-            className="text-muted"
-            label={expanded ? collapseLabel : expandLabel}
-            aria-expanded={expanded}
-            onClick={() => onExpandedChange(!expanded)}
-          >
-            <Icon size={16}>
-              <rect width="18" height="18" x="3" y="3" rx="2" />
-              <path d="M9 3v18" />
-            </Icon>
-          </IconButton>
+        className="h-full overflow-hidden"
+        leading={leading}
+        trailing={
+          <>
+            {trailing}
+            <IconButton
+              size="sm"
+              variant="ghost"
+              className="text-muted"
+              label={expanded ? collapseLabel : expandLabel}
+              aria-expanded={expanded}
+              onClick={() => onExpandedChange(!expanded)}
+            >
+              <Icon size={16}>
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M9 3v18" />
+              </Icon>
+            </IconButton>
+          </>
         }
       />
     </motion.div>

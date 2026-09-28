@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "../actions/Button";
+import { Avatar } from "../data-display/Avatar";
 import { Icon } from "../data-display/Icon";
 import { CollapsibleSidebar } from "../navigation/CollapsibleSidebar";
-import { LinkProvider } from "../navigation/Link";
 import { TabBar } from "../navigation/TabBar";
 import { AppShell } from "./AppShell";
 import { Card } from "./Card";
-import { Header } from "./Header";
 import { PageHeader } from "./PageHeader";
 
 function NavIcon({ paths, size, filled = false }: { paths: string[]; size: number; filled?: boolean }) {
@@ -71,72 +70,79 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Press Tab once to show the skip link, then Enter to move focus to the page. From 1024 px the sidebar sits beside the page; below, the tab bar is fixed to the bottom and the header's links fold into a menu below 768 px. */
+/** Press Tab once to show the skip link, then Enter to move focus to the page. From 1024 px the sidebar stays in view while the page scrolls (its bottom button folds it into a rail); below, the brand moves into the header and the tab bar is fixed to the bottom. */
 export const Default: Story = {
   render: function Render(args) {
-    const [page, setPage] = useState("/projects");
     const [section, setSection] = useState("home");
     const [expanded, setExpanded] = useState(true);
+    const brand = (
+      <span className="flex h-10 items-center gap-2.5 overflow-hidden px-1.5 text-body font-semibold whitespace-nowrap text-ink">
+        <Icon size={20} className="shrink-0">
+          <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+          <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+          <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+        </Icon>
+        Harbor
+      </span>
+    );
     return (
-      <LinkProvider navigate={setPage}>
-        <AppShell
-          {...args}
-          header={
-            <Header
-              brand={
-                <span className="flex items-center gap-2 text-body font-semibold text-ink">
-                  <Icon size={20}>
-                    <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-                    <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-                    <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-                  </Icon>
-                  Harbor
+      <AppShell
+        {...args}
+        header={
+          <header className="flex h-16 items-center justify-between px-6 lg:hidden">
+            {brand}
+            <Avatar name="Maya Chen" />
+          </header>
+        }
+        sidebar={
+          <CollapsibleSidebar
+            items={sections.map((item) => ({ value: item.value, label: item.label, icon: <NavIcon paths={item.paths} size={16} /> }))}
+            value={section}
+            onValueChange={setSection}
+            expanded={expanded}
+            onExpandedChange={setExpanded}
+            label="Project"
+            leading={brand}
+            trailing={
+              <span className="flex items-center gap-2.5 overflow-hidden whitespace-nowrap">
+                <Avatar name="Maya Chen" className="shrink-0" />
+                <span className="min-w-0">
+                  <span className="block truncate text-label font-medium text-ink">Maya Chen</span>
+                  <span className="block truncate text-caption text-muted">Content lead</span>
                 </span>
-              }
-              links={[
-                { label: "Projects", href: "/projects" },
-                { label: "Calendar", href: "/calendar" },
-                { label: "Reports", href: "/reports" },
-                { label: "Team", href: "/team" },
-              ]}
-              value={page}
-              actions={<Button size="sm">New project</Button>}
-            />
-          }
-          sidebar={
-            <CollapsibleSidebar
-              items={sections.map((item) => ({ value: item.value, label: item.label, icon: <NavIcon paths={item.paths} size={16} /> }))}
-              value={section}
-              onValueChange={setSection}
-              expanded={expanded}
-              onExpandedChange={setExpanded}
-              label="Project"
-            />
-          }
-          mobileNav={
-            <TabBar
-              items={sections.map((item) => ({
-                value: item.value,
-                label: item.label,
-                icon: <NavIcon paths={item.paths} size={20} />,
-                activeIcon: <NavIcon paths={item.paths} size={20} filled />,
-              }))}
-              value={section}
-              onValueChange={setSection}
-              label="Project"
-            />
-          }
-        >
-          <div className="grid gap-6">
-            <PageHeader
-              title={sections.find((item) => item.value === section)!.label}
-              description="Website relaunch, due November 14."
-              actions={<Button variant="secondary">Share</Button>}
-            />
-            {args.children}
-          </div>
-        </AppShell>
-      </LinkProvider>
+              </span>
+            }
+            className="h-full"
+          />
+        }
+        mobileNav={
+          <TabBar
+            items={sections.map((item) => ({
+              value: item.value,
+              label: item.label,
+              icon: <NavIcon paths={item.paths} size={20} />,
+              activeIcon: <NavIcon paths={item.paths} size={20} filled />,
+            }))}
+            value={section}
+            onValueChange={setSection}
+            label="Project"
+          />
+        }
+      >
+        <div className="grid gap-6">
+          <PageHeader
+            title={sections.find((item) => item.value === section)!.label}
+            description="Website relaunch, due November 14."
+            actions={
+              <>
+                <Button variant="secondary">Share</Button>
+                <Button>New task</Button>
+              </>
+            }
+          />
+          {args.children}
+        </div>
+      </AppShell>
     );
   },
 };

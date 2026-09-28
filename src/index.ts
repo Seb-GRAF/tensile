@@ -70,6 +70,7 @@ export { Rating, type RatingProps } from "./components/inputs/Rating";
 export { SearchField, type SearchFieldProps } from "./components/inputs/SearchField";
 export { SegmentedTabs, type SegmentedTabsProps } from "./components/navigation/SegmentedTabs";
 export { Select, type SelectProps } from "./components/inputs/Select";
+export { SelectionBar, type SelectionBarProps } from "./components/actions/SelectionBar";
 export { Separator, type SeparatorProps } from "./components/layout/Separator";
 export { SidebarNav, type SidebarNavProps } from "./components/navigation/SidebarNav";
 export { Skeleton, type SkeletonProps } from "./components/feedback/Skeleton";

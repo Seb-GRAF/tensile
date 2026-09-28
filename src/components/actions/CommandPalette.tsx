@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { filterByWords, ListHighlight, scrollToRow, ROW, useActiveIndex } from "../../list";
 import { useSprings } from "../../springs";
+import { useFocusSource } from "../../focus";
 import { icons } from "../../icons";
 import { Icon } from "../data-display/Icon";
 import { Kbd } from "../data-display/Kbd";
@@ -28,6 +29,7 @@ export function CommandPalette({
   className = "",
 }: CommandPaletteProps) {
   const { shape, soft, swap } = useSprings();
+  useFocusSource();
   const list = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -85,7 +87,7 @@ export function CommandPalette({
       initial={false}
       animate={{ height, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)" }}
       transition={shape}
-      className={`overflow-hidden bg-paper shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${className}`}
+      className={`overflow-hidden bg-paper shadow-control outline-offset-2 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${className}`}
     >
       <label className="flex h-13 cursor-text items-center gap-2.5 px-4">
         <Icon className="shrink-0 text-muted">{icons.search}</Icon>

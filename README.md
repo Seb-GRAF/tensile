@@ -1,4 +1,4 @@
-# morph-components
+# Tensile
 
 A React design system of animated components. Every control is one shape that morphs between its states; content inside it blur-swaps; things that slide use a liquid spring; drags follow the pointer and keep their speed on release. Colors, type, radii, shadows, focus and motion speed are CSS tokens an app overrides. Every component is generic: data and text come in as props with English defaults.
 
@@ -18,25 +18,58 @@ Stack: React 19, TypeScript, Motion (`motion/react`), Tailwind 4 (for the librar
 
 ## Install and use
 
-The package isn't published. Build it with `npm run build`, then depend on it by path (or a workspace link). `dist/` holds:
+Tensile is being prepared for release as the npm package `tensile`, from [seb-graf/tensile](https://github.com/seb-graf/tensile). This version is a local preview and has not been published. npm reports a previously unpublished package with that name; publishing rights still need verification. The copyright holder and license also need confirmation. Keep `private: true` until release preparation is complete.
+
+With Node 24, build a package artifact in this checkout:
+
+```sh
+npm ci
+npm pack
+```
+
+Install the resulting tarball in an existing React 19 application:
+
+```sh
+npm install /path/to/tensile-0.1.0.tgz motion@^13
+```
+
+Do not install an unrelated registry package with this name. `dist/` holds:
 
 - `index.js`: ESM with a `"use client"` banner; React, React DOM and Motion stay external.
 - `index.d.ts` and the other declarations.
-- `styles.css`: the tokens, the utilities the components use, and Geist. It styles no elements.
+- `styles.css`: global tokens, unprefixed utilities, font faces, and generated CSS property initialization; no Preflight or body background rule.
 - `reset.css`: Tailwind's preflight, opt-in.
 
 Peer dependencies: `react` ^19, `react-dom` ^19, `motion` ^13.
 
 ```tsx
 // Once, at the app's entry.
-import "morph-components/reset.css"; // optional: only if the app has no reset of its own
-import "morph-components/styles.css";
+import "tensile/reset.css"; // optional: only if the app has no reset of its own
+import "tensile/styles.css";
 import "./app.css"; // your overrides, loaded after the library
 
-import { Button, Field, Input } from "morph-components";
+import { Button, Field, Input } from "tensile";
 ```
 
 The app doesn't need Tailwind. `examples/consumer` is a Vite app without Tailwind that type-checks against the built declarations, builds, overrides tokens, and server-renders every export (`npm run check:consumer`).
+
+The check installs an actual tarball in a temporary directory outside the checkout, with its own dependencies. It also type-checks the shared documentation examples. It does not validate hydration or promise framework-specific support.
+
+For a first working component:
+
+```tsx
+import { useState } from "react";
+import { Toggle } from "tensile";
+
+export default function App() {
+  const [enabled, setEnabled] = useState(false);
+  return <Toggle label="Notifications" checked={enabled} onCheckedChange={setEnabled} />;
+}
+```
+
+The reset changes native element defaults across the page. If you omit it, provide your own baseline for box sizing, form fonts, margins, borders, and native appearance in `@layer base`, then check the components in your app. Unlayered native-element rules can override component utilities. Apply `font-family: var(--font-sans)` to your app root if your reset does not establish it. Geist is served from bundled WOFF2 assets with `font-display: swap`; its license is in `THIRD_PARTY_NOTICES`.
+
+ESM bundlers and React 19 are the intended environment. Peer-version lower bounds, non-Chromium engines, screen-reader speech, and framework hydration need separate verification. The library's compiled utilities are not a general Tailwind stylesheet; application layout classes need your own CSS or Tailwind build.
 
 Server rendering: components render their markup on the server. The modal layers of Dialog, AlertDialog, BottomSheet, Drawer and Lightbox render nothing until they mount in the browser (their triggers and thumbnails do render). The motion scale is 1 on the server.
 
@@ -373,4 +406,7 @@ Recipes:
 - `npm run storybook`: the component workshop at http://localhost:6006.
 - `npx tsc --noEmit`, `npm test` (calendar and color logic with Node's test runner).
 - `npm run build`, `npm run check:consumer`.
+- `npm run build:site` builds the landing page and documentation into `site-dist/`; `npm run preview:site` serves that production build locally.
+- `npm run site` develops the landing page; documentation links require the combined production preview or a separately served Storybook build.
+- [Contributing](CONTRIBUTING.md) covers checks and the release procedure; [Changelog](CHANGELOG.md) records package changes.
 - `AGENTS.md` holds the rules (tokens, motion, API, stories, pitfalls) and the inventory; `docs/coverage.md` holds what's covered and how each wave was verified; `.claude/skills/morph-component/` is the workflow for adding a component, with `check_story.py` for browser checks.

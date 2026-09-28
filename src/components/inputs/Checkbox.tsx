@@ -39,7 +39,7 @@ export function Checkbox({
         initial={false}
         animate={{ backgroundColor: checked || indeterminate ? "var(--color-accent)" : "var(--color-paper)" }}
         transition={soft}
-        className="relative grid size-6 shrink-0 place-items-center rounded-md text-on-accent shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
+        className="relative grid size-6 shrink-0 place-items-center rounded-md text-on-accent shadow-control outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
       >
         <input
           {...props}

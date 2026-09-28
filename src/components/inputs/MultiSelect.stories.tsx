@@ -17,6 +17,7 @@ const meta = {
       { value: "engineering", label: "Engineering" },
       { value: "research", label: "Research" },
       { value: "writing", label: "Writing and content strategy" },
+      { value: "support", label: "Customer support" },
     ],
     value: [],
     onValueChange: fn(),
@@ -64,6 +65,9 @@ export const LongListNearTheBottom: Story = {
   args: { options: Array.from({ length: 30 }, (_, i) => ({ value: String(i + 1), label: `Collection ${String(i + 1).padStart(2, "0")} — recordings and interviews` })) },
   decorators: [(Story) => <div className="flex h-[calc(100vh-4rem)] items-end"><Story /></div>],
 };
+
+/** Near the bottom the menu opens upward and the pill stays in place; press Save first to see the list take the error row's place. */
+export const InAFieldNearTheBottom: Story = { ...InAFieldInsideAForm, decorators: LongListNearTheBottom.decorators };
 
 export const InsideAClippingCard: Story = {
   ...Default,

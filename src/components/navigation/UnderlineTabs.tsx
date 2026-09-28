@@ -48,7 +48,7 @@ export function UnderlineTabs({ options, value, onValueChange, label = "Sections
   }
 
   return (
-    <div id={id} role="tablist" aria-label={label} onKeyDown={onKeyDown} className={`inline-block max-w-full rounded-control bg-paper px-3 py-[3px] shadow-float ${className}`}>
+    <div id={id} role="tablist" aria-label={label} onKeyDown={onKeyDown} className={`inline-block max-w-full rounded-control bg-paper px-3 py-[3px] shadow-control ${className}`}>
       <div className="relative flex">
         {options.map((option, i) => (
           <motion.button

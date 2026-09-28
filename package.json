@@ -1,5 +1,7 @@
 {
-  "name": "morph-components",
+  "name": "tensile",
+  "version": "0.1.0",
+  "description": "React components with shared styling and motion, TypeScript types, and ready-to-import CSS.",
   "private": true,
   "type": "module",
   "sideEffects": [
@@ -14,14 +16,19 @@
     "./reset.css": "./dist/reset.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "THIRD_PARTY_NOTICES"
   ],
   "scripts": {
     "test": "node --test",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "storybook": "npm run build && storybook dev -p 6006",
+    "build-storybook": "npm run build && storybook build",
     "build": "vite build -c vite.lib.config.ts --mode css && vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json",
-    "check:consumer": "sh examples/consumer/check.sh"
+    "check:consumer": "sh examples/consumer/check.sh",
+    "prepack": "npm run build",
+    "site": "npm run build && vite --config site/vite.config.ts",
+    "build:site": "npm run build && vite build --config site/vite.config.ts && storybook build --output-dir site-dist/storybook && cp THIRD_PARTY_NOTICES site-dist/THIRD_PARTY_NOTICES",
+    "preview:site": "vite preview --config site/vite.config.ts"
   },
   "peerDependencies": {
     "motion": "^13.0.0",
@@ -30,6 +37,7 @@
   },
   "devDependencies": {
     "@fontsource-variable/geist": "^5.3.0",
+    "@storybook/addon-docs": "^10.6.0",
     "@storybook/react-vite": "^10.6.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.6.3",
@@ -43,5 +51,13 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "vite": "^8.3.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seb-graf/tensile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seb-graf/tensile/issues"
+  },
+  "homepage": "https://github.com/seb-graf/tensile#readme"
 }

@@ -130,7 +130,7 @@ function DialogPanel({
       }}
       tabIndex={-1}
       data-autofocus={role === "dialog" ? "" : undefined}
-      className="absolute overflow-hidden bg-paper text-ink shadow-float outline-none"
+      className="absolute overflow-hidden bg-paper text-ink shadow-float surface outline-none"
     >
       {trigger !== null && (
         <motion.div aria-hidden="true" initial={swap.animate} animate={swap.exit} exit={swap.animate} className="absolute inset-0 grid place-items-center whitespace-nowrap text-body font-medium">

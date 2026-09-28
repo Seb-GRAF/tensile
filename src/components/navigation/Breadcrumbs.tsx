@@ -110,7 +110,7 @@ export function Breadcrumbs({
 
   return (
     <nav aria-label={label} className={className}>
-      <ol role="list" className="flex w-fit items-center rounded-control bg-paper px-1.5 py-1 text-label font-medium whitespace-nowrap text-muted shadow-float">
+      <ol role="list" className="flex w-fit items-center rounded-control bg-paper px-1.5 py-1 text-label font-medium whitespace-nowrap text-muted shadow-control">
         {items.map((item, i) =>
           i > itemsBeforeCollapse && i < end ? null : (
             <li key={i} className="flex items-center">

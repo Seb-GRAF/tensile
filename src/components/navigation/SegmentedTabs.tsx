@@ -31,7 +31,7 @@ export function SegmentedTabs({ options, value, onValueChange, label = "Range", 
   }
 
   return (
-    <div id={id} role="tablist" aria-label={label} onKeyDown={onKeyDown} className={`inline-block max-w-full rounded-control bg-paper p-[3px] shadow-float ${className}`}>
+    <div id={id} role="tablist" aria-label={label} onKeyDown={onKeyDown} className={`inline-block max-w-full rounded-control bg-paper p-[3px] shadow-control ${className}`}>
       <div className="relative grid auto-cols-fr grid-flow-col">
         {options.map((option, i) => (
           <button

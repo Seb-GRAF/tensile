@@ -53,16 +53,19 @@ export const Default: Story = {
 /** No options: the open menu shows the empty text. */
 export const Empty: Story = { ...Default, args: { options: [] } };
 
+/** Press Save without a sort order: the error shows inside the pill until you pick one. Reset clears it. */
 export const InAForm: Story = {
   render: function Render(args) {
     const [value, setValue] = useState<string | null>(null);
+    const [submitted, setSubmitted] = useState(false);
     const [data, setData] = useState("");
     return (
       <form className="grid w-80 gap-4" noValidate onSubmit={(event) => {
         event.preventDefault();
+        setSubmitted(true);
         setData(JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))));
-      }} onReset={() => { setValue(null); setData(""); }}>
-        <Field label="Sort order" description="Choose how to arrange your library." required>
+      }} onReset={() => { setValue(null); setSubmitted(false); setData(""); }}>
+        <Field label="Sort order" description="Choose how to arrange your library." required error={submitted && value === null ? "Choose a sort order" : undefined}>
           <Select {...args} name="sort" value={value} onValueChange={setValue} />
         </Field>
         <div className="flex gap-2"><Button type="submit">Save</Button><Button type="reset" variant="secondary">Reset</Button></div>
@@ -81,6 +84,9 @@ export const NearTheBottom: Story = {
   ...Default,
   decorators: [(Story) => <div className="flex h-[calc(100vh-4rem)] items-end"><Story /></div>],
 };
+
+/** Near the bottom the menu opens upward and the pill stays in place; press Save first to see the list take the error row's place. */
+export const InAFieldNearTheBottom: Story = { ...InAForm, decorators: NearTheBottom.decorators };
 
 export const InsideAClippingCard: Story = {
   ...Default,

@@ -1,0 +1,79 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/Get started" />
+
+<a href="../" target="_top">← Tensile</a>
+
+# Get started
+
+Tensile is a React library of controls, navigation, feedback, and surfaces. Import the pieces you need, keep state in your application, and compose them with ordinary React.
+
+## Release status
+
+This is a local preview of the npm package `tensile`, from [seb-graf/tensile](https://github.com/seb-graf/tensile). This version has not been published. Publishing rights to the previously unpublished npm name, the copyright holder, and the license still need verification or confirmation. Install the tarball below until a release is available.
+
+## Build and install
+
+In the library checkout, use Node 24 and npm, then:
+
+```sh
+npm ci
+npm pack
+```
+
+In an existing React 19 application, install the generated tarball and Motion:
+
+```sh
+npm install /path/to/tensile-0.1.0.tgz motion@^13
+```
+
+The peer dependencies are React 19, React DOM 19, and Motion 13. TypeScript declarations are included. Tailwind is used to build the library; your application does not need Tailwind, a plugin, or a source-scanning configuration.
+
+## Load styles once
+
+```tsx
+import "tensile/reset.css";
+import "tensile/styles.css";
+import "./app.css";
+```
+
+The reset is optional if your app already provides a reset: border-box sizing, inherited form fonts, and normalized native margins, borders, and appearance. It affects your whole page. Keep a custom reset in `@layer base` so it does not override component utilities, and test the components you use.
+
+`styles.css` includes tokens, utility classes, font faces, and CSS property initialization. It does not set the page background. Its global effects are described in Styling.
+
+## Your first component
+
+```tsx
+import { useState } from "react";
+import { Toggle } from "tensile";
+
+export default function App() {
+  const [enabled, setEnabled] = useState(false);
+
+  return (
+    <Toggle
+      label="Notifications"
+      checked={enabled}
+      onCheckedChange={setEnabled}
+    />
+  );
+}
+```
+
+Click the switch or focus it and press Space. Your state receives the new value.
+
+Components expose their props types from the same entry, for example `import type { ToggleProps } from "tensile"`.
+
+## Requirements and limitations
+
+- ESM imports, React 19, and a bundler that handles CSS and font URLs. CommonJS is not an advertised target.
+- The consumer check installs a tarball in an isolated Vite app with no Tailwind dependency, builds it, and renders every public export with React's server renderer.
+- Server rendering is a smoke check, not hydration or framework certification. Modal layers mount only in the browser; triggers and thumbnails can render on the server.
+- The package includes a `"use client"` boundary. Next.js and other framework-specific integrations have not been verified.
+- Chromium has prior development coverage. Safari, Firefox, physical touch devices, and screen-reader speech need separate verification. No blanket accessibility conformance is claimed.
+- Tailwind 4's baseline is Chrome 111, Safari 16.4, and Firefox 128. The library uses additional browser APIs; those versions are not a tested library support matrix.
+- Complete dark mode and right-to-left layouts are not supported release features. See the README's known limitations for component-specific constraints.
+
+## Where to go next
+
+Read Styling for CSS and fonts, Motion for preferences, and Composition for a complete form example. Component pages show live examples and props. Individual Storybook stories remain the workshop for isolated states, controls, and keyboard checks.

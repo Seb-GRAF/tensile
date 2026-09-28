@@ -33,7 +33,7 @@ export function Toggle({
       initial={false}
       animate={{ backgroundColor: checked ? "var(--color-accent)" : "var(--color-paper)" }}
       transition={soft}
-      className={`relative inline-block h-8 w-13 rounded-control shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus has-[:disabled]:opacity-40 ${className}`}
+      className={`relative inline-block h-8 w-13 rounded-control shadow-control outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus has-[:disabled]:opacity-40 ${className}`}
     >
       <input
         {...props}

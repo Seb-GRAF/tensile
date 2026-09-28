@@ -105,7 +105,7 @@ export function Lightbox({
           aria-haspopup="dialog"
           aria-label={image.label}
           onClick={() => onValueChange(i)}
-          className={`size-24 overflow-hidden rounded-overlay bg-ink shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${i === hidden ? "opacity-0" : ""}`}
+          className={`size-24 overflow-hidden rounded-overlay bg-ink shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${i === hidden ? "opacity-0" : ""}`}
         >
           {image.image}
         </button>

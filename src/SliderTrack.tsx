@@ -86,7 +86,7 @@ function SliderKnobs({
 
   return (
     <div {...(!disabled && dragHandlers(drag, release))} className={`absolute inset-0 ${disabled ? "" : "cursor-pointer touch-none"}`}>
-      <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control bg-paper shadow-float">
+      <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control bg-paper shadow-control">
         <motion.div
           style={{ left: INSET + from * travel, right }}
           className="absolute inset-y-1 rounded-control bg-ink [--color-focus:var(--color-paper)]"

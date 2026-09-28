@@ -113,7 +113,7 @@ export function CalendarView({
   }
 
   return (
-    <div className={`rounded-card bg-paper p-3 shadow-float ${disabled ? "opacity-40" : ""}`}>
+    <div className={`rounded-card bg-paper p-3 shadow-control ${disabled ? "opacity-40" : ""}`}>
       <div className="flex items-center justify-between">
         <IconButton
           label={previousLabel}

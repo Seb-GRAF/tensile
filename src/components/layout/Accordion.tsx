@@ -33,7 +33,7 @@ export function Accordion({ items, value, onValueChange, className = "" }: Accor
             initial={false}
             animate={{ height: open ? "auto" : 44, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)" }}
             transition={shape}
-            className="overflow-hidden bg-paper shadow-float outline-offset-2 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus"
+            className="overflow-hidden bg-paper shadow-float surface outline-offset-2 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus"
           >
             <button
               ref={(el) => {

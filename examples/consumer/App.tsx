@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Button, Dialog, Field, Icon, Input, MorphButton, SegmentedTabs, Select, Toggle } from "morph-components";
+import { Button, Dialog, Field, Icon, Input, MorphButton, SegmentedTabs, Select, Toggle } from "tensile";
 
 const ranges = [
   { value: "day", label: "Day" },

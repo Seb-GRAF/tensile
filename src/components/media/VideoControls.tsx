@@ -53,7 +53,7 @@ export function VideoControls({
   }, [playing, morph]);
 
   return (
-    <div className={`flex h-13 w-full items-center rounded-control bg-ink p-1 text-paper shadow-float [--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)] ${className}`}>
+    <div className={`flex h-13 w-full items-center rounded-control bg-ink p-1 text-paper shadow-float surface [--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)] ${className}`}>
       <IconButton
         variant="ghost"
         label={playing ? pauseLabel : playLabel}

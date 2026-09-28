@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { icons } from "../../icons";
+import { useFocusSource } from "../../focus";
 import { useSprings } from "../../springs";
 import { IconButton } from "../actions/IconButton";
 import { Icon } from "../data-display/Icon";
@@ -28,6 +29,7 @@ export function SearchField({
   className = "",
 }: SearchFieldProps) {
   const { shape, soft, swap } = useSprings();
+  useFocusSource();
   const [open, setOpen] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -48,7 +50,7 @@ export function SearchField({
         initial={false}
         animate={{ width: open ? "100%" : 44 }}
         transition={shape}
-        className="relative h-11 rounded-control bg-paper shadow-float outline-offset-2 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-focus"
+        className="relative h-11 rounded-control bg-paper shadow-control outline-offset-2 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus"
       >
         <motion.span
           initial={false}

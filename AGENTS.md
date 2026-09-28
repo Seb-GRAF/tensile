@@ -14,7 +14,7 @@ A React design system of animated components, shown in Storybook. Every componen
 
 Three levels. They describe dependencies, not folders:
 
-- **Foundations**, in the `src/` root: tokens (`theme.css`), motion (`springs.ts`), measuring (`useWidth.ts`, `useSize.ts`), interaction (`drag.ts`, `list.tsx`, `overlay.ts`, `Modal.tsx`, `Expand.tsx`), icon shapes (`icons.tsx`, `Check.tsx`), media (`playback.ts`, `SeekBar.tsx`). The lead owns them.
+- **Foundations**, in the `src/` root: tokens (`theme.css`), motion (`springs.ts`), measuring (`useWidth.ts`, `useSize.ts`), interaction (`drag.ts`, `focus.ts`, `list.tsx`, `overlay.ts`, `Modal.tsx`, `Expand.tsx`), icon shapes (`icons.tsx`, `Check.tsx`), media (`playback.ts`, `SeekBar.tsx`). The lead owns them.
 - **Primitives**: one responsibility each, usable on their own (`Icon`, `Spinner`, `Toggle`, `Checkbox`, the tablists, the sliders, `NumberTicker`, `Badge`…).
 - **Composed components**: they combine primitives (`Select`, `Dialog`, `TextField`…).
 - **Examples and recipes**: stories in `src/examples/` that build pages from public exports only.
@@ -44,12 +44,13 @@ Actions:
 - `ActionMenu`: menu button with an optional custom trigger; one shape grows into `Menu` in the top layer, flips up and caps the scrolling list to available room; disabled actions, arrows, Home/End, typeahead and focus return; list stays mounted and inert when closed; `size="sm"` is the 32 px trigger for dense rows.
 - `CommandPalette`: full-width inline combobox and scrolling listbox built on `src/list.tsx`; rows blur in and out as filtering changes; arrows, Home/End and ⌘K; `Kbd` shortcut hint.
 - `Toolbar`: `role="toolbar"` named by `label`, one Tab stop with roving focus among its enabled buttons (arrows along `orientation`, Home/End); its Tooltips share one bubble that glides between buttons.
+- `SelectionBar`: an ink pill for bulk actions that rises in while `count > 0` and leaves at 0: the count rolls with NumberTicker (`countLabel`), then the actions (children, e.g. ghost Buttons), then a clear IconButton; a group named by `label` plus an always-mounted status; the caller's `className` places it (e.g. fixed at the bottom center); its width follows the rolling count.
 
 Inputs:
 
-- `Input`: a native `<input>` in a paper pill (44 px, fills its container); `value`/`onValueChange`, `leading`/`trailing` slots; `className` and `style` go on the pill, everything else on the input; reads `useField()`.
-- `Textarea`: a native `<textarea>` in its own `rounded-overlay` paper surface, which springs to the text's height as it grows from `rows`; `className` and `style` go on the surface, everything else on the textarea; reads `useField()`.
-- `Field`: a visible label, the control, a description and an error that blur-swaps; `useField()` gives controls `{ id, labelId, describedBy, invalid, required, disabled }` (null outside a Field; only `disabled` directly inside a Fieldset).
+- `Input`: a native `<input>` in a paper pill (44 px, fills its container); `value`/`onValueChange`, `leading`/`trailing` slots; `className` and `style` go on the pill, everything else on the input; reads `useField()`. Inside a Field with the label inside (the default) the pill is 52 px, the Field's label rests in it and floats up while focused or filled, a placeholder shows only while it's up and empty, and an error grows the pill into a card, as in TextField.
+- `Textarea`: a native `<textarea>` in its own `rounded-overlay` paper surface that grows from `rows` like a morph: only the text sits in a clip whose height springs to the textarea's, so a new line is revealed as the surface grows (the padding stays outside the clip, and a press on it focuses the textarea); `className` and `style` go on the surface, everything else on the textarea; reads `useField()`; inside a Field with the label inside, the label floats above the first line and the error springs open inside the surface.
+- `Field`: a label, the control, a description and an error that blur-swaps and springs open; `useField()` gives controls `{ id, labelId, describedBy, invalid, required, disabled, inside }` (null outside a Field; only `disabled` directly inside a Fieldset). `labelPlacement` "inside" (default) or "above": with "inside", `inside` carries the label as drawn and the error for text controls (Input, Textarea, Select, Combobox, MultiSelect, TagInput), which draw them in their shape with the exported `FloatingLabel` and `ErrorRow` and mark it `data-label-inside`; Field then keeps its own label and error for screen readers only (a `:has()` rule), so each is read once. Other controls keep the label above and the error below.
 - `Fieldset`: a native `<fieldset>` with a legend, description and error; its `disabled` reaches native controls through the element and div-based ones through `useField()`.
 - `Toggle`: native checkbox with `role="switch"` over the track; a `useLiquid` knob and a morphing track; native form props and Field context; Space toggles.
 - `ThemeToggle`: composes Toggle, with one sun/moon path in its knob; the dark track scopes the accent token; `name` and `disabled` reach the checkbox.
@@ -58,14 +59,14 @@ Inputs:
 - `RadioGroup`: native radios sharing a name, with native keyboard navigation and optional disabled options; a `useLiquid` dot slides between rings; Field/Fieldset naming and form props.
 - `ColorSwatches`: native radios sharing a name; one ink ring with a paper lining slides between swatches with `useLiquid`; Field/Fieldset naming and form props.
 - `Rating`: liquid accent fill clipped to star outlines; interactive slider with Field/form props, or a noninteractive named image when readOnly.
-- `TextField`: native input props with its own floating label (no placeholder prop); full-width shape, with className/style on that shape; error grows it into a card and blur-swaps; no enclosing Field.
+- `TextField`: native input props with its own floating label (no placeholder prop); full-width shape, with className/style on that shape; error grows it into a card and blur-swaps; no enclosing Field. It draws Field's `FloatingLabel` and `ErrorRow`, as the text controls do inside a Field.
 - `PasswordInput`: Input with a ghost IconButton that toggles password visibility; eye paths blur-swap; Input props and current-password autocomplete by default.
 - `SearchField`: round search trigger expands to its container width; Escape clears, then folds; an IconButton clears the value and returns input focus; optional native name.
-- `Select`: full-width select-only combobox with Field context and a hidden named input; its top-layer menu flips up, scrolls within available room and escapes clipping; arrows, Home/End, typeahead, blur-swapped value and a selected `Check`.
-- `Combobox`: Select’s form and top-layer behavior with a text input; `filterByWords` filters rows, which blur and slide as results change; Enter picks without submitting the form.
-- `MultiSelect`: Select's shape and top-layer list, with Checks that toggle while the menu stays open; the pill shows `summary(labels)` (first two, then "+N"); one hidden input per value; Field context.
+- `Select`: full-width select-only combobox with Field context and a hidden named input; its top-layer menu flips up, scrolls within available room and escapes clipping; arrows, Home/End, typeahead, blur-swapped value and a selected `Check`. Inside a Field with the label inside, the 52 px trigger carries the floating label, an error grows the closed shape into a card with the error row, and while open the list takes that row's place; the trigger never moves.
+- `Combobox`: Select’s form and top-layer behavior with a text input; `filterByWords` filters rows, which blur and slide as results change; Enter picks without submitting the form. Inside a Field with the label inside, it draws the floating label and the error card as Select does.
+- `MultiSelect`: Select's shape and top-layer list, with Checks that toggle while the menu stays open; the pill shows `summary(labels)` (first two, then "+N"); one hidden input per value; Field context. Inside a Field with the label inside, it draws the floating label and the error card as Select does.
 - `ToggleGroup`: `aria-pressed` Buttons (IconButtons named by the label when an option has an icon) with roving focus and Home/End; a pressed one fades in an ink layer carrying a paper copy of its label; repeated hidden named values, Field/Fieldset naming and disabled.
-- `TagInput`: composes removable Tags, with chips/input sliding through layout position and height measured by useSize; repeated hidden named inputs, Field context and disabled state.
+- `TagInput`: composes removable Tags, with chips/input sliding through layout position and height measured by useSize; repeated hidden named inputs, Field context and disabled state; inside a Field with the label inside, the label floats up while focused or once there are tags or text, and the error grows the shape into a card.
 - `OTPInput`: one input per digit with one-time-code autocomplete, a shared liquid focus ring and blur-swapped digits; paste fills the cells; hidden named code, disabled and Field error/required wiring.
 - `EditableText`: a display Button morphs into an Input with measured content width; Enter/blur commit, Escape cancels, focus returns to the display.
 - `NumberInput`: Input-based numeric entry with raw draft text while focused and formatted display on blur; Enter/blur commit and clamp, arrows step; empty becomes null, invalid input keeps the prior value; plain hidden form value.
@@ -84,10 +85,10 @@ Navigation:
 - `Link`: a native `<a>` in the current text color with a light underline; inside `LinkProvider navigate={…}`, plain left clicks on same-origin links call `navigate(href)` instead of loading the page, except `#fragment` links, which scroll natively. `useLinkClick()` (from `Link.tsx`) gives the same click handling to components that render their own `<a>`.
 - `SegmentedTabs`: equal intrinsic columns based on the widest label; roving arrows/Home/End, liquid selected pill and clipped paper labels; optional id wires tab/panel ids.
 - `UnderlineTabs`: label-sized tabs with a measured liquid underline, remeasured after fonts load; roving keys and the same optional id contract.
-- `Tabs`: composes either tablist and one focusable tabpanel; only current content mounts, with inert, hidden exiting content during the blur swap.
+- `Tabs`: composes either tablist and one focusable tabpanel; only current content mounts, with inert, hidden exiting content; the content blur-swaps in the travel direction within one grid cell (no empty moment) while the panel's height springs to the new content.
 - `TabBar`: named navigation with href links or action buttons and aria-current; arrows move focus only; liquid icon pill and active-icon blur swap. Link selection follows the caller/router.
-- `SidebarNav`: links or buttons with aria-current, focus-only vertical arrows and a liquid ink pill; collapsed labels stay named; leading content allows CollapsibleSidebar to supply its toggle.
-- `CollapsibleSidebar`: composes SidebarNav and an IconButton inside a width spring from a 48 px rail to a 208 px sidebar; pushes adjacent content.
+- `SidebarNav`: links or buttons with aria-current, focus-only vertical arrows and a liquid ink pill; collapsed labels stay named; `leading` content above the list, `trailing` content pinned to the bottom when the nav is taller than its content.
+- `CollapsibleSidebar`: composes SidebarNav and an IconButton inside a width spring from a 48 px rail to a 208 px sidebar; pushes adjacent content. `leading` (the brand) sits at the top and `trailing` (the account) at the bottom above the collapse button; the nav clips them, so the rail shows their first 32 px (a logo, an avatar).
 - `Breadcrumbs`: links for href items, buttons for actions and a nonlinked current page; the middle trail expands from a measured pill with focus-ring-safe clipping. Its expanded intrinsic trail can exceed a narrow viewport.
 - `Pagination`: fixed slots blur-swap around a liquid selected pill; IconButton arrows, optional numbered page links through pageHref; navigation callbacks still run.
 - `PageDots`: a `role="slider"` row of dots; the active dot is a `useLiquid` pill; a press or drag picks the page under the pointer; past either end the capsule and pill stretch with `rubber`.
@@ -129,7 +130,7 @@ Data display:
 
 Layout:
 
-- `Card`: a surface (`rounded-card`, `shadow-float`), `tone` paper or ink, no padding of its own; the ink tone sets the focus ring to paper and `line` to ink-3 inside.
+- `Card`: a surface (`rounded-card`, `shadow-float`, `surface`), `tone` paper or ink, no padding of its own; the ink tone sets the focus ring to paper and `line` to ink-3 inside.
 - `Separator`: a native `<hr>` rule in `line`, horizontal or vertical (stretching to its flex or grid row).
 - `Accordion`: full-width paper disclosures with token radii; one item opens at a time, content stays mounted and inert when closed; Icon chevrons and blur-swapped panels; arrow/Home/End focus navigation.
 - `ExpandableCard`: `Expand` with the `bottom-left` placement; a 280 × 72 card grows into a 360 × 400 detail view with an IconButton close action; token radii and outer placement className.
@@ -138,7 +139,7 @@ Layout:
 - `PageHeader`: h1, optional description, breadcrumbs and actions; actions wrap below the title in narrow containers.
 - `Header`: a sticky paper bar (`z-(--layer-sticky)`, `max-w-page` content) with a brand, links and actions; from `md` up the links are inline with `aria-current` and UnderlineTabs' liquid underline (none when `value` matches no link); below `md` a menu IconButton opens them in a left Drawer.
 - `Footer`: a `<footer>` of titled link groups in columns that stack in narrow containers (a container query), plus a note.
-- `AppShell`: a skip link first (native fragment navigation to `main`, which takes focus), the header, a sidebar from `lg` up and a mobile nav fixed to the bottom below it, with `main` padded to clear it; no animation of its own.
+- `AppShell`: a skip link first (native fragment navigation to `main`, which takes focus); from `lg` up the sidebar is a sticky full-height column (12 px from the edges; give the sidebar `h-full`), and the header sits at the top of the page column, which clips what overflows it sideways (a Carousel with `overflow="visible"` runs to its edge); below `lg` the header is on top and the mobile nav is fixed to the bottom, with `main` padded to clear it; no animation of its own.
 
 Overlays:
 
@@ -166,7 +167,7 @@ Examples (`src/examples/`, public exports only; `docs/coverage.md` lists what ea
 
 Shared code (owned by the lead; read-only for subagents unless a brief assigns a file):
 
-- `src/theme.css`: the tokens (see Tokens), the `press` utility, the `animate-spinner` and `animate-shimmer` animations, and the `scroll-fade` utility for a scroll body: its content fades toward an edge while more of it is hidden past that edge (scroll-driven; no fade in browsers without scroll timelines). `src/index.css` is the library stylesheet built from it; Storybook loads `.storybook/preview.css`, which adds the page background and the alternate theme.
+- `src/theme.css`: the tokens (see Tokens), the `shadow-control` and `surface` utilities (see Tokens), the `press` utility, the `animate-spinner` and `animate-shimmer` animations, and the `scroll-fade` utility for a scroll body: its content fades toward an edge while more of it is hidden past that edge (scroll-driven; no fade in browsers without scroll timelines). `src/index.css` is the library stylesheet built from it; Storybook loads `.storybook/preview.css`, which adds the page background and the alternate theme.
 - `src/springs.ts`: `useSprings()` and `useLiquid` (see Motion).
 - `src/icons.tsx`: `icons.close`, `icons.chevronLeft`, `icons.chevronRight`, `icons.chevronsUpDown`, `icons.search`, `icons.alert`, `icons.more`, `icons.plus`, `icons.minus`: shapes more than one component draws, used as `<Icon size={16}>{icons.close}</Icon>`. A shape one component draws stays in that component; propose moving it here when a second one needs it.
 - `src/Check.tsx`: `<Check size={20} />`, a check in the current text color that draws itself when it mounts, with the stroke worked out from `size`. Put it in a `motion.span` with `swap` to blur it in and out.
@@ -178,6 +179,7 @@ Shared code (owned by the lead; read-only for subagents unless a brief assigns a
 - `src/color.ts`: pure hex/RGB/HSV conversions and hex parsing (`#rgb` or `#rrggbb`, any case, with or without `#`); tested with Node in `src/color.test.ts`.
 - `UnderlineTabs.tsx` exports `Underline`, the liquid underline between measured `left` and `right` edges, shared with `Header`.
 - `src/calendar.ts`: pure local ISO-date parsing/formatting, month grids, month and keyboard arithmetic, bounds and range ordering; tested with Node. `src/CalendarView.tsx` shares the header, month swap, roving day grid and selection slot. Its distinct filename avoids a Calendar.tsx/calendar.ts collision on case-insensitive filesystems and in generated declarations.
+- `src/focus.ts`: `useFocusSource()` marks `<html data-pointer>` from a pointer press until the next Tab; the `has-keyboard-focus:` variant (in `theme.css`) matches a shape whose text input or textarea has focus that came from the keyboard.
 - `src/drag.ts`, taken from `VolumeSlider`: `{...dragHandlers(onDrag, onRelease)}` on the element dragged over (with `touch-none`) captures the pointer and calls `onDrag(event)` on press and on every move while held, `onRelease()` when it lets go; `rubber(over)` turns px dragged past a limit into px drawn past it (at most 24); `const [stretch, style] = useStretch(width, height)` gives a pill that gets longer and thinner as `stretch` goes past an end. Set the dragged value from the pointer while held (a `MotionValue` you `set()` tracks its speed), then `animate(value, target, snap)` on release so it keeps that speed. On press, `stop()` the value: `set()` doesn't stop a spring that's still running from the last release, and the spring would win.
 - `src/overlay.ts`: `const { room, settle } = useTopLayer(frame, open)` lifts `frame` — a transparent `absolute inset-0` box inside a shape's `relative` wrapper — into the browser's top layer while `open`, exactly over the wrapper and following it every frame, until you call `settle` from the shape's `onAnimationComplete`; the shape inside keeps its own position, overlays everything, and escapes `overflow: hidden` and transformed ancestors, while DOM order and Tab order stay put. `room` (`above`, `below`, `left`, `right` in px, measured when it opened) is for opening upward or capping a menu's height. `useOutsidePress(ref, open, onPress)` calls `onPress` on a pointer press outside `ref` while open.
 - `src/Modal.tsx`: `<Modal open onClose aria-label>{layers}</Modal>`, the modal base for dialogs, sheets and the lightbox: a native `<dialog>` shown with `showModal()` in a portal on `document.body`, so the page behind is inert, Tab stays inside, Escape calls `onClose`, and the page doesn't scroll. Its children are the layers that animate in and out (a backdrop, a panel), each with an `exit`; mark the element to focus first with `data-autofocus` (not React's `autoFocus`, which fires before the dialog opens). When `open` turns false it closes the dialog at once, so focus returns to the opener and the page is usable immediately, and it keeps the layers painted and inert until their exit animations end. Nothing renders on the server. Portaled content is outside the story root; `check_story.py` finds it anyway.
@@ -213,13 +215,14 @@ The tokens are CSS custom properties defined once, in `src/theme.css`. Use the u
 | `--radius-overlay` | 20px | open menus and popovers, alerts, open accordion items, error cards | `rounded-overlay` |
 | `--radius-card` | 24px | cards, panels, full-view images | `rounded-card` |
 | `--radius-dialog` | 28px | dialogs, sheets, drawers, expanded detail views | `rounded-dialog` |
-| `--shadow-float` | | every floating surface and control; starts with a 1px `line` ring, so paper controls keep an edge on paper surfaces | `shadow-float` |
+| `--shadow-float` | | every floating surface: cards, dialogs, sheets, menus, toasts; starts with a 1px `line` ring | `shadow-float` |
+| `--shadow-control-drop` | the float drop | a control's own shadow: the same as `shadow-float` on the canvas; inside an element marked `surface` only the `line` ring and a contact shadow, so controls rest on cards and dialogs instead of floating; a control that grows into a floating menu sets `[--shadow-control-drop:initial]` while open, with `transition-shadow` | `shadow-control`, `surface` |
 | `--layer-raised`, `--layer-sticky`, `--layer-overlay` | 10, 20, 50 | a shape over its in-flow neighbors; sticky headers; an overlay animating out of the top layer | `z-(--layer-raised)`… |
 | `--container-page` | 72rem | page content width | `max-w-page` |
 | `--motion-duration-scale` | 1 (0 under reduced motion) | multiplies every animation's duration and delay | see Motion |
 
 - Text on `paper` is `ink`, secondary `muted`; on `ink` it's `paper`, secondary `paper/55` (both pass WCAG AA); on `accent` it's `on-accent`, never an assumed ink, since an app's accent can be dark. Accent on ink is for icons, lines and large text.
-- Focus ring: `outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`, or `has-focus-visible:` on the shape. A dark surface sets `[--color-focus:var(--color-paper)]` on its root instead of using another outline color, and `[--color-line:var(--color-ink-3)]` so separators and the `shadow-float` ring stay dark on it (see `Card tone="ink"`).
+- Focus ring: `outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`, or `has-focus-visible:` on the shape. A shape around a text input or textarea uses `has-keyboard-focus:` and calls `useFocusSource()` instead: browsers treat every focused text field as `:focus-visible`, so a click would draw the ring; a menu that is open shows focus with its highlighted row, not the ring. A dark surface sets `[--color-focus:var(--color-paper)]` on its root instead of using another outline color, and `[--color-line:var(--color-ink-3)]` so separators and the `shadow-float` ring stay dark on it (see `Card tone="ink"`).
 - `rounded-control` stays a full pill up to 52 px tall, because CSS caps a radius at half the height. Circles stay `rounded-full`: knobs, dots, avatars, rings. A shape that morphs animates its radius between `"var(--radius-…)"` strings; Motion resolves them when an animation starts, so the morph follows overrides.
 - Sizes are a fixed scale, not tokens, because geometry is computed from them: compact controls `h-8` (32 px, as in `Toggle` and `SegmentedTabs`), buttons, fields and sliders `h-11` (44 px, as in `MorphButton` and `VolumeSlider`), large fields `h-13` (52 px), list rows `h-10`, chips `h-7`, badges `h-6`. Don't override `--spacing`.
 - No `text-[…px]`, no arbitrary radii for these roles. Numbers that are geometry (SVG coordinates, pointer math, measured sizes, percentages) stay numbers.
@@ -243,7 +246,7 @@ The tokens are CSS custom properties defined once, in `src/theme.css`. Use the u
 - Content that changes inside the shape swaps with a short blur, and the old content is gone before the new appears (`swap`).
 - Springs everywhere, from `useSprings`, with a tiny overshoot at most. Anything that slides between positions uses `useLiquid`.
 - Drags follow the pointer directly: while held, the value comes from the pointer position; on release it springs back from wherever it was, keeping its speed. Past a limit it stretches like rubber, then springs back.
-- Warm-gray canvas, black and white components, one accent, Geist. Surfaces are `bg-paper` or `bg-ink` with `shadow-float`.
+- Warm-gray canvas, black and white components, one accent, Geist. Surfaces are `bg-paper` or `bg-ink` with `shadow-float` and `surface`; controls use `shadow-control`, so they float on the canvas and rest on a surface (no shadows inside shadows).
 - Banned: bouncy easing, particle bursts, glows, gradients on UI chrome, mismatched icon strokes, dead time, anything that looks like a template.
 - Icons are `Icon`: a 24 grid with stroke-width = 36 / rendered size, so every line renders at 1.5 px (12 px → 3, 14 → 2.6, 16 → 2.25, 20 → 1.8, 24 → 1.5). A hand-drawn SVG follows the same rule.
 - No red or amber. Status colors: info is `ink`, warning is `paper` with an ink icon, success is `accent`. Errors are ink text with an icon, plus `aria-invalid` and `aria-describedby` on the field.
@@ -306,6 +309,7 @@ export function Select({
   - Realistic content, including long labels. Use the library's `Button`, `Icon` and fields in stories instead of local copies once they exist.
   - Examples in `src/examples/` (`title: "Examples/<Name>"`, `id: "examples-<name>"`) import only from `src/index.ts`.
 - Known pitfalls:
+  - Motion keeps the `ref` a `motion.*` element mounted with; a ref that changes later (say, only on the present layer) is ignored. Put such a ref on a plain element (see `Tabs`).
   - Motion's `width: "auto"` only animates when the target changes. For pills that size to their content, measure the new content with `useWidth` (see `Toast`).
   - Content layers inside a morphing container get a fixed size and are centered, so nothing reflows mid-morph (see `MusicPlayer`).
   - Swap layers stacked in a grid (`col-start-1 row-start-1`) need `place-content-center` as well as `place-items-center`; otherwise the track is as wide as the widest layer, hangs off one side, and the other layer jumps off-center mid-morph.

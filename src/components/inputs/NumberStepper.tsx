@@ -68,7 +68,7 @@ export function NumberStepper({
       {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
       <motion.div
         style={style}
-        className="absolute top-1/2 left-0 flex -translate-y-1/2 items-center justify-between rounded-control bg-paper px-1 text-body font-medium text-ink shadow-float outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
+        className="absolute top-1/2 left-0 flex -translate-y-1/2 items-center justify-between rounded-control bg-paper px-1 text-body font-medium text-ink shadow-control outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
       >
         <IconButton
           variant="ghost"

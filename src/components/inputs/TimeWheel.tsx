@@ -152,7 +152,7 @@ export function TimeWheel({
       aria-labelledby={field?.labelId}
       aria-describedby={field?.describedBy}
       aria-disabled={disabled}
-      className={`relative flex w-fit rounded-card bg-paper p-2 text-body font-medium tabular-nums shadow-float ${disabled ? "opacity-40" : ""} ${className}`}
+      className={`relative flex w-fit rounded-card bg-paper p-2 text-body font-medium tabular-nums shadow-control ${disabled ? "opacity-40" : ""} ${className}`}
     >
       {name && <input type="hidden" name={name} value={`${String(value.hours).padStart(2, "0")}:${String(value.minutes).padStart(2, "0")}`} disabled={disabled} />}
       <div className="absolute inset-x-2 top-1/2 h-10 -translate-y-1/2 rounded-control bg-ink" />
