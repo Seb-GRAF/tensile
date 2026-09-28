@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "React components with shared styling and motion, TypeScript types, and ready-to-import CSS.",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "sideEffects": [
     "**/*.css"
@@ -27,7 +28,7 @@
     "check:consumer": "sh examples/consumer/check.sh",
     "prepack": "npm run build",
     "site": "npm run build && vite --config site/vite.config.ts",
-    "build:site": "npm run build && vite build --config site/vite.config.ts && storybook build --output-dir site-dist/storybook && cp THIRD_PARTY_NOTICES site-dist/THIRD_PARTY_NOTICES",
+    "build:site": "npm run build && vite build --config site/vite.config.ts && storybook build --output-dir site-dist/storybook && cp LICENSE THIRD_PARTY_NOTICES site-dist/",
     "preview:site": "vite preview --config site/vite.config.ts"
   },
   "peerDependencies": {

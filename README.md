@@ -16,9 +16,13 @@ Stack: React 19, TypeScript, Motion (`motion/react`), Tailwind 4 (for the librar
 - [Known limitations](#known-limitations)
 - [Developing the library](#developing-the-library)
 
+## License
+
+[MIT](LICENSE) © 2026 Sébastien Graf. Bundled Geist fonts retain their SIL Open Font License; see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
+
 ## Install and use
 
-Tensile is being prepared for release as the npm package `tensile`, from [seb-graf/tensile](https://github.com/seb-graf/tensile). This version is a local preview and has not been published. npm reports a previously unpublished package with that name; publishing rights still need verification. The copyright holder and license also need confirmation. Keep `private: true` until release preparation is complete.
+Tensile is being prepared for release as the npm package `tensile`, from [seb-graf/tensile](https://github.com/seb-graf/tensile). This version is a local preview and has not been published. npm reports a previously unpublished package with that name; publishing rights still need verification. Keep `private: true` until release preparation is complete.
 
 With Node 24, build a package artifact in this checkout:
 

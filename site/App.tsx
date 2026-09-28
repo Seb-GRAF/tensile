@@ -99,7 +99,7 @@ export function App() {
         groups={[
           { title: "Build", links: links.slice(0, 2) },
           { title: "Learn", links: [{ label: "Styling and themes", href: `${docs}guides-styling--docs` }, { label: "Motion", href: `${docs}guides-motion--docs` }, { label: "Composition", href: `${docs}guides-composition--docs` }] },
-          { title: "Explore", links: [links[2], { label: "GitHub", href: "https://github.com/seb-graf/tensile" }, { label: "Font license", href: "./THIRD_PARTY_NOTICES" }] },
+          { title: "Explore", links: [links[2], { label: "GitHub", href: "https://github.com/seb-graf/tensile" }, { label: "MIT license", href: "./LICENSE" }, { label: "Font license", href: "./THIRD_PARTY_NOTICES" }] },
         ]}
         note="Tensile. React components with shared styling and motion."
       />
