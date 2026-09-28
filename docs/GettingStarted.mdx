@@ -8,24 +8,15 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 Tensile is a React library of controls, navigation, feedback, and surfaces. Import the pieces you need, keep state in your application, and compose them with ordinary React.
 
-## Release status
+## Install
 
-This is a local preview of the npm package `tensile`, from [seb-graf/tensile](https://github.com/seb-graf/tensile). This version has not been published. Publishing rights to the previously unpublished npm name still need verification. The library is licensed under [MIT](../LICENSE), copyright 2026 Sébastien Graf; bundled Geist fonts retain their own license. Install the tarball below until a release is available.
-
-## Build and install
-
-In the library checkout, use Node 24 and npm, then:
+In an existing React 19 application:
 
 ```sh
-npm ci
-npm pack
+npm install tensile
 ```
 
-In an existing React 19 application, install the generated tarball:
-
-```sh
-npm install /path/to/tensile-0.1.0.tgz
-```
+Tensile is licensed under [MIT](../LICENSE), copyright 2026 Sébastien Graf. Bundled Geist fonts retain their own license.
 
 The peer dependencies are React 19 and React DOM 19. Motion installs automatically as a dependency of Tensile. TypeScript declarations are included. Tailwind is used to build the library; your application does not need Tailwind, a plugin, or a source-scanning configuration.
 

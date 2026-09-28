@@ -5,3 +5,4 @@ storybook-static
 dist
 site-dist
 *.tgz
+__pycache__/

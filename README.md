@@ -24,22 +24,13 @@ Stack: React 19, TypeScript, Motion (`motion/react`), Tailwind 4 (for the librar
 
 ## Install and use
 
-Tensile is being prepared for release as the npm package `tensile`, from [seb-graf/tensile](https://github.com/seb-graf/tensile). This version is a local preview and has not been published. npm reports a previously unpublished package with that name; publishing rights still need verification. Keep `private: true` until release preparation is complete.
-
-With Node 24, build a package artifact in this checkout:
+Install Tensile in an existing React 19 application:
 
 ```sh
-npm ci
-npm pack
+npm install tensile
 ```
 
-Install the resulting tarball in an existing React 19 application:
-
-```sh
-npm install /path/to/tensile-0.1.0.tgz
-```
-
-Do not install an unrelated registry package with this name. `dist/` holds:
+The package includes:
 
 - `index.js`: ESM with a `"use client"` banner; React, React DOM and Motion stay external.
 - `index.d.ts` and the other declarations.

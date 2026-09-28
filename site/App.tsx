@@ -4,7 +4,7 @@ import { MorphButtonExample } from "../docs/examples/MorphButtonExample";
 import { TabsExample } from "../docs/examples/TabsExample";
 
 const docs = "./storybook/?path=/docs/";
-const install = "npm install ./tensile-0.1.0.tgz";
+const install = "npm install tensile";
 const links = [
   { label: "Get started", href: `${docs}guides-get-started--docs` },
   { label: "Components", href: `${docs}components-button--docs` },
@@ -58,7 +58,7 @@ export function App() {
                 <code className="min-w-0 flex-1 overflow-x-auto py-2 text-sm whitespace-nowrap">{install}</code>
                 <CopyButton value={install} label="Copy install command" className="shrink-0" />
               </div>
-              <p className="mt-2 text-caption text-muted">Local package preview. <Link href={links[0].href}>Build the tarball first</Link>; npm publication is pending.</p>
+              <p className="mt-2 text-caption text-muted">Motion installs automatically. <Link href={links[0].href}>Load the styles and add your first component</Link>.</p>
             </div>
           </div>
         </section>

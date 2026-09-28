@@ -2,7 +2,6 @@
   "name": "tensile",
   "version": "0.1.0",
   "description": "React components with shared styling and motion, TypeScript types, and ready-to-import CSS.",
-  "private": true,
   "license": "MIT",
   "type": "module",
   "sideEffects": [
