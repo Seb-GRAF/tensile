@@ -18,6 +18,7 @@ import {
   IconButton,
   Input,
   Link,
+  LinkProvider,
   MorphButton,
   NumberStepper,
   NumberTicker,
@@ -34,15 +35,14 @@ import { icons } from "../src/icons";
 import { useSprings } from "../src/springs";
 import { useWidth } from "../src/useWidth";
 import { Logo } from "./Logo";
+import { Docs, docsPages } from "./Docs";
 
-const docs = "./storybook/?path=/docs/";
-const start = `${docs}guides-get-started--docs`;
+const start = "?docs=get-started";
 const github = "https://github.com/seb-graf/tensile";
 const install = "npm install tensile";
 const links = [
-  { label: "Get started", href: start },
+  { label: "Documentation", href: start },
   { label: "Components", href: "#components" },
-  { label: "Storybook", href: "./storybook/?path=/story/components-morphbutton--default" },
 ];
 
 const pill =
@@ -150,7 +150,8 @@ const catalog = [
 ];
 
 function docsFor(name: string) {
-  return `${docs}components-${name.toLowerCase()}--docs`;
+  const page = docsPages.find((page) => page.title === name);
+  return page ? `?docs=${page.id}` : undefined;
 }
 
 function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -224,17 +225,17 @@ function Brand() {
   }, [scale]);
 
   return (
-    <a
+    <Link
       href="./"
       onPointerEnter={() => setOpen(true)}
       onPointerLeave={() => setOpen(false)}
       onFocus={() => setOpen(true)}
       onBlur={() => setOpen(false)}
-      className="flex items-center rounded-sm text-xl tracking-tight focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="flex items-center rounded-sm text-xl tracking-tight no-underline! focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       <Logo open={open} />
       <span className="sr-only">Tensile</span>
-    </a>
+    </Link>
   );
 }
 
@@ -319,9 +320,9 @@ function Hero() {
           turns into its own spinner, then a check. Drag a slider past its end and it stretches, then springs back as fast as you let go.
         </motion.p>
         <motion.div {...rise(3)} className="mt-9 flex flex-wrap items-center gap-3">
-          <a href={start} className={`${pill} h-11 bg-ink px-5 text-body text-paper hover:bg-ink-3`}>
+          <Link href={start} className={`${pill} h-11 rounded-control! bg-ink px-5 text-body text-paper no-underline! hover:bg-ink-3`}>
             Get started
-          </a>
+          </Link>
           <a href="#feel" className={`${pill} h-11 bg-paper px-5 text-body text-ink hover:bg-hover`}>
             Try the components
           </a>
@@ -354,11 +355,10 @@ function Tile({ names, title, tone = "paper", demo, children, className = "" }: 
     <Reveal className={className}>
       <Card {...demo} tone={tone} className="flex h-full flex-col p-6 sm:p-7">
         <p className={`flex flex-wrap gap-x-3 text-label ${muted}`}>
-          {names.map((name) => (
-            <Link key={name} href={docsFor(name)}>
-              {name}
-            </Link>
-          ))}
+          {names.map((name) => {
+            const href = docsFor(name);
+            return href ? <Link key={name} href={href}>{name}</Link> : <span key={name}>{name}</span>;
+          })}
         </p>
         <h3 className="mt-3 text-xl font-semibold tracking-tight">{title}</h3>
         <div className="flex min-h-40 flex-1 flex-wrap items-center justify-center gap-4 pt-8">{children}</div>
@@ -765,13 +765,14 @@ function Catalog() {
               <h3 className="text-body font-semibold">{group.group}</h3>
               <ul role="list" className="flex flex-wrap gap-x-5 gap-y-2">
                 <AnimatePresence mode="popLayout" initial={false}>
-                  {group.names.map((name) => (
-                    <motion.li key={name} layout="position" transition={shape} {...swap}>
-                      <Link href={docsFor(name)} className="text-body">
-                        {name}
-                      </Link>
-                    </motion.li>
-                  ))}
+                  {group.names.map((name) => {
+                    const href = docsFor(name);
+                    return (
+                      <motion.li key={name} layout="position" transition={shape} {...swap}>
+                        {href ? <Link href={href} className="text-body">{name}</Link> : <span className="text-body text-muted">{name}</span>}
+                      </motion.li>
+                    );
+                  })}
                 </AnimatePresence>
               </ul>
             </motion.div>
@@ -787,14 +788,14 @@ function Catalog() {
   );
 }
 
-function Closing() {
+function Closing({ onNavigate }: { onNavigate: (href: string) => void }) {
   const [confirmed, setConfirmed] = useState(false);
 
   useEffect(() => {
     if (!confirmed) return;
-    const timer = setTimeout(() => location.assign(start), 700);
+    const timer = setTimeout(() => onNavigate(start), 700);
     return () => clearTimeout(timer);
-  }, [confirmed]);
+  }, [confirmed, onNavigate]);
 
   return (
     <section className="mx-auto max-w-page px-6 pb-24">
@@ -820,53 +821,85 @@ function Closing() {
 }
 
 export function App() {
+  const [url, setUrl] = useState(() => window.location.href);
+  const doc = new URL(url).searchParams.get("docs");
+  const page = docsPages.find((page) => page.id === doc);
+
+  useEffect(() => {
+    const onPopState = () => setUrl(window.location.href);
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  useEffect(() => {
+    document.title = page ? `${page.title} · Tensile` : "Tensile · React components in motion";
+    const section = document.getElementById(new URL(url).hash.slice(1));
+    if (section) section.scrollIntoView();
+    else window.scrollTo(0, 0);
+    document.getElementById("main")!.focus({ preventScroll: true });
+  }, [url, page]);
+
+  function navigate(href: string) {
+    const target = new URL(href, window.location.href);
+    if (target.pathname !== window.location.pathname) {
+      window.location.assign(target.href);
+      return;
+    }
+    window.history.pushState(null, "", target.href);
+    setUrl(target.href);
+  }
+
   return (
-    <>
-      <a href="#main" className="sr-only fixed top-3 left-3 z-(--layer-overlay) rounded-control bg-ink px-5 py-3 text-paper focus:not-sr-only">
-        Skip to content
-      </a>
-      <Header
-        brand={<Brand />}
-        links={links}
-        value="./"
-        actions={
-          <div className="flex items-center gap-4">
-            <Link href={github} className="text-label">
-              GitHub
-            </Link>
-            <a href={start} className={`${pill} h-8 bg-ink px-4 text-label text-paper hover:bg-ink-3`}>
-              Get started
-            </a>
-          </div>
-        }
-      />
-      <main id="main" tabIndex={-1} className="outline-none">
-        <Hero />
-        <Specimens />
-        <Overlays />
-        <Theming />
-        <Code />
-        <Catalog />
-        <Closing />
-      </main>
-      <Footer
-        groups={[
-          { title: "Build", links: [links[0], { label: "Components", href: `${docs}components-button--docs` }] },
-          {
-            title: "Learn",
-            links: [
-              { label: "Styling and themes", href: `${docs}guides-styling--docs` },
-              { label: "Motion", href: `${docs}guides-motion--docs` },
-              { label: "Composition", href: `${docs}guides-composition--docs` },
-            ],
-          },
-          {
-            title: "Explore",
-            links: [links[2], { label: "GitHub", href: github }, { label: "MIT license", href: "./LICENSE" }, { label: "Font license", href: "./THIRD_PARTY_NOTICES" }],
-          },
-        ]}
-        note="Tensile is MIT licensed. Made by Sébastien Graf."
-      />
-    </>
+    <LinkProvider navigate={navigate}>
+      {page ? <Docs page={page} brand={<Brand />} onNavigate={navigate} /> : (
+        <>
+          <a href="#main" className="sr-only fixed top-3 left-3 z-(--layer-overlay) rounded-control bg-ink px-5 py-3 text-paper focus:not-sr-only">
+            Skip to content
+          </a>
+          <Header
+            brand={<Brand />}
+            links={links}
+            value="./"
+            actions={
+              <div className="flex items-center gap-4">
+                <Link href={github} className="text-label">
+                  GitHub
+                </Link>
+                <Link href={start} className={`${pill} h-8 rounded-control! bg-ink px-4 text-label text-paper no-underline! hover:bg-ink-3`}>
+                  Get started
+                </Link>
+              </div>
+            }
+          />
+          <main id="main" tabIndex={-1} className="outline-none">
+            <Hero />
+            <Specimens />
+            <Overlays />
+            <Theming />
+            <Code />
+            <Catalog />
+            <Closing onNavigate={navigate} />
+          </main>
+          <Footer
+            groups={[
+              { title: "Build", links: [links[0], { label: "Components", href: "?docs=button" }] },
+              {
+                title: "Learn",
+                links: [
+                  { label: "Styling and themes", href: `${github}#tokens` },
+                  { label: "Motion", href: `${github}#motion` },
+                  { label: "Composition", href: `${github}#patterns-and-recipes` },
+                ],
+              },
+              {
+                title: "Explore",
+                links: [{ label: "GitHub", href: github }, { label: "MIT license", href: "./LICENSE" }, { label: "Font license", href: "./THIRD_PARTY_NOTICES" }],
+              },
+            ]}
+            note="Tensile is MIT licensed. Made by Sébastien Graf."
+          />
+        </>
+      )}
+    </LinkProvider>
   );
 }

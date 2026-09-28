@@ -2,7 +2,9 @@
 
 A React design system of animated components. Every control is one shape that morphs between its states; content inside it blur-swaps; things that slide use a liquid spring; drags follow the pointer and keep their speed on release. Colors, type, radii, shadows, focus and motion speed are CSS tokens an app overrides. Every component is generic: data and text come in as props with English defaults.
 
-[Website and documentation](https://seb-graf.github.io/tensile/) · [Storybook](https://seb-graf.github.io/tensile/storybook/)
+[Website](https://seb-graf.github.io/tensile/) · [Documentation](https://seb-graf.github.io/tensile/?docs=get-started)
+
+The public documentation discovers every component and its examples from Storybook. Run `npm run storybook` for the development workshop. The public site keeps its own navigation and styling, and includes only Storybook’s preview build for the live examples.
 
 Stack: React 19, TypeScript, Motion (`motion/react`), Tailwind 4 (for the library's own build), Storybook 10, Geist.
 
@@ -404,6 +406,12 @@ Recipes:
 - `npx tsc --noEmit`, `npm test` (calendar and color logic with Node's test runner).
 - `npm run build`, `npm run check:consumer`.
 - `npm run build:site` builds the landing page and documentation into `site-dist/`; `npm run preview:site` serves that production build locally.
-- `npm run site` develops the landing page; documentation links require the combined production preview or a separately served Storybook build.
+- `npm run site` develops the landing page and documentation together.
 - [Contributing](CONTRIBUTING.md) covers checks and the release procedure; [Changelog](CHANGELOG.md) records package changes.
 - `AGENTS.md` holds the rules (tokens, motion, API, stories, pitfalls) and the inventory; `docs/coverage.md` holds what's covered and how each wave was verified; `.claude/skills/morph-component/` is the workflow for adding a component, with `check_story.py` for browser checks.
+
+Component pages, sidebar groups, search entries, and example choices are generated from Storybook’s `index.json`. Add or edit a component’s stories in `src/components/`; no separate component docs page or example is needed. Story comments supply the example descriptions, and the Story source tab shows the original story file. API tables come from the component’s TypeScript props and function defaults.
+
+`npm run site` and `npm run build:site` build the library, build Storybook with `--preview-only`, and regenerate `site/docs/api.json`. Vite serves and bundles the preview assets alongside the custom docs; the public build does not include Storybook’s manager UI. After changing stories or component code during a site session, restart `npm run site` to rebuild the previews and generated data. Use `npm run storybook` for live story development.
+
+Keep `site/docs/api.json` with the source change; do not edit it by hand. Getting started remains an authored guide. Component-specific descriptions belong in the component or story comments.

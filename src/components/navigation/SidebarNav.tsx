@@ -31,7 +31,8 @@ export function SidebarNav({
   const { swap } = useSprings();
   const linkClick = useLinkClick();
   const index = items.findIndex((item) => item.value === value);
-  const [top, bottom] = useLiquid(index * STEP, (items.length - 1 - index) * STEP);
+  const position = Math.max(0, index);
+  const [top, bottom] = useLiquid(position * STEP, (items.length - 1 - position) * STEP);
   const clip = useMotionTemplate`inset(${top}px 0 ${bottom}px 0 round var(--radius-control))`;
   const buttons = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
 
@@ -80,11 +81,13 @@ export function SidebarNav({
         })}
         <motion.li
           aria-hidden
+          hidden={index === -1}
           style={{ top, bottom }}
           className="pointer-events-none absolute inset-x-0 rounded-control bg-ink"
         />
         <motion.li
           aria-hidden
+          hidden={index === -1}
           style={{ clipPath: clip }}
           className="pointer-events-none absolute inset-0 grid gap-2 text-label font-medium text-paper"
         >
