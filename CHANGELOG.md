@@ -2,6 +2,7 @@
 
 ## 0.1.0 — Unreleased
 
+- Motion installs automatically as a runtime dependency; no separate consumer install is needed.
 - MIT license, copyright 2026 Sébastien Graf.
 - ESM package with public React components, TypeScript declarations, compiled styles, optional reset, and bundled Geist fonts.
 - Isolated tarball consumer validation, including public imports, CSS without Tailwind, documentation example types, and server-render coverage.

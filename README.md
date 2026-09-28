@@ -36,7 +36,7 @@ npm pack
 Install the resulting tarball in an existing React 19 application:
 
 ```sh
-npm install /path/to/tensile-0.1.0.tgz motion@^13
+npm install /path/to/tensile-0.1.0.tgz
 ```
 
 Do not install an unrelated registry package with this name. `dist/` holds:
@@ -46,7 +46,7 @@ Do not install an unrelated registry package with this name. `dist/` holds:
 - `styles.css`: global tokens, unprefixed utilities, font faces, and generated CSS property initialization; no Preflight or body background rule.
 - `reset.css`: Tailwind's preflight, opt-in.
 
-Peer dependencies: `react` ^19, `react-dom` ^19, `motion` ^13.
+Peer dependencies: `react` ^19 and `react-dom` ^19. Motion is a regular dependency of Tensile and installs automatically; you do not need a separate Motion install.
 
 ```tsx
 // Once, at the app's entry.

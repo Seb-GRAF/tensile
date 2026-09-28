@@ -21,13 +21,13 @@ npm ci
 npm pack
 ```
 
-In an existing React 19 application, install the generated tarball and Motion:
+In an existing React 19 application, install the generated tarball:
 
 ```sh
-npm install /path/to/tensile-0.1.0.tgz motion@^13
+npm install /path/to/tensile-0.1.0.tgz
 ```
 
-The peer dependencies are React 19, React DOM 19, and Motion 13. TypeScript declarations are included. Tailwind is used to build the library; your application does not need Tailwind, a plugin, or a source-scanning configuration.
+The peer dependencies are React 19 and React DOM 19. Motion installs automatically as a dependency of Tensile. TypeScript declarations are included. Tailwind is used to build the library; your application does not need Tailwind, a plugin, or a source-scanning configuration.
 
 ## Load styles once
 

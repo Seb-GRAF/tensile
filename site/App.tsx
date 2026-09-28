@@ -4,7 +4,7 @@ import { MorphButtonExample } from "../docs/examples/MorphButtonExample";
 import { TabsExample } from "../docs/examples/TabsExample";
 
 const docs = "./storybook/?path=/docs/";
-const install = "npm install ./tensile-0.1.0.tgz motion@^13";
+const install = "npm install ./tensile-0.1.0.tgz";
 const links = [
   { label: "Get started", href: `${docs}guides-get-started--docs` },
   { label: "Components", href: `${docs}components-button--docs` },
@@ -51,7 +51,7 @@ export function App() {
           <div className="grid gap-5 border-t border-ink/15 pt-6 lg:grid-cols-[1fr_2fr] lg:items-center">
             <div>
               <h2 className="text-body font-medium">Bring the pieces. Keep your app.</h2>
-              <p className="mt-1 text-label text-muted">React 19 · Motion 13 · No consumer Tailwind setup</p>
+              <p className="mt-1 text-label text-muted">React 19 · No consumer Tailwind setup</p>
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-3 rounded-overlay bg-paper p-3 pl-5">
