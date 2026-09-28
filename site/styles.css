@@ -2,6 +2,7 @@
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 @import "../src/theme.css";
 @source "./";
+@source "../src";
 
 html {
   color-scheme: light;
