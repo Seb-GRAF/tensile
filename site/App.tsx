@@ -35,6 +35,7 @@ import { icons } from "../src/icons";
 import { useSprings } from "../src/springs";
 import { useWidth } from "../src/useWidth";
 import { Logo } from "./Logo";
+import { chapters, Reel } from "./Reel";
 import { Docs, docsPages } from "./Docs";
 
 const start = "?docs=get-started";
@@ -47,8 +48,6 @@ const links = [
 
 const pill =
   "inline-flex items-center justify-center whitespace-nowrap rounded-control font-medium shadow-control outline-offset-2 press focus-visible:outline-2 focus-visible:outline-focus";
-
-const verbs = ["stretch.", "morph.", "settle.", "follow you.", "spring back."];
 
 const channels = [
   { value: "stable", label: "Stable" },
@@ -187,16 +186,9 @@ function useAutoplay(interval: number, step: (beat: number) => void) {
   return { ref, onPointerDown: () => setTouched(true), onFocus: () => setTouched(true) };
 }
 
-function Verb() {
-  const { shape, swap, scale } = useSprings();
-  const [index, setIndex] = useState(0);
+function Verb({ verb }: { verb: string }) {
+  const { shape, swap } = useSprings();
   const [width, measure] = useWidth();
-
-  useEffect(() => {
-    if (scale === 0) return;
-    const timer = setInterval(() => setIndex((i) => (i + 1) % verbs.length), 2400);
-    return () => clearInterval(timer);
-  }, [scale]);
 
   return (
     <motion.span
@@ -206,8 +198,8 @@ function Verb() {
       className="inline-grid h-[1.12em] place-content-center place-items-center overflow-hidden rounded-full bg-accent text-on-accent"
     >
       <AnimatePresence initial={false}>
-        <motion.span key={verbs[index]} ref={measure} {...swap} className="col-start-1 row-start-1 px-[0.28em] pb-[0.06em] whitespace-nowrap">
-          {verbs[index]}
+        <motion.span key={verb} ref={measure} {...swap} className="col-start-1 row-start-1 px-[0.28em] pb-[0.06em] whitespace-nowrap">
+          {verb}
         </motion.span>
       </AnimatePresence>
     </motion.span>
@@ -267,7 +259,7 @@ function ReleaseCard() {
   }, [released]);
 
   return (
-    <Card {...demo} className="grid gap-6 p-6 sm:p-7">
+    <Card {...demo} className="grid h-full content-between gap-6 p-6 sm:p-7">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-body font-semibold">Release 1.4</p>
@@ -296,6 +288,7 @@ function ReleaseCard() {
 
 function Hero() {
   const { spring, scale } = useSprings();
+  const [chapter, setChapter] = useState(0);
 
   function rise(step: number) {
     return {
@@ -306,37 +299,39 @@ function Hero() {
   }
 
   return (
-    <section className="mx-auto grid max-w-page gap-14 px-6 pt-14 pb-20 md:pt-24 md:pb-28 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-16">
-      <div className="min-w-0">
-        <motion.h1 {...rise(1)} className="text-5xl leading-[1.05] font-semibold tracking-tight sm:text-6xl lg:text-7xl">
-          <span className="sr-only">Components that stretch, morph, settle, follow you and spring back.</span>
+    <section className="mx-auto max-w-page px-6 pt-10 pb-24 md:pt-14 md:pb-32">
+      <div className="grid gap-8 lg:grid-cols-[1fr_24rem] lg:items-end lg:gap-12">
+        <motion.h1 {...rise(1)} className="text-5xl leading-[0.98] font-semibold tracking-tighter sm:text-7xl lg:text-8xl">
+          <span className="sr-only">Components that morph, switch, slide, stretch and settle.</span>
           <span aria-hidden className="block">Components</span>
           <span aria-hidden className="flex items-center gap-[0.22em]">
-            that <Verb />
+            that <Verb verb={chapters[chapter].verb} />
           </span>
         </motion.h1>
-        <motion.p {...rise(2)} className="mt-7 max-w-xl text-lg text-muted">
-          Tensile is a set of React components where each control is a single shape that changes with its state. Press Save and the button
-          turns into its own spinner, then a check. Drag a slider past its end and it stretches, then springs back as fast as you let go.
-        </motion.p>
-        <motion.div {...rise(3)} className="mt-9 flex flex-wrap items-center gap-3">
-          <Link href={start} className={`${pill} h-11 rounded-control! bg-ink px-5 text-body text-paper no-underline! hover:bg-ink-3`}>
-            Get started
-          </Link>
-          <a href="#feel" className={`${pill} h-11 bg-paper px-5 text-body text-ink hover:bg-hover`}>
-            Try the components
-          </a>
-        </motion.div>
-        <motion.div {...rise(4)} className="mt-8 flex max-w-md items-center gap-3 rounded-control bg-paper/60 p-1.5 pl-5 shadow-control">
-          <code className="min-w-0 flex-1 overflow-x-auto text-label whitespace-nowrap">
-            <span className="text-muted select-none">$ </span>
-            {install}
-          </code>
-          <CopyButton value={install} label="Copy install command" className="shrink-0" />
-        </motion.div>
+        <div className="lg:pb-2">
+          <motion.p {...rise(2)} className="max-w-md text-lg text-muted">
+            React components where each control is one shape. It changes size, color and content with its state, and follows your pointer when
+            you drag it.
+          </motion.p>
+          <motion.div {...rise(3)} className="mt-6 flex flex-wrap items-center gap-3">
+            <Link href={start} className={`${pill} h-11 rounded-control! bg-ink px-5 text-body text-paper no-underline! hover:bg-ink-3`}>
+              Get started
+            </Link>
+            <a href="#play" className={`${pill} h-11 bg-paper px-5 text-body text-ink hover:bg-hover`}>
+              Try the components
+            </a>
+          </motion.div>
+          <motion.div {...rise(4)} className="mt-4 flex max-w-md items-center gap-3 rounded-control bg-paper/60 p-1.5 pl-5 shadow-control">
+            <code className="min-w-0 flex-1 overflow-x-auto text-label whitespace-nowrap">
+              <span className="text-muted select-none">$ </span>
+              {install}
+            </code>
+            <CopyButton value={install} label="Copy install command" className="shrink-0" />
+          </motion.div>
+        </div>
       </div>
-      <motion.div {...rise(3)} className="min-w-0">
-        <ReleaseCard />
+      <motion.div {...rise(5)} className="mt-10 md:mt-12">
+        <Reel chapter={chapter} onChapterChange={setChapter} />
       </motion.div>
     </section>
   );
@@ -361,7 +356,7 @@ function Tile({ names, title, tone = "paper", demo, children, className = "" }: 
           })}
         </p>
         <h3 className="mt-3 text-xl font-semibold tracking-tight">{title}</h3>
-        <div className="flex min-h-40 flex-1 flex-wrap items-center justify-center gap-4 pt-8">{children}</div>
+        <div className="flex flex-1 flex-wrap items-center justify-center gap-4 py-6">{children}</div>
       </Card>
     </Reveal>
   );
@@ -488,24 +483,6 @@ function SwapDemo() {
   );
 }
 
-function Specimens() {
-  return (
-    <section id="feel" className="mx-auto max-w-page scroll-mt-20 px-6 pb-24">
-      <Reveal>
-        <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance md:text-5xl">The rules behind the motion</h2>
-        <p className="mt-4 max-w-xl text-lg text-muted">Each tile plays by itself until you click or tab into it.</p>
-      </Reveal>
-      <div className="mt-12 grid gap-4 md:grid-cols-6">
-        <MorphDemo />
-        <DragDemo />
-        <LiquidDemo />
-        <NumbersDemo />
-        <SwapDemo />
-      </div>
-    </section>
-  );
-}
-
 function InviteDemo() {
   const [team, setTeam] = useState(people.slice(0, 3).map((person) => ({ name: person.label })));
   const [open, setOpen] = useState(false);
@@ -531,7 +508,7 @@ function InviteDemo() {
   return (
     <Tile
       names={["Dialog", "Field", "Select", "MorphButton"]}
-      title="Invite someone"
+      title="Dialogs grow out of their button"
       className="md:col-span-3"
     >
       <div className="grid justify-items-center gap-3">
@@ -572,7 +549,7 @@ function MenuDemo() {
   return (
     <Tile
       names={["Select", "Combobox"]}
-      title="Pick or search"
+      title="Menus open from their field"
       demo={demo}
       className="md:col-span-3"
     >
@@ -588,16 +565,22 @@ function MenuDemo() {
   );
 }
 
-function Overlays() {
+function Playground() {
   return (
-    <section className="mx-auto max-w-page px-6 pb-24">
+    <section id="play" className="mx-auto max-w-page scroll-mt-20 px-6 pb-24 md:pb-32">
       <Reveal>
-        <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance md:text-5xl">Overlays open out of their buttons</h2>
-        <p className="mt-4 max-w-xl text-lg text-muted">
-          The dialog is the Invite teammates button, resized. Menus open from their field, and upward if there isn't room below.
-        </p>
+        <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance md:text-5xl">Now try them</h2>
+        <p className="mt-4 max-w-xl text-lg text-muted">Each tile plays by itself until you click or tab into it.</p>
       </Reveal>
       <div className="mt-12 grid gap-4 md:grid-cols-6">
+        <Reveal className="md:col-span-3 md:row-span-2">
+          <ReleaseCard />
+        </Reveal>
+        <MorphDemo />
+        <DragDemo />
+        <LiquidDemo />
+        <NumbersDemo />
+        <SwapDemo />
         <InviteDemo />
         <MenuDemo />
       </div>
@@ -630,7 +613,7 @@ function Theming() {
 
   return (
     <section className="bg-paper">
-      <div {...demo} className="mx-auto grid max-w-page gap-12 px-6 py-24 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+      <div {...demo} className="mx-auto grid max-w-page gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <Reveal>
           <h2 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">Restyle it with six CSS variables</h2>
           <p className="mt-4 max-w-md text-lg text-muted">
@@ -701,7 +684,7 @@ function Code() {
   const [digest, setDigest] = useState(true);
 
   return (
-    <section className="mx-auto grid max-w-page gap-12 px-6 py-24 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+    <section className="mx-auto grid max-w-page gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
       <Reveal className="min-w-0">
         <Card tone="ink" className="overflow-hidden">
           <div className="flex items-center justify-between gap-3 px-5 pt-5">
@@ -739,7 +722,7 @@ function Catalog() {
   const count = groups.reduce((total, group) => total + group.names.length, 0);
 
   return (
-    <section id="components" className="mx-auto max-w-page scroll-mt-20 px-6 py-24">
+    <section id="components" className="mx-auto max-w-page scroll-mt-20 px-6 pb-24 md:pb-32">
       <Reveal className="grid gap-8 md:grid-cols-[1fr_20rem] md:items-end">
         <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
           <NumberTicker value={count} /> {count === 1 ? "component" : "components"}
@@ -798,7 +781,7 @@ function Closing({ onNavigate }: { onNavigate: (href: string) => void }) {
   }, [confirmed, onNavigate]);
 
   return (
-    <section className="mx-auto max-w-page px-6 pb-24">
+    <section className="mx-auto max-w-page px-6 pb-24 md:pb-32">
       <Reveal>
         <Card tone="ink" className="grid gap-10 p-8 sm:p-12 md:grid-cols-[1.4fr_1fr] md:items-end md:p-16">
           <div>
@@ -873,8 +856,7 @@ export function App() {
           />
           <main id="main" tabIndex={-1} className="outline-none">
             <Hero />
-            <Specimens />
-            <Overlays />
+            <Playground />
             <Theming />
             <Code />
             <Catalog />
