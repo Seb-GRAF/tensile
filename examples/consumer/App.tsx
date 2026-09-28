@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Icon, MorphButton, SegmentedTabs, Select, Spinner, Toggle } from "morph-components";
+import { useState, type FormEvent } from "react";
+import { Button, Dialog, Field, Icon, Input, MorphButton, SegmentedTabs, Select, Toggle } from "morph-components";
 
 const ranges = [
   { value: "day", label: "Day" },
@@ -7,21 +7,34 @@ const ranges = [
   { value: "month", label: "Month" },
 ];
 
-const sorts = [
-  { value: "added", label: "Date added" },
-  { value: "title", label: "Title" },
+const roles = [
+  { value: "editor", label: "Editor" },
+  { value: "viewer", label: "Viewer" },
 ];
 
 export function App() {
   const [range, setRange] = useState("week");
-  const [sort, setSort] = useState<string | null>(null);
   const [notify, setNotify] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<string | null>("editor");
+  const [error, setError] = useState<string>();
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
 
-  function save() {
+  function invite(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!email.includes("@")) {
+      setError("Enter an email address");
+      return;
+    }
+    setError(undefined);
     setStatus("loading");
     setTimeout(() => setStatus("success"), 1200);
-    setTimeout(() => setStatus("idle"), 2700);
+    setTimeout(() => {
+      setStatus("idle");
+      setEmail("");
+      setOpen(false);
+    }, 2400);
   }
 
   return (
@@ -33,14 +46,25 @@ export function App() {
         A consumer without Tailwind
       </h1>
       <SegmentedTabs options={ranges} value={range} onValueChange={setRange} />
-      <Select options={sorts} value={sort} onValueChange={setSort} />
       <Toggle checked={notify} onCheckedChange={setNotify} label="Notifications" />
-      <MorphButton status={status} onClick={save}>
-        Save
-      </MorphButton>
-      <p className="busy">
-        <Spinner /> Syncing
-      </p>
+      <div className="actions">
+        <Dialog open={open} onOpenChange={setOpen} trigger="Invite people" title="Invite people">
+          <form noValidate onSubmit={invite} className="invite">
+            <Field label="Email" error={error}>
+              <Input type="email" autoComplete="email" placeholder="name@example.com" value={email} onValueChange={setEmail} />
+            </Field>
+            <Field label="Role">
+              <Select options={roles} value={role} onValueChange={setRole} />
+            </Field>
+            <MorphButton type="submit" status={status}>
+              Send invite
+            </MorphButton>
+          </form>
+        </Dialog>
+        <Button variant="ghost" onClick={() => setRange("week")}>
+          Reset range
+        </Button>
+      </div>
     </main>
   );
 }

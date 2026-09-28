@@ -162,6 +162,8 @@ Media:
 - `Lightbox`: wrapping thumbnails; on Modal, the clicked thumbnail's measured box springs (left, top, size, radius) into a 3:2 full view over a backdrop and back; secondary IconButton controls, arrows that wrap and blur-swap the picture, focus back on the thumbnail.
 - `Carousel`: measured-width slides in a `role="region"` with `aria-roledescription` carousel/slide, inactive slides inert; the track follows the pointer with rubber past the ends, and a release projects position + velocity × 0.2 s and settles with `snap`; bounded IconButton arrows, PageDots and arrow keys; vertical page scrolling stays native.
 
+Examples (`src/examples/`, public exports only; `docs/coverage.md` lists what each composes and how it was checked): Settings form, Authentication, Detail page, Theme and motion, Data management, Marketing.
+
 Shared code (owned by the lead; read-only for subagents unless a brief assigns a file):
 
 - `src/theme.css`: the tokens (see Tokens), the `press` utility, the `animate-spinner` and `animate-shimmer` animations, and the `scroll-fade` utility for a scroll body: its content fades toward an edge while more of it is hidden past that edge (scroll-driven; no fade in browsers without scroll timelines). `src/index.css` is the library stylesheet built from it; Storybook loads `.storybook/preview.css`, which adds the page background and the alternate theme.

@@ -108,7 +108,7 @@ Options:
 | `--viewport 390x844` | page size in CSS px (default 800x600); use a phone size for anything responsive |
 | `--reduced-motion` | emulates `prefers-reduced-motion: reduce`, so the motion scale is 0 |
 | `--globals theme:alternate` | runs with the alternate tokens (accent, radii, speed) |
-| `--args 'scale:3;open:!true'` | sets story args, in Storybook's URL syntax |
+| `--args 'scale:3;open:!true'` | sets story args, in Storybook's URL syntax (values with characters such as `/` are dropped; use plain words) |
 | `--video` | records the run to `video.webm`; look at it frame by frame with `ffmpeg -i video.webm -vf fps=20,tile=6x4 film.png` |
 
 Steps, run in order:
@@ -137,6 +137,7 @@ Steps, run in order:
 - A flick is several `move` steps a few pixels apart with `{"wait": 16}` between them, then `up`, so the release has speed.
 - A check prints `PASS` or `FAIL` with the value it read; the run continues after a failure and exits with 1 at the end. Without `equals`, `attr`, `prop` and `text` only print the value: that's a reading, not a check.
 - `:focus` selects the focused element, so `{"attr": ":focus", "name": "aria-label", "equals": "Close"}` checks where focus went.
+- The script drives a mouse and a keyboard. Touch-only behavior (a long press, the browser's own touch gestures) needs a separate temporary Playwright script under `/tmp` that starts and stops its own Storybook, e.g. with CDP's `Input.synthesizeTapGesture`; keep it and its log as evidence.
 - Changes that go through `updateArgs` land on a later tick: wait about 250 ms before checking.
 
 Exercise every interaction, by pointer and by keyboard, and check the result of each one. For each animation, take one shot about 100 ms in and one about 600 ms after it started; with `--args` or the alternate theme slowing things down, wait longer. Check reversals and quick repeated input, and record drags and morphs with `--video`:
