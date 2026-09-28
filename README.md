@@ -2,6 +2,8 @@
 
 A React design system of animated components. Every control is one shape that morphs between its states; content inside it blur-swaps; things that slide use a liquid spring; drags follow the pointer and keep their speed on release. Colors, type, radii, shadows, focus and motion speed are CSS tokens an app overrides. Every component is generic: data and text come in as props with English defaults.
 
+[Website and documentation](https://seb-graf.github.io/tensile/) · [Storybook](https://seb-graf.github.io/tensile/storybook/)
+
 Stack: React 19, TypeScript, Motion (`motion/react`), Tailwind 4 (for the library's own build), Storybook 10, Geist.
 
 - [Install and use](#install-and-use)

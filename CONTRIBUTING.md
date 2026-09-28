@@ -35,15 +35,15 @@ Use [seb-graf/tensile](https://github.com/seb-graf/tensile) for pull requests an
 
 ## Release procedure
 
-Publication and deployment require maintainer authorization. The approved package name is `tensile` and the repository is `seb-graf/tensile`. The library is licensed under MIT, copyright 2026 Sébastien Graf. The package remains private pending verification of npm publishing rights and release authorization. GitHub Pages remains the proposed host. Do not publish with placeholder metadata.
+Publication and deployment require maintainer authorization. The approved package name is `tensile` and the repository is `seb-graf/tensile`. The library is licensed under MIT, copyright 2026 Sébastien Graf. The package remains private pending verification of npm publishing rights and release authorization. The site is hosted on GitHub Pages at https://seb-graf.github.io/tensile/. Do not publish with placeholder metadata.
 
-1. Verify npm publishing rights for `tensile` and repository access, then confirm hosting. Set the homepage to the deployed site once its host is approved. Include the license and bundled-font notices in the package. Remove `private` when this metadata is approved; that does not authorize publication.
+1. Verify npm publishing rights for `tensile` and repository access. Include the license and bundled-font notices in the package. Remove `private` when this metadata is approved; that does not authorize publication.
 2. Finish and review concurrent component work. Release from a clean, reviewed commit.
 3. Update `version` in `package.json` and synchronize `package-lock.json`; update `CHANGELOG.md`. Start at `0.1.0`. During 0.x, document breaking changes in minor releases; reserve patches for compatible fixes.
 4. Run the checks above, sequentially. Verify lower peer-version bounds before advertising them as tested.
 5. Run `npm pack --dry-run --json`, then `npm pack`. Inspect the tarball: JS, declarations, both CSS entries, all font URLs and assets, README, package metadata, license, and third-party notices; no stories, site, tests, or development configuration.
 6. Install that exact final tarball into a clean consumer, repeat types, build, SSR and browser checks, then retain it for publication. Do not rebuild a different artifact for publishing.
 7. After authorization, create the matching version tag and publish the tested tarball with `npm publish ./tensile-0.1.0.tgz --access public`. Add release notes from the changelog.
-8. After deployment authorization, manually run the site workflow for the release commit. Review the deployed base path, assets, documentation, and links. The initial host can be GitHub Pages without a custom domain.
+8. After deployment authorization, manually run the site workflow for the release commit. Review the deployed base path, assets, documentation, and links. GitHub Pages serves the combined site and Storybook build under `/tensile/`.
 
 For subsequent releases, npm trusted publishing can replace local publication. Configure the approved repository and workflow in npm first. It requires npm 11.5.1 or newer and Node 22.14.0 or newer on supported hosted runners. No automatic publishing workflow is enabled here.

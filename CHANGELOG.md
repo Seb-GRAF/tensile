@@ -7,4 +7,4 @@
 - Isolated tarball consumer validation, including public imports, CSS without Tailwind, documentation example types, and server-render coverage.
 - Landing page with interactive examples and Storybook documentation for getting started, styling, motion, composition, and component APIs.
 
-The package is named `tensile`, with source at `seb-graf/tensile`. npm publishing rights, hosting, and final browser acceptance remain pending. See the README's known limitations before adopting a component.
+The package is named `tensile`, with source at `seb-graf/tensile`. GitHub Pages is the approved host. npm publishing rights and final browser acceptance remain pending. See the README's known limitations before adopting a component.
