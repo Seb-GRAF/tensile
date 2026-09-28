@@ -23,6 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Mark a notification as read or dismiss it: dismissed rows blur out, the rest spring up, and focus moves to a remaining action. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

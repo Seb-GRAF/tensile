@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click the island to open the player; click the artwork or press Escape to close it. */
+/** Click the island to open the player; play, scrub the progress bar, then minimize it or press Escape to close it. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

@@ -2,7 +2,8 @@ import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useState } from "react";
 import { dragHandlers, rubber } from "../../drag";
 import { clock } from "../../playback";
-import { shape, snap } from "../../springs";
+import { useSprings } from "../../springs";
+import { TimeReadout } from "../../SeekBar";
 
 export type WaveformScrubberProps = {
   /** Bar heights from 0 to 1, one bar per peak. */
@@ -14,6 +15,7 @@ export type WaveformScrubberProps = {
   duration: number;
   label?: string;
   formatTime?: (seconds: number) => string;
+  className?: string;
 };
 
 const STEP = 5;
@@ -25,7 +27,9 @@ export function WaveformScrubber({
   duration,
   label = "Seek",
   formatTime = clock,
+  className = "",
 }: WaveformScrubberProps) {
+  const { shape, snap } = useSprings();
   const [scrubbing, setScrubbing] = useState(false);
   const stretch = useMotionValue(0);
   const left = useTransform(stretch, (s) => Math.min(0, s));
@@ -63,7 +67,7 @@ export function WaveformScrubber({
   }
 
   return (
-    <div className="w-[360px] rounded-3xl bg-ink px-6 py-4 shadow-float">
+    <div className={`rounded-card bg-ink px-6 py-4 shadow-float [--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)] ${className}`}>
       <div
         role="slider"
         tabIndex={0}
@@ -74,7 +78,7 @@ export function WaveformScrubber({
         aria-valuetext={formatTime(value)}
         {...dragHandlers(drag, release)}
         onKeyDown={onKeyDown}
-        className="relative flex h-11 cursor-pointer touch-none items-center rounded-xl outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper"
+        className="relative flex h-11 cursor-pointer touch-none items-center rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
       >
         <motion.div
           initial={false}
@@ -98,10 +102,7 @@ export function WaveformScrubber({
           </div>
         </motion.div>
       </div>
-      <div className="mt-1 flex justify-between text-[11px] tabular-nums text-paper/55">
-        <span>{formatTime(value)}</span>
-        <span>−{formatTime(duration - value)}</span>
-      </div>
+      <TimeReadout value={value} duration={duration} formatTime={formatTime} />
     </div>
   );
 }

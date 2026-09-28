@@ -45,7 +45,7 @@ function NotificationRow({ notification, onRead, onDismiss, readLabel, dismissLa
       layout="position"
       {...swap}
       transition={{ layout: shape }}
-      className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0"
+      className="flex items-center gap-3 border-line py-2.5 [li:not([inert])~&]:border-t"
     >
       <ListContent
         item={{
@@ -113,8 +113,8 @@ export function NotificationList({
 
   return (
     <motion.section ref={region} aria-label={label} tabIndex={-1} initial={false} animate={{ height: size?.height }} transition={shape} className={`w-full outline-none ${className}`}>
-      <div ref={measure}>
-        <ul role="list" className="relative divide-y divide-line">
+      <div ref={measure} className="grid">
+        <ul role="list" className="relative -my-2.5">
           <AnimatePresence initial={false} mode="popLayout">
             {notifications.map((notification) => (
               <NotificationRow key={notification.id} notification={notification} onRead={onRead} onDismiss={dismiss} readLabel={readLabel} dismissLabel={dismissLabel} />

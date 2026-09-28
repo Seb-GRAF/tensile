@@ -51,6 +51,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <StatefulCompareSlider {...args} onValueChange={(value) => updateArgs({ value })} />;
+    return <div className="w-120 max-w-[calc(100vw-64px)]"><StatefulCompareSlider {...args} className="aspect-3/2" onValueChange={(value) => updateArgs({ value })} /></div>;
   },
 };

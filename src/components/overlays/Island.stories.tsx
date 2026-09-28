@@ -1,25 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
+import { Button } from "../actions/Button";
+import { IconButton } from "../actions/IconButton";
+import { Icon } from "../data-display/Icon";
 import { Island } from "./Island";
 
-function Icon({ paths, size }: { paths: string[]; size: number }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      className="fill-none stroke-current"
-      strokeWidth={36 / size}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {paths.map((d) => (
-        <path key={d} d={d} />
-      ))}
-    </svg>
-  );
-}
 
 const timer = ["M10 2h4", "m12 14 3-3", "M20 14a8 8 0 1 1-16 0 8 8 0 0 1 16 0"];
 const pause = [
@@ -33,27 +19,25 @@ const phone = [
 ];
 const download = ["M12 15V3", "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", "m7 10 5 5 5-5"];
 
-const button = "grid size-11 shrink-0 place-items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-paper";
-
 const activities = [
   {
     activity: "Timer",
     leading: (
       <span className="grid size-6 place-items-center text-accent">
-        <Icon paths={timer} size={16} />
+        <Icon size={16}>{timer.map((d) => <path key={d} d={d} />)}</Icon>
       </span>
     ),
     trailing: <span className="px-1 text-accent tabular-nums">4:59</span>,
     children: (
       <div className="flex h-full items-center gap-2 p-5">
-        <button type="button" aria-label="Pause" className={`${button} bg-accent text-ink`}>
-          <Icon paths={pause} size={20} />
-        </button>
-        <button type="button" aria-label="Cancel" className={`${button} bg-ink-3`}>
-          <Icon paths={close} size={20} />
-        </button>
+        <IconButton label="Pause" className="shrink-0 [--color-ink:var(--color-accent)] [--color-paper:var(--color-on-accent)]">
+          <Icon size={20}>{pause.map((d) => <path key={d} d={d} />)}</Icon>
+        </IconButton>
+        <IconButton label="Cancel" className="shrink-0 [--color-ink:var(--color-ink-3)]">
+          <Icon size={20}>{close.map((d) => <path key={d} d={d} />)}</Icon>
+        </IconButton>
         <div className="ml-auto text-right">
-          <p className="text-[13px] leading-4 text-paper/55">Timer</p>
+          <p className="text-label leading-4 text-paper/55">Timer</p>
           <p className="text-3xl leading-7 font-semibold text-accent tabular-nums">4:59</p>
         </div>
       </div>
@@ -63,27 +47,27 @@ const activities = [
     activity: "Call",
     leading: (
       <span className="flex items-center gap-2">
-        <span className="grid size-6 place-items-center rounded-full bg-ink-3 text-[11px] font-semibold">MC</span>
+        <span className="grid size-6 place-items-center rounded-full bg-ink-3 text-caption font-semibold">MC</span>
         Maya
       </span>
     ),
     trailing: <span className="px-1 text-accent tabular-nums">0:42</span>,
     children: (
       <div className="flex h-full items-center gap-3 p-5">
-        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink-3 text-[15px] font-semibold">MC</span>
+        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink-3 text-body font-semibold">MC</span>
         <div className="min-w-0 grow">
-          <p className="truncate text-[15px] font-semibold">Maya Chen</p>
-          <p className="text-[13px] text-accent tabular-nums">0:42</p>
+          <p className="truncate text-body font-semibold">Maya Chen</p>
+          <p className="text-label text-accent tabular-nums">0:42</p>
         </div>
         <div className="flex gap-2">
-          <button type="button" aria-label="Mute" className={`${button} bg-ink-3`}>
-            <Icon paths={mic} size={20} />
-          </button>
-          <button type="button" aria-label="End call" className={`${button} bg-paper text-ink`}>
+          <IconButton label="Mute" className="shrink-0 [--color-ink:var(--color-ink-3)]">
+            <Icon size={20}>{mic.map((d) => <path key={d} d={d} />)}</Icon>
+          </IconButton>
+          <IconButton label="End call" variant="secondary" className="shrink-0">
             <span className="rotate-135">
-              <Icon paths={phone} size={20} />
+              <Icon size={20}>{phone.map((d) => <path key={d} d={d} />)}</Icon>
             </span>
-          </button>
+          </IconButton>
         </div>
       </div>
     ),
@@ -92,11 +76,11 @@ const activities = [
     activity: "Download",
     leading: (
       <span className="grid size-6 place-items-center">
-        <Icon paths={download} size={16} />
+        <Icon size={16}>{download.map((d) => <path key={d} d={d} />)}</Icon>
       </span>
     ),
     trailing: (
-      <svg viewBox="0 0 24 24" className="size-6 -rotate-90 fill-none" strokeWidth={3} strokeLinecap="round">
+      <svg viewBox="0 0 24 24" className="size-6 -rotate-90 fill-none" strokeWidth={1.5} strokeLinecap="round">
         <circle cx="12" cy="12" r="8" className="stroke-ink-3" />
         <circle cx="12" cy="12" r="8" pathLength={1} strokeDasharray="0.4 1" className="stroke-accent" />
       </svg>
@@ -104,18 +88,18 @@ const activities = [
     children: (
       <div className="flex h-full items-center gap-3 p-5">
         <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink-3">
-          <Icon paths={download} size={20} />
+          <Icon size={20}>{download.map((d) => <path key={d} d={d} />)}</Icon>
         </span>
         <div className="min-w-0 grow">
-          <p className="truncate text-[15px] font-semibold">Report.pdf</p>
-          <p className="text-[13px] text-paper/55 tabular-nums">18.4 of 46 MB</p>
+          <p className="truncate text-body font-semibold">Report.pdf</p>
+          <p className="text-label text-paper/55 tabular-nums">18.4 of 46 MB</p>
         </div>
-        <button type="button" aria-label="Cancel download" className={`${button} relative bg-ink-3`}>
-          <svg viewBox="0 0 44 44" className="absolute inset-0 -rotate-90 fill-none" strokeWidth={3} strokeLinecap="round">
+        <IconButton label="Cancel download" className="relative shrink-0 [--color-ink:var(--color-ink-3)]">
+          <svg viewBox="0 0 44 44" className="absolute inset-0 -rotate-90 fill-none" strokeWidth={1.5} strokeLinecap="round">
             <circle cx="22" cy="22" r="20.5" pathLength={1} strokeDasharray="0.4 1" className="stroke-accent" />
           </svg>
-          <Icon paths={close} size={16} />
-        </button>
+          <Icon size={16}>{close.map((d) => <path key={d} d={d} />)}</Icon>
+        </IconButton>
       </div>
     ),
   },
@@ -146,13 +130,7 @@ export const Default: Story = {
             updateArgs({ expanded });
           }}
         />
-        <button
-          type="button"
-          onClick={() => updateArgs({ activity: activities[(index + 1) % activities.length].activity })}
-          className="h-8 rounded-full bg-paper px-4 text-[13px] font-medium text-ink shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-        >
-          Next activity
-        </button>
+        <Button size="sm" variant="secondary" onPointerDown={(event) => event.stopPropagation()} onClick={() => updateArgs({ activity: activities[(index + 1) % activities.length].activity, expanded: false })}>Next activity</Button>
       </div>
     );
   },

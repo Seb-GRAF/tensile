@@ -33,7 +33,7 @@ function StatefulVideoControls({
   }, [playing, currentTime, volume]);
 
   return (
-    <div className="relative aspect-video w-160 overflow-hidden rounded-3xl shadow-float">
+    <div className="relative aspect-video w-160 max-w-[calc(100vw-32px)] overflow-hidden rounded-card shadow-float">
       <svg viewBox="0 0 640 360" className="size-full">
         <rect width="640" height="360" fill="#dae6ea" />
         <circle cx="452" cy="112" r="34" fill="#fbeaa8" />

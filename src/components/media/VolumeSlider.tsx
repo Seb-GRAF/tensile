@@ -55,7 +55,7 @@ function VolumeTrack({ value, onValueChange, label, tone, formatValue, width }: 
       aria-valuetext={formatValue(value)}
       {...dragHandlers(drag, release)}
       onKeyDown={onKeyDown}
-      className={`absolute inset-0 cursor-pointer touch-none rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${tone === "ink" ? "[--color-focus:var(--color-paper)]" : ""}`}
+      className={`absolute inset-0 cursor-pointer touch-none rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${tone === "ink" ? "[--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)]" : ""}`}
     >
       <motion.div
         style={style}

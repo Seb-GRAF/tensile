@@ -1,17 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
+import { Button } from "../actions/Button";
+import { Icon } from "../data-display/Icon";
+import { Separator } from "../layout/Separator";
 import { BottomSheet } from "./BottomSheet";
-
-function Icon({ paths }: { paths: string[] }) {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5 fill-none stroke-current" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      {paths.map((d) => (
-        <path key={d} d={d} />
-      ))}
-    </svg>
-  );
-}
 
 const actions = [
   { label: "Add to queue", paths: ["M11 12H3", "M16 6H3", "M16 18H3", "M18 9v6", "M21 12h-6"] },
@@ -31,54 +24,49 @@ const meta = {
     children: (
       <div className="px-2 pb-6">
         <div className="px-3 pb-3">
-          <p className="text-[15px] font-semibold text-ink">Winter Breeze</p>
-          <p className="text-[13px] text-muted">Arulo</p>
+          <p className="text-body font-semibold text-ink">Winter Breeze</p>
+          <p className="text-label text-muted">Arulo</p>
         </div>
-        <div className="mx-3 mb-2 h-px bg-line" />
+        <Separator className="mx-3 mb-2" />
         {actions.map(({ label, paths }) => (
-          <button
-            key={label}
-            type="button"
-            className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-          >
-            <span className="text-muted">
-              <Icon paths={paths} />
+          <Button key={label} variant="ghost" className="w-full">
+            <span className="flex w-full items-center gap-3">
+              <Icon size={20} className="text-muted">{paths.map((d) => <path key={d} d={d} />)}</Icon>
+              {label}
             </span>
-            {label}
-          </button>
+          </Button>
         ))}
       </div>
     ),
+  },
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+    return (
+      <div className="grid min-h-screen place-items-center">
+        <Button aria-haspopup="dialog" aria-expanded={args.open} onClick={() => updateArgs({ open: true })}>Open sheet</Button>
+        <BottomSheet {...args} onOpenChange={(open) => { args.onOpenChange(open); updateArgs({ open }); }} />
+      </div>
+    );
   },
 } satisfies Meta<typeof BottomSheet>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click Open sheet, then drag the handle: flick or pull it down to close, pull it up to stretch. Escape, the backdrop, or Enter on the handle close it too. */
-export const Default: Story = {
-  render: function Render(args) {
-    const [, updateArgs] = useArgs();
-    return (
-      <div className="grid min-h-screen place-items-center">
-        <div className="relative flex h-[600px] w-[390px] justify-center overflow-hidden bg-paper pt-36">
-          <button
-            type="button"
-            aria-haspopup="dialog"
-            onClick={() => updateArgs({ open: true })}
-            className="h-11 rounded-full bg-ink px-5 text-sm font-medium text-paper shadow-float outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-          >
-            Open sheet
-          </button>
-          <BottomSheet
-            {...args}
-            onOpenChange={(open) => {
-              args.onOpenChange(open);
-              updateArgs({ open });
-            }}
-          />
-        </div>
+/** Open the sheet, then drag its grab strip down (a flick or past halfway closes it, a short drag springs back), tap the handle, click the backdrop or press Escape. */
+export const Default: Story = {};
+
+export const LongContent: Story = {
+  args: {
+    children: (
+      <div className="p-5">
+        <h2 className="mb-4 text-body font-semibold">Your library</h2>
+        <ul role="list">
+          {Array.from({ length: 24 }, (_, i) => (
+            <li key={i}><Button variant="ghost" className="w-full"><span className="w-full text-left">Track {i + 1}</span></Button></li>
+          ))}
+        </ul>
       </div>
-    );
+    ),
   },
 };

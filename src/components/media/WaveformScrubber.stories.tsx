@@ -42,6 +42,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <StatefulWaveformScrubber {...args} onValueChange={(value) => updateArgs({ value })} />;
+    return <div className="w-90 max-w-[calc(100vw-32px)]"><StatefulWaveformScrubber {...args} onValueChange={(value) => updateArgs({ value })} /></div>;
   },
 };

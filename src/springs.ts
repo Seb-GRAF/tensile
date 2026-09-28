@@ -3,20 +3,6 @@ import { useEffect, useState } from "react";
 
 type Swap = { initial: TargetAndTransition; animate: TargetAndTransition; exit: TargetAndTransition };
 
-/** @deprecated Use `useSprings()`. These ignore `--motion-duration-scale`; they go once every component has moved over. */
-export const shape: Transition = { type: "spring", visualDuration: 0.38, bounce: 0.15 };
-/** @deprecated Use `useSprings()`. */
-export const soft: Transition = { type: "spring", visualDuration: 0.3, bounce: 0 };
-/** @deprecated Use `useSprings()`. */
-export const snap: Transition = { type: "spring", stiffness: 224, damping: 22.4 };
-const quick: Transition = { type: "spring", visualDuration: 0.12, bounce: 0 };
-/** @deprecated Use `useSprings()`. */
-export const swap: Swap = {
-  initial: { opacity: 0, filter: "blur(4px)", scale: 0.96 },
-  animate: { opacity: 1, filter: "blur(0px)", scale: 1, transition: { ...soft, delay: 0.1 } },
-  exit: { opacity: 0, filter: "blur(4px)", scale: 0.96, transition: quick },
-};
-
 const instant: Transition = { duration: 0 };
 
 /** `--motion-duration-scale` on the root element: 1 is the designed speed, 2 twice as slow, 0 no animation (the library CSS sets 0 under prefers-reduced-motion). The server renders with 1. */

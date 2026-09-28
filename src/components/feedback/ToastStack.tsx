@@ -46,7 +46,7 @@ export function ToastStack({
       onMouseLeave={(event) => setExpanded(event.currentTarget.contains(document.activeElement))}
       onFocus={() => setExpanded(true)}
       onBlur={(event) => setExpanded(event.currentTarget.contains(event.relatedTarget) || event.currentTarget.matches(":hover"))}
-      className={`w-full outline-none [--color-focus:var(--color-paper)] ${className}`}
+      className={`w-full outline-none [--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)] ${className}`}
     >
       <ol role="list" className="relative h-11">
         <AnimatePresence initial={false}>

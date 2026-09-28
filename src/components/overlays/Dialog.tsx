@@ -82,6 +82,11 @@ export function Dialog({
   );
 }
 
+function centered(width: number, height: number) {
+  const { clientWidth, clientHeight } = document.documentElement;
+  return { left: (clientWidth - width) / 2, top: (clientHeight - height) / 2, width, height };
+}
+
 function DialogPanel({
   button,
   title,
@@ -103,7 +108,7 @@ function DialogPanel({
   onClosed: () => void;
   children: React.ReactNode;
 }) {
-  const { shape, swap } = useSprings();
+  const { shape, soft, swap } = useSprings();
   const present = useIsPresent();
   const [size, measure] = useSize();
   const [origin] = useState(() => {
@@ -111,21 +116,15 @@ function DialogPanel({
       const { left, top, width, height } = button.current.getBoundingClientRect();
       return { left, top, width, height, borderRadius: "var(--radius-control)" };
     }
-    return { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0, borderRadius: "var(--radius-control)" };
+    return { ...centered(0, 0), borderRadius: "var(--radius-dialog)", opacity: 0 };
   });
 
   return (
     <motion.div
       initial={origin}
-      animate={size ? {
-        left: (document.documentElement.clientWidth - size.width) / 2,
-        top: (document.documentElement.clientHeight - size.height) / 2,
-        width: size.width,
-        height: size.height,
-        borderRadius: "var(--radius-dialog)",
-      } : origin}
+      animate={size ? { ...centered(size.width, size.height), borderRadius: "var(--radius-dialog)", opacity: 1 } : origin}
       exit={origin}
-      transition={shape}
+      transition={{ default: shape, opacity: soft }}
       onAnimationComplete={() => {
         if (!present) onClosed();
       }}
@@ -141,15 +140,15 @@ function DialogPanel({
       <motion.div
         ref={measure}
         {...swap}
-        className="flex max-h-[calc(100dvh-2rem)] w-[min(420px,calc(100vw-2rem))] flex-col p-5"
+        className="absolute top-1/2 left-1/2 flex max-h-[calc(100dvh-2rem)] w-[min(420px,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 flex-col"
       >
-        <div className="flex shrink-0 items-center justify-between gap-3">
+        <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-5">
           <h2 id={titleId} className="text-body font-semibold">{title}</h2>
           <IconButton label={closeLabel} variant="ghost" size="sm" onClick={onClose} className="-my-1.5 -mr-2 shrink-0 text-muted">
             <Icon size={16}>{icons.close}</Icon>
           </IconButton>
         </div>
-        <div className="-m-1 min-h-0 overflow-y-auto p-1">{children}</div>
+        <div className="scroll-fade min-h-0 overflow-y-auto px-5 pt-1 pb-5">{children}</div>
       </motion.div>
     </motion.div>
   );

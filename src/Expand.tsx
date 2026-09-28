@@ -6,15 +6,23 @@ import { useSprings } from "./springs";
 /** `radius` is a CSS length, usually a token: `"var(--radius-control)"`. */
 type Size = { width: number; height: number; radius: string };
 
+/** The side a shape grows toward and the edge it keeps aligned: `"bottom-left"` grows down from the closed shape's top edge with left edges aligned, `"top-center"` grows up from its bottom edge, centered. */
+export type Placement = `${"top" | "bottom"}-${"left" | "center" | "right"}`;
+
 export type ExpandProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   closed: Size;
   opened: Size;
-  /** Where the shape grows from: the closed shape's center, or the corner that leaves it the most room in the viewport. */
-  anchor: "center" | "corner";
+  /** Where the shape grows from: the closed shape's center, or a placement whose side and left/right alignment flip when the viewport has more room the other way; the shape also shifts sideways to stay in view. */
+  anchor: "center" | Placement;
   /** Accessible name of the closed shape, which is the button that opens it. */
-  label: string;
+  label?: string;
+  id?: string;
+  labelledBy?: string;
+  describedBy?: string;
+  invalid?: boolean;
+  disabled?: boolean;
   /** Accessible name of the open shape; when set, the open shape is a dialog. */
   panelLabel?: string;
   /** Content of the closed shape. */
@@ -25,8 +33,14 @@ export type ExpandProps = {
   className: string;
 };
 
+const MARGIN = 16;
+
+function flips(preferred: number, other: number, grow: number) {
+  return preferred < grow && other > preferred;
+}
+
 /** One shape that springs between a closed and an open size and radius. It takes the closed size in the layout and overlays everything around it when open, from the top layer; its content blur-swaps, focus moves in on open and back on close (unless it has moved to something else), and Escape closes it. */
-export function Expand({ open, onOpenChange, closed, opened, anchor, label, panelLabel, trigger, children, className }: ExpandProps) {
+export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, labelledBy, describedBy, invalid, disabled, panelLabel, trigger, children, className }: ExpandProps) {
   const { shape, swap } = useSprings();
   const root = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLDivElement>(null);
@@ -34,17 +48,21 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, pane
   const button = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(open);
   const { room, settle } = useTopLayer(frame, open);
-  const up = room !== undefined && room.below < opened.height - closed.height && room.above > room.below;
-  const left = room !== undefined && room.right < opened.width - closed.width && room.left > room.right;
+  const [side, align] = anchor.split("-");
+  const growX = opened.width - closed.width;
+  const growY = opened.height - closed.height;
+  const up = room !== undefined && (side === "top" ? !flips(room.above, room.below, growY) : side === "bottom" && flips(room.below, room.above, growY));
+  const centered = align === "center" && (room === undefined || Math.min(room.left, room.right) >= growX / 2 + MARGIN);
+  const left = room !== undefined && !centered && (align === "right" ? !flips(room.left, room.right, growX) : align === "left" ? flips(room.right, room.left, growX) : room.left > room.right);
   const place =
     anchor === "center"
       ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      : `${up ? "bottom-0" : "top-0"} ${left ? "right-0" : "left-0"}`;
+      : `${up ? "bottom-0" : "top-0"} ${centered ? "left-1/2 -translate-x-1/2" : left ? "right-0" : "left-0"}`;
   const size = open ? opened : closed;
-  const x = open && anchor === "corner" && room
+  const x = open && anchor !== "center" && !centered && room
     ? left
-      ? Math.max(0, opened.width - closed.width - room.left)
-      : Math.min(0, room.right - opened.width + closed.width)
+      ? Math.max(0, growX + MARGIN - room.left)
+      : Math.min(0, room.right - growX - MARGIN)
     : 0;
 
   useEffect(() => {
@@ -64,9 +82,13 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, pane
           transition={shape}
           onAnimationComplete={settle}
           onKeyDown={(event) => {
-            if (open && event.key === "Escape") onOpenChange(false);
+            if (open && event.key === "Escape") {
+              event.preventDefault();
+              event.stopPropagation();
+              onOpenChange(false);
+            }
           }}
-          className={`absolute overflow-hidden shadow-float outline-offset-2 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus ${place} ${className}`}
+          className={`absolute overflow-hidden shadow-float outline-offset-2 has-[>button:disabled]:opacity-40 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus ${place} ${className}`}
         >
           <AnimatePresence initial={false}>
             {open ? (
@@ -87,9 +109,14 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, pane
                 key="closed"
                 ref={button}
                 type="button"
+                id={id}
+                disabled={disabled}
                 aria-expanded={false}
                 aria-haspopup={panelLabel ? "dialog" : undefined}
                 aria-label={label}
+                aria-labelledby={labelledBy}
+                aria-describedby={describedBy}
+                aria-invalid={invalid}
                 onClick={() => onOpenChange(true)}
                 {...swap}
                 style={{ width: closed.width, height: closed.height }}

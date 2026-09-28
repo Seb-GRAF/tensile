@@ -46,6 +46,7 @@ export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Act
     <div className={`relative h-11 ${className}`} style={{ width }}>
       <div ref={frame} className="absolute inset-0">
         <motion.div
+          key={width === undefined ? "measuring" : "measured"}
           initial={false}
           animate={{ width: open ? menuWidth : width, height, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)", x }}
           transition={shape}

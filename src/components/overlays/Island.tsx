@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Expand } from "../../Expand";
-import { swap } from "../../springs";
+import { useOutsidePress } from "../../overlay";
+import { useSprings } from "../../springs";
 import { useWidth } from "../../useWidth";
 
 export type IslandProps = {
@@ -18,6 +19,7 @@ export type IslandProps = {
   openLabel?: (activity: string) => string;
   panelWidth?: number;
   panelHeight?: number;
+  className?: string;
 };
 
 export function Island({
@@ -30,18 +32,13 @@ export function Island({
   openLabel = (activity: string) => `Expand ${activity}`,
   panelWidth = 340,
   panelHeight = 84,
+  className = "",
 }: IslandProps) {
+  const { swap } = useSprings();
   const [width, measure] = useWidth();
   const root = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!expanded) return;
-    function onPointerDown(event: PointerEvent) {
-      if (!root.current!.contains(event.target as Node)) onExpandedChange(false);
-    }
-    window.addEventListener("pointerdown", onPointerDown);
-    return () => window.removeEventListener("pointerdown", onPointerDown);
-  }, [expanded, onExpandedChange]);
+  useOutsidePress(root, expanded, () => onExpandedChange(false));
 
   const compact = (
     <AnimatePresence initial={false}>
@@ -49,7 +46,7 @@ export function Island({
         key={activity}
         ref={measure}
         {...swap}
-        className="col-start-1 row-start-1 inline-flex items-center gap-10 whitespace-nowrap px-2 text-[13px] font-medium"
+        className="col-start-1 row-start-1 inline-flex items-center gap-10 whitespace-nowrap px-2 text-label font-medium"
       >
         {leading}
         {trailing}
@@ -58,20 +55,20 @@ export function Island({
   );
 
   return (
-    <div ref={root} className="w-fit">
+    <div ref={root} className={`w-fit ${className}`}>
       {width === undefined ? (
         compact
       ) : (
         <Expand
           open={expanded}
           onOpenChange={onExpandedChange}
-          closed={{ width, height: 40, radius: "20px" }}
-          opened={{ width: panelWidth, height: panelHeight, radius: `${panelHeight / 2}px` }}
+          closed={{ width, height: 40, radius: "var(--radius-control)" }}
+          opened={{ width: panelWidth, height: panelHeight, radius: "var(--radius-dialog)" }}
           anchor="center"
           label={openLabel(activity)}
           panelLabel={activity}
           trigger={<span className="grid size-full place-content-center place-items-center">{compact}</span>}
-          className="bg-ink text-paper"
+          className="bg-ink text-paper [--color-focus:var(--color-paper)] [--color-line:var(--color-ink-3)]"
         >
           <AnimatePresence initial={false}>
             <motion.div key={activity} {...swap} className="absolute inset-0">

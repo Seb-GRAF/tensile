@@ -44,7 +44,7 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="grid min-h-screen place-items-center">
+      <div className="grid min-h-screen place-items-center p-4">
         <Lightbox
           {...args}
           onValueChange={(value) => {

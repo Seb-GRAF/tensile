@@ -31,6 +31,7 @@ const cases = {
   Breadcrumbs: { items: [{ label: "Home" }, { label: "Library" }, { label: "Track" }], onNavigate: noop },
   Button: { children: "Save" },
   Card: { children: "Body" },
+  Carousel: { slides: [{ label: "One", content: "Slide" }], value: 0, onValueChange: noop },
   Checkbox: { checked: false, onCheckedChange: noop },
   CheckboxGroup: { options, value: ["a"], onValueChange: noop },
   CollapsibleSidebar: { items: nav, value: "a", onValueChange: noop, expanded: true, onExpandedChange: noop },
@@ -38,12 +39,14 @@ const cases = {
   Combobox: { options, value: null, onValueChange: noop },
   CommandPalette: { commands: [{ label: "Open" }], onSelect: noop },
   CompareSlider: { before: "Before", after: "After", value: 0.5, onValueChange: noop },
+  ContextMenu: { actions: [{ label: "Rename" }], onAction: noop, children: "Target" },
   CopyButton: { value: "text" },
   DatePicker: { value: "2026-09-18", onValueChange: noop },
   DateRangePicker: { value: { start: "2026-09-18", end: "2026-09-22" }, onValueChange: noop },
   DescriptionList: { items: [{ label: "Status", value: "Shipped" }] },
   Dialog: { open: false, onOpenChange: noop, children: "Body" },
   DonutChart: { data },
+  Drawer: { open: false, onOpenChange: noop, title: "Details", children: "Body" },
   EditableText: { value: "Title", onValueChange: noop, label: "Title" },
   EmptyState: { title: "No items" },
   ExpandableCard: { title: "Card", subtitle: "Detail", visual: icon, children: "Body", open: false, onOpenChange: noop },
@@ -64,6 +67,7 @@ const cases = {
   List: { items: [{ id: "1", title: "Report.pdf" }] },
   LoadingState: {},
   MorphButton: { status: "idle", onClick: noop },
+  MultiSelect: { options, value: ["a"], onValueChange: noop },
   MusicPlayer: { title: "Song", artist: "Artist", duration: 120, expanded: false, onExpandedChange: noop },
   NotificationList: { notifications: [{ id: "1", title: "Updated", time: "Today" }], onRead: noop, onDismiss: noop },
   NumberInput: { value: 1200, onValueChange: noop },
@@ -104,7 +108,9 @@ const cases = {
   Toast: { status: "success" },
   ToastStack: { toasts: [{ id: "1", label: "Saved" }], onDismiss: noop },
   Toggle: { checked: true, onCheckedChange: noop },
-  Tooltip: { actions: [{ label: "Bold" }], onAction: noop },
+  ToggleGroup: { options, value: ["a"], onValueChange: noop },
+  Toolbar: { label: "Actions", children: h(ui.Button, {}, "Copy") },
+  Tooltip: { label: "Copy", children: (trigger) => h(ui.Button, trigger, "Copy") },
   UnderlineTabs: { options, value: "a", onValueChange: noop },
   VideoControls: {
     duration: 60,
@@ -125,6 +131,8 @@ if (missing.length) throw new Error(`No server-render case for: ${missing.join("
 
 for (const [name, props] of Object.entries(cases)) {
   const html = renderToString(h(ui[name], props));
-  if (!html.startsWith("<")) throw new Error(`${name} rendered no markup`);
+  if (name === "BottomSheet" || name === "Drawer") {
+    if (html !== "") throw new Error(`${name} should render no modal markup on the server`);
+  } else if (!html.startsWith("<")) throw new Error(`${name} rendered no markup`);
 }
 console.log(`Server-rendered ${Object.keys(cases).length} components without a DOM.`);

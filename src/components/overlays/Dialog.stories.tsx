@@ -21,6 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Click Open dialog: the button grows into the dialog; Escape, the close button or the backdrop close it and focus returns to the button. */
 export const Default: Story = {
   render: function Render(args) {
     const [open, setOpen] = useState(args.open);

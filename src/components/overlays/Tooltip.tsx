@@ -1,126 +1,135 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useId, useRef, useState } from "react";
-import { shape, soft, swap } from "../../springs";
-import { useWidth } from "../../useWidth";
+import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
+import { useTopLayer } from "../../overlay";
+import { useSprings } from "../../springs";
+import { useSize } from "../../useSize";
 
-type Action = { label: string; icon?: React.ReactNode };
-
-export type TooltipProps = {
-  /** The targets. Each label is the button's accessible name and its tooltip text. */
-  actions: Action[];
-  onAction: (action: Action) => void;
-  label?: string;
+type Trigger = {
+  ref: React.RefCallback<HTMLElement>;
+  onPointerEnter: React.PointerEventHandler<HTMLElement>;
+  onPointerLeave: React.PointerEventHandler<HTMLElement>;
+  onFocus: React.FocusEventHandler<HTMLElement>;
+  onBlur: React.FocusEventHandler<HTMLElement>;
+  "aria-describedby": string | undefined;
 };
 
-const DELAY = 400;
-const moves: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
+type Target = { element: HTMLElement; label: string };
 
-function Bubble({ id, text }: { id: string; text: string }) {
-  const [width, measure] = useWidth();
+type Group = {
+  id: string;
+  target: Target | null;
+  show: (element: HTMLElement, label: string) => void;
+  leave: (next: EventTarget | null) => void;
+};
+
+const TooltipContext = createContext<Group | null>(null);
+
+export type TooltipProps = {
+  label: string;
+  children: (trigger: Trigger) => React.ReactNode;
+  className?: string;
+};
+
+function Bubble({ id, target, root }: { id: string; target: Target; root: React.RefObject<HTMLDivElement | null> }) {
+  const { shape, soft, swap } = useSprings();
+  const [size, measure] = useSize();
+  const box = target.element.getBoundingClientRect();
+  const parent = root.current!.getBoundingClientRect();
+  const width = size?.width ?? 0;
+  const height = size?.height ?? 28;
+  const x = Math.min(innerWidth - width - 8, Math.max(8, box.left + (box.width - width) / 2)) - parent.left;
+  const y = (box.top >= height + 16 ? box.top - height - 8 : box.bottom + 8) - parent.top;
+
   return (
     <motion.div
+      key={size ? "placed" : "measuring"}
       role="tooltip"
       id={id}
-      initial={false}
-      animate={{ width }}
-      transition={shape}
-      className="grid h-7 -translate-x-1/2 place-content-center place-items-center overflow-hidden rounded-full bg-ink text-[13px] font-medium text-paper shadow-float"
+      initial={{ opacity: 0, x, y }}
+      animate={{ opacity: 1, x, y, width: size?.width, height: size?.height }}
+      exit={{ opacity: 0 }}
+      transition={{ x: shape, y: shape, width: shape, height: shape, opacity: soft }}
+      className="absolute top-0 left-0 grid overflow-hidden rounded-control bg-ink text-label font-medium text-paper shadow-float"
     >
-      <span className="sr-only">{text}</span>
+      <span className="sr-only">{target.label}</span>
       <AnimatePresence initial={false}>
         <motion.span
-          key={text}
+          key={target.label}
           ref={measure}
           aria-hidden
           {...swap}
-          className="col-start-1 row-start-1 whitespace-nowrap px-3"
+          className="col-start-1 row-start-1 w-max max-w-[calc(100vw-2rem)] px-3 py-1 text-center"
         >
-          {text}
+          {target.label}
         </motion.span>
       </AnimatePresence>
     </motion.div>
   );
 }
 
-export function Tooltip({ actions, onAction, label = "Actions" }: TooltipProps) {
-  const [target, setTarget] = useState<{ index: number; x: number } | null>(null);
-  const [focused, setFocused] = useState(0);
-  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+export function TooltipGroup({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const [target, setTarget] = useState<Target | null>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
   const timer = useRef(0);
-  const tooltipId = useId();
-
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") hide();
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
-
-  function show(index: number, button: HTMLButtonElement) {
-    const next = { index, x: button.offsetLeft + button.offsetWidth / 2 };
-    clearTimeout(timer.current);
-    if (target) setTarget(next);
-    else timer.current = window.setTimeout(() => setTarget(next), DELAY);
-  }
+  const id = useId();
+  const { settle } = useTopLayer(frame, target !== null);
 
   function hide() {
     clearTimeout(timer.current);
     setTarget(null);
   }
 
-  function onKeyDown(event: React.KeyboardEvent) {
-    const move = moves[event.key];
-    if (!move) return;
-    buttons.current[(focused + move + actions.length) % actions.length]!.focus();
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") hide();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      clearTimeout(timer.current);
+    };
+  }, []);
+
+  function show(element: HTMLElement, label: string) {
+    clearTimeout(timer.current);
+    if (target) setTarget({ element, label });
+    else timer.current = window.setTimeout(() => setTarget({ element, label }), 400);
+  }
+
+  function leave(next: EventTarget | null) {
+    if (!(next instanceof Node) || !root.current!.contains(next)) hide();
   }
 
   return (
-    <div
-      role="toolbar"
-      aria-label={label}
-      onKeyDown={onKeyDown}
-      onPointerLeave={hide}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) hide();
-      }}
-      className="relative flex w-fit rounded-full bg-paper p-1 shadow-float"
-    >
-      {actions.map((action, i) => (
-        <button
-          key={action.label}
-          ref={(el) => {
-            buttons.current[i] = el;
-          }}
-          type="button"
-          tabIndex={i === focused ? 0 : -1}
-          aria-label={action.label}
-          aria-describedby={target?.index === i ? tooltipId : undefined}
-          onPointerEnter={(event) => show(i, event.currentTarget)}
-          onFocus={(event) => {
-            setFocused(i);
-            show(i, event.currentTarget);
-          }}
-          onClick={() => onAction(action)}
-          className="flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-[13px] font-medium text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
-        >
-          {action.icon ?? action.label}
-        </button>
-      ))}
-      <AnimatePresence>
-        {target && (
-          <motion.div
-            key="tooltip"
-            initial={{ opacity: 0, x: target.x }}
-            animate={{ opacity: 1, x: target.x }}
-            exit={{ opacity: 0 }}
-            transition={{ x: shape, opacity: soft }}
-            className="pointer-events-none absolute bottom-full left-0 mb-2"
-          >
-            <Bubble id={tooltipId} text={actions[target.index].label} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <TooltipContext.Provider value={{ id, target, show, leave }}>
+      <div ref={root} onPointerLeave={hide} onBlur={(event) => leave(event.relatedTarget)} className={`relative inline-block ${className}`}>
+        {children}
+        <div ref={frame} className="pointer-events-none absolute inset-0">
+          <AnimatePresence onExitComplete={settle}>
+            {target && <Bubble key="tooltip" id={id} target={target} root={root} />}
+          </AnimatePresence>
+        </div>
+      </div>
+    </TooltipContext.Provider>
   );
+}
+
+function TooltipTrigger({ label, children }: TooltipProps) {
+  const group = useContext(TooltipContext)!;
+  const element = useRef<HTMLElement | null>(null);
+  return children({
+    ref: (node) => { element.current = node; },
+    onPointerEnter: () => group.show(element.current!, label),
+    onPointerLeave: (event) => group.leave(event.relatedTarget),
+    onFocus: () => group.show(element.current!, label),
+    onBlur: (event) => group.leave(event.relatedTarget),
+    "aria-describedby": group.target?.element === element.current ? group.id : undefined,
+  });
+}
+
+export function Tooltip({ label, children, className = "" }: TooltipProps) {
+  const group = useContext(TooltipContext);
+  const trigger = <TooltipTrigger label={label}>{children}</TooltipTrigger>;
+  return group ? <span className={`inline-flex ${className}`}>{trigger}</span> : <TooltipGroup className={className}>{trigger}</TooltipGroup>;
 }

@@ -1,6 +1,7 @@
-import { animate, motion, useMotionTemplate, useMotionValue, useTransform } from "motion/react";
+import { animate, motion, useMotionValue } from "motion/react";
 import { dragHandlers, rubber } from "../../drag";
-import { snap } from "../../springs";
+import { useSprings } from "../../springs";
+import { Icon } from "../data-display/Icon";
 
 export type CompareSliderProps = {
   /** Left of the divider: any node that fills the frame, e.g. an img with size-full object-cover. */
@@ -13,9 +14,9 @@ export type CompareSliderProps = {
   afterLabel?: string;
   /** The handle's accessible name. */
   label?: string;
+  className?: string;
 };
 
-const WIDTH = 480;
 const STEP = 0.05;
 
 export function CompareSlider({
@@ -26,16 +27,17 @@ export function CompareSlider({
   beforeLabel = "Before",
   afterLabel = "After",
   label = "Divider position",
+  className = "",
 }: CompareSliderProps) {
+  const { snap } = useSprings();
   const stretch = useMotionValue(0);
-  const x = useTransform(stretch, (s) => value * WIDTH + s);
-  const clip = useMotionTemplate`inset(0 0 0 ${x}px)`;
 
   function drag(event: React.PointerEvent<HTMLDivElement>) {
     if (event.type === "pointerdown") stretch.stop();
-    const px = event.clientX - event.currentTarget.getBoundingClientRect().left;
-    onValueChange(Math.min(1, Math.max(0, px / WIDTH)));
-    const over = px > WIDTH ? px - WIDTH : Math.min(0, px);
+    const box = event.currentTarget.getBoundingClientRect();
+    const px = event.clientX - box.left;
+    onValueChange(Math.min(1, Math.max(0, px / box.width)));
+    const over = px > box.width ? px - box.width : Math.min(0, px);
     stretch.set(rubber(over));
   }
 
@@ -61,22 +63,22 @@ export function CompareSlider({
   return (
     <div
       {...dragHandlers(drag, release)}
-      className="relative h-80 w-120 cursor-ew-resize touch-none rounded-3xl outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink"
+      className={`relative cursor-ew-resize touch-none rounded-card outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${className}`}
     >
-      <div className="absolute inset-0 overflow-hidden rounded-3xl bg-paper shadow-float">
+      <div className="absolute inset-0 overflow-hidden rounded-card bg-paper shadow-float">
         <div className="absolute inset-0">
           {before}
-          <span className="absolute top-3 left-3 rounded-full bg-paper px-3 py-1 text-[13px] font-medium text-ink">
+          <span className="absolute top-3 left-3 rounded-control bg-paper px-3 py-1 text-label font-medium text-ink">
             {beforeLabel}
           </span>
         </div>
-        <motion.div style={{ clipPath: clip }} className="absolute inset-0">
+        <div style={{ clipPath: `inset(0 0 0 ${value * 100}%)` }} className="absolute inset-0">
           {after}
-          <span className="absolute top-3 right-3 rounded-full bg-paper px-3 py-1 text-[13px] font-medium text-ink">
+          <span className="absolute top-3 right-3 rounded-control bg-paper px-3 py-1 text-label font-medium text-ink">
             {afterLabel}
           </span>
-        </motion.div>
-        <motion.div style={{ x }} className="absolute inset-y-0 left-0 w-0.5 -translate-x-1/2 bg-paper" />
+        </div>
+        <motion.div style={{ left: `${value * 100}%`, x: stretch }} className="absolute inset-y-0 w-0.5 -translate-x-1/2 bg-paper" />
       </div>
       <motion.div
         role="slider"
@@ -86,19 +88,13 @@ export function CompareSlider({
         aria-valuemax={100}
         aria-valuenow={Math.round(value * 100)}
         onKeyDown={onKeyDown}
-        style={{ x }}
-        className="absolute top-1/2 left-0 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-paper text-ink shadow-float outline-none"
+        style={{ left: `${value * 100}%`, x: stretch }}
+        className="absolute top-1/2 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-paper text-ink shadow-float outline-none"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="size-4 fill-none stroke-current"
-          strokeWidth={2.25}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
+        <Icon size={16}>
           <path d="m9 7-5 5 5 5" />
           <path d="m15 7 5 5-5 5" />
-        </svg>
+        </Icon>
       </motion.div>
     </div>
   );
