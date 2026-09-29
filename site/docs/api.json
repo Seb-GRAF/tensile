@@ -4701,10 +4701,10 @@
     "props": [
       {
         "prop": "items",
-        "type": "{ value: string; label: string; icon?: ReactNode; href?: string | undefined; }[]",
+        "type": "(Item | { label: string; items: Item[]; })[]",
         "required": true,
         "default": "—",
-        "description": "Destinations with values, labels, icons and optional hrefs."
+        "description": "Destinations with values, labels, icons and optional hrefs, or categories of them with a heading label."
       },
       {
         "prop": "value",

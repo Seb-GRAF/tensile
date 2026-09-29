@@ -158,7 +158,7 @@ Every public component, with its story (the Controls panel shows the full API an
 | SegmentedTabs | `components-segmentedtabs` (Default, LongLabels) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Select | `components-select` (Default, Empty, InAForm, LongList, NearTheBottom, InsideAClippingCard) | Check, list.tsx, outside press, top layer, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Separator | `components-separator` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
-| SidebarNav | `components-sidebarnav` (Default, Collapsed, LongLabels, WithLinks) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| SidebarNav | `components-sidebarnav` (Default, Collapsed, LongLabels, Categories, WithLinks) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Skeleton | `components-skeleton` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
 | Slider | `components-slider` (Default, InAForm, Disabled) | SliderTrack | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Spinner | `components-spinner` (Default) | — | W0: rendering, size-derived strokes, reduced motion | — |
