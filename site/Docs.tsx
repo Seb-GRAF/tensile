@@ -63,16 +63,15 @@ export function Docs({ page, brand, onNavigate }: { page: typeof docsPages[numbe
 
   const navigation = (
     <div className="grid gap-6">
-      {Object.entries(groups).map(([group, pages]) => (
-        <SidebarNav
-          key={group}
-          label={group}
-          leading={<p className="mb-1 px-2 text-label font-medium">{group}</p>}
-          items={pages.map((item) => ({ value: item.id, label: item.title, href: `?docs=${item.id}` }))}
-          value={page.id}
-          onValueChange={() => setOpen(false)}
-        />
-      ))}
+      <SidebarNav
+        label="Documentation"
+        items={Object.entries(groups).map(([group, pages]) => ({
+          label: group,
+          items: pages.map((item) => ({ value: item.id, label: item.title, href: `?docs=${item.id}` })),
+        }))}
+        value={page.id}
+        onValueChange={() => setOpen(false)}
+      />
       <Separator />
       <div className="grid gap-3 px-2 text-label text-muted">
         <p className="font-medium text-ink">Resources</p>

@@ -2,6 +2,7 @@ import { SidebarNavDemo } from "./demos/SidebarNavDemo";
 import { SidebarNavLinksDemo } from "./demos/SidebarNavLinksDemo";
 import { SidebarNavCollapsedDemo } from "./demos/SidebarNavCollapsedDemo";
 import { SidebarNavSlotsDemo } from "./demos/SidebarNavSlotsDemo";
+import { SidebarNavCategoriesDemo } from "./demos/SidebarNavCategoriesDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "../../data-display/Icon/Icon";
 import { Card } from "../../layout/Card/Card";
@@ -83,6 +84,16 @@ export const LongLabels: Story = {
   },
 };
 
+export const Categories: Story = {
+  ...Default,
+  args: {
+    items: [
+      { label: "Browse", items: meta.args.items.slice(0, 3) },
+      { label: "Your music", items: meta.args.items.slice(3) },
+    ],
+  },
+};
+
 export const WithLinks: Story = {
   render: function Render(args) {
     const [value, setValue] = useState(args.value);
@@ -93,7 +104,7 @@ export const WithLinks: Story = {
           <Card className="p-2">
             <SidebarNav
               {...args}
-              items={args.items.map((item, index) => ({ ...item, href: index < 4 ? `/${item.value}` : undefined }))}
+              items={meta.args.items.map((item, index) => ({ ...item, href: index < 4 ? `/${item.value}` : undefined }))}
               value={value}
               onValueChange={(next) => { args.onValueChange(next); setValue(next); }}
             />
@@ -119,4 +130,8 @@ export const CollapsedUsage: Story = {
 
 export const SlotsUsage: Story = {
   render: () => <SidebarNavSlotsDemo />,
+};
+
+export const CategoriesUsage: Story = {
+  render: () => <SidebarNavCategoriesDemo />,
 };
