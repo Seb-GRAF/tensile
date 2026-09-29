@@ -253,61 +253,55 @@ function DetailPage() {
         }))}
       />
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <Tabs
-          value={tab}
-          onValueChange={setTab}
-          items={[
-            {
-              value: "overview",
-              label: "Overview",
-              content: (
-                <Card className="grid gap-6 p-6">
-                  <p className="text-body text-ink">{listing.description}</p>
-                  <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                    {figures.map((figure) => (
-                      <div key={figure.label}>
-                        <dt className="text-label text-muted">{figure.label}</dt>
-                        <dd className="mt-1 text-2xl font-semibold tracking-tight text-ink">{figure.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                  <Separator />
-                  <DescriptionList
-                    items={[
-                      { label: "On the website", value: listing.published ? "Shown" : "Hidden" },
-                      ...facts,
-                    ]}
-                  />
-                </Card>
-              ),
-            },
-            {
-              value: "photos",
-              label: "All photos",
-              content: (
-                <Card className="p-6">
+        <Card className="overflow-clip p-6">
+          <Tabs
+            value={tab}
+            onValueChange={setTab}
+            items={[
+              {
+                value: "overview",
+                label: "Overview",
+                content: (
+                  <div className="grid gap-6">
+                    <p className="text-body text-ink">{listing.description}</p>
+                    <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                      {figures.map((figure) => (
+                        <div key={figure.label}>
+                          <dt className="text-label text-muted">{figure.label}</dt>
+                          <dd className="mt-1 text-2xl font-semibold tracking-tight text-ink">{figure.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <Separator />
+                    <DescriptionList
+                      items={[
+                        { label: "On the website", value: listing.published ? "Shown" : "Hidden" },
+                        ...facts,
+                      ]}
+                    />
+                  </div>
+                ),
+              },
+              {
+                value: "photos",
+                label: "All photos",
+                content: (
                   <Lightbox
                     value={photo}
                     onValueChange={setPhoto}
                     images={photos.map((item) => ({ label: item.label, image: <Scene colors={item.colors} sun={item.sun} /> }))}
                   />
-                </Card>
-              ),
-            },
-            {
-              value: "activity",
-              label: "Activity",
-              content: (
-                <Card className="p-6">
-                  <Timeline items={events} />
-                </Card>
-              ),
-            },
-            {
-              value: "files",
-              label: "Files",
-              content: (
-                <Card className="p-6">
+                ),
+              },
+              {
+                value: "activity",
+                label: "Activity",
+                content: <Timeline items={events} />,
+              },
+              {
+                value: "files",
+                label: "Files",
+                content: (
                   <List
                     items={files.map((file) => ({
                       ...file,
@@ -328,12 +322,12 @@ function DetailPage() {
                       ),
                     }))}
                   />
-                </Card>
-              ),
-            },
-          ]}
-        />
-        <Card className="grid gap-5 p-6 lg:sticky lg:top-6 lg:mt-13.5">
+                ),
+              },
+            ]}
+          />
+        </Card>
+        <Card className="grid gap-5 p-6 lg:sticky lg:top-6">
           <div>
             <p className="text-label text-muted">Asking price</p>
             <p className="mt-1 text-3xl font-semibold tracking-tight text-ink tabular-nums">CHF 1,250,000</p>
@@ -414,7 +408,7 @@ function DetailPage() {
         className="fixed right-4 bottom-24 z-(--layer-sticky) w-80 max-w-[calc(100vw-2rem)] lg:right-6 lg:bottom-6"
       />
       <Drawer open={editing} onOpenChange={setEditing} title="Edit listing">
-        <form noValidate onSubmit={save} className="grid gap-5 px-5 pb-5">
+        <form noValidate onSubmit={save} className="grid gap-5">
           <Field label="Name" required error={validated ? nameError : undefined}>
             <Input ref={nameInput} value={draft.name} onValueChange={(name) => setDraft({ ...draft, name })} />
           </Field>

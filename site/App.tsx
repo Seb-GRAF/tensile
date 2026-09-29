@@ -848,7 +848,7 @@ export function App() {
                 <Link href={github} className="text-label">
                   GitHub
                 </Link>
-                <Link href={start} className={`${pill} h-8 rounded-control! bg-ink px-4 text-label text-paper no-underline! hover:bg-ink-3`}>
+                <Link href={start} className={`${pill} h-11 rounded-control! bg-ink px-5 text-body text-paper no-underline! hover:bg-ink-3`}>
                   Get started
                 </Link>
               </div>
@@ -879,6 +879,7 @@ export function App() {
               },
             ]}
             note="Tensile is MIT licensed. Made by Sébastien Graf."
+            className="m-3"
           />
         </>
       )}

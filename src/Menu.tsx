@@ -19,6 +19,7 @@ export function Menu({ actions, onAction, onClose, open, id, label, initialIndex
   const menu = useRef<HTMLUListElement>(null);
   const [active, setActive, onArrowKey] = useActiveIndex(actions.length);
   const onTypeahead = useTypeahead(actions, active, setActive);
+  const withIcons = actions.some((action) => action.icon);
 
   useEffect(() => {
     if (!open) return;
@@ -75,7 +76,7 @@ export function Menu({ actions, onAction, onClose, open, id, label, initialIndex
           onClick={() => run(action)}
           className={`relative flex h-10 cursor-pointer items-center gap-2.5 px-2.5 text-sm text-ink ${action.disabled ? "opacity-40" : ""}`}
         >
-          {action.icon && <span className="shrink-0 text-muted">{action.icon}</span>}
+          {withIcons && <span className="w-4 shrink-0 text-muted">{action.icon}</span>}
           <span className="truncate">{action.label}</span>
         </li>
       ))}

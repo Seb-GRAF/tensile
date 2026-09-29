@@ -13,5 +13,5 @@
     "types": ["vite/client"],
     "paths": { "tensile": ["./src/index.ts"] }
   },
-  "include": ["src", ".storybook", "site", "docs/examples", "vite.config.ts", "vite.lib.config.ts"]
+  "include": ["src", ".storybook", "site", "vite.config.ts", "vite.lib.config.ts"]
 }

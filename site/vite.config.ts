@@ -5,7 +5,6 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   root: fileURLToPath(new URL(".", import.meta.url)),
-  publicDir: fileURLToPath(new URL("../storybook-static", import.meta.url)),
   base: "./",
   plugins: [react(), tailwindcss()],
   build: { outDir: "../site-dist", emptyOutDir: true },

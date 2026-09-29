@@ -16,16 +16,12 @@ type SheetProps = {
 };
 
 const panels = {
-  bottom: "inset-x-0 bottom-0 max-h-dvh rounded-t-dialog",
-  left: "inset-y-0 left-0 w-[min(360px,calc(100vw-48px))] rounded-r-dialog",
-  right: "inset-y-0 right-0 w-[min(360px,calc(100vw-48px))] rounded-l-dialog",
+  bottom: "inset-x-0 bottom-0 max-h-dvh rounded-t-dialog sm:mx-auto sm:max-w-lg",
+  left: "inset-y-3 left-3 w-[min(360px,calc(100vw-48px))] overflow-clip rounded-dialog",
+  right: "inset-y-3 right-3 w-[min(360px,calc(100vw-48px))] overflow-clip rounded-dialog",
 };
 
-const extensions = {
-  bottom: "inset-x-0 top-full -mt-px h-full",
-  left: "inset-y-0 right-full -mr-px w-full",
-  right: "inset-y-0 left-full -ml-px w-full",
-};
+const CLOSED_GAP = 40;
 
 export function Sheet({ open, onOpenChange, side, header, children, className = "", ...label }: SheetProps) {
   return (
@@ -46,7 +42,7 @@ function SheetPanel({ side, header, children, onClose, className }: Pick<SheetPr
   const offset = useMotionValue(1);
   const vertical = side === "bottom";
   const direction = side === "left" ? -1 : 1;
-  const position = useTransform(offset, (value) => `${value * direction * 100}%`);
+  const position = useTransform(offset, (value) => `calc(${value * direction} * (100% + ${CLOSED_GAP}px))`);
   const opacity = useTransform(offset, [0, 1], [1, 0]);
 
   useEffect(() => {
@@ -61,16 +57,16 @@ function SheetPanel({ side, header, children, onClose, className }: Pick<SheetPr
 
   function drag(event: React.PointerEvent<HTMLDivElement>) {
     const header = event.currentTarget;
-    const size = vertical ? panel.current!.offsetHeight : panel.current!.offsetWidth;
+    const travel = (vertical ? panel.current!.offsetHeight : panel.current!.offsetWidth) + CLOSED_GAP;
     const pointer = (vertical ? event.clientY : event.clientX) * direction;
     if (!header.hasPointerCapture(event.pointerId)) {
       if (!press.current || !event.buttons || Math.hypot(event.clientX - press.current.x, event.clientY - press.current.y) < 4) return;
       header.setPointerCapture(event.pointerId);
       offset.stop();
-      origin.current = pointer - offset.get() * size;
+      origin.current = pointer - offset.get() * travel;
     }
     const pulled = pointer - origin.current;
-    offset.set((pulled < 0 ? rubber(pulled) : pulled) / size);
+    offset.set((pulled < 0 ? rubber(pulled) : pulled) / travel);
   }
 
   function release(event: React.PointerEvent<HTMLDivElement>) {
@@ -91,7 +87,7 @@ function SheetPanel({ side, header, children, onClose, className }: Pick<SheetPr
         style={vertical ? { y: position } : { x: position }}
         className={`absolute flex flex-col bg-paper text-ink shadow-float surface outline-none ${panels[side]} ${className}`}
       >
-        <div className={`absolute bg-paper ${extensions[side]}`} />
+        {vertical && <div className="absolute inset-x-0 top-full -mt-px h-full bg-paper" />}
         <div
           onPointerDown={(event) => { press.current = { x: event.clientX, y: event.clientY }; }}
           onPointerMove={drag}

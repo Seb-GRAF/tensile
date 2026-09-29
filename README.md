@@ -4,7 +4,7 @@ A React design system of animated components. Every control is one shape that mo
 
 [Website](https://seb-graf.github.io/tensile/) · [Documentation](https://seb-graf.github.io/tensile/?docs=get-started)
 
-The public documentation discovers every component and its examples from Storybook. Run `npm run storybook` for the development workshop. The public site keeps its own navigation and styling, and includes only Storybook’s preview build for the live examples.
+The public documentation combines authored React demos with API references generated from TypeScript. Demos live in each component’s `demos/` subfolder and are shared with Storybook. Run `npm run storybook` for the separate development workshop.
 
 Stack: React 19, TypeScript, Motion (`motion/react`), Tailwind 4 (for the library's own build), Storybook 10, Geist.
 
@@ -410,8 +410,14 @@ Recipes:
 - [Contributing](CONTRIBUTING.md) covers checks and the release procedure; [Changelog](CHANGELOG.md) records package changes.
 - `AGENTS.md` holds the rules (tokens, motion, API, stories, pitfalls) and the inventory; `docs/coverage.md` holds what's covered and how each wave was verified; `.claude/skills/morph-component/` is the workflow for adding a component, with `check_story.py` for browser checks.
 
-Component pages, sidebar groups, search entries, and example choices are generated from Storybook’s `index.json`. Add or edit a component’s stories in `src/components/`; no separate component docs page or example is needed. Story comments supply the example descriptions, and the Story source tab shows the original story file. API tables come from the component’s TypeScript props and function defaults.
+Each component lives in `src/components/<category>/<Name>/` with its implementation and stories. Public exports and Storybook IDs stay stable when files move.
 
-`npm run site` and `npm run build:site` build the library, build Storybook with `--preview-only`, and regenerate `site/docs/api.json`. Vite serves and bundles the preview assets alongside the custom docs; the public build does not include Storybook’s manager UI. After changing stories or component code during a site session, restart `npm run site` to rebuild the previews and generated data. Use `npm run storybook` for live story development.
+Author usage guidance in `<Name>.docs.ts` and put each demo in a standalone `demos/<Name>Demo.tsx` file within the component folder. The docs render that component and show the exact file through a raw source import. Import the same demo into Storybook for review. Demos use public `tensile` imports, explicit props and ordinary React state; they do not use Storybook args or test helpers.
 
-Keep `site/docs/api.json` with the source change; do not edit it by hand. Getting started remains an authored guide. Component-specific descriptions belong in the component or story comments.
+All 105 component pages include authored usage guidance and standalone demos alongside their generated API reference. A page lists its demos individually, with copyable code, then explains composition, keyboard interaction and related components.
+
+`npm run docs:generate` reads the public component implementations and writes `site/docs/api.json`. Prop names, types, required flags and defaults come from TypeScript. Written prop descriptions belong in `<Name>.docs.ts`; component prop comments are also included. The generator includes documented native props in the table.
+
+`npm run site` and `npm run build:site` build the library and regenerate the API data. The public site renders React demos directly and does not build or include Storybook. Demo and documentation edits update through Vite during a site session. After changing the component API, rerun `npm run docs:generate`; rebuild the package after implementation changes. Use `npm run storybook` for live component development.
+
+Keep `site/docs/api.json` with source changes; do not edit it by hand. The consumer check type-checks all colocated demos and existing examples against the packed package.

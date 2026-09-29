@@ -261,7 +261,7 @@ function HeroSection() {
 
 function FeaturesSection() {
   return (
-    <section id="features" className="mx-auto max-w-page scroll-mt-16 px-6 py-12 text-ink md:py-16">
+    <section id="features" className="mx-auto max-w-page scroll-mt-20 px-6 py-12 text-ink md:py-16">
       <h2 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">From kickoff to shipped, in one place</h2>
       <p className="mt-3 max-w-xl text-base text-muted">
         Plan in the view that suits the work, see who has room, and let Harbor send the updates.
@@ -287,7 +287,7 @@ function PricingSection() {
   const index = periods.findIndex((option) => option.value === period);
 
   return (
-    <section id="pricing" className="mx-auto max-w-page scroll-mt-16 px-6 py-12 text-ink md:py-16">
+    <section id="pricing" className="mx-auto max-w-page scroll-mt-20 px-6 py-12 text-ink md:py-16">
       <h2 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">Pay for editors. Viewers are free.</h2>
       <p className="mt-3 max-w-xl text-base text-muted">Every plan includes unlimited projects and a 14-day free trial.</p>
       <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -333,7 +333,7 @@ function PricingSection() {
 
 function TestimonialsSection() {
   return (
-    <section id="customers" className="mx-auto max-w-page scroll-mt-16 px-6 py-12 text-ink md:py-16">
+    <section id="customers" className="mx-auto max-w-page scroll-mt-20 px-6 py-12 text-ink md:py-16">
       <h2 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">Teams that stopped chasing updates</h2>
       <ul role="list" className="mt-10 grid gap-10 md:grid-cols-3 md:gap-8">
         {quotes.map((item) => (
@@ -357,7 +357,7 @@ function FaqSection() {
   const [open, setOpen] = useState<string | null>(null);
 
   return (
-    <section id="faq" className="mx-auto grid max-w-page scroll-mt-16 gap-10 px-6 py-12 text-ink md:grid-cols-[2fr_3fr] md:py-16">
+    <section id="faq" className="mx-auto grid max-w-page scroll-mt-20 gap-10 px-6 py-12 text-ink md:grid-cols-[2fr_3fr] md:py-16">
       <div>
         <h2 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">Questions, answered</h2>
         <p className="mt-3 text-base text-muted">
@@ -387,7 +387,7 @@ function CtaSection() {
   }
 
   return (
-    <section id="signup" className="mx-auto max-w-page scroll-mt-16 px-6 py-12 text-ink md:py-16">
+    <section id="signup" className="mx-auto max-w-page scroll-mt-20 px-6 py-12 text-ink md:py-16">
       <Card className="grid grid-cols-1 gap-8 p-8 md:grid-cols-2 md:p-12">
         <div>
           <h2 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">Start your first project today</h2>
@@ -432,7 +432,7 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {
   render: () => (
     <LinkProvider navigate={action("navigate")}>
-      <Header brand={brand} links={sections} value="/" actions={<Button size="sm">Start free trial</Button>} />
+      <Header brand={brand} links={sections} value="/" actions={<Button>Start free trial</Button>} />
       <main>
         <HeroSection />
         <FeaturesSection />
@@ -441,7 +441,7 @@ export const Page: Story = {
         <FaqSection />
         <CtaSection />
       </main>
-      <Footer groups={footerGroups} note="© 2026 Harbor Labs, Inc. All rights reserved." />
+      <Footer groups={footerGroups} note="© 2026 Harbor Labs, Inc. All rights reserved." className="m-3" />
     </LinkProvider>
   ),
 };

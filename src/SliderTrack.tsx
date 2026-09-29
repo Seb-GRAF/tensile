@@ -54,7 +54,7 @@ function SliderKnobs({
       stretch.stop();
       grabbed.current = range && Math.abs(px - END - from * travel) >= Math.abs(px - END - GAP - to * travel) ? 1 : 0;
       event.preventDefault();
-      knobs.current[grabbed.current].focus();
+      knobs.current[grabbed.current].focus({ focusVisible: false } as FocusOptions);
     }
     const i = grabbed.current;
     const fraction = (px - END - i * GAP) / travel;
@@ -89,7 +89,7 @@ function SliderKnobs({
       <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control bg-paper shadow-control">
         <motion.div
           style={{ left: INSET + from * travel, right }}
-          className="absolute inset-y-1 rounded-control bg-ink [--color-focus:var(--color-paper)]"
+          className="absolute inset-y-1 rounded-control bg-ink"
         >
           {value.map((v, i) => (
             <div
@@ -109,7 +109,7 @@ function SliderKnobs({
               aria-valuenow={v}
               aria-valuetext={formatValue(v)}
               onKeyDown={disabled ? undefined : (event) => onKeyDown(event, i)}
-              className={`absolute top-1/2 ${range && i === 0 ? "left-1.5" : "right-1.5"} size-6 -translate-y-1/2 rounded-full bg-paper outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`}
+              className={`absolute top-1/2 ${range && i === 0 ? "left-1.5" : "right-1.5"} size-6 -translate-y-1/2 rounded-full bg-paper -outline-offset-6 focus-visible:outline-2 focus-visible:outline-focus`}
             >
               {range && <span id={`${labelId}-${i}`} className="sr-only">{labels[i]}</span>}
             </div>

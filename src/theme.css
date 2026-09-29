@@ -109,3 +109,36 @@
     animation-range: 0 1.5rem, calc(100% - 1.5rem) 100%;
   }
 }
+
+@property --scroll-fade-left {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-right {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes scroll-fade-left {
+  to {
+    --scroll-fade-left: 1.5rem;
+  }
+}
+
+@keyframes scroll-fade-right {
+  from {
+    --scroll-fade-right: 1.5rem;
+  }
+}
+
+@utility scroll-fade-x {
+  @supports (animation-timeline: scroll()) {
+    mask-image: linear-gradient(to right, transparent, #000 var(--scroll-fade-left), #000 calc(100% - var(--scroll-fade-right)), transparent);
+    animation: scroll-fade-left linear both, scroll-fade-right linear both;
+    animation-timeline: scroll(self x);
+    animation-range: 0 1.5rem, calc(100% - 1.5rem) 100%;
+  }
+}

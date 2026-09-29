@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
-import { HoldButton } from "../components/actions/HoldButton";
-import { MorphButton } from "../components/actions/MorphButton";
-import { VolumeSlider } from "../components/media/VolumeSlider";
-import { Popover } from "../components/overlays/Popover";
+import { HoldButton } from "../components/actions/HoldButton/HoldButton";
+import { MorphButton } from "../components/actions/MorphButton/MorphButton";
+import { VolumeSlider } from "../components/media/VolumeSlider/VolumeSlider";
+import { Popover } from "../components/overlays/Popover/Popover";
 
 function Demo() {
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");

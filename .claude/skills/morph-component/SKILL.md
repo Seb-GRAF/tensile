@@ -27,7 +27,7 @@ Read the component named in your brief, in full, and its story. Copy its shape: 
 
 ## 3. Build
 
-`src/components/<category>/<Name>.tsx`, named export, `export type <Name>Props`. Check against `AGENTS.md` as you go:
+`src/components/<category>/<Name>/<Name>.tsx`, named export, `export type <Name>Props`. Check against `AGENTS.md` as you go:
 
 - Controlled value plus callback; temporary UI state (hover, highlight, drag) inside.
 - Transitions from `useSprings()`; delays times `scale`; press feedback with the `press` class; functional timers left alone.
@@ -36,9 +36,11 @@ Read the component named in your brief, in full, and its story. Copy its shape: 
 - Full width where the component is a field, track, table, chart or card; `className` on the outer element.
 - Right ARIA role, full keyboard support, focus ring `outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`.
 
+Keep public usage demos in the component’s `demos/` subfolder as standalone `<Name>Demo.tsx` files. Import those demos into stories and list them in `<Name>.docs.ts`; the public docs show the demo source verbatim. Use public `tensile` imports in demos.
+
 ## 4. Story
 
-`src/components/<category>/<Name>.stories.tsx`:
+`src/components/<category>/<Name>/<Name>.stories.tsx`:
 
 ```tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";

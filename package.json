@@ -26,7 +26,7 @@
     "build": "vite build -c vite.lib.config.ts --mode css && vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json",
     "check:consumer": "sh examples/consumer/check.sh",
     "prepack": "npm run build",
-    "docs:generate": "storybook build --preview-only && node scripts/generate-docs.mjs",
+    "docs:generate": "node scripts/generate-docs.mjs",
     "site": "npm run build && npm run docs:generate && vite --config site/vite.config.ts",
     "build:site": "npm run build && npm run docs:generate && vite build --config site/vite.config.ts && cp LICENSE THIRD_PARTY_NOTICES site-dist/",
     "preview:site": "vite preview --config site/vite.config.ts"

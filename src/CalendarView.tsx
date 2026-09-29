@@ -4,9 +4,9 @@ import { flushSync } from "react-dom";
 import { addMonths, clampDay, keyboardDay, monthDays, toDate, toDay } from "./calendar";
 import { icons } from "./icons";
 import { useSprings } from "./springs";
-import { IconButton } from "./components/actions/IconButton";
-import { Icon } from "./components/data-display/Icon";
-import { useField } from "./components/inputs/Field";
+import { IconButton } from "./components/actions/IconButton/IconButton";
+import { Icon } from "./components/data-display/Icon/Icon";
+import { useField } from "./components/inputs/Field/Field";
 
 export type CalendarViewProps = {
   value: string | null;
@@ -71,7 +71,7 @@ export function CalendarView({
   onDayHover,
   selection,
 }: CalendarViewProps) {
-  const { swap } = useSprings();
+  const { shape, swap } = useSprings();
   const field = useField();
   disabled = field?.disabled || disabled;
   const [focused, setFocused] = useState(() => clampDay(value ?? toDay(new Date()), min, max));
@@ -82,7 +82,8 @@ export function CalendarView({
   const current = toDate(day);
   const month = day.slice(0, 7);
   const grid = monthDays(current, firstDayOfWeek);
-  const cells = grid.map((day) => day.slice(0, 7) === month ? day : null);
+  const rows = grid.filter((day, i) => i % 7 === 0 && day.slice(0, 7) <= month).length;
+  const cells = grid.slice(0, rows * 7).map((day) => day.slice(0, 7) === month ? day : null);
   const today = toDay(new Date());
   const title = formatMonth(toDate(`${month}-01`));
   const labels = cells.map((day, i) => (
@@ -171,10 +172,10 @@ export function CalendarView({
             </span>
           ))}
         </div>
-        <div className="grid">
+        <motion.div initial={false} animate={{ height: rows * 36 - 4 }} transition={shape} className="grid items-start">
           <AnimatePresence initial={false} custom={direction}>
             <CalendarMonth key={month} direction={direction}>
-              {Array.from({ length: 6 }, (_, row) => (
+              {Array.from({ length: rows }, (_, row) => (
                 <div key={row} role="row" className="grid h-8 grid-cols-7 gap-1">
                   {cells.slice(row * 7, row * 7 + 7).map((cell, column) => cell ? (
                     <button
@@ -189,7 +190,7 @@ export function CalendarView({
                       onFocus={() => { setFocused(cell); onDayHover?.(cell); }}
                       onMouseMove={disabled || clampDay(cell, min, max) !== cell ? undefined : () => onDayHover?.(cell)}
                       onClick={() => { setFocused(cell); onValueChange(cell); }}
-                      className="relative flex h-8 min-w-0 items-center justify-center rounded-control text-label font-medium text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus disabled:opacity-40"
+                      className="relative flex h-8 min-w-0 items-center justify-center rounded-control text-label font-medium text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus enabled:hover:bg-hover disabled:opacity-40"
                     >
                       {formatDay(toDate(cell))}
                       {cell === today && <span className="absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-current" />}
@@ -200,7 +201,7 @@ export function CalendarView({
               {selection(cells, labels)}
             </CalendarMonth>
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
