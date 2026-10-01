@@ -1,6 +1,7 @@
 [
   {"click": "button[type=submit]"},
   {"attr": "[role=combobox]", "name": "aria-invalid", "equals": "true"},
+  {"css": "[data-label-inside] p", "name": "filter", "equals": "blur(0px)"},
   {"a11y": true},
   {"focus": "[role=combobox]"},
   {"press": "ArrowDown"},

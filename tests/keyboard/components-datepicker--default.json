@@ -24,6 +24,9 @@
   {"text": ":focus", "equals": "19"},
   {"attr": ":focus", "name": "aria-selected", "equals": "true"},
   {"text": "[role=gridcell][aria-selected=true]:not([inert] *)", "equals": "19"},
+  {"hidden": "[role=rowgroup][inert] >> nth=0"},
+  {"hidden": "[aria-live=polite] > span[aria-hidden]:not(:text-is('August 2026')) >> nth=0"},
+  {"css": "[aria-live=polite] > span[aria-hidden]", "name": "filter", "equals": "blur(0px)"},
   {"a11y": true},
   {"shot": "picked"}
 ]
