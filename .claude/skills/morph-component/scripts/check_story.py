@@ -183,7 +183,7 @@ def main():
     args = parser.parse_args()
     steps = json.loads(args.steps)
     args.out.mkdir(parents=True, exist_ok=True)
-    for old in [*args.out.glob("*.png"), *args.out.glob("*.webm")]:
+    for old in [*args.out.glob("*.png"), *args.out.glob("*.webm"), *args.out.glob("*-a11y.json")]:
         old.unlink()
 
     query = f"id={args.story}&viewMode=story"
