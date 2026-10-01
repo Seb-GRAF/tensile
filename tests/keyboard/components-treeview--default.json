@@ -29,5 +29,6 @@
   {"wait": 300},
   {"attr": ":focus", "name": "aria-selected", "equals": "true"},
   {"attr": "[role=tree] [tabindex=\"0\"]", "name": "aria-selected", "equals": "true"},
+  {"a11y": true},
   {"shot": "selected"}
 ]

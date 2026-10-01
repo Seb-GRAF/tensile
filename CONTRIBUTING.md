@@ -25,6 +25,23 @@ Run build commands sequentially: they share `dist/`. The consumer check packs th
 
 For visible changes, review the production site at phone, tablet, and desktop widths. Check keyboard focus, reduced motion, long content, errors, font requests, and horizontal overflow. Report browser versions actually checked. Type-checking and server rendering are not browser, hydration, or screen-reader verification.
 
+The Vite consumer installs both React 19.0.0 and the newest React 19 release, checking public types, the production build, and server rendering against each. The Next.js app checks hydration, controlled and uncontrolled updates, and reduced motion against its current React 19 dependency.
+
+Keyboard fixtures in `tests/keyboard/` cover navigation, dialog focus containment and return, and controlled form submission and reset. Add regression cases to the closest fixture. An `a11y` step runs axe against the rendered story and open dialogs for WCAG 2.2 A/AA rules, including earlier WCAG versions. Violations fail the run; JSON reports include findings that need manual review. Browser versions are printed in each run's log. CI retains the logs, screenshots and axe reports in its keyboard-results artifact for seven days.
+
+Before a release with interaction changes, manually check the affected controls with VoiceOver/Safari and NVDA/Firefox: names and descriptions, errors, selection announcements, and focus after dismissal. Review axe's incomplete findings. Record the tested versions and results in the PR; automated checks alone do not establish accessibility conformance.
+
+## Compatibility
+
+| Area | Target and verification |
+| --- | --- |
+| React | React and React DOM 19.x; minimum and current versions checked in the Vite consumer. React 18 is not supported. |
+| Next.js | App Router, exercised by the Next.js 16 consumer. Other framework versions are not part of CI. |
+| Desktop browsers | Current Chromium, Firefox, and Safari are the targets. CI runs selected scenarios in Playwright Chromium, Firefox, and WebKit. WebKit automation does not verify installed Safari. |
+| Mobile and assistive technology | Manual verification is required; CI does not establish iOS, Android, VoiceOver, or NVDA support. |
+
+Keep the existing 0.x versioning policy below. Removing support or changing public behavior requires a changeset with migration instructions.
+
 Do not stop another developer's server. Stop servers you start for verification when you finish.
 
 ## Issues and pull requests
@@ -72,3 +89,5 @@ Review the release PR's migration notes and inspect the tarball listing in the w
 GitHub may ask a maintainer to approve CI runs for a bot-created release PR. Approve those runs before merging; do not bypass the required check.
 
 Dependabot opens weekly grouped updates for compatible npm dependencies and GitHub Actions. Review major updates individually and add a changeset when an update changes the published package's behavior or requirements.
+
+Workflow actions are pinned to commit SHAs and updated by Dependabot. The required dependency review checks newly introduced dependencies for known vulnerabilities. Report vulnerabilities privately using [Security](SECURITY.md).

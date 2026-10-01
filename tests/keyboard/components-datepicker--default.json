@@ -24,5 +24,6 @@
   {"text": ":focus", "equals": "19"},
   {"attr": ":focus", "name": "aria-selected", "equals": "true"},
   {"text": "[role=gridcell][aria-selected=true]:not([inert] *)", "equals": "19"},
+  {"a11y": true},
   {"shot": "picked"}
 ]

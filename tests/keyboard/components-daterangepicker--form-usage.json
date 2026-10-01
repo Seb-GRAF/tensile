@@ -1,0 +1,19 @@
+[
+  {"click": "button[role=gridcell]:not([disabled]) >> nth=0"},
+  {"click": "button[type=reset]"},
+  {"click": "button[role=gridcell]:not([disabled]) >> nth=2"},
+  {"click": "button[type=submit]"},
+  {"prop": "input[name=start]", "name": "value", "equals": ""},
+  {"prop": "input[name=end]", "name": "value", "equals": ""},
+  {"text": "output", "equals": ""},
+  {"attr": "[role=grid]", "name": "aria-invalid", "equals": "true"},
+  {"prop": "[role=grid]", "name": "ariaDescribedByElements.1.textContent", "equals": "Required"},
+  {"a11y": true},
+  {"click": "button[role=gridcell]:not([disabled]) >> nth=4"},
+  {"click": "button[type=submit]"},
+  {"attr": "[role=grid]", "name": "aria-invalid", "equals": "false"},
+  {"click": "button[type=reset]"},
+  {"prop": "input[name=start]", "name": "value", "equals": ""},
+  {"prop": "input[name=end]", "name": "value", "equals": ""},
+  {"text": "output", "equals": ""}
+]

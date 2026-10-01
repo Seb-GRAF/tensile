@@ -13,9 +13,12 @@ cp package.json tsconfig.json vite.config.ts index.html main.tsx App.tsx app.css
 mkdir "$consumer_dir/docs-examples"
 find ../../src/components -type f \( -name '*Demo.tsx' -o -name '*Example.tsx' \) -exec cp {} "$consumer_dir/docs-examples/" \;
 cd "$consumer_dir"
-npm install --ignore-scripts --package-lock=false --no-audit --no-fund ./*.tgz
-npx tsc -p .
-npx vite build --logLevel warn
-node ssr.mjs
-grep -q -- "--tn-radius-control: *12px" dist/assets/*.css
-echo "The app's token overrides are in its built CSS."
+for react_version in 19.0.0 19; do
+  npm install --ignore-scripts --package-lock=false --no-audit --no-fund ./*.tgz "react@$react_version" "react-dom@$react_version" "@types/react@$react_version" "@types/react-dom@$react_version"
+  npm ls react react-dom
+  npx tsc -p .
+  npx vite build --logLevel warn
+  node ssr.mjs
+  grep -q -- "--tn-radius-control: *12px" dist/assets/*.css
+  echo "The app's token overrides are in its built CSS."
+done

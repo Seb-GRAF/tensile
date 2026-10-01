@@ -14,7 +14,7 @@ export default {
   usage: "Keep an ISO date string or null in state. Dates use local YYYY-MM-DD strings.",
   anatomy: "A header with the month and month arrows, a Today button in the footer, and a keyboard-accessible day grid with as many rows as the month has weeks; the calendar's height springs between months. Field provides the group label, description and error.",
   notes: [
-    "Required is an ARIA state; validate the selected date before submitting.",
+    "Required selection is described to assistive technology; validate the selected date before submitting.",
     "name creates a hidden input with the selected ISO date.",
     "Today shows today's month and makes today the day Tab reaches in the grid; it doesn't pick it. With min or max, it stops at the nearest allowed month.",
     "Picking another day moves the ink pill there at its size."
@@ -52,7 +52,8 @@ export default {
     "disabled": "Dims the calendar and stops day picks and month changes. A disabled Field or Fieldset does the same.",
     "max": "Latest permitted date as YYYY-MM-DD.",
     "min": "Earliest permitted date as YYYY-MM-DD.",
-    "required": "Expose the required state. See the form example for validation.",
+    "required": "Describe the selection as required. See the form example for validation.",
+    "requiredLabel": "Accessible description when a selection is required. Defaults to Required.",
     "value": "The selected local date as YYYY-MM-DD, or null. Leave it out to let the picker track it, starting from defaultValue.",
     "defaultValue": "The first selected date when the picker tracks it itself. Defaults to null, no date.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",

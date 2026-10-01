@@ -24,7 +24,7 @@ import urllib.request
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
-from playwright.sync_api import Error, sync_playwright
+from playwright.sync_api import Error, expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[4]
 LABEL = 28
@@ -122,6 +122,17 @@ def run(page, steps, out):
                 page.mouse.up()
             elif "wait" in step:
                 page.wait_for_timeout(step["wait"])
+            elif "css" in step:
+                expect(find(page, step["css"])).to_have_css(step["name"], step["equals"])
+                print(f"step {i} PASS css {step['css']} {step['name']} = {json.dumps(step['equals'])}")
+            elif "a11y" in step:
+                page.add_script_tag(path=ROOT / "node_modules/axe-core/axe.min.js")
+                result = page.evaluate("""async () => axe.run(
+                    { include: ['#storybook-root', 'dialog[open]'], exclude: ['.sb-wrapper'] },
+                    { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] } }
+                )""")
+                (out / f"{i:02d}-a11y.json").write_text(json.dumps(result, indent=2))
+                failures += check(i, "accessibility violations", result["violations"], [])
             elif "shot" in step:
                 path = out / f"{len(shots) + 1:02d}-{step['shot']}.png"
                 page.screenshot(path=path)
@@ -197,6 +208,7 @@ def main():
             errors = []
             with sync_playwright() as p:
                 browser = getattr(p, args.browser).launch()
+                print(f"Browser: {args.browser} {browser.version}; reduced motion: {args.reduced_motion}")
                 context = browser.new_context(
                     viewport=args.viewport,
                     device_scale_factor=2,

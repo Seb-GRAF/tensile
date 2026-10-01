@@ -40,7 +40,7 @@ function TreeRow({ children }: { children: React.ReactNode }) {
   const present = useIsPresent();
   return (
     <motion.div
-      aria-hidden={!present}
+      aria-hidden={present ? undefined : true}
       inert={!present}
       initial={{ height: 0 }}
       animate={{ height: STEP }}

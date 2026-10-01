@@ -1,0 +1,18 @@
+[
+  {"click": "button[type=submit]"},
+  {"attr": "[role=combobox]", "name": "aria-invalid", "equals": "true"},
+  {"a11y": true},
+  {"focus": "[role=combobox]"},
+  {"press": "ArrowDown"},
+  {"press": "Home"},
+  {"press": "Enter"},
+  {"prop": "input[name=sort]", "name": "value", "equals": "added"},
+  {"click": "button[type=submit]"},
+  {"text": "output", "equals": "{\"sort\":\"added\"}"},
+  {"click": "button[type=reset]"},
+  {"prop": "input[name=sort]", "name": "value", "equals": ""},
+  {"text": "output", "equals": ""},
+  {"attr": "[role=combobox]", "name": "aria-invalid", "equals": null},
+  {"hidden": "[role=combobox] span[style*=filter]"},
+  {"a11y": true}
+]

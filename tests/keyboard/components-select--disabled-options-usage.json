@@ -23,6 +23,8 @@
   {"attr": "[role=combobox]", "name": "aria-expanded", "equals": "true"},
   {"type": "p"},
   {"prop": "[role=combobox]", "name": "ariaActiveDescendantElement.textContent", "equals": "Pick up in store"},
+  {"css": "[role=combobox] span[style*=filter]", "name": "filter", "equals": "blur(0px)"},
+  {"a11y": true},
   {"shot": "typeahead"},
   {"press": "Enter"},
   {"attr": "[role=combobox]", "name": "aria-expanded", "equals": "false"},
