@@ -23,5 +23,6 @@
   {"prop": "[role=tabpanel]", "name": "ariaLabelledByElements.0.textContent", "equals": "Overview"},
   {"press": "Tab"},
   {"attr": ":focus", "name": "role", "equals": "tabpanel"},
+  {"a11y": true},
   {"shot": "panel-focus"}
 ]

@@ -30,17 +30,17 @@ jobs:
       mode: ${{ steps.mode.outputs.mode }}
       package: ${{ steps.pack.outputs.pack-dir-artifact-id }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - uses: changesets/action/select-mode@v2
+      - uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51
         id: mode
-      - uses: changesets/action/version@v2
+      - uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51
         if: steps.mode.outputs.mode == 'version'
         with:
           script: npm run version:release
@@ -48,20 +48,20 @@ jobs:
           pr-title: "Release Tensile"
       - run: npm run build
         if: steps.mode.outputs.mode == 'publish'
-      - uses: changesets/action/pack@v2
+      - uses: changesets/action/pack@ae32849d5ba541f9ae29e40e22a623bc13562f51
         if: steps.mode.outputs.mode == 'publish'
         id: pack
         with:
           publish-plan-artifact-id: ${{ steps.mode.outputs.publish-plan-artifact-id }}
         env:
           npm_config_ignore_scripts: true
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         if: steps.mode.outputs.mode == 'publish'
         with:
           artifact-ids: ${{ steps.pack.outputs.pack-dir-artifact-id }}
           path: release-artifacts
           merge-multiple: true
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
         if: steps.mode.outputs.mode == 'publish'
       - run: uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
         if: steps.mode.outputs.mode == 'publish'
@@ -71,10 +71,10 @@ jobs:
           export TENSILE_TARBALL="$PWD/release-artifacts/packages/tensile-$(node -p 'require("./package.json").version').tgz"
           tar -tzf "$TENSILE_TARBALL"
           npm run check
-      - uses: actions/upload-artifact@v4
-        if: failure()
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && steps.mode.outputs.mode == 'publish'
         with:
-          name: release-keyboard-failures
+          name: release-keyboard-results
           path: /tmp/keyboard
           retention-days: 7
 
@@ -88,13 +88,13 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --ignore-scripts
-      - uses: changesets/action/publish@v2
+      - uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51
         with:
           pack-dir-artifact-id: ${{ needs.prepare.outputs.package }}
 
@@ -115,12 +115,12 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version-file: .nvmrc
           cache: npm
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
       - run: npm ci
       - run: uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
       - name: Version the prerelease
@@ -134,9 +134,9 @@ jobs:
           echo "TENSILE_TARBALL=$RUNNER_TEMP/tensile-$(node -p 'require("./package.json").version').tgz" >> "$GITHUB_ENV"
       - run: npm run check
       - run: npm publish "$TENSILE_TARBALL" --tag next --access public --ignore-scripts
-      - uses: actions/upload-artifact@v4
-        if: failure()
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
-          name: next-keyboard-failures
+          name: next-keyboard-results
           path: /tmp/keyboard
           retention-days: 7

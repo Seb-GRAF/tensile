@@ -8,7 +8,7 @@ import sys
 import time
 import urllib.request
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 url = sys.argv[1]
 for _ in range(120):
@@ -37,6 +37,8 @@ with sync_playwright() as playwright:
     page.get_by_role("switch", name="Weekly digest").click()
     if not page.get_by_role("switch", name="Weekly digest").is_checked():
         failures.append("the Toggle didn't respond to a click, so the page didn't hydrate")
+    page.get_by_role("button", name="Reset digest").click()
+    expect(page.get_by_role("switch", name="Weekly digest")).not_to_be_checked()
 
     page.get_by_role("combobox", name="Team").click()
     page.get_by_role("option", name="Engineering").click()
@@ -46,6 +48,20 @@ with sync_playwright() as playwright:
 
     page.get_by_role("tab", name="Activity").click()
     page.get_by_text("Switched on the client.").wait_for()
+
+    page.emulate_media(reduced_motion="reduce")
+    page.reload()
+    page.get_by_role("button", name="Save").wait_for()
+    spinner = page.get_by_role("status", name="Loading preview").locator("svg")
+    expect(spinner).to_have_css("animation-duration", "0s")
+    transform = spinner.evaluate("element => getComputedStyle(element).transform")
+    page.wait_for_timeout(200)
+    expect(spinner).to_have_css("transform", transform)
+    page.get_by_role("combobox", name="Team").click()
+    page.get_by_role("option", name="Engineering").click()
+    expect(page.locator("input[name=team]")).to_have_value("engineering")
+    page.get_by_role("tab", name="Activity").click()
+    expect(page.get_by_role("tabpanel")).to_have_text("Switched on the client.")
 
     browser.close()
 

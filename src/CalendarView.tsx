@@ -23,6 +23,7 @@ export type CalendarViewProps = {
   id?: string;
   disabled?: boolean;
   required?: boolean;
+  requiredLabel?: string;
   multiple?: boolean;
   isSelected: (day: string) => boolean;
   onDayHover?: (day: string | null) => void;
@@ -93,6 +94,7 @@ export function CalendarView({
   id,
   disabled = false,
   required = false,
+  requiredLabel = "Required",
   multiple = false,
   isSelected,
   onDayHover,
@@ -101,6 +103,7 @@ export function CalendarView({
   const { shape, swap } = useSprings();
   const field = useField();
   disabled = field?.disabled || disabled;
+  required = field?.required || required;
   const [focused, setFocused] = useState(() => clampDay(value ?? toDay(new Date()), min, max));
   const [direction, setDirection] = useState(1);
   const days = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -177,13 +180,13 @@ export function CalendarView({
           onClick={() => goTo(toDay(addMonths(current, 1)))}
         />
       </div>
+      {required && <span id={`${titleId}-required`} className="tn:sr-only">{requiredLabel}</span>}
       <div
         id={field?.id ?? id}
         role="grid"
         aria-labelledby={[field?.labelId, titleId].filter(Boolean).join(" ")}
-        aria-describedby={field?.describedBy}
+        aria-describedby={[field?.describedBy, required && `${titleId}-required`].filter(Boolean).join(" ") || undefined}
         aria-invalid={field?.invalid}
-        aria-required={field?.required || required}
         aria-disabled={disabled}
         aria-multiselectable={multiple || undefined}
         onKeyDown={disabled ? undefined : onKeyDown}

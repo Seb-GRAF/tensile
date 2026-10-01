@@ -8,7 +8,7 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": []
+    "types": ["vite/client"]
   },
   "include": ["main.tsx", "App.tsx", "vite.config.ts", "docs-examples"]
 }

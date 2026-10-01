@@ -15,6 +15,7 @@
   {"wait": 600},
   {"hidden": "[role=option] >> text=Artist"},
   {"prop": "[role=combobox]", "name": "ariaActiveDescendantElement.textContent", "equals": "Album"},
+  {"a11y": true},
   {"shot": "filtered"},
   {"press": "Enter"},
   {"attr": "[role=combobox]", "name": "aria-expanded", "equals": "false"},

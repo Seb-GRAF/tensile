@@ -7,7 +7,7 @@ export function Limitations() {
     <>
       <section id="browsers">
         <h2>Browsers and assistive tech</h2>
-        <p>Components are checked in Chromium. Safari, Firefox and screen reader speech haven't been tested.</p>
+        <p>Selected keyboard, form and accessibility scenarios run in Playwright Chromium, Firefox and WebKit. Installed Safari, mobile browsers and screen reader speech haven't been verified. These checks do not cover every component or establish accessibility conformance.</p>
         <p>iOS fires no <code>contextmenu</code> event on touch, so ContextMenu opens on its own 500 ms long press there. A long press with a pen on Windows may also click what's under the pen.</p>
       </section>
       <section id="scope">
