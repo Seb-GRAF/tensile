@@ -1,10 +1,14 @@
 #!/bin/sh
 set -e
 cd "$(dirname "$0")"
-npm --prefix ../.. run build --silent
 consumer_dir=$(mktemp -d)
 trap 'rm -rf "$consumer_dir"' EXIT HUP INT TERM
-(cd ../.. && npm pack --ignore-scripts --pack-destination "$consumer_dir" --silent)
+if [ -n "$TENSILE_TARBALL" ]; then
+  cp "$TENSILE_TARBALL" "$consumer_dir/"
+else
+  npm --prefix ../.. run build --silent
+  (cd ../.. && npm pack --ignore-scripts --pack-destination "$consumer_dir" --silent)
+fi
 cp package.json tsconfig.json vite.config.ts index.html main.tsx App.tsx app.css ssr.mjs "$consumer_dir/"
 mkdir "$consumer_dir/docs-examples"
 find ../../src/components -type f \( -name '*Demo.tsx' -o -name '*Example.tsx' \) -exec cp {} "$consumer_dir/docs-examples/" \;

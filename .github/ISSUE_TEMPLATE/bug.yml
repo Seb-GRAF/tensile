@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a problem with a Tensile component.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Tensile version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Component
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Share a small example or reproduction link, and steps to reproduce the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and version, operating system, React version, and framework.
+    validations:
+      required: true

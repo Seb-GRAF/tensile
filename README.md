@@ -47,6 +47,8 @@ The Toggle keeps its own state. Pass `checked` and `onCheckedChange` to keep it 
 ## Developing the library
 
 - `npm run storybook`: the component workshop at http://localhost:6006.
+- `npm run check`: the full CI checks, including both consumer apps and keyboard scenarios in three browsers; see [Contributing](CONTRIBUTING.md) for browser setup.
+- `npm run changeset`: describe a package change for the next release. A release PR collects versions and changelog entries; merging it publishes the tested package and deploys the docs.
 - `npx tsc --noEmit` type-checks everything; `npm test` runs the calendar and color tests.
 - `npm run build` builds the package into `dist/`; `npm run check:consumer` checks a Vite app without Tailwind against it, and `npm run check:next` a Next.js app.
 - `npm run site` develops the landing page and docs; `npm run build:site` builds them into `site-dist/`, and `npm run preview:site` serves that build at http://localhost:4173/tensile/.
