@@ -1,11 +1,13 @@
 import { motion, useTransform } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useLiquid } from "../../../springs";
 
 export type UnderlineTabsProps = {
   options: { value: string; label: string; icon?: React.ReactNode }[];
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   label?: string;
   id?: string;
   className?: string;
@@ -19,12 +21,21 @@ export function Underline({ left, right }: { left: number; right: number }) {
     <motion.span
       aria-hidden
       style={{ left: l, width }}
-      className="pointer-events-none absolute bottom-1 h-0.5 rounded-full bg-ink"
+      className="tn:pointer-events-none tn:absolute tn:bottom-1 tn:h-0.5 tn:rounded-full tn:bg-ink"
     />
   );
 }
 
-export function UnderlineTabs({ options, value, onValueChange, label = "Sections", id, className = "" }: UnderlineTabsProps) {
+export function UnderlineTabs({
+  options,
+  value: valueProp,
+  defaultValue = options[0].value,
+  onValueChange,
+  label = "Sections",
+  id,
+  className = "",
+}: UnderlineTabsProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const index = options.findIndex((option) => option.value === value);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const [edges, setEdges] = useState<{ left: number; right: number }>();
@@ -42,13 +53,13 @@ export function UnderlineTabs({ options, value, onValueChange, label = "Sections
     if (target === undefined) return;
     event.preventDefault();
     const next = (target + options.length) % options.length;
-    onValueChange(options[next].value);
+    setValue(options[next].value);
     tabs.current[next]!.focus();
   }
 
   return (
-    <div id={id} role="tablist" aria-label={label} onKeyDown={onKeyDown} className={`inline-block max-w-full rounded-control bg-paper px-3 py-[3px] shadow-control ${className}`}>
-      <div className="relative flex">
+    <div id={id} role="tablist" aria-label={label} onKeyDown={onKeyDown} className={`tn:inline-block tn:max-w-full tn:rounded-control tn:bg-paper tn:px-3 tn:py-[3px] tn:shadow-control ${className}`}>
+      <div className="tn:relative tn:flex">
         {options.map((option, i) => (
           <button
             key={option.value}
@@ -61,11 +72,11 @@ export function UnderlineTabs({ options, value, onValueChange, label = "Sections
             aria-controls={id ? `${id}-${i}-panel` : undefined}
             aria-selected={i === index}
             tabIndex={i === index ? 0 : -1}
-            onClick={() => onValueChange(option.value)}
-            className={`flex h-8 min-w-0 items-center gap-1.5 rounded-control px-3 text-label font-medium outline-offset-2 transition-colors duration-[calc(300ms*var(--motion-duration-scale))] hover:transition-none focus-visible:outline-2 focus-visible:outline-focus ${i === index ? "text-ink" : "text-muted hover:text-ink"}`}
+            onClick={() => setValue(option.value)}
+            className={`tn:flex tn:h-8 tn:min-w-0 tn:items-center tn:gap-1.5 tn:rounded-control tn:px-3 tn:text-label tn:font-medium tn:outline-offset-2 tn:transition-colors tn:duration-[calc(300ms*var(--tn-motion-duration-scale))] tn:hover:transition-none tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${i === index ? "tn:text-ink" : "tn:text-muted tn:hover:text-ink"}`}
           >
             {option.icon}
-            <span className="truncate">{option.label}</span>
+            <span className="tn:truncate">{option.label}</span>
           </button>
         ))}
         {edges && <Underline {...edges} />}

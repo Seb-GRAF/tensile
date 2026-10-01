@@ -20,6 +20,6 @@ export default {
   props: {
     children: "SVG shapes drawn on a 24 × 24 coordinate grid.",
     size: "Rendered width and height in pixels. Stroke thickness stays at 1.5px.",
-    className: "Additional classes on the SVG, including text color utilities.",
+    className: "Classes on the `<svg>`, for placement or a text color that sets the stroke.",
   },
 };

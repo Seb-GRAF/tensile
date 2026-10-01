@@ -38,7 +38,7 @@ export function CopyButton({ value, label = "Copy", copiedLabel = "Copied", clas
         initial={false}
         animate={{ width: copied ? width : 44 }}
         transition={shape}
-        className={`grid h-11 place-content-center place-items-center overflow-hidden rounded-control bg-ink text-body font-medium text-paper shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus press ${className}`}
+        className={`tn:grid tn:h-11 tn:place-content-center tn:place-items-center tn:overflow-hidden tn:rounded-control tn:bg-ink tn:text-body tn:font-medium tn:text-paper tn:shadow-control tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus tn:press ${className}`}
       >
         <AnimatePresence initial={false}>
           {copied ? (
@@ -46,15 +46,13 @@ export function CopyButton({ value, label = "Copy", copiedLabel = "Copied", clas
               key={copiedLabel}
               ref={measure}
               {...swap}
-              className="col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap pr-5 pl-4"
+              className="tn:col-start-1 tn:row-start-1 tn:flex tn:items-center tn:gap-1.5 tn:whitespace-nowrap tn:pr-5 tn:pl-4"
             >
-              <span className="text-accent">
-                <Check size={18} />
-              </span>
+              <Check size={18} />
               {copiedLabel}
             </motion.span>
           ) : (
-            <motion.span key="idle" {...swap} className="col-start-1 row-start-1">
+            <motion.span key="idle" {...swap} className="tn:col-start-1 tn:row-start-1">
               <Icon size={18}>
                 <rect x="8" y="8" width="13" height="13" rx="2.5" />
                 <path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8" />
@@ -63,7 +61,7 @@ export function CopyButton({ value, label = "Copy", copiedLabel = "Copied", clas
           )}
         </AnimatePresence>
       </motion.button>
-      <span role="status" className="sr-only">
+      <span role="status" className="tn:sr-only">
         {copied && copiedLabel}
       </span>
     </>

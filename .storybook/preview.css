@@ -1,15 +1,18 @@
-@import "tailwindcss" source("../src");
-@import "../src/theme.css";
-@import "@fontsource-variable/geist";
+@import "tailwindcss" source(none);
+@import "../src/tailwind.css";
+@source "../src/**/*.stories.tsx";
+@source "../src/**/demos/**";
+@source "../src/examples";
+@source "../src/foundations";
 @source "../docs";
 
 body {
-  background: var(--color-canvas);
+  background: var(--tn-color-canvas);
   -webkit-font-smoothing: antialiased;
 }
 
 .sbdocs-wrapper {
-  font-family: var(--font-sans);
+  font-family: var(--tn-font-sans);
 }
 
 .sbdocs-content :not(pre) > code {
@@ -24,16 +27,16 @@ body {
 }
 
 [data-theme="alternate"] {
-  --color-accent: #3355ff;
-  --color-on-accent: #ffffff;
-  --radius-control: 10px;
-  --radius-overlay: 12px;
-  --radius-card: 14px;
-  --radius-dialog: 16px;
+  --tn-color-accent: #3355ff;
+  --tn-color-on-accent: #ffffff;
+  --tn-radius-control: 10px;
+  --tn-radius-overlay: 12px;
+  --tn-radius-card: 14px;
+  --tn-radius-dialog: 16px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   [data-theme="alternate"] {
-    --motion-duration-scale: 1.6;
+    --tn-motion-duration-scale: 1.6;
   }
 }

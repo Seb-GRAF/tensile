@@ -13,7 +13,7 @@ function StatefulPageDots(props: PageDotsProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -37,7 +37,7 @@ export const Default: Story = {
       <StatefulPageDots
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />

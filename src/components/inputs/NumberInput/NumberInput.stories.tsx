@@ -14,7 +14,7 @@ import { NumberInput, type NumberInputProps } from "./NumberInput";
 
 function StatefulNumberInput(props: NumberInputProps) {
   const [value, setValue] = useState(props.value);
-  return <NumberInput {...props} value={value} onValueChange={(value) => { setValue(value); props.onValueChange(value); }} />;
+  return <NumberInput {...props} value={value} onValueChange={(value) => { setValue(value); props.onValueChange?.(value); }} />;
 }
 
 const meta = {
@@ -26,7 +26,7 @@ const meta = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-80 max-w-[calc(100vw-2rem)]">
-        <StatefulNumberInput {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulNumberInput {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { useTopLayer } from "./overlay";
 import { useSprings } from "./springs";
 
-/** `radius` is a CSS length, usually a token: `"var(--radius-control)"`. */
+/** `radius` is a CSS length, usually a token: `"var(--tn-radius-control)"`. */
 type Size = { width: number; height: number; radius: string };
 
 /** The side a shape grows toward and the edge it keeps aligned: `"bottom-left"` grows down from the closed shape's top edge with left edges aligned, `"top-center"` grows up from its bottom edge, centered. */
@@ -56,8 +56,8 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, 
   const left = room !== undefined && !centered && (align === "right" ? !flips(room.left, room.right, growX) : align === "left" ? flips(room.right, room.left, growX) : room.left > room.right);
   const place =
     anchor === "center"
-      ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      : `${up ? "bottom-0" : "top-0"} ${centered ? "left-1/2 -translate-x-1/2" : left ? "right-0" : "left-0"}`;
+      ? "tn:top-1/2 tn:left-1/2 tn:-translate-x-1/2 tn:-translate-y-1/2"
+      : `${up ? "tn:bottom-0" : "tn:top-0"} ${centered ? "tn:left-1/2 tn:-translate-x-1/2" : left ? "tn:right-0" : "tn:left-0"}`;
   const size = open ? opened : closed;
   const x = open && anchor !== "center" && !centered && room
     ? left
@@ -74,8 +74,8 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, 
   }, [open]);
 
   return (
-    <div ref={root} className="relative shrink-0" style={{ width: closed.width, height: closed.height }}>
-      <div ref={frame} className="absolute inset-0">
+    <div ref={root} className="tn:relative tn:shrink-0" style={{ width: closed.width, height: closed.height }}>
+      <div ref={frame} className="tn:absolute tn:inset-0">
         <motion.div
           initial={false}
           animate={{ width: size.width, height: size.height, borderRadius: size.radius, x }}
@@ -88,7 +88,7 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, 
               onOpenChange(false);
             }
           }}
-          className={`absolute overflow-hidden shadow-control transition-shadow duration-[calc(300ms*var(--motion-duration-scale))] ${open ? "[--shadow-control-drop:initial]" : ""} outline-offset-2 has-[>button:disabled]:opacity-40 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus ${place} ${className}`}
+          className={`tn:absolute tn:overflow-hidden tn:shadow-control tn:transition-shadow tn:duration-[calc(300ms*var(--tn-motion-duration-scale))] ${open ? "tn:[--tn-shadow-control-drop:initial]" : ""} tn:outline-offset-2 tn:has-[>button:disabled]:opacity-40 tn:has-[>button:focus-visible]:outline-2 tn:has-[>button:focus-visible]:outline-focus ${place} ${className}`}
         >
           <AnimatePresence initial={false}>
             {open ? (
@@ -100,7 +100,7 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, 
                 tabIndex={-1}
                 {...swap}
                 style={{ width: opened.width, height: opened.height }}
-                className={`absolute surface outline-none ${place}`}
+                className={`tn:absolute tn:surface tn:outline-none ${place}`}
               >
                 {children}
               </motion.div>
@@ -120,7 +120,7 @@ export function Expand({ open, onOpenChange, closed, opened, anchor, label, id, 
                 onClick={() => onOpenChange(true)}
                 {...swap}
                 style={{ width: closed.width, height: closed.height }}
-                className={`absolute outline-none ${place}`}
+                className={`tn:absolute tn:outline-none ${place}`}
               >
                 {trigger}
               </motion.button>

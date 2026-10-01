@@ -1,3 +1,4 @@
+import { useControllable } from "../../../controllable";
 import { Expand } from "../../../Expand";
 import { icons } from "../../../icons";
 import { IconButton } from "../../actions/IconButton/IconButton";
@@ -10,8 +11,9 @@ export type ExpandableCardProps = {
   visual: React.ReactNode;
   /** Body of the detail view, below its header. */
   children: React.ReactNode;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   openLabel?: (title: string) => string;
   closeLabel?: string;
   className?: string;
@@ -22,44 +24,46 @@ export function ExpandableCard({
   subtitle,
   visual,
   children,
-  open,
+  open: openProp,
+  defaultOpen = false,
   onOpenChange,
   openLabel = (title: string) => `Open ${title}`,
   closeLabel = "Close",
   className = "",
 }: ExpandableCardProps) {
+  const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
   return (
     <div className={className}>
       <Expand
         open={open}
-        onOpenChange={onOpenChange}
-        closed={{ width: 280, height: 72, radius: "var(--radius-card)" }}
-        opened={{ width: 360, height: 400, radius: "var(--radius-dialog)" }}
+        onOpenChange={setOpen}
+        closed={{ width: 280, height: 72, radius: "var(--tn-radius-card)" }}
+        opened={{ width: 360, height: 400, radius: "var(--tn-radius-dialog)" }}
         anchor="bottom-left"
         label={openLabel(title)}
         panelLabel={title}
         trigger={
-          <span className="flex size-full items-center gap-3 p-3 text-left">
-            <span className="size-12 shrink-0 overflow-hidden rounded-[calc(var(--radius-card)/2)]">{visual}</span>
-            <span className="min-w-0">
-              <span className="block truncate text-body font-semibold">{title}</span>
-              <span className="block truncate text-label text-muted">{subtitle}</span>
+          <span className="tn:flex tn:size-full tn:items-center tn:gap-3 tn:p-3 tn:text-left">
+            <span className="tn:size-12 tn:shrink-0 tn:overflow-hidden tn:rounded-[calc(var(--tn-radius-card)/2)]">{visual}</span>
+            <span className="tn:min-w-0">
+              <span className="tn:block tn:truncate tn:text-body tn:font-semibold">{title}</span>
+              <span className="tn:block tn:truncate tn:text-label tn:text-muted">{subtitle}</span>
             </span>
           </span>
         }
-        className="bg-paper text-ink"
+        className="tn:bg-paper tn:text-ink"
       >
-        <div className="flex items-center gap-3 p-5">
-          <div className="size-14 shrink-0 overflow-hidden rounded-[calc(var(--radius-card)/2)]">{visual}</div>
-          <div className="min-w-0 grow">
-            <p className="truncate text-base font-semibold tracking-[-0.01em]">{title}</p>
-            <p className="truncate text-sm text-muted">{subtitle}</p>
+        <div className="tn:flex tn:items-center tn:gap-3 tn:p-5">
+          <div className="tn:size-14 tn:shrink-0 tn:overflow-hidden tn:rounded-[calc(var(--tn-radius-card)/2)]">{visual}</div>
+          <div className="tn:min-w-0 tn:grow">
+            <p className="tn:truncate tn:text-base tn:font-semibold tn:tracking-[-0.01em]">{title}</p>
+            <p className="tn:truncate tn:text-sm tn:text-muted">{subtitle}</p>
           </div>
-          <IconButton label={closeLabel} variant="ghost" size="sm" onClick={() => onOpenChange(false)} className="shrink-0 self-start text-muted">
+          <IconButton label={closeLabel} variant="ghost" size="sm" onClick={() => setOpen(false)} className="tn:shrink-0 tn:self-start tn:text-muted">
             <Icon size={16}>{icons.close}</Icon>
           </IconButton>
         </div>
-        <div className="px-5">{children}</div>
+        <div className="tn:px-5">{children}</div>
       </Expand>
     </div>
   );

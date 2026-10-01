@@ -1,0 +1,36 @@
+@import "./utilities.css";
+
+@theme inline {
+  --font-sans: var(--tn-font-sans);
+
+  --color-canvas: var(--tn-color-canvas);
+  --color-ink: var(--tn-color-ink);
+  --color-ink-3: var(--tn-color-ink-3);
+  --color-paper: var(--tn-color-paper);
+  --color-accent: var(--tn-color-accent);
+  --color-on-accent: var(--tn-color-on-accent);
+  --color-muted: var(--tn-color-muted);
+  --color-line: var(--tn-color-line);
+  --color-hover: var(--tn-color-hover);
+  --color-focus: var(--tn-color-focus);
+  --color-scrim: var(--tn-color-scrim);
+
+  --text-caption: var(--tn-text-caption);
+  --text-caption--line-height: var(--tn-text-caption--line-height);
+  --text-label: var(--tn-text-label);
+  --text-label--line-height: var(--tn-text-label--line-height);
+  --text-body: var(--tn-text-body);
+  --text-body--line-height: var(--tn-text-body--line-height);
+
+  --radius-control: var(--tn-radius-control);
+  --radius-overlay: var(--tn-radius-overlay);
+  --radius-card: var(--tn-radius-card);
+  --radius-dialog: var(--tn-radius-dialog);
+
+  --shadow-float: var(--tn-shadow-float);
+
+  --container-page: var(--tn-container-page);
+
+  --animate-spinner: var(--tn-animate-spinner);
+  --animate-shimmer: var(--tn-animate-shimmer);
+}

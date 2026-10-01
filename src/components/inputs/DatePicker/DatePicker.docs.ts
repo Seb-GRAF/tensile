@@ -18,11 +18,11 @@ export default {
     "name creates a hidden input with the selected ISO date."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled nullable date.", Demo: DatePickerDemo, code: datePickerDemoCode },
-    { id: "bounds", title: "Bounds and steps", description: "Minimum and maximum dates.", Demo: DatePickerBoundsDemo, code: datePickerBoundsDemoCode },
-    { id: "weekstart", title: "Week starts on Monday", description: "Custom first day of the week.", Demo: DatePickerWeekStartDemo, code: datePickerWeekStartDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled calendar.", Demo: DatePickerDisabledDemo, code: datePickerDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named ISO date.", Demo: DatePickerFormDemo, code: datePickerFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A date picker in a Field, starting from a chosen date.", Demo: DatePickerDemo, code: datePickerDemoCode },
+    { id: "bounds", title: "Bounds and steps", description: "Days outside min and max are disabled and the month arrows stop at their months; use it for booking windows.", Demo: DatePickerBoundsDemo, code: datePickerBoundsDemoCode },
+    { id: "weekstart", title: "Week starts on Monday", description: "Weeks start on Monday with firstDayOfWeek, as most of Europe expects.", Demo: DatePickerWeekStartDemo, code: datePickerWeekStartDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed calendar that shows its date but takes no input.", Demo: DatePickerDisabledDemo, code: datePickerDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A required date in a form: name submits the ISO date, and Save shows an error until a day is picked.", Demo: DatePickerFormDemo, code: datePickerFormDemoCode },
   ],
   keyboard: [
     {
@@ -47,13 +47,14 @@ export default {
     "Field"
   ],
   props: {
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the calendar and stops day picks and month changes. A disabled Field or Fieldset does the same.",
     "max": "Latest permitted date as YYYY-MM-DD.",
     "min": "Earliest permitted date as YYYY-MM-DD.",
     "required": "Expose the required state. See the form example for validation.",
-    "value": "Selected local date as YYYY-MM-DD, or null.",
+    "value": "The selected local date as YYYY-MM-DD, or null. Leave it out to let the picker track it, starting from defaultValue.",
+    "defaultValue": "The first selected date when the picker tracks it itself. Defaults to null, no date.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "onValueChange": "Called with the date as YYYY-MM-DD when a day is picked by click, Enter or Space.",
     "firstDayOfWeek": "First weekday column: 0 for Sunday through 6 for Saturday.",
     "formatMonth": "Format the month heading from a local Date.",
     "formatWeekday": "Format a weekday column label from a local Date.",
@@ -61,6 +62,6 @@ export default {
     "previousLabel": "Accessible label for moving backward.",
     "nextLabel": "Accessible label for moving forward.",
     "name": "Name used for the submitted form value.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the wrapper around the calendar, for width and placement. The calendar fills it."
   },
 };

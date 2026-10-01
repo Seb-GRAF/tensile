@@ -32,7 +32,7 @@ export const Default: Story = {
       <UnderlineTabs
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />

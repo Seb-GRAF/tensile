@@ -18,7 +18,7 @@ function StatefulTextarea(props: TextareaProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -43,7 +43,7 @@ export const Default: Story = {
         <StatefulTextarea
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -59,7 +59,7 @@ export const InAField: Story = {
     value: "The parcel with order CH-2048-7731 arrived yesterday, but the lid of the teapot was broken in the box. Could you send a new lid, or should I return the whole teapot?",
   },
   render: function Render(args) {
-    const [value, setValue] = useState(args.value);
+    const [value, setValue] = useState(args.value!);
     return (
       <Field
         label="Message"

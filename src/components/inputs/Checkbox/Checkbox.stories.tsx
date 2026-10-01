@@ -28,7 +28,7 @@ export const Default: Story = {
       <Checkbox
         {...args}
         onCheckedChange={(checked) => {
-          args.onCheckedChange(checked);
+          args.onCheckedChange?.(checked);
           updateArgs({ checked });
         }}
       />
@@ -44,7 +44,7 @@ export const Indeterminate: Story = {
       <Checkbox
         {...args}
         onCheckedChange={(checked) => {
-          args.onCheckedChange(checked);
+          args.onCheckedChange?.(checked);
           updateArgs({ checked, indeterminate: false });
         }}
       />

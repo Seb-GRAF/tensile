@@ -17,7 +17,7 @@ function StatefulTextField(props: TextFieldProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -43,7 +43,7 @@ export const Default: Story = {
         <StatefulTextField
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value, error: value.includes(" ") ? "Email addresses can't contain spaces" : undefined });
           }}
         />

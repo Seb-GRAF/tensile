@@ -16,10 +16,10 @@ export default {
     "Set name to include the value in FormData; reset controlled state in onReset."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled single value.", Demo: SliderDemo, code: sliderDemoCode },
-    { id: "steps", title: "Steps", description: "Bounds, steps and formatted value.", Demo: SliderStepsDemo, code: sliderStepsDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled slider.", Demo: SliderDisabledDemo, code: sliderDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named value.", Demo: SliderFormDemo, code: sliderFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A slider in a Field: drag the knob, press anywhere on the track, or use the arrow keys.", Demo: SliderDemo, code: sliderDemoCode },
+    { id: "steps", title: "Steps", description: "step makes it move in tens, and formatValue reads the value as a percentage.", Demo: SliderStepsDemo, code: sliderStepsDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed slider that shows its value and takes no input.", Demo: SliderDisabledDemo, code: sliderDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A slider in a form: name submits the number, and Reset restores the starting value.", Demo: SliderFormDemo, code: sliderFormDemoCode },
   ],
   keyboard: [
     {
@@ -36,17 +36,18 @@ export default {
     "Field"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "The current number, from min to max. Leave it out to let the slider track it, starting from defaultValue.",
+    "defaultValue": "The first value when the slider tracks it itself. Defaults to min.",
+    "onValueChange": "Called with each new value while the knob is dragged, and on a track press or key press.",
     "min": "Minimum permitted value.",
     "max": "Maximum permitted value.",
     "step": "Increment used when changing the value.",
     "formatValue": "Format a value for display or accessible value text.",
-    "label": "Accessible name of the control or region.",
+    "label": "Accessible name of the knob when no Field labels it.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
     "required": "Expose the required state. See the form example for validation.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the slider and stops drags and keys. A disabled Field or Fieldset does the same.",
+    "className": "Classes on the 44 px track area, for placement. The track fills its container's width."
   },
 };

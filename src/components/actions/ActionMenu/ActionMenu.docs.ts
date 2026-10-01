@@ -14,9 +14,9 @@ export default {
     "The menu flips upward, or grows leftward from the trigger near the right edge, keeps 16 px from the viewport's sides and limits its height to available space."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Text trigger, named actions and disabled items.", Demo: ActionMenuDemo, code: actionMenuDemoCode },
-    { id: "icontrigger", title: "Icon Trigger", description: "Custom named icon trigger.", Demo: ActionMenuIconTriggerDemo, code: actionMenuIconTriggerDemoCode },
-    { id: "sizes", title: "Sizes", description: "Default and small triggers.", Demo: ActionMenuSizesDemo, code: actionMenuSizesDemoCode },
+    { id: "usage", title: "Basic usage", description: "A text trigger with named actions, one of them disabled, for page or record actions.", Demo: ActionMenuDemo, code: actionMenuDemoCode },
+    { id: "icontrigger", title: "Icon Trigger", description: "An icon-only trigger named by label, for crowded headers and cards.", Demo: ActionMenuIconTriggerDemo, code: actionMenuIconTriggerDemoCode },
+    { id: "sizes", title: "Sizes", description: "The 44 px trigger beside the 32 px one used in dense rows such as table cells.", Demo: ActionMenuSizesDemo, code: actionMenuSizesDemoCode },
   ],
   keyboard: [
     {
@@ -47,10 +47,10 @@ export default {
   props: {
     "actions": "Actions with labels, optional icons and disabled states.",
     "onAction": "Called with the selected action.",
-    "label": "Accessible name of the control or region.",
+    "label": "The trigger's visible text, or its accessible name when you pass a custom trigger, such as an icon.",
     "menuLabel": "Accessible name of the opened menu.",
     "trigger": "Optional custom content inside the trigger button.",
     "size": "`sm` is the 32 px trigger for dense rows, e.g. an icon trigger in a table.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the wrapper that holds the trigger's place, for placement such as `justify-self-end`. The menu itself sizes to its actions."
   },
 };

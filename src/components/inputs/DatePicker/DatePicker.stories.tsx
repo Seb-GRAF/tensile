@@ -30,7 +30,7 @@ export const Default: Story = {
         <DatePicker
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />

@@ -14,9 +14,9 @@ export default {
     "The named hidden input submits the current hex value."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled color area, hue and hex value.", Demo: ColorPickerDemo, code: colorPickerDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled color picker.", Demo: ColorPickerDisabledDemo, code: colorPickerDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named hex value.", Demo: ColorPickerFormDemo, code: colorPickerFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A brand color in a Field: drag in the area or along the hue strip, or type a hex code.", Demo: ColorPickerDemo, code: colorPickerDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed picker that shows its color and takes no input.", Demo: ColorPickerDisabledDemo, code: colorPickerDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A color in a form: name submits the hex code, and Reset restores the starting color.", Demo: ColorPickerFormDemo, code: colorPickerFormDemoCode },
   ],
   keyboard: [
     {
@@ -37,16 +37,17 @@ export default {
     "Field"
   ],
   props: {
-    "value": "A lowercase \"#rrggbb\" color.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "A lowercase \"#rrggbb\" color. Leave it out to let the picker track it, starting from defaultValue.",
+    "defaultValue": "The first color when the picker tracks it itself. Defaults to #000000.",
+    "onValueChange": "Called with a lowercase \"#rrggbb\" color while a knob is dragged or moved by key, and when a valid hex code is committed.",
+    "label": "Accessible name of the group when no Field labels it.",
     "areaLabel": "Accessible name of the saturation and brightness control.",
     "hueLabel": "Accessible name of the hue slider.",
     "hexLabel": "Accessible name of the hex text input.",
     "formatArea": "The area knob's value text, from saturation and brightness between 0 and 1.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the area and hue strip and disables the hex input. A disabled Field or Fieldset does the same.",
+    "className": "Classes on the card, for width and placement. The area, strip and input fill its width."
   },
 };

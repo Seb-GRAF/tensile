@@ -1,12 +1,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId } from "react";
+import { useControllable } from "../../../controllable";
 import { useLiquid, useSprings } from "../../../springs";
 import { useField } from "../Field/Field";
 
 export type RadioGroupProps = {
   options: { value: string; label: string; icon?: React.ReactNode; disabled?: boolean }[];
-  value: string | null;
-  onValueChange: (value: string) => void;
+  value?: string | null;
+  defaultValue?: string | null;
+  onValueChange?: (value: string) => void;
   label?: string;
   id?: string;
   name?: string;
@@ -28,14 +30,15 @@ function Dot({ index, count, disabled }: { index: number; count: number; disable
       exit={{ scale: 0 }}
       transition={{ scale: shape, opacity: soft }}
       style={{ top, bottom }}
-      className="pointer-events-none absolute left-3.75 w-2.5 rounded-full bg-ink"
+      className="tn:pointer-events-none tn:absolute tn:left-3.75 tn:w-2.5 tn:rounded-full tn:bg-ink"
     />
   );
 }
 
 export function RadioGroup({
   options,
-  value,
+  value: valueProp,
+  defaultValue = null,
   onValueChange,
   label = "Options",
   id,
@@ -44,6 +47,7 @@ export function RadioGroup({
   required = false,
   className = "",
 }: RadioGroupProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   const groupName = useId();
   const index = options.findIndex((option) => option.value === value);
@@ -59,7 +63,7 @@ export function RadioGroup({
       aria-required={field?.required || required}
       className={className}
     >
-      <div className="relative -mx-2 grid">
+      <div className="tn:relative tn:-mx-2 tn:grid">
         <AnimatePresence initial={false}>
           {index !== -1 && (
             <Dot
@@ -73,17 +77,17 @@ export function RadioGroup({
         {options.map((option) => (
           <label
             key={option.value}
-            className="flex h-10 cursor-pointer items-center gap-2.5 rounded-control px-2 text-sm font-medium text-ink has-[:enabled]:hover:bg-hover has-[:disabled]:cursor-default has-[:disabled]:opacity-40"
+            className="tn:flex tn:h-10 tn:cursor-pointer tn:items-center tn:gap-2.5 tn:rounded-control tn:px-2 tn:text-sm tn:font-medium tn:text-ink tn:has-[:enabled]:hover:bg-hover tn:has-[:disabled]:cursor-default tn:has-[:disabled]:opacity-40"
           >
             <input
               type="radio"
               name={name ?? groupName}
               value={option.value}
               checked={option.value === value}
-              onChange={() => onValueChange(option.value)}
+              onChange={() => setValue(option.value)}
               disabled={field?.disabled || disabled || option.disabled}
               required={field?.required || required}
-              className="relative size-6 shrink-0 appearance-none rounded-full border-[1.5px] border-muted outline-offset-2 transition-colors duration-[calc(300ms*var(--motion-duration-scale))] checked:border-ink focus-visible:outline-2 focus-visible:outline-focus"
+              className="tn:relative tn:size-6 tn:shrink-0 tn:appearance-none tn:rounded-full tn:border-[1.5px] tn:border-muted tn:outline-offset-2 tn:transition-colors tn:duration-[calc(300ms*var(--tn-motion-duration-scale))] tn:checked:border-ink tn:focus-visible:outline-2 tn:focus-visible:outline-focus"
             />
             {option.icon}
             {option.label}

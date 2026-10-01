@@ -12,8 +12,8 @@ export default {
     "Long visible labels truncate while the full text remains accessible."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Display progress with external previous/next controls.", Demo: WizardStepsDemo, code: wizardStepsDemoCode },
-    { id: "icons", title: "With icons", description: "Steps with icons.", Demo: WizardStepsIconsDemo, code: wizardStepsIconsDemoCode },
+    { id: "usage", title: "Basic usage", description: "Progress through a multi-step form, driven by your own Back and Next buttons.", Demo: WizardStepsDemo, code: wizardStepsDemoCode },
+    { id: "icons", title: "With icons", description: "Steps with an icon beside each label.", Demo: WizardStepsIconsDemo, code: wizardStepsIconsDemoCode },
   ],
   keyboard: [],
   related: [
@@ -26,6 +26,6 @@ export default {
     "doneLabel": "Read out after the label of a finished step.",
     "currentLabel": "Read out after the label of the current step.",
     "upcomingLabel": "Read out after the label of a step not reached yet.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the outer element, for width and placement. It has no surface of its own; put it in a Card."
   },
 };

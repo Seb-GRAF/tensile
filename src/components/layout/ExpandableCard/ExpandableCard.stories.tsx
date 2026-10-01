@@ -59,7 +59,7 @@ export const Default: Story = {
         <ExpandableCard
           {...args}
           onOpenChange={(open) => {
-            args.onOpenChange(open);
+            args.onOpenChange?.(open);
             updateArgs({ open });
           }}
         />

@@ -35,6 +35,7 @@ Read the component named in your brief, in full, and its story. Copy its shape: 
 - No hardcoded user-facing text. Text with data in it is a function prop.
 - Full width where the component is a field, track, table, chart or card; `className` on the outer element.
 - Right ARIA role, full keyboard support, focus ring `outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`.
+- Every class in the component file carries the `tn:` prefix (`tn:outline-offset-2 tn:focus-visible:outline-2`) and every token is `--tn-*` (AGENTS.md › Tokens); stories and demos use plain classes.
 
 Keep public usage demos in the component’s `demos/` subfolder as standalone `<Name>Demo.tsx` files. Import those demos into stories and list them in `<Name>.docs.ts`; the public docs show the demo source verbatim. Use public `tensile` imports in demos.
 
@@ -100,7 +101,7 @@ uv run .claude/skills/morph-component/scripts/check_story.py <story-id> '<steps 
 ```
 
 - The story id is `components-<name in lowercase>--<story in kebab case>`, e.g. `components-copybutton--default`.
-- The script starts its own Storybook on a free port, opens the story's `iframe.html` at 800 × 600 (2× pixels) with clipboard access granted, runs the steps, saves `NN-<name>.png` per shot plus `contact.png`, and always stops the server. It exits with 1 if a step fails, a check fails, or the browser console shows an error (React warnings included).
+- The script starts its own Storybook on a free port, opens the story's `iframe.html` at 800 × 600 (2× pixels) in Chromium with clipboard access granted, runs the steps, saves `NN-<name>.png` per shot plus `contact.png`, and always stops the server. It exits with 1 if a step fails, a check fails, or the browser console shows an error (React warnings included).
 - It takes about 10 s. If Storybook fails to start, read `storybook.log` in the out directory.
 
 Options:
@@ -111,6 +112,7 @@ Options:
 | `--reduced-motion` | emulates `prefers-reduced-motion: reduce`, so the motion scale is 0 |
 | `--globals theme:alternate` | runs with the alternate tokens (accent, radii, speed) |
 | `--args 'scale:3;open:!true'` | sets story args, in Storybook's URL syntax (values with characters such as `/` are dropped; use plain words) |
+| `--browser firefox` | runs in `chromium` (default), `firefox` or `webkit`; only Chromium gets clipboard access |
 | `--video` | records the run to `video.webm`; look at it frame by frame with `ffmpeg -i video.webm -vf fps=20,tile=6x4 film.png` |
 
 Steps, run in order:

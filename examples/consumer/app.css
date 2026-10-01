@@ -1,11 +1,11 @@
 :root {
-  --color-accent: #3355ff;
-  --color-on-accent: #ffffff;
-  --radius-control: 12px;
+  --tn-color-accent: #3355ff;
+  --tn-color-on-accent: #ffffff;
+  --tn-radius-control: 12px;
 }
 
 body {
-  background: var(--color-canvas);
+  background: var(--tn-color-canvas);
 }
 
 .app {

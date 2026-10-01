@@ -13,25 +13,39 @@
         "description": "Sections with unique values, labels, content and optional icons."
       },
       {
-        "prop": "value",
-        "type": "string | null",
-        "required": true,
-        "default": "—",
-        "description": "Current value, controlled by the parent."
-      },
-      {
-        "prop": "onValueChange",
-        "type": "(value: string | null) => void",
-        "required": true,
-        "default": "—",
-        "description": "Called with the next value when the user makes a change."
-      },
-      {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Width, margin and placement of the list of items."
+      },
+      {
+        "prop": "type",
+        "type": "\"single\" | \"multiple\" | undefined",
+        "required": false,
+        "default": "\"single\"",
+        "description": "\"single\" (default) keeps at most one item open; \"multiple\" lets several stay open and makes the value an array."
+      },
+      {
+        "prop": "value",
+        "type": "string | string[] | null | undefined",
+        "required": false,
+        "default": "—",
+        "description": "The open item’s value, or null when all are closed; with type=\"multiple\", the array of open values. Set it to control the accordion."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | string[] | null | undefined",
+        "required": false,
+        "default": "type === \"multiple\" ? [] : null",
+        "description": "The item open at first when value isn’t set (null by default; [] with type=\"multiple\")."
+      },
+      {
+        "prop": "onValueChange",
+        "type": "((value: string | null) => void) | ((value: string[]) => void) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Called with the new open value, or array of values, when a header is pressed."
       }
     ]
   },
@@ -60,7 +74,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"More\"",
-        "description": "Accessible name of the control or region."
+        "description": "The trigger's visible text, or its accessible name when you pass a custom trigger, such as an icon."
       },
       {
         "prop": "menuLabel",
@@ -88,7 +102,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapper that holds the trigger's place, for placement such as `justify-self-end`. The menu itself sizes to its actions."
       }
     ]
   },
@@ -110,21 +124,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Heads up\"",
-        "description": "Title displayed by the component."
+        "description": "The alert's message in a few words."
       },
       {
         "prop": "description",
         "type": "string | undefined",
         "required": false,
         "default": "\"Check the details before you continue.\"",
-        "description": "Supporting content explaining the control or group."
+        "description": "Detail under the title; leave it out for a one-line alert."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the alert card, for placement; it fills its container's width."
       }
     ]
   },
@@ -136,31 +150,38 @@
     "props": [
       {
         "prop": "open",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the overlay is open."
+        "description": "Whether the confirmation is open. Set it to control the dialog."
+      },
+      {
+        "prop": "defaultOpen",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the confirmation starts open when open isn’t set."
       },
       {
         "prop": "onOpenChange",
-        "type": "(open: boolean) => void",
-        "required": true,
+        "type": "((open: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the overlay requests an open or closed state."
+        "description": "Called with true when the trigger is pressed, and with false on Cancel, Confirm or Escape."
       },
       {
         "prop": "title",
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Title displayed by the component."
+        "description": "The question at the top, such as “Delete playlist?”; also names the dialog."
       },
       {
         "prop": "description",
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Supporting content explaining the control or group."
+        "description": "What happens if the person confirms; read when the dialog opens."
       },
       {
         "prop": "onConfirm",
@@ -195,7 +216,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the built-in trigger button."
       }
     ]
   },
@@ -231,7 +252,7 @@
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Content rendered inside the component."
+        "description": "Page content, placed in the main landmark that the skip link jumps to."
       },
       {
         "prop": "skipLabel",
@@ -245,7 +266,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Size and placement of the whole shell."
       }
     ]
   },
@@ -281,7 +302,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the circle, for margin and placement; `size` sets its size."
       }
     ]
   },
@@ -317,21 +338,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"People\"",
-        "description": "Accessible name of the list."
+        "description": "Names the list for screen readers, such as \"Reviewers\"."
       },
       {
         "prop": "moreLabel",
         "type": "((count: number) => string) | undefined",
         "required": false,
         "default": "(count: number) => `${count} more`",
-        "description": "Accessible name of the \"+N\" circle."
+        "description": "Names the \"+N\" circle from the hidden count (\"3 more\" by default)."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the list, for margin and placement."
       }
     ]
   },
@@ -367,7 +388,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the badge, for placement, e.g. absolute over the corner of an icon button."
       }
     ]
   },
@@ -389,21 +410,21 @@
         "type": "((value: number) => string) | undefined",
         "required": false,
         "default": "(value: number) => value.toLocaleString(\"en-US\")",
-        "description": "Format a value for display or accessible value text."
+        "description": "Turns a value into the text in the tooltip and the live status, such as \"6 h\"."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Bar chart\"",
-        "description": "Accessible summary of the chart."
+        "description": "Names the chart for screen readers with a short summary, such as \"Work hours this week\"."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the ink card, for width and placement; it fills its container by default."
       }
     ]
   },
@@ -415,31 +436,38 @@
     "props": [
       {
         "prop": "open",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the overlay is open."
+        "description": "Whether the sheet is open. Set it to control the sheet."
+      },
+      {
+        "prop": "defaultOpen",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the sheet starts open when open isn’t set."
       },
       {
         "prop": "onOpenChange",
-        "type": "(open: boolean) => void",
-        "required": true,
+        "type": "((open: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the overlay requests an open or closed state."
+        "description": "Called with false when the sheet is dragged down, its handle or the backdrop is pressed, or Escape is pressed."
       },
       {
         "prop": "children",
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Content rendered inside the component."
+        "description": "Body of the sheet, below the handle; it scrolls when taller than the screen."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Sheet\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the sheet’s dialog."
       },
       {
         "prop": "handleLabel",
@@ -453,7 +481,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Size of the sheet panel."
       }
     ]
   },
@@ -482,7 +510,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Breadcrumb\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the navigation landmark, so it differs from your main navigation."
       },
       {
         "prop": "expandLabel",
@@ -510,7 +538,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the nav element, for placement and to limit its width."
       }
     ]
   },
@@ -521,60 +549,11 @@
     "description": "",
     "props": [
       {
-        "prop": "disabled",
-        "type": "boolean | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Prevent activation and remove the button from the Tab order."
-      },
-      {
-        "prop": "form",
-        "type": "string | undefined",
-        "required": false,
-        "default": "—",
-        "description": "ID of the form this button belongs to, including a form outside its ancestors."
-      },
-      {
-        "prop": "name",
-        "type": "string | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Name included in form submission when this button is the submitter."
-      },
-      {
-        "prop": "type",
-        "type": "\"button\" | \"submit\" | \"reset\" | undefined",
-        "required": false,
-        "default": "\"button\"",
-        "description": "Native button type. Use submit or reset for form actions."
-      },
-      {
-        "prop": "value",
-        "type": "string | number | readonly string[] | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Value submitted under the button's name."
-      },
-      {
-        "prop": "className",
-        "type": "string | undefined",
-        "required": false,
-        "default": "\"\"",
-        "description": "Additional classes on the native button."
-      },
-      {
         "prop": "children",
         "type": "ReactNode",
         "required": true,
         "default": "—",
         "description": "Visible button content. Text supplies the accessible name."
-      },
-      {
-        "prop": "onClick",
-        "type": "MouseEventHandler<HTMLButtonElement> | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Native click handler, also called by keyboard activation."
       },
       {
         "prop": "variant",
@@ -589,6 +568,34 @@
         "required": false,
         "default": "\"md\"",
         "description": "Control height: md is 44px and sm is 32px."
+      },
+      {
+        "prop": "type",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Native button type. Use submit or reset for form actions. Ignored with href."
+      },
+      {
+        "prop": "className",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "Classes on the native button or link, for placement and width, such as `w-full` or `justify-self-end`."
+      },
+      {
+        "prop": "onClick",
+        "type": "MouseEventHandler<HTMLButtonElement> | MouseEventHandler<HTMLAnchorElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Native click handler, also called by keyboard activation."
+      },
+      {
+        "prop": "href",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Render a link to this URL instead of a button, with the same look."
       }
     ]
   },
@@ -643,17 +650,24 @@
       },
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "The selected slide, from 0."
+        "description": "The selected slide, from 0. Leave it out to let the carousel track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "0",
+        "description": "The first slide shown when the carousel tracks the slide itself."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the slide a drag, wheel, arrow key, arrow button or dot moves to."
       },
       {
         "prop": "slideWidth",
@@ -688,21 +702,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Carousel\"",
-        "description": "Accessible name of the control or region."
+        "description": "Name of the carousel region and of its dots."
       },
       {
         "prop": "previousLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Previous slide\"",
-        "description": "Accessible label for moving backward."
+        "description": "Name of the arrow button that shows the previous slide."
       },
       {
         "prop": "nextLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Next slide\"",
-        "description": "Accessible label for moving forward."
+        "description": "Name of the arrow button that shows the next slide."
       },
       {
         "prop": "slideLabel",
@@ -716,7 +730,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the carousel region, for placement and width; it fills its container by default."
       }
     ]
   },
@@ -741,13 +755,6 @@
         "description": "Name of the checkbox entry in the submitted form."
       },
       {
-        "prop": "required",
-        "type": "boolean | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Require the checkbox to be checked before native form submission."
-      },
-      {
         "prop": "value",
         "type": "string | number | readonly string[] | undefined",
         "required": false,
@@ -755,11 +762,18 @@
         "description": "Value submitted when the checkbox is checked. The native default is on."
       },
       {
+        "prop": "required",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Require the checkbox to be checked before native form submission."
+      },
+      {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the wrapping label."
+        "description": "Classes on the label that wraps the box and its text, for placement such as margin."
       },
       {
         "prop": "id",
@@ -770,17 +784,24 @@
       },
       {
         "prop": "checked",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the checkbox is checked. The parent owns this value."
+        "description": "Whether the checkbox is checked. Leave it out to let the checkbox track it, starting from defaultChecked."
+      },
+      {
+        "prop": "defaultChecked",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the checkbox starts checked when it tracks its own state. Defaults to false."
       },
       {
         "prop": "onCheckedChange",
-        "type": "(checked: boolean) => void",
-        "required": true,
+        "type": "((checked: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next boolean value when the user toggles the checkbox."
+        "description": "Called with the new state when the box or its label is clicked, or Space is pressed."
       },
       {
         "prop": "label",
@@ -813,24 +834,31 @@
       },
       {
         "prop": "value",
-        "type": "string[]",
-        "required": true,
+        "type": "string[] | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "Values of the checked options. Leave it out to let the group track them, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string[] | undefined",
+        "required": false,
+        "default": "[]",
+        "description": "The first checked values when the group tracks them itself. Defaults to none."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string[]) => void",
-        "required": true,
+        "type": "((value: string[]) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with every checked value, in the order they were checked, when a box is toggled."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Options\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the group when no Field or Fieldset wraps it."
       },
       {
         "prop": "id",
@@ -851,14 +879,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims every option and stops them from toggling. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the group, for width and placement. Rows fill its width, so their hover reaches the edge."
       }
     ]
   },
@@ -877,31 +905,45 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The current destination's value. Leave it out to let the sidebar track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The current destination when the sidebar tracks it itself. Empty marks none."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with an item's value when it's activated."
       },
       {
         "prop": "expanded",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the content is expanded."
+        "description": "Whether the sidebar shows its labels. Leave it out to let the sidebar track it, starting from defaultExpanded."
+      },
+      {
+        "prop": "defaultExpanded",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "true",
+        "description": "Whether the sidebar starts expanded when it tracks this itself. Defaults to true."
       },
       {
         "prop": "onExpandedChange",
-        "type": "(expanded: boolean) => void",
-        "required": true,
+        "type": "((expanded: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the expanded state changes."
+        "description": "Called when the collapse button is pressed."
       },
       {
         "prop": "leading",
@@ -922,7 +964,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Main\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the navigation landmark."
       },
       {
         "prop": "expandLabel",
@@ -943,7 +985,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the sidebar's card, for height and placement, such as `h-full`."
       }
     ]
   },
@@ -955,24 +997,31 @@
     "props": [
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "A lowercase \"#rrggbb\" color."
+        "description": "A lowercase \"#rrggbb\" color. Leave it out to let the picker track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"#000000\"",
+        "description": "The first color when the picker tracks it itself. Defaults to #000000."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with a lowercase \"#rrggbb\" color while a knob is dragged or moved by key, and when a valid hex code is committed."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Color\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the group when no Field labels it."
       },
       {
         "prop": "areaLabel",
@@ -1021,14 +1070,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the area and hue strip and disables the hex input. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the card, for width and placement. The area, strip and input fill its width."
       }
     ]
   },
@@ -1047,24 +1096,31 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Selected value; it must match one of the options."
+        "description": "Selected value; it must match one of the options. Leave it out to let the swatches track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "options[0].value",
+        "description": "The first selected value when the swatches track it themselves. Defaults to the first option."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with a swatch's value when it's picked by click or arrow key."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Color\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the radiogroup when no Field wraps it."
       },
       {
         "prop": "id",
@@ -1085,7 +1141,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the swatches and stops picks. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -1099,7 +1155,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the paper pill, for placement such as margin. It sizes to its swatches."
       }
     ]
   },
@@ -1111,45 +1167,52 @@
     "props": [
       {
         "prop": "options",
-        "type": "{ value: string; label: string; icon?: ReactNode; }[]",
+        "type": "Options",
         "required": true,
         "default": "—",
-        "description": "Available choices. Each option supplies a value and visible label."
+        "description": "The choices: `{ value, label, icon?, disabled? }`, or groups `{ label, options }` whose options show under a heading. Typing filters options by the start of their words; a group with no matches is hidden. A disabled option is dimmed and can't be picked."
       },
       {
         "prop": "value",
-        "type": "string | null",
-        "required": true,
+        "type": "string | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The selected value, or null for none. Pass it to control Combobox; leave it out and Combobox keeps its own value."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The value Combobox starts with when it keeps its own value."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the value of the option the user picks; typing alone doesn't call it."
       },
       {
         "prop": "placeholder",
         "type": "string | undefined",
         "required": false,
         "default": "\"Search\"",
-        "description": "Hint shown while the value is empty."
+        "description": "Shown in the empty input; inside a Field with the label inside, only while it has focus."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Choose an option\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the input and its list for screen readers when no Field labels them."
       },
       {
         "prop": "emptyText",
         "type": "string | undefined",
         "required": false,
         "default": "\"No results\"",
-        "description": "Message shown when there are no options or results."
+        "description": "Shown in the open list when nothing matches the typed text."
       },
       {
         "prop": "id",
@@ -1170,7 +1233,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the field and disables the input, so it can't be focused or opened; the hidden input is left out of the form. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -1184,7 +1247,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to set its width or place it in a layout."
       }
     ]
   },
@@ -1213,14 +1276,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Search commands\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the search field."
       },
       {
         "prop": "placeholder",
         "type": "string | undefined",
         "required": false,
         "default": "\"Search\"",
-        "description": "Hint shown while the value is empty."
+        "description": "Hint shown in the empty search field."
       },
       {
         "prop": "listLabel",
@@ -1234,14 +1297,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"No commands found\"",
-        "description": "Message shown when there are no options or results."
+        "description": "Message in the list when no command matches the search."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the palette's surface, for width and placement, such as `w-96`."
       }
     ]
   },
@@ -1267,17 +1330,24 @@
       },
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "Divider position from the left, 0..1"
+        "description": "Divider position from the left, 0..1. Leave it out to let the slider track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "0.5",
+        "description": "The divider's first position, 0..1, when the slider tracks it itself."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the divider position, 0..1, while the frame is dragged or an arrow, Home or End key moves the handle."
       },
       {
         "prop": "beforeLabel",
@@ -1305,7 +1375,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the frame; set its aspect ratio or height here, e.g. `aspect-3/2`."
       }
     ]
   },
@@ -1334,7 +1404,7 @@
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Content rendered inside the component."
+        "description": "The target area that opens the menu on right-click, long press, Shift+F10 or the menu key."
       },
       {
         "prop": "menuLabel",
@@ -1348,7 +1418,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Size and placement of the target area."
       }
     ]
   },
@@ -1384,7 +1454,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the animated button."
+        "description": "Classes on the button, for placement, such as `absolute top-3 right-3` over a code block."
       }
     ]
   },
@@ -1406,7 +1476,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapper around the table and the pager, for width and placement."
       },
       {
         "prop": "rows",
@@ -1445,38 +1515,59 @@
       },
       {
         "prop": "sort",
-        "type": "TableSort | null",
-        "required": true,
+        "type": "TableSort | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current sort key and direction, or null."
+        "description": "The sorted column's key and direction, or null. Set it to control the sort."
+      },
+      {
+        "prop": "defaultSort",
+        "type": "TableSort | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The sort marked at first when `sort` isn't set (null by default). The table only marks the header; sort `rows` yourself."
       },
       {
         "prop": "onSortChange",
-        "type": "(sort: TableSort) => void",
-        "required": true,
+        "type": "((sort: TableSort) => void) | undefined",
+        "required": false,
         "default": "—",
         "description": "Apply the requested key and direction to the data."
       },
       {
         "prop": "selection",
-        "type": "string[]",
-        "required": true,
+        "type": "string[] | undefined",
+        "required": false,
         "default": "—",
-        "description": "Keys of the selected rows (from `rowKey`), on every page."
+        "description": "Keys of the selected rows (from `rowKey`), on every page. Set it to control the selection."
+      },
+      {
+        "prop": "defaultSelection",
+        "type": "string[] | undefined",
+        "required": false,
+        "default": "[]",
+        "description": "The keys selected at first when `selection` isn't set ([] by default)."
       },
       {
         "prop": "onSelectionChange",
-        "type": "(selection: string[]) => void",
-        "required": true,
+        "type": "((selection: string[]) => void) | undefined",
+        "required": false,
         "default": "—",
         "description": "Update selected row keys across all pages."
       },
       {
         "prop": "page",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current page, from 1 to `pageCount`."
+        "description": "Current page, from 1 to `pageCount`. Set it to control the pager."
+      },
+      {
+        "prop": "defaultPage",
+        "type": "number | undefined",
+        "required": false,
+        "default": "1",
+        "description": "The page marked at first when `page` isn't set (1 by default). The table only moves the pager; pass that page's rows yourself."
       },
       {
         "prop": "pageCount",
@@ -1487,8 +1578,8 @@
       },
       {
         "prop": "onPageChange",
-        "type": "(page: number) => void",
-        "required": true,
+        "type": "((page: number) => void) | undefined",
+        "required": false,
         "default": "—",
         "description": "Load or slice the requested one-based page."
       },
@@ -1511,21 +1602,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"No results\"",
-        "description": "Message shown when there are no options or results."
+        "description": "Title of the default empty state when there are no rows; unused when you pass `empty`."
       },
       {
         "prop": "selectAllLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Select all rows on this page\"",
-        "description": "Accessible label for selecting the current page."
+        "description": "Names the header checkbox, which selects or clears the shown rows."
       },
       {
         "prop": "selectRowLabel",
         "type": "((row: Row) => string) | undefined",
         "required": false,
         "default": "(row: Row) => `Select ${rowKey(row)}`",
-        "description": "Accessible label for a row checkbox."
+        "description": "Names each row's checkbox from its row (\"Select INV-1032\" by default, from `rowKey`)."
       },
       {
         "prop": "sortLabel",
@@ -1546,35 +1637,190 @@
         "type": "((row: Row) => string) | undefined",
         "required": false,
         "default": "(row: Row) => `Actions for ${rowKey(row)}`",
-        "description": "Accessible name of a row action menu."
+        "description": "Names each row's action menu button and menu (\"Actions for INV-1032\" by default, from `rowKey`)."
       },
       {
         "prop": "paginationLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Pagination\"",
-        "description": "Accessible name of pagination."
+        "description": "Names the pager's navigation landmark."
       },
       {
         "prop": "previousPageLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Previous page\"",
-        "description": "Accessible label for the previous page."
+        "description": "Names the pager's previous-page arrow button."
       },
       {
         "prop": "nextPageLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Next page\"",
-        "description": "Accessible label for the next page."
+        "description": "Names the pager's next-page arrow button."
       },
       {
         "prop": "pageLabel",
         "type": "((page: number) => string) | undefined",
         "required": false,
         "default": "(page: number) => `Page ${page}`",
-        "description": "Accessible name of a page button."
+        "description": "Names each page button from its number (\"Page 2\" by default)."
+      }
+    ]
+  },
+  "DateField": {
+    "id": "datefield",
+    "title": "DateField",
+    "group": "Inputs",
+    "description": "",
+    "props": [
+      {
+        "prop": "form",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "ID of the form that owns the visible and hidden inputs."
+      },
+      {
+        "prop": "disabled",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Disables the input and the calendar button and dims the pill; the hidden input is left out of the form. A disabled Field or Fieldset does the same."
+      },
+      {
+        "prop": "name",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Name of the hidden input that submits the ISO date."
+      },
+      {
+        "prop": "placeholder",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"MM/DD/YYYY\"",
+        "description": "Hint shown while the input is empty; inside a Field with the label inside, only while it's focused."
+      },
+      {
+        "prop": "onFocus",
+        "type": "FocusEventHandler<HTMLInputElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Native focus event handler."
+      },
+      {
+        "prop": "onBlur",
+        "type": "FocusEventHandler<HTMLInputElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Native blur event handler, called after the typed text is committed."
+      },
+      {
+        "prop": "onKeyDown",
+        "type": "KeyboardEventHandler<HTMLInputElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Native keyboard handler; preventDefault skips the built-in Enter and Alt + Down handling."
+      },
+      {
+        "prop": "leading",
+        "type": "ReactNode",
+        "required": false,
+        "default": "—",
+        "description": "Content before the text, inside the pill."
+      },
+      {
+        "prop": "formatMonth",
+        "type": "((month: Date) => string) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Format the calendar's month heading from a local Date."
+      },
+      {
+        "prop": "formatWeekday",
+        "type": "((day: Date) => string) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Format a weekday column label from a local Date."
+      },
+      {
+        "prop": "formatDay",
+        "type": "((day: Date) => string) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Format each day number from a local Date."
+      },
+      {
+        "prop": "previousLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Accessible name of the calendar's previous-month button."
+      },
+      {
+        "prop": "nextLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Accessible name of the calendar's next-month button."
+      },
+      {
+        "prop": "value",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "—",
+        "description": "The date as YYYY-MM-DD, or null when empty. Leave it out to let the field track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The first date when the field tracks it itself. Defaults to null, no date."
+      },
+      {
+        "prop": "onValueChange",
+        "type": "((value: string | null) => void) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Called with the date as YYYY-MM-DD, or null, when typed text is committed with Enter or on blur, or a day is picked."
+      },
+      {
+        "prop": "min",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Earliest date as YYYY-MM-DD. Earlier days are disabled in the calendar and typing one keeps the previous date."
+      },
+      {
+        "prop": "max",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Latest date as YYYY-MM-DD. Later days are disabled in the calendar and typing one keeps the previous date."
+      },
+      {
+        "prop": "formatDate",
+        "type": "((day: string) => string) | undefined",
+        "required": false,
+        "default": "formatUSDate",
+        "description": "Turn a YYYY-MM-DD date into the text the input shows. Defaults to MM/DD/YYYY."
+      },
+      {
+        "prop": "parseDate",
+        "type": "((text: string) => string | null) | undefined",
+        "required": false,
+        "default": "parseUSDate",
+        "description": "Read typed text as YYYY-MM-DD, or return null when it isn't a date. Defaults to MM/DD/YYYY with /, -, . or a space."
+      },
+      {
+        "prop": "calendarLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"Choose date\"",
+        "description": "Accessible name of the calendar button and of the open calendar."
       }
     ]
   },
@@ -1589,7 +1835,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the calendar and stops day picks and month changes. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "max",
@@ -1613,25 +1859,11 @@
         "description": "Expose the required state. See the form example for validation."
       },
       {
-        "prop": "value",
-        "type": "string | null",
-        "required": true,
-        "default": "—",
-        "description": "Selected local date as YYYY-MM-DD, or null."
-      },
-      {
         "prop": "id",
         "type": "string | undefined",
         "required": false,
         "default": "—",
         "description": "Control ID; Field supplies an ID when it wraps this control."
-      },
-      {
-        "prop": "onValueChange",
-        "type": "(day: string) => void",
-        "required": true,
-        "default": "—",
-        "description": "Called with the next value when the user makes a change."
       },
       {
         "prop": "firstDayOfWeek",
@@ -1676,6 +1908,27 @@
         "description": "Accessible label for moving forward."
       },
       {
+        "prop": "value",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "—",
+        "description": "The selected local date as YYYY-MM-DD, or null. Leave it out to let the picker track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The first selected date when the picker tracks it itself. Defaults to null, no date."
+      },
+      {
+        "prop": "onValueChange",
+        "type": "((value: string) => void) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Called with the date as YYYY-MM-DD when a day is picked by click, Enter or Space."
+      },
+      {
         "prop": "name",
         "type": "string | undefined",
         "required": false,
@@ -1687,7 +1940,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapper around the calendar, for width and placement. The calendar fills it."
       }
     ]
   },
@@ -1702,7 +1955,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the calendar and stops day picks and month changes. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "max",
@@ -1730,7 +1983,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapper around the calendar, for width and placement. The calendar fills it."
       },
       {
         "prop": "id",
@@ -1783,17 +2036,24 @@
       },
       {
         "prop": "value",
-        "type": "DateRange | null",
-        "required": true,
+        "type": "DateRange | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Complete ordered date range, or null before selection."
+        "description": "The complete range, start before end, or null. Leave it out to let the picker track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "DateRange | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The first range when the picker tracks it itself. Defaults to null, no range."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: DateRange) => void",
-        "required": true,
+        "type": "((value: DateRange) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the ordered range when the second day is picked. The first pick only previews."
       },
       {
         "prop": "startName",
@@ -1829,7 +2089,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the `<dl>`, for width and placement; its width decides whether labels sit beside or above the values."
       }
     ]
   },
@@ -1841,24 +2101,31 @@
     "props": [
       {
         "prop": "open",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the overlay is open."
+        "description": "Whether the dialog is open. Set it to control the dialog."
+      },
+      {
+        "prop": "defaultOpen",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the dialog starts open when open isn’t set."
       },
       {
         "prop": "onOpenChange",
-        "type": "(open: boolean) => void",
-        "required": true,
+        "type": "((open: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the overlay requests an open or closed state."
+        "description": "Called with true when the trigger is pressed, and with false on Escape, a backdrop click or the close button."
       },
       {
         "prop": "children",
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Content rendered inside the component."
+        "description": "Body of the dialog, below the title; it scrolls when it’s taller than the screen."
       },
       {
         "prop": "trigger",
@@ -1872,14 +2139,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Dialog\"",
-        "description": "Title displayed by the component."
+        "description": "Heading at the top of the panel; also names the dialog."
       },
       {
         "prop": "closeLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Close\"",
-        "description": "Accessible label for the close action."
+        "description": "Accessible name of the × button in the panel’s header."
       },
       {
         "prop": "role",
@@ -1893,7 +2160,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "—",
-        "description": "ID of content describing the dialog."
+        "description": "ID of the text in the body that describes the dialog, read when it opens."
       },
       {
         "prop": "className",
@@ -1922,14 +2189,14 @@
         "type": "((value: number) => string) | undefined",
         "required": false,
         "default": "(value: number) => value.toLocaleString(\"en-US\")",
-        "description": "Format a value for display or accessible value text."
+        "description": "Turns a value into the text in the center and the spoken segment text, such as \"6 h\"."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Donut chart\"",
-        "description": "Accessible summary of the chart."
+        "description": "Names the chart for screen readers with a short summary, such as \"Work hours this week\"."
       },
       {
         "prop": "totalLabel",
@@ -1950,7 +2217,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the ink card, for width and placement; it fills its container by default."
       }
     ]
   },
@@ -1962,31 +2229,38 @@
     "props": [
       {
         "prop": "open",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the overlay is open."
+        "description": "Whether the drawer is open. Set it to control the drawer."
+      },
+      {
+        "prop": "defaultOpen",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the drawer starts open when open isn’t set."
       },
       {
         "prop": "onOpenChange",
-        "type": "(open: boolean) => void",
-        "required": true,
+        "type": "((open: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the overlay requests an open or closed state."
+        "description": "Called with false when the drawer is dragged toward its edge, the × button or the backdrop is pressed, or Escape is pressed."
       },
       {
         "prop": "title",
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Title displayed by the component."
+        "description": "Heading in the drawer’s header; also names the drawer."
       },
       {
         "prop": "children",
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Content rendered inside the component."
+        "description": "Body of the drawer, padded to line up with the title; it scrolls when taller than the panel."
       },
       {
         "prop": "side",
@@ -2000,14 +2274,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Close\"",
-        "description": "Accessible label for the close action."
+        "description": "Accessible name of the × button in the header."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Size of the drawer panel."
       }
     ]
   },
@@ -2019,24 +2293,31 @@
     "props": [
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The saved text. Pass it to control EditableText; leave it out and EditableText keeps its own text."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The text EditableText starts with when it keeps its own text."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the new text when an edit is saved, not on every keystroke."
       },
       {
         "prop": "label",
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Accessible name of the control or region."
+        "description": "Names the input while editing, and goes into the edit button's name through `editLabel`."
       },
       {
         "prop": "placeholder",
@@ -2050,14 +2331,14 @@
         "type": "((label: string, value: string) => string) | undefined",
         "required": false,
         "default": "(label: string, value: string) => `Edit ${label}, ${value}`",
-        "description": "Build the accessible name of the edit button from its label and value."
+        "description": "Names the button that starts editing, given the label and the saved text."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to place it in a layout."
       }
     ]
   },
@@ -2072,14 +2353,14 @@
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Title displayed by the component."
+        "description": "Short statement of what is empty, e.g. \"No projects yet\"."
       },
       {
         "prop": "description",
         "type": "ReactNode",
         "required": false,
         "default": "—",
-        "description": "Supporting content explaining the control or group."
+        "description": "A line under the title on why it is empty or what to do next."
       },
       {
         "prop": "icon",
@@ -2100,7 +2381,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the centered column, for placement; it fills its container's width and has 24 px padding."
       }
     ]
   },
@@ -2115,14 +2396,14 @@
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Title displayed by the component."
+        "description": "Heading in the card and the detail view; also names the detail dialog."
       },
       {
         "prop": "subtitle",
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Secondary text below the title."
+        "description": "Muted line under the title in the card and the detail view."
       },
       {
         "prop": "visual",
@@ -2140,38 +2421,45 @@
       },
       {
         "prop": "open",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the overlay is open."
+        "description": "Whether the detail view is open. Set it to control the card."
+      },
+      {
+        "prop": "defaultOpen",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the detail view starts open when open isn’t set."
       },
       {
         "prop": "onOpenChange",
-        "type": "(open: boolean) => void",
-        "required": true,
+        "type": "((open: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the overlay requests an open or closed state."
+        "description": "Called with true when the card is pressed, and with false on Escape or the close button."
       },
       {
         "prop": "openLabel",
         "type": "((title: string) => string) | undefined",
         "required": false,
         "default": "(title: string) => `Open ${title}`",
-        "description": "Build the accessible name of the summary trigger."
+        "description": "Builds the card button’s accessible name from the title."
       },
       {
         "prop": "closeLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Close\"",
-        "description": "Accessible label for the close action."
+        "description": "Accessible name of the × button in the detail view."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the card; the space it takes stays 280 × 72 while the detail view overlays the page."
       }
     ]
   },
@@ -2235,7 +2523,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the Field's outer box, to set its width or place it in a form layout."
       }
     ]
   },
@@ -2285,7 +2573,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the `<fieldset>`, to set its width or place it in a form layout."
       }
     ]
   },
@@ -2297,7 +2585,7 @@
     "props": [
       {
         "prop": "status",
-        "type": "\"idle\" | \"uploading\" | \"done\"",
+        "type": "\"done\" | \"idle\" | \"uploading\"",
         "required": true,
         "default": "—",
         "description": "Current display state: idle, uploading or done."
@@ -2307,7 +2595,7 @@
         "type": "number",
         "required": true,
         "default": "—",
-        "description": "0..1"
+        "description": "Upload progress from 0 to 1, shown while status is uploading."
       },
       {
         "prop": "onFiles",
@@ -2321,7 +2609,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Drop a file or click to upload\"",
-        "description": "Accessible name of the control or region."
+        "description": "Text on the drop target while idle, which also names its button."
       },
       {
         "prop": "uploadingLabel",
@@ -2363,14 +2651,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the target; it doesn't open the chooser or take drops."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 128 px tall area that holds the target, for placement. The target fills its width."
       }
     ]
   },
@@ -2392,7 +2680,7 @@
         "type": "ReactNode",
         "required": false,
         "default": "—",
-        "description": "Optional content below the links."
+        "description": "Small print under a separator below the link groups, such as a copyright line."
       },
       {
         "prop": "label",
@@ -2406,7 +2694,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the footer, such as its margin; it has none of its own."
       }
     ]
   },
@@ -2463,21 +2751,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Main\"",
-        "description": "Accessible name for desktop and mobile navigation."
+        "description": "Accessible name of the link navigation, in the header and in the menu drawer."
       },
       {
         "prop": "closeLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Close\"",
-        "description": "Accessible label for the close action."
+        "description": "Accessible name of the × button in the menu drawer."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the header, which sticks to the top of its scroll container."
       }
     ]
   },
@@ -2506,14 +2794,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Hold to delete\"",
-        "description": "Content rendered inside the component."
+        "description": "The visible label, also the accessible name until the hold completes."
       },
       {
         "prop": "doneLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Deleted\"",
-        "description": "Accessible completion label."
+        "description": "Accessible name once confirmed, since the check has no text."
       },
       {
         "prop": "duration",
@@ -2527,7 +2815,71 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the button, for placement."
+      }
+    ]
+  },
+  "HoverCard": {
+    "id": "hovercard",
+    "title": "HoverCard",
+    "group": "Overlays",
+    "description": "",
+    "props": [
+      {
+        "prop": "content",
+        "type": "ReactNode",
+        "required": true,
+        "default": "—",
+        "description": "Content of the card, with its own padding and width."
+      },
+      {
+        "prop": "children",
+        "type": "(trigger: Trigger) => ReactNode",
+        "required": true,
+        "default": "—",
+        "description": "Render function receiving ref and pointer/focus handlers. Spread these onto the trigger."
+      },
+      {
+        "prop": "open",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Whether the card is open. Set it to control the card."
+      },
+      {
+        "prop": "defaultOpen",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the card starts open when open isn't set."
+      },
+      {
+        "prop": "onOpenChange",
+        "type": "((open: boolean) => void) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Called with true when the open delay passes or the trigger gets keyboard focus, and with false when the close delay passes, focus leaves the trigger and the card, or Escape is pressed."
+      },
+      {
+        "prop": "openDelay",
+        "type": "number | undefined",
+        "required": false,
+        "default": "700",
+        "description": "Milliseconds the pointer rests on the trigger before the card opens."
+      },
+      {
+        "prop": "closeDelay",
+        "type": "number | undefined",
+        "required": false,
+        "default": "300",
+        "description": "Milliseconds after the pointer leaves the trigger or the card before the card closes; moving into the card within this time keeps it open."
+      },
+      {
+        "prop": "className",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "Placement of the wrapper around the trigger."
       }
     ]
   },
@@ -2556,7 +2908,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the SVG, including text color utilities."
+        "description": "Classes on the `<svg>`, for placement or a text color that sets the stroke."
       }
     ]
   },
@@ -2567,39 +2919,11 @@
     "description": "",
     "props": [
       {
-        "prop": "disabled",
-        "type": "boolean | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Prevent activation and remove the button from the Tab order."
-      },
-      {
-        "prop": "type",
-        "type": "\"button\" | \"submit\" | \"reset\" | undefined",
-        "required": false,
-        "default": "\"button\"",
-        "description": "Native button type. Defaults to button to avoid accidental form submission."
-      },
-      {
-        "prop": "className",
-        "type": "string | undefined",
-        "required": false,
-        "default": "\"\"",
-        "description": "Additional classes on the native button."
-      },
-      {
         "prop": "children",
         "type": "ReactNode",
         "required": true,
         "default": "—",
         "description": "Icon content. The button's label names the action."
-      },
-      {
-        "prop": "onClick",
-        "type": "MouseEventHandler<HTMLButtonElement> | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Native click handler, also called by keyboard activation."
       },
       {
         "prop": "variant",
@@ -2616,11 +2940,39 @@
         "description": "Button width and height: md is 44px and sm is 32px."
       },
       {
+        "prop": "type",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Native button type. Defaults to button to avoid accidental form submission. Ignored with href."
+      },
+      {
+        "prop": "className",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "Classes on the native button or link, for placement, such as `absolute top-3 right-3`."
+      },
+      {
+        "prop": "onClick",
+        "type": "MouseEventHandler<HTMLButtonElement> | MouseEventHandler<HTMLAnchorElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Native click handler, also called by keyboard activation."
+      },
+      {
+        "prop": "href",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Render a link to this URL instead of a button, with the same look."
+      },
+      {
         "prop": "label",
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Required accessible name, applied as aria-label to the button."
+        "description": "Required accessible name, applied as aria-label to the button or link."
       }
     ]
   },
@@ -2642,7 +2994,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "—",
-        "description": "Image source URL."
+        "description": "Image source URL. A new src starts over: the placeholder shows until it loads or fails."
       },
       {
         "prop": "className",
@@ -2692,7 +3044,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "—",
-        "description": "Disable the input and any built-in actions."
+        "description": "Disables the native input and dims the pill; a disabled Field or Fieldset does the same."
       },
       {
         "prop": "name",
@@ -2720,7 +3072,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer surface, not the native input."
+        "description": "Classes for the pill around the input, to set its width or place it; other props go to the input."
       },
       {
         "prop": "id",
@@ -2745,15 +3097,22 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current text value."
+        "description": "The text. Pass it to control Input; leave it out and Input keeps its own text."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The text Input starts with when it keeps its own text; the floating label starts up when it isn't empty."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
         "description": "Called with the new text when the user types."
       },
@@ -2809,45 +3168,52 @@
       },
       {
         "prop": "expanded",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the content is expanded."
+        "description": "Whether the pill is expanded into its panel. Set it to control the island."
+      },
+      {
+        "prop": "defaultExpanded",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the island starts expanded when expanded isn’t set."
       },
       {
         "prop": "onExpandedChange",
-        "type": "(expanded: boolean) => void",
-        "required": true,
+        "type": "((expanded: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the expanded state changes."
+        "description": "Called with true when the pill is pressed, and with false on Escape or a press outside."
       },
       {
         "prop": "openLabel",
         "type": "((activity: string) => string) | undefined",
         "required": false,
         "default": "(activity: string) => `Expand ${activity}`",
-        "description": "Build the accessible name of the compact trigger."
+        "description": "Builds the pill button’s accessible name from the activity."
       },
       {
         "prop": "panelWidth",
         "type": "number | undefined",
         "required": false,
         "default": "340",
-        "description": "Expanded panel width in pixels."
+        "description": "Width of the expanded panel in pixels."
       },
       {
         "prop": "panelHeight",
         "type": "number | undefined",
         "required": false,
         "default": "84",
-        "description": "Expanded panel height in pixels."
+        "description": "Height of the expanded panel in pixels."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the pill; the panel grows from its center over the page."
       }
     ]
   },
@@ -2862,7 +3228,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the native kbd element."
+        "description": "Classes on the `<kbd>`, for margin and placement."
       },
       {
         "prop": "children",
@@ -2888,45 +3254,52 @@
       },
       {
         "prop": "value",
-        "type": "number | null",
-        "required": true,
+        "type": "number | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Index of the open image, or null when closed."
+        "description": "Index of the open image, or null when closed. Leave it out to let the lightbox track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "Index of the image open at first, or null (the default) to start closed, when the lightbox tracks it itself."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number | null) => void",
-        "required": true,
+        "type": "((value: number | null) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the image index a thumbnail, arrow button or arrow key opens, and with null when the viewer closes."
       },
       {
         "prop": "closeLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Close\"",
-        "description": "Accessible label for the close action."
+        "description": "Name of the close button in the full view."
       },
       {
         "prop": "previousLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Previous image\"",
-        "description": "Accessible label for moving backward."
+        "description": "Name of the button that shows the previous image."
       },
       {
         "prop": "nextLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Next image\"",
-        "description": "Accessible label for moving forward."
+        "description": "Name of the button that shows the next image."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapping row of thumbnails, for placement and width."
       }
     ]
   },
@@ -2948,21 +3321,21 @@
         "type": "((value: number) => string) | undefined",
         "required": false,
         "default": "(value: number) => value.toLocaleString(\"en-US\")",
-        "description": "Format a value for display or accessible value text."
+        "description": "Turns a value into the text in the tooltip and the live status, such as \"6 h\"."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Line chart\"",
-        "description": "Accessible summary of the chart."
+        "description": "Names the chart for screen readers with a short summary, such as \"Work hours this week\"."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the ink card, for width and placement; it fills its container by default."
       }
     ]
   },
@@ -2984,7 +3357,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the native link, for placement or text size, such as `text-label`."
       },
       {
         "prop": "onClick",
@@ -2992,6 +3365,13 @@
         "required": false,
         "default": "—",
         "description": "Native click handler. preventDefault skips navigation."
+      },
+      {
+        "prop": "underline",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "true",
+        "description": "Draw the underline (the default). Set it to false for links in navigation lists and footers, where their position already shows they are links."
       }
     ]
   },
@@ -3020,7 +3400,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the `<ul>`, for width and placement. It draws no card; place it in a Card."
       }
     ]
   },
@@ -3035,21 +3415,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Loading\"",
-        "description": "Accessible name of the control or region."
+        "description": "Visible title under the spinner, also read out by the status."
       },
       {
         "prop": "description",
         "type": "ReactNode",
         "required": false,
         "default": "—",
-        "description": "Supporting content explaining the control or group."
+        "description": "A muted line under the label."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the centered status column, for placement; it fills its container's width and has 24 px padding, like EmptyState."
       }
     ]
   },
@@ -3060,60 +3440,67 @@
     "description": "",
     "props": [
       {
+        "prop": "disabled",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Native disabled: dims the button and removes it from the Tab order. Loading and success block activation without this."
+      },
+      {
         "prop": "type",
         "type": "\"button\" | \"submit\" | \"reset\" | undefined",
         "required": false,
         "default": "\"button\"",
-        "description": "Native input type."
+        "description": "Native button type. Use submit inside a form; the default is button."
       },
       {
         "prop": "children",
         "type": "ReactNode",
         "required": false,
         "default": "\"Connect\"",
-        "description": "Content rendered inside the component."
-      },
-      {
-        "prop": "disabled",
-        "type": "boolean | undefined",
-        "required": false,
-        "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "The idle label. The button narrows to a circle around the spinner and the check."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the button, for placement, such as `justify-self-end`."
       },
       {
         "prop": "aria-label",
         "type": "string | undefined",
         "required": false,
         "default": "—",
-        "description": "Optional accessible name while idle."
+        "description": "Accessible name while idle, when the label alone isn't clear enough."
+      },
+      {
+        "prop": "onClick",
+        "type": "MouseEventHandler<HTMLButtonElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": ""
       },
       {
         "prop": "status",
         "type": "\"success\" | \"loading\" | \"idle\"",
         "required": true,
         "default": "—",
-        "description": "Caller-controlled idle, loading or success state."
+        "description": "idle shows the label; loading shows a spinner; success shows a check on the accent fill."
       },
       {
         "prop": "loadingLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Loading\"",
-        "description": "Accessible name during loading."
+        "description": "Accessible name while loading, since the spinner has no text."
       },
       {
         "prop": "successLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Done\"",
-        "description": "Accessible name after success."
+        "description": "Accessible name after success, since the check has no text."
       }
     ]
   },
@@ -3125,24 +3512,31 @@
     "props": [
       {
         "prop": "options",
-        "type": "{ value: string; label: string; icon?: ReactNode; }[]",
+        "type": "Options",
         "required": true,
         "default": "—",
-        "description": "Choices with a stable value, visible label and optional icon."
+        "description": "The choices: `{ value, label, icon?, disabled? }`, or groups `{ label, options }` whose options show under a heading. A disabled option is dimmed and can't be picked."
       },
       {
         "prop": "value",
-        "type": "string[]",
-        "required": true,
+        "type": "string[] | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The picked values. Pass it to control MultiSelect; leave it out and MultiSelect keeps its own values."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string[] | undefined",
+        "required": false,
+        "default": "[]",
+        "description": "The values MultiSelect starts with when it keeps its own values."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string[]) => void",
-        "required": true,
+        "type": "((value: string[]) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with all picked values each time an option is ticked or unticked."
       },
       {
         "prop": "placeholder",
@@ -3156,14 +3550,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Choose options\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the pill and its list for screen readers when no Field labels them."
       },
       {
         "prop": "emptyText",
         "type": "string | undefined",
         "required": false,
         "default": "\"No options\"",
-        "description": "Message shown when there are no options or results."
+        "description": "Shown in the open list when there are no options."
       },
       {
         "prop": "summary",
@@ -3191,7 +3585,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the pill and stops it from opening or taking focus; the hidden inputs are left out of the form. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -3205,7 +3599,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to set its width or place it in a layout."
       }
     ]
   },
@@ -3220,7 +3614,7 @@
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Title displayed by the component."
+        "description": "Track title, shown in the pill and the player and used in openLabel."
       },
       {
         "prop": "artist",
@@ -3238,17 +3632,24 @@
       },
       {
         "prop": "expanded",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the content is expanded."
+        "description": "Whether the player is open. Leave it out to let the player track it, starting from defaultExpanded."
+      },
+      {
+        "prop": "defaultExpanded",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the player starts open when it tracks this itself."
       },
       {
         "prop": "onExpandedChange",
-        "type": "(expanded: boolean) => void",
-        "required": true,
+        "type": "((expanded: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the expanded state changes."
+        "description": "Called with true when the pill is pressed, and with false when Minimize or Escape closes the player."
       },
       {
         "prop": "openLabel",
@@ -3297,7 +3698,57 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapper around the pill, for placement; the open player grows over the page from there."
+      }
+    ]
+  },
+  "NavigationMenu": {
+    "id": "navigationmenu",
+    "title": "NavigationMenu",
+    "group": "Navigation",
+    "description": "",
+    "props": [
+      {
+        "prop": "items",
+        "type": "({ label: string; href: string; } | { label: string; links: PanelLink[]; })[]",
+        "required": true,
+        "default": "—",
+        "description": "Top-level links (`label`, `href`) and triggers (`label`, `links`); each panel link has a `label`, an `href` and an optional `description`."
+      },
+      {
+        "prop": "value",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "—",
+        "description": "The `label` of the item whose panel is open; null while none is."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The open item when uncontrolled."
+      },
+      {
+        "prop": "onValueChange",
+        "type": "((value: string | null) => void) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Called with the item that opens, or null when the panel closes."
+      },
+      {
+        "prop": "label",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"Main\"",
+        "description": "Accessible name of the navigation landmark."
+      },
+      {
+        "prop": "className",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "Placement of the navigation."
       }
     ]
   },
@@ -3333,14 +3784,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Notifications\"",
-        "description": "Accessible name of the control or region."
+        "description": "Name of the notifications region, which takes focus when the last row is dismissed."
       },
       {
         "prop": "emptyText",
         "type": "string | undefined",
         "required": false,
         "default": "\"No notifications\"",
-        "description": "Message shown when there are no options or results."
+        "description": "Message shown when there are no notifications."
       },
       {
         "prop": "readLabel",
@@ -3361,7 +3812,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the region, for placement; it fills its container's width and draws no card, so put it in one."
       }
     ]
   },
@@ -3383,7 +3834,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "—",
-        "description": "Disable interaction with this control."
+        "description": "Disables the input and dims the pill; the hidden input is left out of the form. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "name",
@@ -3428,13 +3879,6 @@
         "description": "Native keyboard handler; preventDefault skips the built-in handling."
       },
       {
-        "prop": "leading",
-        "type": "ReactNode",
-        "required": false,
-        "default": "—",
-        "description": "Content before the main content."
-      },
-      {
         "prop": "trailing",
         "type": "ReactNode",
         "required": false,
@@ -3442,18 +3886,32 @@
         "description": "Content after the main content."
       },
       {
-        "prop": "value",
-        "type": "number | null",
-        "required": true,
+        "prop": "leading",
+        "type": "ReactNode",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "Content before the main content."
+      },
+      {
+        "prop": "value",
+        "type": "number | null | undefined",
+        "required": false,
+        "default": "—",
+        "description": "The number, or null when empty. Pass it to control NumberInput; leave it out and NumberInput keeps its own number."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The number NumberInput starts with when it keeps its own number."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number | null) => void",
-        "required": true,
+        "type": "((value: number | null) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the clamped number, or null, when an edit is committed with Enter, on blur or with the arrow keys."
       },
       {
         "prop": "min",
@@ -3500,17 +3958,24 @@
     "props": [
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The number. Pass it to control NumberStepper; leave it out and NumberStepper keeps its own number."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "0",
+        "description": "The number NumberStepper starts with when it keeps its own number."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the new number after a button press, an arrow key, Home or End, never past `min` or `max`."
       },
       {
         "prop": "min",
@@ -3545,21 +4010,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Quantity\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the stepper for screen readers when no Field labels it."
       },
       {
         "prop": "decreaseLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Decrease\"",
-        "description": "Accessible name for the decrease button."
+        "description": "Names the minus button."
       },
       {
         "prop": "increaseLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Increase\"",
-        "description": "Accessible name for the increase button."
+        "description": "Names the plus button."
       },
       {
         "prop": "id",
@@ -3587,14 +4052,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the stepper and stops its buttons and keys; the hidden input is left out of the form. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to place it in a layout."
       }
     ]
   },
@@ -3609,7 +4074,7 @@
         "type": "number",
         "required": true,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The number shown; when it changes, the digits roll toward it."
       },
       {
         "prop": "format",
@@ -3623,7 +4088,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the inline span around the digits, for margin and placement; size and color come from the parent."
       }
     ]
   },
@@ -3635,17 +4100,24 @@
     "props": [
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The digits entered so far. Pass it to control OTPInput; leave it out and OTPInput keeps its own code."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The code OTPInput starts with when it keeps its own code."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the whole code each time a digit is typed, deleted or pasted."
       },
       {
         "prop": "length",
@@ -3659,14 +4131,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Verification code\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the group of slots for screen readers when no Field labels it."
       },
       {
         "prop": "cellLabel",
         "type": "((position: number, length: number) => string) | undefined",
         "required": false,
         "default": "(position: number, length: number) => `Digit ${position} of ${length}`",
-        "description": "Accessible name for each one-based cell position and total length."
+        "description": "Names each slot, given its position from 1 and the code length, e.g. \"Digit 2 of 6\"."
       },
       {
         "prop": "id",
@@ -3687,7 +4159,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the slots and disables their inputs; the hidden input is left out of the form. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -3701,7 +4173,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to place it in a layout."
       }
     ]
   },
@@ -3720,24 +4192,31 @@
       },
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "The current page, from 0."
+        "description": "The current page, from 0. Leave it out to let the dots track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "0",
+        "description": "The first page shown when the dots track the page themselves."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the page a press, a drag or an arrow key picks."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Pages\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the slider."
       },
       {
         "prop": "pageLabel",
@@ -3751,7 +4230,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the dots' row, for placement. It has no surface; put it on one if it needs it."
       }
     ]
   },
@@ -3766,14 +4245,14 @@
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Title displayed by the component."
+        "description": "The page’s h1."
       },
       {
         "prop": "description",
         "type": "ReactNode",
         "required": false,
         "default": "—",
-        "description": "Supporting content explaining the control or group."
+        "description": "Muted text under the title that says what the page is for."
       },
       {
         "prop": "breadcrumbs",
@@ -3794,7 +4273,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the header, such as its margin."
       }
     ]
   },
@@ -3813,17 +4292,24 @@
       },
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current page, from 1 to `count`."
+        "description": "The current page, from 1 to count. Leave it out to let Pagination track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "1",
+        "description": "The first page shown when Pagination tracks the page itself."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the page the user picks; load or slice that page's data here."
       },
       {
         "prop": "slots",
@@ -3844,7 +4330,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Pagination\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the navigation landmark."
       },
       {
         "prop": "previousLabel",
@@ -3879,7 +4365,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the nav element, for placement such as `justify-self-center`."
       }
     ]
   },
@@ -3897,18 +4383,11 @@
         "description": "Inline styles on the outer surface."
       },
       {
-        "prop": "autoComplete",
-        "type": "HTMLInputAutoCompleteAttribute | undefined",
-        "required": false,
-        "default": "\"current-password\"",
-        "description": "Native autocomplete hint."
-      },
-      {
         "prop": "disabled",
         "type": "boolean | undefined",
         "required": false,
         "default": "—",
-        "description": "Disable the input and any built-in actions."
+        "description": "Disables the native input and the eye button, and dims the pill; a disabled Field or Fieldset does the same."
       },
       {
         "prop": "name",
@@ -3916,6 +4395,13 @@
         "required": false,
         "default": "—",
         "description": "Native form field name."
+      },
+      {
+        "prop": "autoComplete",
+        "type": "HTMLInputAutoCompleteAttribute | undefined",
+        "required": false,
+        "default": "\"current-password\"",
+        "description": "Native autocomplete hint."
       },
       {
         "prop": "required",
@@ -3929,19 +4415,26 @@
         "type": "string | undefined",
         "required": false,
         "default": "—",
-        "description": "Additional classes on the outer surface, not the native input."
+        "description": "Classes for the pill around the input, to set its width or place it; other props go to the input."
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current text value."
+        "description": "The password. Pass it to control PasswordInput; leave it out and it keeps its own text."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "The text PasswordInput starts with when it keeps its own text."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
         "description": "Called with the new text when the user types."
       },
@@ -3964,14 +4457,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Show password\"",
-        "description": "Accessible name for showing the password."
+        "description": "Names the eye button while the password is hidden."
       },
       {
         "prop": "hideLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Hide password\"",
-        "description": "Accessible name for hiding the password."
+        "description": "Names the eye button while the password is shown."
       }
     ]
   },
@@ -3983,24 +4476,31 @@
     "props": [
       {
         "prop": "open",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the overlay is open."
+        "description": "Whether the panel is open. Set it to control the popover."
+      },
+      {
+        "prop": "defaultOpen",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the panel starts open when open isn’t set."
       },
       {
         "prop": "onOpenChange",
-        "type": "(open: boolean) => void",
-        "required": true,
+        "type": "((open: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called when the overlay requests an open or closed state."
+        "description": "Called with true when the trigger is pressed, and with false on Escape or a press outside."
       },
       {
         "prop": "children",
         "type": "ReactNode",
         "required": true,
         "default": "—",
-        "description": "Content rendered inside the component."
+        "description": "Content of the panel, which sizes to it up to the viewport and scrolls beyond."
       },
       {
         "prop": "trigger",
@@ -4014,7 +4514,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "—",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the trigger; required when the trigger shows only an icon."
       },
       {
         "prop": "panelLabel",
@@ -4049,7 +4549,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the trigger and keeps the panel from opening."
       },
       {
         "prop": "aria-labelledby",
@@ -4077,7 +4577,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the trigger; the open panel overlays the page."
       }
     ]
   },
@@ -4099,21 +4599,21 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Loading\"",
-        "description": "Accessible name of the control or region."
+        "description": "Name of the progress bar, e.g. \"Export progress\"."
       },
       {
         "prop": "formatValue",
         "type": "((value: number) => string) | undefined",
         "required": false,
         "default": "(value: number) => value.toLocaleString(\"en-US\", { style: \"percent\" })",
-        "description": "Format a value for display or accessible value text."
+        "description": "Turns the value into the text read out for it, \"45%\" by default."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 44 px track, for placement; it fills its container's width."
       }
     ]
   },
@@ -4135,14 +4635,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Progress\"",
-        "description": "Accessible name of the control or region."
+        "description": "Name of the progress ring, e.g. \"Export progress\"."
       },
       {
         "prop": "formatValue",
         "type": "((value: number) => string) | undefined",
         "required": false,
         "default": "(value: number) => value.toLocaleString(\"en-US\", { style: \"percent\" })",
-        "description": "Format a value for display or accessible value text."
+        "description": "Turns the value into the text read out for it, \"45%\" by default."
       },
       {
         "prop": "doneLabel",
@@ -4156,7 +4656,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 44 px ring, for placement."
       }
     ]
   },
@@ -4175,17 +4675,24 @@
       },
       {
         "prop": "value",
-        "type": "string | null",
-        "required": true,
+        "type": "string | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Selected option value, or null for no selection."
+        "description": "Selected option value, or null for no selection. Leave it out to let the group track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The first selected value when the group tracks it itself. Defaults to null, no selection."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the selected option value when the user makes a choice."
+        "description": "Called with the option's value when it's picked by click or arrow key."
       },
       {
         "prop": "label",
@@ -4227,7 +4734,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the radiogroup, for width and placement. Rows fill its width, so their hover reaches the edge."
       }
     ]
   },
@@ -4239,17 +4746,24 @@
     "props": [
       {
         "prop": "value",
-        "type": "[number, number]",
-        "required": true,
+        "type": "[number, number] | undefined",
+        "required": false,
         "default": "—",
-        "description": "Ordered pair: lower value, then upper value."
+        "description": "Ordered pair: lower value, then upper value. Leave it out to let the slider track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "[number, number] | undefined",
+        "required": false,
+        "default": "[min, max]",
+        "description": "The first pair when the slider tracks it itself. Defaults to [min, max]."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: [number, number]) => void",
-        "required": true,
+        "type": "((value: [number, number]) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the new pair while a knob is dragged, and on a track press or key press."
       },
       {
         "prop": "min",
@@ -4319,14 +4833,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the slider and stops drags and keys. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 44 px track area, for placement. The track fills its container's width."
       }
     ]
   },
@@ -4338,17 +4852,24 @@
     "props": [
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whole stars, from 0 to `count`."
+        "description": "Whole stars, from 0 to `count`. Leave it out to let the rating track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "0",
+        "description": "The first rating when it tracks its own value. Defaults to 0."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the new number of stars on a star click, an arrow key, Home or End."
       },
       {
         "prop": "count",
@@ -4362,7 +4883,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Rating\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the slider when no Field labels it. A read-only rating is named by valueLabel instead."
       },
       {
         "prop": "valueLabel",
@@ -4404,14 +4925,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the stars and stops changes. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the paper pill, for placement such as margin. It sizes to its stars."
       }
     ]
   },
@@ -4423,24 +4944,31 @@
     "props": [
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The query. Pass it to control SearchField; leave it out and SearchField keeps its own query."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The query SearchField starts with when it keeps its own query."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the query as the user types, and with an empty string when it's cleared."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Search\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the search input for screen readers."
       },
       {
         "prop": "placeholder",
@@ -4454,14 +4982,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Open search\"",
-        "description": "Accessible name of the collapsed trigger."
+        "description": "Names the round button that opens the field."
       },
       {
         "prop": "clearLabel",
         "type": "string | undefined",
         "required": false,
         "default": "\"Clear search\"",
-        "description": "Accessible name of the clear action."
+        "description": "Names the button that clears the query."
       },
       {
         "prop": "name",
@@ -4475,7 +5003,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to set its width or place it; the open field grows to fill it."
       }
     ]
   },
@@ -4494,24 +5022,31 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Selected option value; must match one option."
+        "description": "The selected option's value. Leave it out to let the tabs track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "options[0].value",
+        "description": "The first selected option when the tabs track it themselves. Defaults to the first option."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with an option's value when it's picked by click or arrow key."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Range\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the tablist."
       },
       {
         "prop": "id",
@@ -4525,7 +5060,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the tablist, for placement. It sizes to its labels."
       }
     ]
   },
@@ -4537,24 +5072,31 @@
     "props": [
       {
         "prop": "options",
-        "type": "{ value: string; label: string; icon?: ReactNode; }[]",
+        "type": "Options",
         "required": true,
         "default": "—",
-        "description": "Available choices. Each option supplies a value and visible label."
+        "description": "The choices: `{ value, label, icon?, disabled? }`, or groups `{ label, options }` whose options show under a heading. A disabled option is dimmed and can't be picked."
       },
       {
         "prop": "value",
-        "type": "string | null",
-        "required": true,
+        "type": "string | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The selected value, or null for none. Pass it to control Select; leave it out and Select keeps its own value."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The value Select starts with when it keeps its own value."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the value of the option the user picks."
       },
       {
         "prop": "placeholder",
@@ -4568,14 +5110,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Choose an option\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the pill and its list for screen readers when no Field labels them."
       },
       {
         "prop": "emptyText",
         "type": "string | undefined",
         "required": false,
         "default": "\"No options\"",
-        "description": "Message shown when there are no options or results."
+        "description": "Shown in the open list when there are no options."
       },
       {
         "prop": "id",
@@ -4596,7 +5138,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the pill and stops it from opening or taking focus; the hidden input is left out of the form. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -4610,7 +5152,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to set its width or place it in a layout."
       }
     ]
   },
@@ -4646,7 +5188,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Selection\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the group that holds the count and the actions."
       },
       {
         "prop": "countLabel",
@@ -4667,7 +5209,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the bar, for placement, such as `fixed bottom-6 left-1/2 -translate-x-1/2`."
       }
     ]
   },
@@ -4682,7 +5224,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the native hr, including spacing utilities."
+        "description": "Spacing around the rule, such as my-4, and its placement in a flex or grid row."
       },
       {
         "prop": "orientation",
@@ -4708,24 +5250,31 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The current destination's value. Leave it out to let the nav track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The current destination when the nav tracks it itself. Empty marks none."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with an item's value when it's activated, links included."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Main\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the navigation landmark."
       },
       {
         "prop": "collapsed",
@@ -4739,7 +5288,7 @@
         "type": "ReactNode",
         "required": false,
         "default": "—",
-        "description": "Content before the main content."
+        "description": "Content above the list, such as a brand."
       },
       {
         "prop": "trailing",
@@ -4753,7 +5302,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the nav element, for height and width, such as `h-full` or `w-8` when collapsed."
       }
     ]
   },
@@ -4780,17 +5329,24 @@
     "props": [
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The current number, from min to max. Leave it out to let the slider track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "min",
+        "description": "The first value when the slider tracks it itself. Defaults to min."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with each new value while the knob is dragged, and on a track press or key press."
       },
       {
         "prop": "min",
@@ -4825,7 +5381,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Value\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the knob when no Field labels it."
       },
       {
         "prop": "id",
@@ -4853,14 +5409,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the slider and stops drags and keys. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 44 px track area, for placement. The track fills its container's width."
       }
     ]
   },
@@ -4868,7 +5424,7 @@
     "id": "spinner",
     "title": "Spinner",
     "group": "Feedback",
-    "description": "A turning arc in the current text color. It's decorative: give the busy control or region its own name or status text. It stops turning when `--motion-duration-scale` is 0.",
+    "description": "A turning arc in the current text color. It's decorative: give the busy control or region its own name or status text. It stops turning when `--tn-motion-duration-scale` is 0.",
     "props": [
       {
         "prop": "size",
@@ -4908,45 +5464,52 @@
       },
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "Where the divider sits, as a fraction of the width from the left: 0..1."
+        "description": "Where the divider sits, as a fraction of the width from the left: 0..1. Set it to control the panes."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "0.5",
+        "description": "Where the divider starts when value isn’t set."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the new fraction while the divider is dragged or moved with the keyboard."
       },
       {
         "prop": "min",
         "type": "number | undefined",
         "required": false,
         "default": "0.2",
-        "description": "Minimum permitted value."
+        "description": "Smallest fraction the left pane can take; dragging past it stretches and springs back."
       },
       {
         "prop": "max",
         "type": "number | undefined",
         "required": false,
         "default": "0.8",
-        "description": "Maximum permitted value."
+        "description": "Largest fraction the left pane can take; dragging past it stretches and springs back."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Resize panes\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the divider, read with its percentage."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the panes; they fill the parent’s width and height."
       }
     ]
   },
@@ -4961,7 +5524,7 @@
         "type": "number",
         "required": true,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The number shown; when it changes, its digits roll with NumberTicker."
       },
       {
         "prop": "change",
@@ -4975,14 +5538,14 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Total\"",
-        "description": "Accessible name of the control or region."
+        "description": "The metric's name, shown above the number, such as \"Revenue\"."
       },
       {
         "prop": "formatValue",
         "type": "((value: number) => string) | undefined",
         "required": false,
         "default": "(value: number) => value.toLocaleString(\"en-US\")",
-        "description": "Format a value for display or accessible value text."
+        "description": "Turns the value into the shown text, such as a currency."
       },
       {
         "prop": "formatChange",
@@ -5010,7 +5573,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the ink card, for width and placement; the number's size follows that width."
       }
     ]
   },
@@ -5032,14 +5595,14 @@
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Accessible name of the control or region."
+        "description": "The visible status text; a new label blur-swaps and the badge's width follows it."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 24 px pill, for placement."
       }
     ]
   },
@@ -5068,7 +5631,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Slide to confirm\"",
-        "description": "Accessible name of the control or region."
+        "description": "The text on the track, which is also the accessible name before confirming."
       },
       {
         "prop": "confirmedLabel",
@@ -5082,7 +5645,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the track, for width and placement. It fills its container by default."
       }
     ]
   },
@@ -5101,31 +5664,38 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The current destination's value. Leave it out to let the bar track it for button items, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "items[0].value",
+        "description": "The first current item when the bar tracks it itself. Defaults to the first item."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with a button item's value when it's pressed. Link items leave the selection to your router."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Sections\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the navigation landmark."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the bar, for placement such as `fixed inset-x-3 bottom-3`."
       }
     ]
   },
@@ -5189,7 +5759,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the card around the table, for width, placement, or a height that makes the header stick."
       }
     ]
   },
@@ -5208,24 +5778,31 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Selected item value; must match one item."
+        "description": "The selected tab's value. Leave it out to let Tabs track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "items[0].value",
+        "description": "The first selected tab when Tabs tracks it itself. Defaults to the first item."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with a tab's value when it's picked by click or arrow key."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Sections\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the tablist."
       },
       {
         "prop": "variant",
@@ -5239,7 +5816,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the outer grid, for width and placement."
       }
     ]
   },
@@ -5254,7 +5831,7 @@
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Accessible name of the control or region."
+        "description": "The text in the pill; the remove button's name is built from it."
       },
       {
         "prop": "icon",
@@ -5275,14 +5852,14 @@
         "type": "((label: string) => string) | undefined",
         "required": false,
         "default": "(label: string) => `Remove ${label}`",
-        "description": "Build the accessible name of the remove button."
+        "description": "Names the remove button from the label (\"Remove Design\" by default)."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the pill, for margin and placement."
       }
     ]
   },
@@ -5294,24 +5871,31 @@
     "props": [
       {
         "prop": "value",
-        "type": "string[]",
-        "required": true,
+        "type": "string[] | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The tags. Pass it to control TagInput; leave it out and TagInput keeps its own tags."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string[] | undefined",
+        "required": false,
+        "default": "[]",
+        "description": "The tags TagInput starts with when it keeps its own tags."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string[]) => void",
-        "required": true,
+        "type": "((value: string[]) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with all tags each time one is added or removed."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Tags\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the text input for screen readers when no Field labels it."
       },
       {
         "prop": "placeholder",
@@ -5325,7 +5909,7 @@
         "type": "((tag: string) => string) | undefined",
         "required": false,
         "default": "(tag: string) => `Remove ${tag}`",
-        "description": "Accessible label for each tag removal action."
+        "description": "Names each tag's remove button, given the tag."
       },
       {
         "prop": "id",
@@ -5346,7 +5930,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the shape and disables the input and remove buttons; the hidden inputs are left out of the form. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -5360,7 +5944,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes for the outer box, to set its width or place it in a layout."
       }
     ]
   },
@@ -5382,7 +5966,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "—",
-        "description": "Disable the input and any built-in actions."
+        "description": "Disables the native textarea and dims the box; a disabled Field or Fieldset does the same."
       },
       {
         "prop": "name",
@@ -5410,7 +5994,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer surface, not the native input."
+        "description": "Classes for the box around the textarea, to set its width or place it; other props go to the textarea."
       },
       {
         "prop": "id",
@@ -5442,15 +6026,22 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current text value."
+        "description": "The text. Pass it to control Textarea; leave it out and Textarea keeps its own text."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The text Textarea starts with when it keeps its own text; the floating label starts up when it isn't empty."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
         "description": "Called with the new text when the user types."
       }
@@ -5474,7 +6065,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "—",
-        "description": "Disable the input and any built-in actions."
+        "description": "Disables the native input and dims the field."
       },
       {
         "prop": "name",
@@ -5495,7 +6086,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer surface, not the native input."
+        "description": "Classes for the shape around the input, to set its width or place it; other props go to the input."
       },
       {
         "prop": "onFocus",
@@ -5513,15 +6104,22 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current text value."
+        "description": "The text. Pass it to control TextField; leave it out and TextField keeps its own text."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "The text TextField starts with when it keeps its own text; the label starts up when it isn't empty."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
         "description": "Called with the new text when the user types."
       },
@@ -5530,7 +6128,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Email\"",
-        "description": "Accessible name of the control or region."
+        "description": "The visible label inside the field, which also names the input; it floats up while the field has focus or text."
       },
       {
         "prop": "error",
@@ -5549,24 +6147,31 @@
     "props": [
       {
         "prop": "value",
-        "type": "\"light\" | \"dark\"",
-        "required": true,
+        "type": "\"light\" | \"dark\" | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The current theme, light or dark. Leave it out to let the toggle track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "\"light\" | \"dark\" | undefined",
+        "required": false,
+        "default": "\"light\"",
+        "description": "The first theme when the toggle tracks it itself. Defaults to light."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: \"light\" | \"dark\") => void",
-        "required": true,
+        "type": "((value: \"light\" | \"dark\") => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with light or dark when the toggle is clicked or switched with Space."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Dark mode\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the switch when no Field labels it."
       },
       {
         "prop": "name",
@@ -5580,14 +6185,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the toggle and stops it from switching. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the track, for placement such as margin. The track keeps its 52 × 32 px size."
       }
     ]
   },
@@ -5616,7 +6221,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the `<ol>`, for width and placement. It draws no card; place it in a Card."
       }
     ]
   },
@@ -5628,17 +6233,24 @@
     "props": [
       {
         "prop": "value",
-        "type": "Time | null",
-        "required": true,
+        "type": "Time | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Hours 0–23, or null while no time is chosen."
+        "description": "Hours 0–23, or null while no time is chosen. Leave it out to let the picker track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "Time | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The first time when the picker tracks it itself. Defaults to null, no time."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: Time) => void",
-        "required": true,
+        "type": "((value: Time) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the new { hours, minutes } each time a wheel changes while the panel is open."
       },
       {
         "prop": "placeholder",
@@ -5652,7 +6264,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Time\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the open panel, and of the trigger when no Field labels it."
       },
       {
         "prop": "formatTime",
@@ -5729,7 +6341,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the trigger and keeps the panel closed. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -5743,7 +6355,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapper, for width and placement. The trigger fills it, and the panel opens at its width."
       }
     ]
   },
@@ -5755,17 +6367,24 @@
     "props": [
       {
         "prop": "value",
-        "type": "Time",
-        "required": true,
+        "type": "Time | undefined",
+        "required": false,
         "default": "—",
-        "description": "Hours 0–23; the wheels show them as 12, 1–11 and AM or PM."
+        "description": "Hours 0–23; the wheels show them as 12, 1–11 and AM or PM. Leave it out to let the wheels track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "Time | undefined",
+        "required": false,
+        "default": "{ hours: 0, minutes: 0 }",
+        "description": "The first time when the wheels track it themselves. Defaults to 0:00, shown as 12:00 AM."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: Time) => void",
-        "required": true,
+        "type": "((value: Time) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the new { hours, minutes } when a drag or flick is let go over a new row, or on an arrow, Home or End key."
       },
       {
         "prop": "minuteStep",
@@ -5800,7 +6419,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Time\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the group of wheels when no Field labels it."
       },
       {
         "prop": "hoursLabel",
@@ -5842,7 +6461,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the wheels and stops drags and keys. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "required",
@@ -5856,7 +6475,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the card that holds the wheels, for placement such as margin. It sizes to its wheels."
       }
     ]
   },
@@ -5885,7 +6504,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the pill, for placement; its width follows the message."
       }
     ]
   },
@@ -5914,7 +6533,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Notifications\"",
-        "description": "Accessible name of the control or region."
+        "description": "Name of the toast region, read when focus enters it."
       },
       {
         "prop": "dismissLabel",
@@ -5928,7 +6547,36 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Places the stack, e.g. fixed near the bottom of the viewport, and sets its width; it fills its container by default."
+      }
+    ]
+  },
+  "Toaster": {
+    "id": "toaster",
+    "title": "Toaster",
+    "group": "Feedback",
+    "description": "",
+    "props": [
+      {
+        "prop": "label",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Name of the toast region, read when focus enters it."
+      },
+      {
+        "prop": "className",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Places the stack, e.g. fixed near the bottom of the viewport, and sets its width."
+      },
+      {
+        "prop": "dismissLabel",
+        "type": "((label: string) => string) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Name of each toast’s dismiss button, built from the toast’s label."
       }
     ]
   },
@@ -5943,7 +6591,7 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "—",
-        "description": "Disable interaction with this control."
+        "description": "Dims the switch and stops it from toggling. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "name",
@@ -5964,7 +6612,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the track, for placement such as margin. The track keeps its 52 × 32 px size."
       },
       {
         "prop": "id",
@@ -5975,24 +6623,31 @@
       },
       {
         "prop": "checked",
-        "type": "boolean",
-        "required": true,
+        "type": "boolean | undefined",
+        "required": false,
         "default": "—",
-        "description": "Whether the control is checked."
+        "description": "Whether the switch is on. Leave it out to let the switch track it, starting from defaultChecked."
+      },
+      {
+        "prop": "defaultChecked",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "false",
+        "description": "Whether the switch starts on when it tracks its own state. Defaults to false."
       },
       {
         "prop": "onCheckedChange",
-        "type": "(checked: boolean) => void",
-        "required": true,
+        "type": "((checked: boolean) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next checked state."
+        "description": "Called with the new state when the switch is clicked or toggled with Space."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Spatial audio\"",
-        "description": "Accessible name when there is no Field label."
+        "description": "Accessible name of the switch when no Field labels it. A Field label or aria-label replaces it."
       },
       {
         "prop": "children",
@@ -6018,24 +6673,31 @@
       },
       {
         "prop": "value",
-        "type": "string[]",
-        "required": true,
+        "type": "string[] | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "Values of the pressed buttons. Leave it out to let the group track them, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string[] | undefined",
+        "required": false,
+        "default": "[]",
+        "description": "The first pressed values when the group tracks them itself. Defaults to none."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string[]) => void",
-        "required": true,
+        "type": "((value: string[]) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with every pressed value, in the order they were pressed, when a button is clicked or toggled with Enter or Space."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Options\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the group when no Field labels it."
       },
       {
         "prop": "id",
@@ -6056,14 +6718,14 @@
         "type": "boolean | undefined",
         "required": false,
         "default": "false",
-        "description": "Disable interaction with this control."
+        "description": "Dims the buttons and stops them from toggling. A disabled Field or Fieldset does the same."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the wrapping row of buttons, for width and placement. Buttons wrap onto new lines when it's narrow."
       }
     ]
   },
@@ -6099,7 +6761,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer shared-tooltip container."
+        "description": "Classes on the toolbar element, for placement and gaps between groups."
       }
     ]
   },
@@ -6114,7 +6776,7 @@
         "type": "string",
         "required": true,
         "default": "—",
-        "description": "Accessible name of the control or region."
+        "description": "Text in the bubble; also describes the trigger through aria-describedby."
       },
       {
         "prop": "children",
@@ -6128,7 +6790,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Placement of the wrapper around the trigger."
       }
     ]
   },
@@ -6147,45 +6809,59 @@
       },
       {
         "prop": "value",
-        "type": "string | null",
-        "required": true,
+        "type": "string | null | undefined",
+        "required": false,
         "default": "—",
-        "description": "Current value, controlled by the parent."
+        "description": "The selected item's value, or null for none. Set it to control the selection."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | null | undefined",
+        "required": false,
+        "default": "null",
+        "description": "The item selected at first when `value` isn't set (null by default)."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with an item's value when the user clicks it or presses Enter or Space on it."
       },
       {
         "prop": "expanded",
-        "type": "string[]",
-        "required": true,
+        "type": "string[] | undefined",
+        "required": false,
         "default": "—",
-        "description": "Values of the open parents."
+        "description": "Values of the open parents. Set it to control which parents are open."
+      },
+      {
+        "prop": "defaultExpanded",
+        "type": "string[] | undefined",
+        "required": false,
+        "default": "[]",
+        "description": "The parents open at first when `expanded` isn't set ([] by default)."
       },
       {
         "prop": "onExpandedChange",
-        "type": "(expanded: string[]) => void",
-        "required": true,
+        "type": "((expanded: string[]) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Update the array of expanded parent values."
+        "description": "Called with the new list of open parents when the user opens or closes one."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Tree\"",
-        "description": "Accessible name of the control or region."
+        "description": "Names the tree for screen readers, such as \"Project files\"."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the tree element, for width and placement. It draws no card; place it in a Card."
       }
     ]
   },
@@ -6204,24 +6880,31 @@
       },
       {
         "prop": "value",
-        "type": "string",
-        "required": true,
+        "type": "string | undefined",
+        "required": false,
         "default": "—",
-        "description": "Selected option value; must match one option."
+        "description": "The selected option's value. Leave it out to let the tabs track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | undefined",
+        "required": false,
+        "default": "options[0].value",
+        "description": "The first selected option when the tabs track it themselves. Defaults to the first option."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: string) => void",
-        "required": true,
+        "type": "((value: string) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with an option's value when it's picked by click or arrow key."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Sections\"",
-        "description": "Accessible name of the control or region."
+        "description": "Accessible name of the tablist."
       },
       {
         "prop": "id",
@@ -6235,7 +6918,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the tablist, for placement. It sizes to its labels."
       }
     ]
   },
@@ -6341,7 +7024,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 52 px ink bar, for placement; it fills its container's width."
       }
     ]
   },
@@ -6353,45 +7036,52 @@
     "props": [
       {
         "prop": "value",
-        "type": "number",
-        "required": true,
+        "type": "number | undefined",
+        "required": false,
         "default": "—",
-        "description": "0..1"
+        "description": "Volume, 0..1. Leave it out to let the slider track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "number | undefined",
+        "required": false,
+        "default": "1",
+        "description": "The first volume, 0..1, when the slider tracks it itself."
       },
       {
         "prop": "onValueChange",
-        "type": "(value: number) => void",
-        "required": true,
+        "type": "((value: number) => void) | undefined",
+        "required": false,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the volume, 0..1, while the track is dragged or an arrow key moves it."
       },
       {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
         "default": "\"Volume\"",
-        "description": "Accessible name of the control or region."
+        "description": "Name of the slider."
       },
       {
         "prop": "tone",
         "type": "\"paper\" | \"ink\" | undefined",
         "required": false,
         "default": "\"paper\"",
-        "description": "Paper or ink appearance."
+        "description": "\"paper\" for light surfaces, \"ink\" for dark ones."
       },
       {
         "prop": "formatValue",
         "type": "((value: number) => string) | undefined",
         "required": false,
         "default": "(value: number) => `${Math.round(value * 100).toLocaleString(\"en-US\")}%`",
-        "description": "Format a value for display or accessible value text."
+        "description": "Turns the volume into the slider's value text, e.g. \"45%\"."
       },
       {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the 44 px track, for placement and width; it fills its container by default."
       }
     ]
   },
@@ -6413,14 +7103,14 @@
         "type": "number",
         "required": true,
         "default": "—",
-        "description": "Position in seconds."
+        "description": "Position in seconds, kept by the parent so it can follow playback."
       },
       {
         "prop": "onValueChange",
         "type": "(value: number) => void",
         "required": true,
         "default": "—",
-        "description": "Called with the next value when the user makes a change."
+        "description": "Called with the position in seconds while the waveform is dragged or an arrow, Home or End key moves it; seek the media element to it."
       },
       {
         "prop": "duration",
@@ -6434,7 +7124,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"Seek\"",
-        "description": "Accessible name of the control or region."
+        "description": "Name of the position slider."
       },
       {
         "prop": "formatTime",
@@ -6448,7 +7138,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the ink card, for placement and width; it fills its container by default."
       }
     ]
   },
@@ -6498,7 +7188,7 @@
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Additional classes on the outer element."
+        "description": "Classes on the outer element, for width and placement. It has no surface of its own; put it in a Card."
       }
     ]
   }

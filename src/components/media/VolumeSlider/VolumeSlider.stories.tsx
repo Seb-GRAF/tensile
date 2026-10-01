@@ -15,7 +15,7 @@ function StatefulVolumeSlider(props: VolumeSliderProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -38,7 +38,7 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-60 max-w-full">
-        <StatefulVolumeSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulVolumeSlider {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },
@@ -50,7 +50,7 @@ export const OnInk: Story = {
     const [, updateArgs] = useArgs();
     return (
       <Card tone="ink" className="w-80 max-w-full p-6">
-        <StatefulVolumeSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulVolumeSlider {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </Card>
     );
   },

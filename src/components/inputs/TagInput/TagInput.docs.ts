@@ -17,10 +17,10 @@ export default {
     "The required state is ARIA only. Validate the array in your submit handler."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Add and remove tags.", Demo: TagInputDemo, code: tagInputDemoCode },
-    { id: "above", title: "Label above", description: "Label above the input.", Demo: TagInputAboveDemo, code: tagInputAboveDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled tag editing.", Demo: TagInputDisabledDemo, code: tagInputDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field validation and repeated named values.", Demo: TagInputFormDemo, code: tagInputFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "Topics typed and added with Enter or a comma, each removable with its button, labelled by a Field. Use it for free-form keywords.", Demo: TagInputDemo, code: tagInputDemoCode },
+    { id: "above", title: "Label above", description: "`labelPlacement=\"above\"` on the Field puts the label over the shape instead of inside it. Use it when many tags make the shape tall.", Demo: TagInputAboveDemo, code: tagInputAboveDemoCode },
+    { id: "disabled", title: "Disabled", description: "The tags stay visible but can't be added or removed. Use it while the list is locked.", Demo: TagInputDisabledDemo, code: tagInputDisabledDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits one value per tag under the same name, and the Field shows an error while there are none.", Demo: TagInputFormDemo, code: tagInputFormDemoCode },
   ],
   keyboard: [
     {
@@ -42,15 +42,16 @@ export default {
     "MultiSelect"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "The tags. Pass it to control TagInput; leave it out and TagInput keeps its own tags.",
+    "defaultValue": "The tags TagInput starts with when it keeps its own tags.",
+    "onValueChange": "Called with all tags each time one is added or removed.",
+    "label": "Names the text input for screen readers when no Field labels it.",
     "placeholder": "Hint shown while the value is empty.",
-    "removeLabel": "Accessible label for each tag removal action.",
+    "removeLabel": "Names each tag's remove button, given the tag.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the shape and disables the input and remove buttons; the hidden inputs are left out of the form. A disabled Field or Fieldset does the same.",
     "required": "Expose the required state. See the form example for validation.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes for the outer box, to set its width or place it in a layout."
   },
 };

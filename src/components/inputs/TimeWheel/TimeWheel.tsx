@@ -1,5 +1,6 @@
 import { animate, clamp, motion, useMotionValue, useTransform, wrap } from "motion/react";
 import { useEffect, useRef } from "react";
+import { useControllable } from "../../../controllable";
 import { dragHandlers, rubber } from "../../../drag";
 import { useSprings } from "../../../springs";
 import { useField } from "../Field/Field";
@@ -8,8 +9,9 @@ type Time = { hours: number; minutes: number };
 
 export type TimeWheelProps = {
   /** Hours 0–23; the wheels show them as 12, 1–11 and AM or PM. */
-  value: Time;
-  onValueChange: (value: Time) => void;
+  value?: Time;
+  defaultValue?: Time;
+  onValueChange?: (value: Time) => void;
   /** Minutes between two rows of the minutes wheel. */
   minuteStep?: number;
   formatNumber?: (value: number) => string;
@@ -55,7 +57,7 @@ function Wheel({
   const anchor = useRef({ y: 0, position: 0 });
   const y = useTransform(position, (p) => -(loop ? count + wrap(0, count, p) : p) * ROW);
   const rows = (loop ? [...items, ...items, ...items] : items).map((item, i) => (
-    <div key={i} className="flex h-10 items-center justify-center">
+    <div key={i} className="tn:flex tn:h-10 tn:items-center tn:justify-center">
       {item}
     </div>
   ));
@@ -108,14 +110,14 @@ function Wheel({
       aria-valuetext={items[index]}
       {...(disabled ? {} : dragHandlers(drag, release))}
       onKeyDown={disabled ? undefined : onKeyDown}
-      className={`group relative h-50 w-14 touch-none outline-none select-none ${disabled ? "" : "cursor-grab active:cursor-grabbing"}`}
+      className={`tn:group tn:relative tn:h-50 tn:w-14 tn:touch-none tn:outline-none tn:select-none ${disabled ? "" : "tn:cursor-grab tn:active:cursor-grabbing"}`}
     >
-      <div aria-hidden className="absolute inset-0 overflow-hidden mask-y-from-60%">
-        <motion.div style={{ y }} className="absolute inset-x-0 top-20 text-muted">
+      <div aria-hidden className="tn:absolute tn:inset-0 tn:overflow-hidden tn:mask-y-from-60%">
+        <motion.div style={{ y }} className="tn:absolute tn:inset-x-0 tn:top-20 tn:text-muted">
           {rows}
         </motion.div>
       </div>
-      <div aria-hidden className="absolute inset-x-0 top-20 h-10 overflow-hidden rounded-control text-paper -outline-offset-4 [--color-focus:var(--color-paper)] group-focus-visible:outline-2 group-focus-visible:outline-focus">
+      <div aria-hidden className="tn:absolute tn:inset-x-0 tn:top-20 tn:h-10 tn:overflow-hidden tn:rounded-control tn:text-paper tn:-outline-offset-4 tn:[--tn-color-focus:var(--tn-color-paper)] tn:group-focus-visible:outline-2 tn:group-focus-visible:outline-focus">
         <motion.div style={{ y }}>{rows}</motion.div>
       </div>
     </div>
@@ -135,11 +137,11 @@ export function Wheels({
   disabled,
   required,
   invalid,
-}: Required<Omit<TimeWheelProps, "label" | "id" | "name" | "className">> & { invalid?: boolean }) {
+}: Required<Omit<TimeWheelProps, "defaultValue" | "label" | "id" | "name" | "className">> & { invalid?: boolean }) {
   const pm = value.hours >= 12;
   return (
     <>
-      <div className="absolute inset-x-2 top-1/2 h-10 -translate-y-1/2 rounded-control bg-ink" />
+      <div className="tn:absolute tn:inset-x-2 tn:top-1/2 tn:h-10 tn:-translate-y-1/2 tn:rounded-control tn:bg-ink" />
       <Wheel
         label={hoursLabel}
         disabled={disabled}
@@ -175,7 +177,8 @@ export function Wheels({
 }
 
 export function TimeWheel({
-  value,
+  value: valueProp,
+  defaultValue = { hours: 0, minutes: 0 },
   onValueChange,
   minuteStep = 1,
   formatNumber = (value: number) => value.toLocaleString("en-US", { minimumIntegerDigits: 2 }),
@@ -191,6 +194,7 @@ export function TimeWheel({
   required = false,
   className = "",
 }: TimeWheelProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   disabled = field?.disabled || disabled;
   required = field?.required || required;
@@ -203,12 +207,12 @@ export function TimeWheel({
       aria-labelledby={field?.labelId}
       aria-describedby={field?.describedBy}
       aria-disabled={disabled}
-      className={`relative flex w-fit rounded-card bg-paper p-2 text-body font-medium tabular-nums shadow-control ${disabled ? "opacity-40" : ""} ${className}`}
+      className={`tn:relative tn:flex tn:w-fit tn:rounded-card tn:bg-paper tn:p-2 tn:text-body tn:font-medium tn:tabular-nums tn:shadow-control ${disabled ? "tn:opacity-40" : ""} ${className}`}
     >
       {name && <input type="hidden" name={name} value={`${String(value.hours).padStart(2, "0")}:${String(value.minutes).padStart(2, "0")}`} disabled={disabled} />}
       <Wheels
         value={value}
-        onValueChange={onValueChange}
+        onValueChange={setValue}
         minuteStep={minuteStep}
         formatNumber={formatNumber}
         amLabel={amLabel}

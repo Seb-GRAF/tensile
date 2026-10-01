@@ -29,7 +29,7 @@ export const Default: Story = {
       <Rating
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />

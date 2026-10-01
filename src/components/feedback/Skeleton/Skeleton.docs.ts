@@ -12,8 +12,8 @@ export default {
     "Reduced motion stops the shimmer."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Caller-sized text placeholders.", Demo: SkeletonDemo, code: skeletonDemoCode },
-    { id: "card", title: "Card", description: "Loading card composition with a named busy region.", Demo: SkeletonCardDemo, code: skeletonCardDemoCode },
+    { id: "usage", title: "Basic usage", description: "Lines of placeholder text sized with className, to hold a paragraph's place while it loads.", Demo: SkeletonDemo, code: skeletonDemoCode },
+    { id: "card", title: "Card", description: "A card laid out with skeletons for its avatar and text inside a named busy region; use it when the loaded layout is known, so nothing shifts when content arrives.", Demo: SkeletonCardDemo, code: skeletonCardDemoCode },
   ],
   keyboard: [],
   related: [

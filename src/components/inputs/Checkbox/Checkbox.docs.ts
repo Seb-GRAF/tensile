@@ -17,7 +17,7 @@ export default {
     "Use CheckboxGroup when several checkboxes share one array of selected values.",
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "A controlled checkbox with a visible label.", Demo: CheckboxDemo, code: checkboxCode },
+    { id: "usage", title: "Basic usage", description: "A checkbox with its own visible label, for a single yes-or-no choice.", Demo: CheckboxDemo, code: checkboxCode },
     { id: "disabled", title: "Disabled", description: "Disabled checkboxes keep their value and are skipped during keyboard navigation.", Demo: CheckboxDisabledDemo, code: disabledCode },
     { id: "indeterminate", title: "Indeterminate", description: "The parent shows a dash while some notifications are selected. Select it to check or clear every option.", Demo: CheckboxIndeterminateDemo, code: indeterminateCode },
     { id: "form", title: "In a form", description: "Require agreement before submitting. Reset restores the React state as well as the form.", Demo: CheckboxFormDemo, code: formCode },
@@ -28,8 +28,9 @@ export default {
   ],
   related: ["CheckboxGroup", "Field", "Fieldset"],
   props: {
-    checked: "Whether the checkbox is checked. The parent owns this value.",
-    onCheckedChange: "Called with the next boolean value when the user toggles the checkbox.",
+    checked: "Whether the checkbox is checked. Leave it out to let the checkbox track it, starting from defaultChecked.",
+    defaultChecked: "Whether the checkbox starts checked when it tracks its own state. Defaults to false.",
+    onCheckedChange: "Called with the new state when the box or its label is clicked, or Space is pressed.",
     label: "Visible text beside the checkbox and its accessible name.",
     indeterminate: "Show a dash to represent a partial selection. This does not set checked.",
     disabled: "Disable interaction. A surrounding Field or Fieldset can also disable the control.",
@@ -37,6 +38,6 @@ export default {
     value: "Value submitted when the checkbox is checked. The native default is on.",
     required: "Require the checkbox to be checked before native form submission.",
     id: "ID applied to the native checkbox input.",
-    className: "Additional classes on the wrapping label.",
+    className: "Classes on the label that wraps the box and its text, for placement such as margin.",
   },
 };

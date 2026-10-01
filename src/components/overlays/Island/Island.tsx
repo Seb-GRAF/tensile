@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef } from "react";
+import { useControllable } from "../../../controllable";
 import { Expand } from "../../../Expand";
 import { useOutsidePress } from "../../../overlay";
 import { useSprings } from "../../../springs";
@@ -14,8 +15,9 @@ export type IslandProps = {
   trailing: React.ReactNode;
   /** The expanded view, laid out in a panelWidth × panelHeight box. */
   children: React.ReactNode;
-  expanded: boolean;
-  onExpandedChange: (expanded: boolean) => void;
+  expanded?: boolean;
+  defaultExpanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
   openLabel?: (activity: string) => string;
   panelWidth?: number;
   panelHeight?: number;
@@ -27,7 +29,8 @@ export function Island({
   leading,
   trailing,
   children,
-  expanded,
+  expanded: expandedProp,
+  defaultExpanded = false,
   onExpandedChange,
   openLabel = (activity: string) => `Expand ${activity}`,
   panelWidth = 340,
@@ -35,10 +38,11 @@ export function Island({
   className = "",
 }: IslandProps) {
   const { swap } = useSprings();
+  const [expanded, setExpanded] = useControllable(expandedProp, defaultExpanded, onExpandedChange);
   const [width, measure] = useWidth();
   const root = useRef<HTMLDivElement>(null);
 
-  useOutsidePress(root, expanded, () => onExpandedChange(false));
+  useOutsidePress(root, expanded, () => setExpanded(false));
 
   const compact = (
     <AnimatePresence initial={false}>
@@ -46,7 +50,7 @@ export function Island({
         key={activity}
         ref={measure}
         {...swap}
-        className="col-start-1 row-start-1 inline-flex items-center gap-10 whitespace-nowrap px-2 text-label font-medium"
+        className="tn:col-start-1 tn:row-start-1 tn:inline-flex tn:items-center tn:gap-10 tn:whitespace-nowrap tn:px-2 tn:text-label tn:font-medium"
       >
         {leading}
         {trailing}
@@ -55,23 +59,23 @@ export function Island({
   );
 
   return (
-    <div ref={root} className={`w-fit ${className}`}>
+    <div ref={root} className={`tn:w-fit ${className}`}>
       {width === undefined ? (
         compact
       ) : (
         <Expand
           open={expanded}
-          onOpenChange={onExpandedChange}
-          closed={{ width, height: 40, radius: "var(--radius-control)" }}
-          opened={{ width: panelWidth, height: panelHeight, radius: "var(--radius-dialog)" }}
+          onOpenChange={setExpanded}
+          closed={{ width, height: 40, radius: "var(--tn-radius-control)" }}
+          opened={{ width: panelWidth, height: panelHeight, radius: "var(--tn-radius-dialog)" }}
           anchor="center"
           label={openLabel(activity)}
           panelLabel={activity}
-          trigger={<span className="grid size-full place-content-center place-items-center">{compact}</span>}
-          className="bg-ink text-paper [--color-focus:var(--color-paper)] [--ghost-hover:var(--color-ink-3)] [--color-line:var(--color-ink-3)]"
+          trigger={<span className="tn:grid tn:size-full tn:place-content-center tn:place-items-center">{compact}</span>}
+          className="dark tn:bg-paper tn:text-ink"
         >
           <AnimatePresence initial={false}>
-            <motion.div key={activity} {...swap} className="absolute inset-0">
+            <motion.div key={activity} {...swap} className="tn:absolute tn:inset-0">
               {children}
             </motion.div>
           </AnimatePresence>

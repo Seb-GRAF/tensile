@@ -256,7 +256,7 @@ function Invoices() {
       <SelectionBar
         count={selection.length}
         onClear={() => setSelection([])}
-        className="fixed inset-x-0 bottom-24 z-(--layer-sticky) mx-auto w-fit lg:bottom-6"
+        className="fixed inset-x-0 bottom-24 z-(--tn-layer-sticky) mx-auto w-fit lg:bottom-6"
       >
         <Button
           variant="ghost"

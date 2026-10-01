@@ -1,17 +1,32 @@
 import { motion } from "motion/react";
 import { useId, useRef } from "react";
+import { useControllable } from "../../../controllable";
+import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { Icon } from "../../data-display/Icon/Icon";
 
 export type AccordionProps = {
   items: { value: string; label: string; content: React.ReactNode; icon?: React.ReactNode }[];
-  value: string | null;
-  onValueChange: (value: string | null) => void;
   className?: string;
-};
+} & (
+  | {
+      /** "single" opens one item at a time; "multiple" lets several stay open. */
+      type?: "single";
+      value?: string | null;
+      defaultValue?: string | null;
+      onValueChange?: (value: string | null) => void;
+    }
+  | {
+      type: "multiple";
+      value?: string[];
+      defaultValue?: string[];
+      onValueChange?: (value: string[]) => void;
+    }
+);
 
-export function Accordion({ items, value, onValueChange, className = "" }: AccordionProps) {
+export function Accordion({ items, type = "single", value, defaultValue = type === "multiple" ? [] : null, onValueChange, className = "" }: AccordionProps) {
   const { shape, swap } = useSprings();
+  const [current, setCurrent] = useControllable<string | null | string[]>(value, defaultValue, onValueChange as (value: string | null | string[]) => void);
   const id = useId();
   const headers = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -24,16 +39,16 @@ export function Accordion({ items, value, onValueChange, className = "" }: Accor
   }
 
   return (
-    <div className={`grid w-full gap-2 ${className}`}>
+    <div className={`tn:grid tn:w-full tn:gap-2 ${className}`}>
       {items.map((item, i) => {
-        const open = item.value === value;
+        const open = Array.isArray(current) ? current.includes(item.value) : item.value === current;
         return (
           <motion.div
             key={item.value}
             initial={false}
-            animate={{ height: open ? "auto" : 44, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)" }}
+            animate={{ height: open ? "auto" : 44, borderRadius: open ? "var(--tn-radius-overlay)" : "var(--tn-radius-control)" }}
             transition={shape}
-            className="overflow-hidden bg-paper shadow-float surface outline-offset-2 has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-focus"
+            className="tn:overflow-hidden tn:bg-paper tn:shadow-float tn:surface tn:outline-offset-2 tn:has-[>button:focus-visible]:outline-2 tn:has-[>button:focus-visible]:outline-focus"
           >
             <button
               ref={(el) => {
@@ -43,14 +58,17 @@ export function Accordion({ items, value, onValueChange, className = "" }: Accor
               type="button"
               aria-expanded={open}
               aria-controls={`${id}-${i}-panel`}
-              onClick={() => onValueChange(open ? null : item.value)}
+              onClick={() => {
+                if (Array.isArray(current)) setCurrent(open ? current.filter((v) => v !== item.value) : [...current, item.value]);
+                else setCurrent(open ? null : item.value);
+              }}
               onKeyDown={(event) => onKeyDown(event, i)}
-              className="flex h-11 w-full items-center gap-2.5 px-4 text-sm font-medium text-ink outline-none hover:bg-hover"
+              className="tn:flex tn:h-11 tn:w-full tn:items-center tn:gap-2.5 tn:px-4 tn:text-sm tn:font-medium tn:text-ink tn:outline-none tn:hover:bg-hover"
             >
-              {item.icon && <span className="text-muted">{item.icon}</span>}
-              <span className="truncate">{item.label}</span>
-              <motion.span initial={false} animate={{ rotate: open ? 180 : 0 }} transition={shape} className="ml-auto shrink-0 text-muted">
-                <Icon size={16}><path d="m6 9 6 6 6-6" /></Icon>
+              {item.icon && <span className="tn:text-muted">{item.icon}</span>}
+              <span className="tn:truncate">{item.label}</span>
+              <motion.span initial={false} animate={{ rotate: open ? 180 : 0 }} transition={shape} className="tn:ml-auto tn:shrink-0 tn:text-muted">
+                <Icon size={16}>{icons.chevronDown}</Icon>
               </motion.span>
             </button>
             <motion.div
@@ -60,7 +78,7 @@ export function Accordion({ items, value, onValueChange, className = "" }: Accor
               inert={!open}
               initial={false}
               animate={open ? swap.animate : swap.exit}
-              className="origin-top px-4 pb-4 text-label text-muted"
+              className="tn:origin-top tn:px-4 tn:pb-4 tn:text-label tn:text-muted"
             >
               {item.content}
             </motion.div>

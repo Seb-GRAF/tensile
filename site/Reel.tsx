@@ -1,9 +1,7 @@
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { Icon, IconButton } from "tensile";
+import { Icon, IconButton, useSize, useSprings } from "tensile";
 import { playPausePath } from "../src/playback";
-import { useSprings } from "../src/springs";
-import { useSize } from "../src/useSize";
 
 type Spring = { response: number; damping: number };
 type Key = [at: number, target: number[], spring?: Spring];
@@ -305,9 +303,9 @@ export function Reel({ chapter, onChapterChange, className = "" }: ReelProps) {
     for (const node of frame.current!.querySelectorAll<HTMLElement>("[data-el]")) el[node.dataset.el!] = node;
     const style = getComputedStyle(frame.current!);
     const palette = {
-      ink: linear(style.getPropertyValue("--color-ink")),
-      paper: linear(style.getPropertyValue("--color-paper")),
-      accent: linear(style.getPropertyValue("--color-accent")),
+      ink: linear(style.getPropertyValue("--tn-color-ink")),
+      paper: linear(style.getPropertyValue("--tn-color-paper")),
+      accent: linear(style.getPropertyValue("--tn-color-accent")),
     };
 
     seek(time.current, el, palette, zoom);

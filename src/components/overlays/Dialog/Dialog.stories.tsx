@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [open, setOpen] = useState(args.open);
-    return <div className="flex gap-2"><Dialog {...args} open={open} onOpenChange={(next) => { args.onOpenChange(next); setOpen(next); }} /><Button variant="ghost">Next</Button></div>;
+    return <div className="flex gap-2"><Dialog {...args} open={open} onOpenChange={(next) => { args.onOpenChange?.(next); setOpen(next); }} /><Button variant="ghost">Next</Button></div>;
   },
 };
 

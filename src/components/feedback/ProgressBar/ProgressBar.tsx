@@ -30,7 +30,7 @@ function ProgressFill({ value, width }: { value: number | null; width: number })
     return () => clearInterval(id);
   }, [value, scale]);
 
-  return <motion.div style={{ left, right }} className="absolute inset-y-0 rounded-control bg-ink" />;
+  return <motion.div style={{ left, right }} className="tn:absolute tn:inset-y-0 tn:rounded-control tn:bg-ink" />;
 }
 
 export function ProgressBar({
@@ -49,9 +49,9 @@ export function ProgressBar({
       aria-valuemax={100}
       aria-valuenow={value === null ? undefined : Math.round(value * 100)}
       aria-valuetext={value === null ? undefined : formatValue(value)}
-      className={`relative h-11 w-full rounded-control bg-paper shadow-control ${className}`}
+      className={`tn:relative tn:h-11 tn:w-full tn:rounded-control tn:bg-paper tn:shadow-control ${className}`}
     >
-      <div ref={measure} className="absolute inset-1 overflow-hidden rounded-control">
+      <div ref={measure} className="tn:absolute tn:inset-1 tn:overflow-hidden tn:rounded-control">
         {size && <ProgressFill value={value} width={size.width} />}
       </div>
     </div>

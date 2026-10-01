@@ -16,10 +16,10 @@ export default {
     "TextField includes its own label and does not need Field. It has no placeholder prop."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Standalone floating-label input.", Demo: TextFieldDemo, code: textFieldDemoCode },
-    { id: "error", title: "Validation", description: "Validation error and recovery.", Demo: TextFieldErrorDemo, code: textFieldErrorDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled text field.", Demo: TextFieldDisabledDemo, code: textFieldDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Named field with submission and reset.", Demo: TextFieldFormDemo, code: textFieldFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A text field with its own label, which floats up while you type. Use it where a single field stands alone, without a Field around it.", Demo: TextFieldDemo, code: textFieldDemoCode },
+    { id: "error", title: "Validation", description: "The error shows inside the field while the name is too short and clears as soon as it's long enough. Use it for checks you can run as people type.", Demo: TextFieldErrorDemo, code: textFieldErrorDemoCode },
+    { id: "disabled", title: "Disabled", description: "The field is dimmed and can't be focused or edited. Use it for a value that can't change in the current state.", Demo: TextFieldDisabledDemo, code: textFieldDisabledDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits the text; Reset clears it through the parent's state.", Demo: TextFieldFormDemo, code: textFieldFormDemoCode },
   ],
   keyboard: [
     {
@@ -37,15 +37,16 @@ export default {
   ],
   props: {
     "style": "Inline styles on the outer surface.",
-    "className": "Additional classes on the outer surface, not the native input.",
+    "className": "Classes for the shape around the input, to set its width or place it; other props go to the input.",
     "onFocus": "Native focus event handler.",
     "onBlur": "Native blur event handler.",
-    "value": "Current text value.",
+    "value": "The text. Pass it to control TextField; leave it out and TextField keeps its own text.",
+    "defaultValue": "The text TextField starts with when it keeps its own text; the label starts up when it isn't empty.",
     "onValueChange": "Called with the new text when the user types.",
-    "label": "Accessible name of the control or region.",
+    "label": "The visible label inside the field, which also names the input; it floats up while the field has focus or text.",
     "error": "Validation message supplied by the application.",
     "name": "Native form field name.",
-    "disabled": "Disable the input and any built-in actions.",
+    "disabled": "Disables the native input and dims the field.",
     "required": "Use native required validation."
   },
 };

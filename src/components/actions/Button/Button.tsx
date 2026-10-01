@@ -1,33 +1,48 @@
-export type ButtonProps = React.ComponentProps<"button"> & {
+import { useLinkClick } from "../../navigation/Link/Link";
+
+export type ButtonProps = {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "ghost";
   size?: "md" | "sm";
-};
+} & ((React.ComponentProps<"button"> & { href?: undefined }) | (React.ComponentProps<"a"> & { href: string }));
 
 export const base =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-control font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus enabled:press disabled:opacity-40";
+  "tn:inline-flex tn:items-center tn:justify-center tn:whitespace-nowrap tn:rounded-control tn:font-medium tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus tn:not-disabled:press tn:disabled:opacity-40";
 
 export const variants = {
-  primary: "bg-ink text-paper shadow-control enabled:hover:bg-ink-3",
-  secondary: "bg-paper text-ink shadow-control enabled:hover:bg-hover",
-  ghost: "enabled:hover:bg-[var(--ghost-hover,var(--color-hover))]",
+  primary: "tn:bg-ink tn:text-paper tn:shadow-control tn:not-disabled:hover:bg-ink-3",
+  secondary: "tn:bg-paper tn:text-ink tn:shadow-control tn:not-disabled:hover:bg-hover",
+  ghost: "tn:not-disabled:hover:bg-[var(--tn-ghost-hover,var(--tn-color-hover))]",
 };
 
 const sizes = {
-  md: "h-11 gap-2 px-5 text-body",
-  sm: "h-8 gap-1.5 px-4 text-label",
+  md: "tn:h-11 tn:gap-2 tn:px-5 tn:text-body",
+  sm: "tn:h-8 tn:gap-1.5 tn:px-4 tn:text-label",
 };
 
-export function Button({
-  children,
-  variant = "primary",
-  size = "md",
-  type = "button",
-  className = "",
-  ...props
-}: ButtonProps) {
+export function Button({ children, variant = "primary", size = "md", className = "", ...props }: ButtonProps) {
+  const linkClick = useLinkClick();
+  const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+
+  if (props.href !== undefined) {
+    const { onClick, ...link } = props;
+    return (
+      <a
+        {...link}
+        onClick={(event) => {
+          onClick?.(event);
+          linkClick(event);
+        }}
+        className={classes}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  const { type = "button", ...button } = props;
   return (
-    <button {...props} type={type} className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}>
+    <button {...button} type={type} className={classes}>
       {children}
     </button>
   );

@@ -16,10 +16,10 @@ export default {
     "Arrow keys move focus without changing the selection."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled text choices.", Demo: ToggleGroupDemo, code: toggleGroupDemoCode },
-    { id: "icons", title: "With icons", description: "Named icon choices.", Demo: ToggleGroupIconsDemo, code: toggleGroupIconsDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled toggle group.", Demo: ToggleGroupDisabledDemo, code: toggleGroupDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named selected values.", Demo: ToggleGroupFormDemo, code: toggleGroupFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "Text buttons where any number can be pressed, such as filters or teams.", Demo: ToggleGroupDemo, code: toggleGroupDemoCode },
+    { id: "icons", title: "With icons", description: "Icon-only buttons named by their labels, as in a text-style bar.", Demo: ToggleGroupIconsDemo, code: toggleGroupIconsDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed group that shows its pressed buttons and takes no input.", Demo: ToggleGroupDisabledDemo, code: toggleGroupDisabledDemoCode },
+    { id: "form", title: "In a form", description: "The group in a Field and a form: name submits one entry per pressed button, and Reset restores the first choice.", Demo: ToggleGroupFormDemo, code: toggleGroupFormDemoCode },
   ],
   keyboard: [
     {
@@ -42,12 +42,13 @@ export default {
   ],
   props: {
     "options": "Available choices. Each option supplies a value and visible label.",
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "Values of the pressed buttons. Leave it out to let the group track them, starting from defaultValue.",
+    "defaultValue": "The first pressed values when the group tracks them itself. Defaults to none.",
+    "onValueChange": "Called with every pressed value, in the order they were pressed, when a button is clicked or toggled with Enter or Space.",
+    "label": "Accessible name of the group when no Field labels it.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the buttons and stops them from toggling. A disabled Field or Fieldset does the same.",
+    "className": "Classes on the wrapping row of buttons, for width and placement. Buttons wrap onto new lines when it's narrow."
   },
 };

@@ -16,9 +16,9 @@ type SheetProps = {
 };
 
 const panels = {
-  bottom: "inset-x-0 bottom-0 max-h-dvh rounded-t-dialog sm:mx-auto sm:max-w-lg",
-  left: "inset-y-3 left-3 w-[min(360px,calc(100vw-48px))] overflow-clip rounded-dialog",
-  right: "inset-y-3 right-3 w-[min(360px,calc(100vw-48px))] overflow-clip rounded-dialog",
+  bottom: "tn:inset-x-0 tn:bottom-0 tn:max-h-dvh tn:rounded-t-dialog tn:sm:mx-auto tn:sm:max-w-lg",
+  left: "tn:inset-y-3 tn:left-3 tn:w-[min(360px,calc(100vw-48px))] tn:overflow-clip tn:rounded-dialog",
+  right: "tn:inset-y-3 tn:right-3 tn:w-[min(360px,calc(100vw-48px))] tn:overflow-clip tn:rounded-dialog",
 };
 
 const CLOSED_GAP = 40;
@@ -78,26 +78,26 @@ function SheetPanel({ side, header, children, onClose, className }: Pick<SheetPr
   }
 
   return (
-    <div className="absolute inset-0 overflow-clip">
-      <motion.div style={{ opacity }} onClick={onClose} className="absolute inset-0 bg-ink/40" />
+    <div className="tn:absolute tn:inset-0 tn:overflow-clip">
+      <motion.div style={{ opacity }} onClick={onClose} className="tn:absolute tn:inset-0 tn:bg-scrim/40" />
       <motion.div
         ref={panel}
         tabIndex={-1}
         data-autofocus
         style={vertical ? { y: position } : { x: position }}
-        className={`absolute flex flex-col bg-paper text-ink shadow-float surface outline-none ${panels[side]} ${className}`}
+        className={`tn:absolute tn:flex tn:flex-col tn:bg-paper tn:text-ink tn:shadow-float tn:surface tn:outline-none ${panels[side]} ${className}`}
       >
-        {vertical && <div className="absolute inset-x-0 top-full -mt-px h-full bg-paper" />}
+        {vertical && <div className="tn:absolute tn:inset-x-0 tn:top-full tn:-mt-px tn:h-full tn:bg-paper" />}
         <div
           onPointerDown={(event) => { press.current = { x: event.clientX, y: event.clientY }; }}
           onPointerMove={drag}
           onPointerUp={release}
           onPointerCancel={release}
-          className="shrink-0 touch-none select-none"
+          className="tn:shrink-0 tn:touch-none tn:select-none"
         >
           {header}
         </div>
-        <div className="min-h-0 overflow-y-auto overscroll-contain">{children}</div>
+        <div className="tn:min-h-0 tn:overflow-y-auto tn:overscroll-contain">{children}</div>
       </motion.div>
     </div>
   );

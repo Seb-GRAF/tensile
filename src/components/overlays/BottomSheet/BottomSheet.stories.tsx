@@ -46,7 +46,7 @@ const meta = {
     return (
       <div className="grid min-h-screen place-items-center">
         <Button aria-haspopup="dialog" aria-expanded={args.open} onClick={() => updateArgs({ open: true })}>Open sheet</Button>
-        <BottomSheet {...args} onOpenChange={(open) => { args.onOpenChange(open); updateArgs({ open }); }} />
+        <BottomSheet {...args} onOpenChange={(open) => { args.onOpenChange?.(open); updateArgs({ open }); }} />
       </div>
     );
   },

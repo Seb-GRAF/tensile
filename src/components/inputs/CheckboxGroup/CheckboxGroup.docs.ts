@@ -14,9 +14,9 @@ export default {
     "Use FormData.getAll(name) to read the repeated checked values. Unchecked and disabled controls are omitted."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled multiple selection.", Demo: CheckboxGroupDemo, code: checkboxGroupDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled options and whole group.", Demo: CheckboxGroupDisabledDemo, code: checkboxGroupDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Fieldset composition and repeated named form values.", Demo: CheckboxGroupFormDemo, code: checkboxGroupFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A group of channels where any number can be on; one option is disabled on its own.", Demo: CheckboxGroupDemo, code: checkboxGroupDemoCode },
+    { id: "disabled", title: "Disabled", description: "A disabled group keeps its checked boxes but takes no input.", Demo: CheckboxGroupDisabledDemo, code: checkboxGroupDisabledDemoCode },
+    { id: "form", title: "In a form", description: "The group in a Fieldset: name submits one entry per checked option, and Reset restores the first choice.", Demo: CheckboxGroupFormDemo, code: checkboxGroupFormDemoCode },
   ],
   keyboard: [
     {
@@ -35,12 +35,13 @@ export default {
   ],
   props: {
     "options": "Choices with value, label and optional disabled state.",
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "Values of the checked options. Leave it out to let the group track them, starting from defaultValue.",
+    "defaultValue": "The first checked values when the group tracks them itself. Defaults to none.",
+    "onValueChange": "Called with every checked value, in the order they were checked, when a box is toggled.",
+    "label": "Accessible name of the group when no Field or Fieldset wraps it.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims every option and stops them from toggling. A disabled Field or Fieldset does the same.",
+    "className": "Classes on the group, for width and placement. Rows fill its width, so their hover reaches the edge."
   },
 };

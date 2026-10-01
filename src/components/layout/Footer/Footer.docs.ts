@@ -10,7 +10,7 @@ export default {
     "The card has no outer margin; place it with className, such as m-3."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Grouped links and footer note.", Demo: FooterDemo, code: footerDemoCode },
+    { id: "usage", title: "Basic usage", description: "Two titled link groups and a copyright note, the usual end of a marketing or docs page.", Demo: FooterDemo, code: footerDemoCode },
   ],
   keyboard: [
     {
@@ -24,8 +24,8 @@ export default {
   ],
   props: {
     "groups": "Distinct group titles with labeled destination links.",
-    "note": "Optional content below the links.",
+    "note": "Small print under a separator below the link groups, such as a copyright line.",
     "label": "Names the footer's link navigation.",
-    "className": "Additional classes on the outer element."
+    "className": "Placement of the footer, such as its margin; it has none of its own."
   },
 };

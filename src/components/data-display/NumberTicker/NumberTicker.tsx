@@ -25,8 +25,8 @@ function Digit({ value, digit }: { value: number; digit: number }) {
   }, [value, digit, position]);
 
   return (
-    <span className="block h-lh overflow-y-clip">
-      <motion.span style={{ y }} className="flex flex-col">
+    <span className="tn:block tn:h-lh tn:overflow-y-clip">
+      <motion.span style={{ y }} className="tn:flex tn:flex-col">
         {STRIP.map((n, i) => (
           <span key={i}>{n}</span>
         ))}
@@ -41,8 +41,8 @@ export function NumberTicker({ value, format = (value: number) => value.toLocale
   const parts = text.match(/\d|\D+/g)!;
 
   return (
-    <span className={`inline-flex whitespace-pre tabular-nums ${className}`}>
-      <span className="sr-only">{text}</span>
+    <span className={`tn:inline-flex tn:whitespace-pre tn:tabular-nums ${className}`}>
+      <span className="tn:sr-only">{text}</span>
       <AnimatePresence initial={false}>
         {parts.map((part, i) => {
           const fromEnd = parts.length - 1 - i;
@@ -54,7 +54,7 @@ export function NumberTicker({ value, format = (value: number) => value.toLocale
               initial={{ ...swap.initial, width: 0 }}
               animate={{ ...swap.animate, width: "auto", transition: { ...swap.animate.transition, width: shape } }}
               exit={{ ...swap.exit, width: 0, transition: { ...swap.exit.transition, width: shape } }}
-              className="flex justify-end overflow-x-clip"
+              className="tn:flex tn:justify-end tn:overflow-x-clip"
             >
               {isDigit ? <Digit value={value} digit={Number(part)} /> : part}
             </motion.span>

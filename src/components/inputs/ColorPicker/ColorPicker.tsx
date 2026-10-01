@@ -1,6 +1,7 @@
 import { animate, clamp, motion, useMotionValue } from "motion/react";
 import { useRef, useState } from "react";
 import { hexToRgb, hsvToRgb, parseHex, rgbToHex, rgbToHsv, type Hsv } from "../../../color";
+import { useControllable } from "../../../controllable";
 import { dragHandlers, rubber } from "../../../drag";
 import { useSprings } from "../../../springs";
 import { FieldContext, useField } from "../Field/Field";
@@ -8,8 +9,9 @@ import { Input } from "../Input/Input";
 
 export type ColorPickerProps = {
   /** A lowercase "#rrggbb" color. */
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   label?: string;
   areaLabel?: string;
   hueLabel?: string;
@@ -23,7 +25,8 @@ export type ColorPickerProps = {
 };
 
 export function ColorPicker({
-  value,
+  value: valueProp,
+  defaultValue = "#000000",
   onValueChange,
   label = "Color",
   areaLabel = "Saturation and brightness",
@@ -36,6 +39,7 @@ export function ColorPicker({
   disabled = false,
   className = "",
 }: ColorPickerProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const { snap } = useSprings();
   const field = useField();
   const isDisabled = field?.disabled || disabled;
@@ -50,7 +54,7 @@ export function ColorPicker({
 
   function change(next: Hsv) {
     setProduced(next);
-    onValueChange(rgbToHex(hsvToRgb(next)));
+    setValue(rgbToHex(hsvToRgb(next)));
   }
 
   function drag(event: React.PointerEvent<HTMLDivElement>) {
@@ -101,7 +105,7 @@ export function ColorPicker({
 
   function commit() {
     const hex = parseHex(draft);
-    if (hex) onValueChange(hex);
+    if (hex) setValue(hex);
     setDraft(hex ?? value);
   }
 
@@ -112,16 +116,16 @@ export function ColorPicker({
       aria-label={field?.labelId ? undefined : label}
       aria-labelledby={field?.labelId}
       aria-describedby={field?.describedBy}
-      className={`grid gap-3 rounded-card bg-paper p-3 shadow-control ${className}`}
+      className={`tn:grid tn:gap-3 tn:rounded-card tn:bg-paper tn:p-3 tn:shadow-control ${className}`}
     >
       <FieldContext value={{ disabled: isDisabled }}>
         <div
           {...(!isDisabled && dragHandlers(drag, () => {}))}
-          className={`relative h-40 rounded-[calc(var(--radius-card)-12px)] outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${isDisabled ? "opacity-40" : "cursor-crosshair touch-none"}`}
+          className={`tn:relative tn:h-40 tn:rounded-[calc(var(--tn-radius-card)-12px)] tn:outline-offset-2 tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus ${isDisabled ? "tn:opacity-40" : "tn:cursor-crosshair tn:touch-none"}`}
         >
           <div
             style={{ background: `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${hue})` }}
-            className="absolute inset-0 rounded-[inherit]"
+            className="tn:absolute tn:inset-0 tn:rounded-[inherit]"
           />
           <div
             ref={knob}
@@ -135,16 +139,16 @@ export function ColorPicker({
             aria-disabled={isDisabled}
             onKeyDown={isDisabled ? undefined : onKeyDown}
             style={{ left: `${hsv.s * 100}%`, top: `${(1 - hsv.v) * 100}%`, backgroundColor: value }}
-            className="absolute size-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-3 border-paper shadow-float outline-none"
+            className="tn:absolute tn:size-6 tn:-translate-x-1/2 tn:-translate-y-1/2 tn:rounded-full tn:border-3 tn:border-paper tn:shadow-float tn:outline-none"
           />
         </div>
         <div
           {...(!isDisabled && dragHandlers(dragHue, () => animate(hueOver, 0, snap)))}
-          className={`relative h-6 rounded-full outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${isDisabled ? "opacity-40" : "cursor-pointer touch-none"}`}
+          className={`tn:relative tn:h-6 tn:rounded-full tn:outline-offset-2 tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus ${isDisabled ? "tn:opacity-40" : "tn:cursor-pointer tn:touch-none"}`}
         >
           <div
             style={{ background: "linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)" }}
-            className="absolute inset-x-0 top-1/2 h-3 -translate-y-1/2 rounded-full"
+            className="tn:absolute tn:inset-x-0 tn:top-1/2 tn:h-3 tn:-translate-y-1/2 tn:rounded-full"
           />
           <motion.div
             ref={hueKnob}
@@ -157,12 +161,12 @@ export function ColorPicker({
             aria-disabled={isDisabled}
             onKeyDown={isDisabled ? undefined : onHueKeyDown}
             style={{ left: `${(hsv.h / 360) * 100}%`, x: hueOver, backgroundColor: hue }}
-            className="absolute top-0 size-6 -translate-x-1/2 rounded-full border-3 border-paper shadow-float outline-none"
+            className="tn:absolute tn:top-0 tn:size-6 tn:-translate-x-1/2 tn:rounded-full tn:border-3 tn:border-paper tn:shadow-float tn:outline-none"
           />
         </div>
-        <div className="surface">
+        <div className="tn:surface">
           <Input
-            leading={<span aria-hidden style={{ backgroundColor: value }} className="size-5 shrink-0 rounded-full inset-ring inset-ring-ink/10" />}
+            leading={<span aria-hidden style={{ backgroundColor: value }} className="tn:size-5 tn:shrink-0 tn:rounded-full tn:inset-ring tn:inset-ring-ink/10" />}
             aria-label={hexLabel}
             value={focused ? draft : value}
             onValueChange={setDraft}

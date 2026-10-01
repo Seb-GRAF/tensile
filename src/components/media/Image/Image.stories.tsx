@@ -19,7 +19,7 @@ const meta = {
   title: "Media/Image",
   id: "components-image",
   component: Image,
-  args: { src: hills, alt: "Green hills under a pale morning sun", className: "aspect-video w-full rounded-[calc(var(--radius-card)-12px)]" },
+  args: { src: hills, alt: "Green hills under a pale morning sun", className: "aspect-video w-full rounded-[calc(var(--tn-radius-card)-12px)]" },
   render: (args) => (
     <Card className="w-80 p-3">
       <Image {...args} />

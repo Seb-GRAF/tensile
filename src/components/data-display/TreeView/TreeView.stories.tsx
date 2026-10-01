@@ -88,11 +88,11 @@ export const Default: Story = {
         <TreeView
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
           onExpandedChange={(expanded) => {
-            args.onExpandedChange(expanded);
+            args.onExpandedChange?.(expanded);
             updateArgs({ expanded });
           }}
         />

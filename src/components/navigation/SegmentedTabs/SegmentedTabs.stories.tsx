@@ -31,7 +31,7 @@ export const Default: Story = {
       <SegmentedTabs
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />
@@ -51,7 +51,7 @@ export const LongLabels: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-120 max-w-[calc(100vw-2rem)]">
-        <SegmentedTabs {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <SegmentedTabs {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

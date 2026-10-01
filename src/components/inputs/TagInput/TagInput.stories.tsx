@@ -18,7 +18,7 @@ function StatefulTagInput(props: TagInputProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -43,7 +43,7 @@ export const Default: Story = {
         <StatefulTagInput
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -55,7 +55,7 @@ export const Default: Story = {
 /** The label rests inside the field and floats up while it's focused or has tags or text; removing every tag shows the error inside the field. Save prints the submitted genres, Reset restores them and Disable dims the field. */
 export const InAFieldInsideAForm: Story = {
   render: function Render(args) {
-    const [value, setValue] = useState(args.value);
+    const [value, setValue] = useState(args.value!);
     const [disabled, setDisabled] = useState(false);
     const [data, setData] = useState("");
     return (
@@ -64,7 +64,7 @@ export const InAFieldInsideAForm: Story = {
           event.preventDefault();
           setData(JSON.stringify(new FormData(event.currentTarget).getAll("genres")));
         }}
-        onReset={() => { setValue(args.value); setData(""); }}
+        onReset={() => { setValue(args.value!); setData(""); }}
         className="grid w-90 max-w-[calc(100vw-2rem)] gap-4"
       >
         <Field label="Genres" description="Press Enter to add a genre." error={value.length === 0 ? "Add at least one genre" : undefined} required disabled={disabled}>

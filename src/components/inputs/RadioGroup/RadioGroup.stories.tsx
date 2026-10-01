@@ -63,7 +63,7 @@ export const Default: Story = {
         <RadioGroup
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />

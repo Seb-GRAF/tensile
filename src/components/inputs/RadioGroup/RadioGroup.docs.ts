@@ -27,13 +27,14 @@ export default {
   related: ["Field", "Fieldset", "Select", "CheckboxGroup"],
   props: {
     options: "Choices to render. Each has value and label, with an optional icon and disabled state.",
-    value: "Selected option value, or null for no selection.",
-    onValueChange: "Called with the selected option value when the user makes a choice.",
+    value: "Selected option value, or null for no selection. Leave it out to let the group track it, starting from defaultValue.",
+    defaultValue: "The first selected value when the group tracks it itself. Defaults to null, no selection.",
+    onValueChange: "Called with the option's value when it's picked by click or arrow key.",
     label: "Accessible name of a standalone group. Field supplies the name when used as a wrapper.",
     id: "ID on the radiogroup element. Field supplies its control ID when present.",
     name: "Shared native radio name and the key used in FormData.",
     disabled: "Disable every option in the group. Field and Fieldset disabled states also apply.",
     required: "Require one option before native form submission. Field can also make the group required.",
-    className: "Additional classes on the outer element.",
+    className: "Classes on the radiogroup, for width and placement. Rows fill its width, so their hover reaches the edge.",
   },
 };

@@ -13,5 +13,5 @@ npm install --ignore-scripts --package-lock=false --no-audit --no-fund ./*.tgz
 npx tsc -p .
 npx vite build --logLevel warn
 node ssr.mjs
-grep -q -- "--radius-control: *12px" dist/assets/*.css
+grep -q -- "--tn-radius-control: *12px" dist/assets/*.css
 echo "The app's token overrides are in its built CSS."

@@ -32,14 +32,14 @@ const activities = [
     trailing: <span className="px-1 text-accent tabular-nums">4:59</span>,
     children: (
       <div className="flex h-full items-center gap-2 p-5">
-        <IconButton label="Pause" className="shrink-0 [--color-ink:var(--color-accent)] [--color-paper:var(--color-on-accent)]">
+        <IconButton label="Pause" className="shrink-0 [--tn-color-ink:var(--tn-color-accent)] [--tn-color-paper:var(--tn-color-on-accent)]">
           <Icon size={20}>{pause.map((d) => <path key={d} d={d} />)}</Icon>
         </IconButton>
-        <IconButton label="Cancel" className="shrink-0 [--color-ink:var(--color-ink-3)]">
+        <IconButton label="Cancel" variant="ghost" className="shrink-0 bg-line">
           <Icon size={20}>{close.map((d) => <path key={d} d={d} />)}</Icon>
         </IconButton>
         <div className="ml-auto text-right">
-          <p className="text-label leading-4 text-paper/55">Timer</p>
+          <p className="text-label leading-4 text-muted">Timer</p>
           <p className="text-3xl leading-7 font-semibold text-accent tabular-nums">4:59</p>
         </div>
       </div>
@@ -49,20 +49,20 @@ const activities = [
     activity: "Call",
     leading: (
       <span className="flex items-center gap-2">
-        <span className="grid size-6 place-items-center rounded-full bg-ink-3 text-caption font-semibold">MC</span>
+        <span className="grid size-6 place-items-center rounded-full bg-line text-caption font-semibold">MC</span>
         Maya
       </span>
     ),
     trailing: <span className="px-1 text-accent tabular-nums">0:42</span>,
     children: (
       <div className="flex h-full items-center gap-3 p-5">
-        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink-3 text-body font-semibold">MC</span>
+        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-line text-body font-semibold">MC</span>
         <div className="min-w-0 grow">
           <p className="truncate text-body font-semibold">Maya Chen</p>
           <p className="text-label text-accent tabular-nums">0:42</p>
         </div>
         <div className="flex gap-2">
-          <IconButton label="Mute" className="shrink-0 [--color-ink:var(--color-ink-3)]">
+          <IconButton label="Mute" variant="ghost" className="shrink-0 bg-line">
             <Icon size={20}>{mic.map((d) => <path key={d} d={d} />)}</Icon>
           </IconButton>
           <IconButton label="End call" variant="secondary" className="shrink-0">
@@ -83,20 +83,20 @@ const activities = [
     ),
     trailing: (
       <svg viewBox="0 0 24 24" className="size-6 -rotate-90 fill-none" strokeWidth={1.5} strokeLinecap="round">
-        <circle cx="12" cy="12" r="8" className="stroke-ink-3" />
+        <circle cx="12" cy="12" r="8" className="stroke-line" />
         <circle cx="12" cy="12" r="8" pathLength={1} strokeDasharray="0.4 1" className="stroke-accent" />
       </svg>
     ),
     children: (
       <div className="flex h-full items-center gap-3 p-5">
-        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink-3">
+        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-line">
           <Icon size={20}>{download.map((d) => <path key={d} d={d} />)}</Icon>
         </span>
         <div className="min-w-0 grow">
           <p className="truncate text-body font-semibold">Report.pdf</p>
-          <p className="text-label text-paper/55 tabular-nums">18.4 of 46 MB</p>
+          <p className="text-label text-muted tabular-nums">18.4 of 46 MB</p>
         </div>
-        <IconButton label="Cancel download" className="relative shrink-0 [--color-ink:var(--color-ink-3)]">
+        <IconButton label="Cancel download" variant="ghost" className="relative shrink-0 bg-line">
           <svg viewBox="0 0 44 44" className="absolute inset-0 -rotate-90 fill-none" strokeWidth={1.5} strokeLinecap="round">
             <circle cx="22" cy="22" r="20.5" pathLength={1} strokeDasharray="0.4 1" className="stroke-accent" />
           </svg>
@@ -128,7 +128,7 @@ export const Default: Story = {
           {...args}
           {...activities[index]}
           onExpandedChange={(expanded) => {
-            args.onExpandedChange(expanded);
+            args.onExpandedChange?.(expanded);
             updateArgs({ expanded });
           }}
         />

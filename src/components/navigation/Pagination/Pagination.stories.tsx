@@ -26,7 +26,7 @@ export const Default: Story = {
       <Pagination
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />
@@ -45,7 +45,7 @@ export const WithLinks: Story = {
             {...args}
             value={value}
             pageHref={(page) => `/page/${page}`}
-            onValueChange={(next) => { args.onValueChange(next); setValue(next); }}
+            onValueChange={(next) => { args.onValueChange?.(next); setValue(next); }}
           />
           <output className="text-label text-muted">{value} {path}</output>
         </div>

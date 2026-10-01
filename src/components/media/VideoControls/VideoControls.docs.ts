@@ -11,7 +11,7 @@ export default {
     "onScrubChange is optional when you want to pause playback during a drag."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Connect controls to a native video element and its events.", Demo: VideoControlsDemo, code: videoControlsDemoCode },
+    { id: "usage", title: "Basic usage", description: "The bar wired to a native video element and its events; use it in place of the browser's own controls.", Demo: VideoControlsDemo, code: videoControlsDemoCode },
   ],
   keyboard: [
     {
@@ -41,6 +41,6 @@ export default {
     "seekLabel": "Accessible name of the seek slider.",
     "volumeLabel": "Accessible name of the volume slider.",
     "formatTime": "Format a time in seconds for display.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the 52 px ink bar, for placement; it fills its container's width."
   },
 };

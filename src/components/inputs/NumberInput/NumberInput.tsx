@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useField } from "../Field/Field";
 import { Input, type InputProps } from "../Input/Input";
 
-export type NumberInputProps = Omit<InputProps, "value" | "onValueChange" | "type" | "min" | "max" | "step"> & {
-  value: number | null;
-  onValueChange: (value: number | null) => void;
+export type NumberInputProps = Omit<InputProps, "value" | "defaultValue" | "onValueChange" | "type" | "min" | "max" | "step"> & {
+  value?: number | null;
+  defaultValue?: number | null;
+  onValueChange?: (value: number | null) => void;
   min?: number;
   max?: number;
   step?: number;
@@ -13,7 +15,8 @@ export type NumberInputProps = Omit<InputProps, "value" | "onValueChange" | "typ
 };
 
 export function NumberInput({
-  value,
+  value: valueProp,
+  defaultValue = null,
   onValueChange,
   min,
   max,
@@ -30,6 +33,7 @@ export function NumberInput({
   onKeyDown,
   ...props
 }: NumberInputProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   const [focused, setFocused] = useState(false);
   const [draft, setDraft] = useState("");
@@ -41,7 +45,7 @@ export function NumberInput({
 
   function commit(next: number | null) {
     const clamped = next === null ? null : Math.min(max ?? Infinity, Math.max(min ?? -Infinity, next));
-    onValueChange(clamped);
+    setValue(clamped);
     setDraft(clamped === null ? "" : String(clamped));
   }
 

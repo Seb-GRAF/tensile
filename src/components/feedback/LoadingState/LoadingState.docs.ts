@@ -11,8 +11,8 @@ export default {
     "The component has no progress value or automatic completion. Replace it when the data arrives."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Named loading message.", Demo: LoadingStateDemo, code: loadingStateDemoCode },
-    { id: "description", title: "Description", description: "Loading title and supporting description.", Demo: LoadingStateDescriptionDemo, code: loadingStateDescriptionDemoCode },
+    { id: "usage", title: "Basic usage", description: "A spinner and a label, the plain placeholder while a list or panel loads.", Demo: LoadingStateDemo, code: loadingStateDemoCode },
+    { id: "description", title: "Description", description: "Adds a line on what is loading or how long it may take, for waits longer than a moment.", Demo: LoadingStateDescriptionDemo, code: loadingStateDescriptionDemoCode },
   ],
   keyboard: [],
   related: [
@@ -21,8 +21,8 @@ export default {
     "ProgressBar"
   ],
   props: {
-    "label": "Accessible name of the control or region.",
-    "description": "Supporting content explaining the control or group.",
-    "className": "Additional classes on the outer element."
+    "label": "Visible title under the spinner, also read out by the status.",
+    "description": "A muted line under the label.",
+    "className": "Classes on the centered status column, for placement; it fills its container's width and has 24 px padding, like EmptyState."
   },
 };

@@ -1,5 +1,6 @@
 import { animate, AnimatePresence, motion, useIsPresent, useMotionTemplate, useMotionValue } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { icons } from "../../../icons";
 import { useTypeahead } from "../../../list";
 import { useSprings } from "../../../springs";
@@ -9,11 +10,13 @@ type Item = { value: string; label: string; icon?: React.ReactNode; children?: I
 
 export type TreeViewProps = {
   items: Item[];
-  value: string | null;
-  onValueChange: (value: string) => void;
+  value?: string | null;
+  defaultValue?: string | null;
+  onValueChange?: (value: string) => void;
   /** Values of the open parents. */
-  expanded: string[];
-  onExpandedChange: (expanded: string[]) => void;
+  expanded?: string[];
+  defaultExpanded?: string[];
+  onExpandedChange?: (expanded: string[]) => void;
   label?: string;
   className?: string;
 };
@@ -44,9 +47,9 @@ function TreeRow({ children }: { children: React.ReactNode }) {
       animate={{ height: STEP }}
       exit={{ height: 0 }}
       transition={shape}
-      className="[clip-path:inset(-4px)]"
+      className="tn:[clip-path:inset(-4px)]"
     >
-      <motion.div {...swap} animate={{ ...swap.animate, transition: soft }} className="py-0.5">
+      <motion.div {...swap} animate={{ ...swap.animate, transition: soft }} className="tn:py-0.5">
         {children}
       </motion.div>
     </motion.div>
@@ -56,7 +59,7 @@ function TreeRow({ children }: { children: React.ReactNode }) {
 function Selection({ index, children }: { index: number; children: React.ReactNode }) {
   const { shape, soft } = useSprings();
   const top = useMotionValue(index * STEP + 2);
-  const clip = useMotionTemplate`inset(${top}px 0 calc(100% - ${top}px - 32px) 0 round var(--radius-control))`;
+  const clip = useMotionTemplate`inset(${top}px 0 calc(100% - ${top}px - 32px) 0 round var(--tn-radius-control))`;
 
   useEffect(() => {
     animate(top, index * STEP + 2, shape);
@@ -69,18 +72,30 @@ function Selection({ index, children }: { index: number; children: React.ReactNo
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={soft}
-      className="pointer-events-none absolute inset-0"
+      className="tn:pointer-events-none tn:absolute tn:inset-0"
     >
-      <motion.div style={{ top }} className="absolute inset-x-0 h-8 rounded-control bg-ink" />
-      <motion.div style={{ clipPath: clip }} className="absolute inset-0 text-label font-medium text-paper">
+      <motion.div style={{ top }} className="tn:absolute tn:inset-x-0 tn:h-8 tn:rounded-control tn:bg-ink" />
+      <motion.div style={{ clipPath: clip }} className="tn:absolute tn:inset-0 tn:text-label tn:font-medium tn:text-paper">
         {children}
       </motion.div>
     </motion.div>
   );
 }
 
-export function TreeView({ items, value, onValueChange, expanded, onExpandedChange, label = "Tree", className = "" }: TreeViewProps) {
+export function TreeView({
+  items,
+  value: valueProp,
+  defaultValue = null,
+  onValueChange,
+  expanded: expandedProp,
+  defaultExpanded = [],
+  onExpandedChange,
+  label = "Tree",
+  className = "",
+}: TreeViewProps) {
   const { shape } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
+  const [expanded, setExpanded] = useControllable(expandedProp, defaultExpanded, onExpandedChange);
   const [focused, setFocused] = useState<string>();
   const rowElements = useRef<Record<string, HTMLDivElement | null>>({});
   const rows = visibleRows(items, expanded);
@@ -94,7 +109,7 @@ export function TreeView({ items, value, onValueChange, expanded, onExpandedChan
   }
 
   function toggle(target: string) {
-    onExpandedChange(expanded.includes(target) ? expanded.filter((other) => other !== target) : [...expanded, target]);
+    setExpanded(expanded.includes(target) ? expanded.filter((other) => other !== target) : [...expanded, target]);
   }
 
   function onKeyDown(event: React.KeyboardEvent) {
@@ -105,13 +120,13 @@ export function TreeView({ items, value, onValueChange, expanded, onExpandedChan
     if (target !== undefined) {
       if (rows[target]) focusRow(rows[target].value);
     } else if (event.key === "ArrowRight") {
-      if (open) focusRow(rows[current + 1].value);
-      else if (row.children) toggle(row.value);
+      if (!open && row.children) toggle(row.value);
+      else if (open && row.children?.[0]) focusRow(row.children[0].value);
     } else if (event.key === "ArrowLeft") {
       if (open) toggle(row.value);
       else if (row.parent) focusRow(row.parent);
     } else if (event.key === "Enter" || event.key === " ") {
-      onValueChange(row.value);
+      setValue(row.value);
     } else {
       onTypeahead(event);
       return;
@@ -121,31 +136,31 @@ export function TreeView({ items, value, onValueChange, expanded, onExpandedChan
 
   function rowContent(row: Row, muted: string) {
     return (
-      <span style={{ paddingLeft: 4 + (row.level - 1) * 24 }} className="flex h-8 items-center pr-3">
+      <span style={{ paddingLeft: 4 + (row.level - 1) * 24 }} className="tn:flex tn:h-8 tn:items-center tn:pr-3">
         {row.children ? (
           <span
             onClick={(event) => {
               event.stopPropagation();
               toggle(row.value);
             }}
-            className={`grid h-8 w-6 shrink-0 place-items-center ${muted}`}
+            className={`tn:grid tn:h-8 tn:w-6 tn:shrink-0 tn:place-items-center ${muted}`}
           >
             <motion.span initial={false} animate={{ rotate: expanded.includes(row.value) ? 90 : 0 }} transition={shape}>
               <Icon>{icons.chevronRight}</Icon>
             </motion.span>
           </span>
         ) : (
-          <span className="w-6 shrink-0" />
+          <span className="tn:w-6 tn:shrink-0" />
         )}
-        {row.icon && <span className={`mr-2 shrink-0 ${muted}`}>{row.icon}</span>}
-        <span className="truncate">{row.label}</span>
+        {row.icon && <span className={`tn:mr-2 tn:shrink-0 ${muted}`}>{row.icon}</span>}
+        <span className="tn:truncate">{row.label}</span>
       </span>
     );
   }
 
   return (
     <div role="tree" aria-label={label} onKeyDown={onKeyDown} className={className}>
-      <div className="relative">
+      <div className="tn:relative">
         <AnimatePresence initial={false}>
           {rows.map((row, i) => (
             <TreeRow key={row.value}>
@@ -161,10 +176,10 @@ export function TreeView({ items, value, onValueChange, expanded, onExpandedChan
                 aria-selected={row.value === value}
                 tabIndex={i === current ? 0 : -1}
                 onFocus={() => setFocused(row.value)}
-                onClick={() => onValueChange(row.value)}
-                className={`cursor-pointer rounded-control text-label font-medium text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${i === selected ? "" : "hover:bg-hover"}`}
+                onClick={() => setValue(row.value)}
+                className={`tn:cursor-pointer tn:rounded-control tn:text-label tn:font-medium tn:text-ink tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${i === selected ? "" : "tn:hover:bg-hover"}`}
               >
-                {rowContent(row, "text-muted")}
+                {rowContent(row, "tn:text-muted")}
               </div>
             </TreeRow>
           ))}

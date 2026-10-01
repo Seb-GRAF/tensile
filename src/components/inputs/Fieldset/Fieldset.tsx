@@ -27,28 +27,28 @@ export function Fieldset({ legend, description, error, disabled = false, childre
         aria-describedby={[description && descriptionId, error && errorId].filter(Boolean).join(" ") || undefined}
         className={className}
       >
-        <legend className="text-body font-semibold text-ink">{legend}</legend>
+        <legend className="tn:text-body tn:font-semibold tn:text-ink">{legend}</legend>
         {description && (
-          <p id={descriptionId} className="mt-1 text-label text-muted">
+          <p id={descriptionId} className="tn:mt-1 tn:text-label tn:text-muted">
             {description}
           </p>
         )}
-        <div className="mt-4 grid gap-4">{children}</div>
+        <div className="tn:mt-4 tn:grid tn:gap-4">{children}</div>
         <motion.div
           id={errorId}
           initial={false}
           animate={{ height: error ? "auto" : 0 }}
           transition={shape}
-          className="grid overflow-hidden"
+          className="tn:grid tn:overflow-hidden"
         >
           <AnimatePresence initial={false}>
             {error && (
               <motion.p
                 key={error}
                 {...swap}
-                className="col-start-1 row-start-1 mt-4 flex origin-left gap-2 text-label text-ink"
+                className="tn:col-start-1 tn:row-start-1 tn:mt-4 tn:flex tn:origin-left tn:gap-2 tn:text-label tn:text-ink"
               >
-                <Icon size={14} className="mt-0.75">
+                <Icon size={14} className="tn:mt-0.75">
                   {icons.alert}
                 </Icon>
                 {error}

@@ -1,11 +1,13 @@
 import { useRef } from "react";
+import { useControllable } from "../../../controllable";
 import { Expand, type Placement } from "../../../Expand";
 import { useOutsidePress } from "../../../overlay";
 import { useSize } from "../../../useSize";
 
 export type PopoverProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   children: React.ReactNode;
   trigger?: React.ReactNode;
   label?: string;
@@ -22,7 +24,8 @@ export type PopoverProps = {
 };
 
 export function Popover({
-  open,
+  open: openProp,
+  defaultOpen = false,
   onOpenChange,
   children,
   trigger = "Details",
@@ -37,20 +40,21 @@ export function Popover({
   "aria-invalid": invalid,
   className = "",
 }: PopoverProps) {
+  const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
   const root = useRef<HTMLDivElement>(null);
   const [triggerSize, measureTrigger] = useSize();
   const width = triggerSize?.width;
   const [size, measurePanel] = useSize();
-  useOutsidePress(root, open, () => onOpenChange(false));
-  const content = <span ref={measureTrigger} className="inline-flex items-center whitespace-nowrap px-4 text-sm font-medium">{trigger}</span>;
+  useOutsidePress(root, open, () => setOpen(false));
+  const content = <span ref={measureTrigger} className="tn:inline-flex tn:items-center tn:whitespace-nowrap tn:px-4 tn:text-sm tn:font-medium">{trigger}</span>;
 
   return (
-    <div ref={root} className={`w-fit ${className}`}>
+    <div ref={root} className={`tn:w-fit ${className}`}>
       {width === undefined ? content : <Expand
         open={open}
-        onOpenChange={onOpenChange}
-        closed={{ width, height: 44, radius: "var(--radius-control)" }}
-        opened={{ width: size?.width ?? panelWidth, height: size?.height ?? 44, radius: "var(--radius-overlay)" }}
+        onOpenChange={setOpen}
+        closed={{ width, height: 44, radius: "var(--tn-radius-control)" }}
+        opened={{ width: size?.width ?? panelWidth, height: size?.height ?? 44, radius: "var(--tn-radius-overlay)" }}
         anchor={placement}
         label={label}
         id={id}
@@ -60,9 +64,9 @@ export function Popover({
         disabled={disabled}
         panelLabel={panelLabel}
         trigger={content}
-        className="bg-paper text-ink"
+        className="tn:bg-paper tn:text-ink"
       >
-        <div ref={measurePanel} style={{ width: panelWidth }} className="max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] overflow-y-auto">{children}</div>
+        <div ref={measurePanel} style={{ width: panelWidth }} className="tn:max-h-[calc(100dvh-2rem)] tn:max-w-[calc(100vw-2rem)] tn:overflow-y-auto">{children}</div>
       </Expand>}
     </div>
   );

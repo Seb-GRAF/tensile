@@ -10,7 +10,7 @@ function Demo() {
   const [open, setOpen] = useState(false);
   const [volume, setVolume] = useState(0.45);
   const [done, setDone] = useState(false);
-  const [scale] = useState(() => getComputedStyle(document.documentElement).getPropertyValue("--motion-duration-scale"));
+  const [scale] = useState(() => getComputedStyle(document.documentElement).getPropertyValue("--tn-motion-duration-scale"));
 
   function connect() {
     setStatus("loading");
@@ -21,7 +21,7 @@ function Demo() {
   return (
     <div className="grid w-[560px] gap-8">
       <p className="text-label text-muted">
-        --motion-duration-scale: <output className="font-medium text-ink">{scale}</output>
+        --tn-motion-duration-scale: <output className="font-medium text-ink">{scale}</output>
       </p>
       <div className="grid grid-cols-2 gap-x-8 gap-y-10">
         <section aria-label="Button" className="grid h-24 place-items-start gap-3">
@@ -52,12 +52,12 @@ function Demo() {
 
 function Scaled({ scale }: { scale?: number }) {
   const root = document.documentElement.style;
-  if (scale === undefined) root.removeProperty("--motion-duration-scale");
-  else root.setProperty("--motion-duration-scale", String(scale));
+  if (scale === undefined) root.removeProperty("--tn-motion-duration-scale");
+  else root.setProperty("--tn-motion-duration-scale", String(scale));
 
   useEffect(
     () => () => {
-      root.removeProperty("--motion-duration-scale");
+      root.removeProperty("--tn-motion-duration-scale");
     },
     [root],
   );

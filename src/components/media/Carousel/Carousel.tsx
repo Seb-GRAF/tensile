@@ -1,5 +1,6 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useLayoutEffect, useRef } from "react";
+import { useControllable } from "../../../controllable";
 import { dragHandlers, rubber } from "../../../drag";
 import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
@@ -10,8 +11,9 @@ import { PageDots } from "../../navigation/PageDots/PageDots";
 export type CarouselProps = {
   slides: { label: string; content: React.ReactNode }[];
   /** The selected slide, from 0. */
-  value: number;
-  onValueChange: (value: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
   /** CSS width of each slide; "80%" or "min(320px, 80%)" shows the neighbours. */
   slideWidth?: string;
   /** Where the current slide sits when it's narrower than the carousel. */
@@ -33,7 +35,8 @@ const moves: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
 
 export function Carousel({
   slides,
-  value,
+  value: valueProp,
+  defaultValue = 0,
   onValueChange,
   slideWidth = "86%",
   align = "start",
@@ -46,6 +49,7 @@ export function Carousel({
   className = "",
 }: CarouselProps) {
   const { snap } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const position = useMotionValue(value);
   const left = align === "center" ? `(100% - ${slideWidth}) / 2` : "0px";
   const x = useTransform(position, (p) => `calc(${left} - ${p} * (${slideWidth} + ${GAP}px))`);
@@ -87,11 +91,11 @@ export function Carousel({
     const element = area.current!;
     element.addEventListener("wheel", onWheel, { passive: false });
     return () => element.removeEventListener("wheel", onWheel);
-  }, [value, last, onValueChange]);
+  }, [value, last, setValue]);
 
   function moveTo(slide: number) {
     const next = Math.min(last, Math.max(0, slide));
-    if (next !== value) onValueChange(next);
+    if (next !== value) setValue(next);
   }
 
   function drag(event: React.PointerEvent<HTMLDivElement>) {
@@ -131,7 +135,7 @@ export function Carousel({
       <Icon>{icons.chevronRight}</Icon>
     </IconButton>
   );
-  const dots = <PageDots count={slides.length} value={value} onValueChange={onValueChange} label={label} pageLabel={slideLabel} />;
+  const dots = <PageDots count={slides.length} value={value} onValueChange={setValue} label={label} pageLabel={slideLabel} />;
   return (
     <div role="region" aria-roledescription="carousel" aria-label={label} className={className}>
       <div
@@ -143,10 +147,10 @@ export function Carousel({
         }}
         onDragStart={(event) => event.preventDefault()}
         onKeyDown={onKeyDown}
-        className="group relative flow-root touch-pan-y select-none contain-inline-size outline-none"
+        className="tn:group tn:relative tn:flow-root tn:touch-pan-y tn:select-none tn:contain-inline-size tn:outline-none"
       >
-        <div className={`pointer-events-none ${overflow === "clip" ? "-mx-4 -mt-2 -mb-8 overflow-clip px-4 pt-2 pb-8 mask-x-from-[calc(100%-16px)]" : ""}`}>
-          <motion.div style={{ x }} className="flex gap-4">
+        <div className={`tn:pointer-events-none ${overflow === "clip" ? "tn:-mx-4 tn:-mt-2 tn:-mb-8 tn:overflow-clip tn:px-4 tn:pt-2 tn:pb-8 tn:mask-x-from-[calc(100%-16px)]" : ""}`}>
+          <motion.div style={{ x }} className="tn:flex tn:gap-4">
             {slides.map((slide, i) => (
               <div
                 key={slide.label}
@@ -158,7 +162,7 @@ export function Carousel({
                 inert={i !== value}
                 tabIndex={-1}
                 style={{ width: slideWidth }}
-                className="pointer-events-auto shrink-0 overflow-clip rounded-card bg-paper text-ink shadow-float surface outline-none"
+                className="tn:pointer-events-auto tn:shrink-0 tn:overflow-clip tn:rounded-card tn:bg-paper tn:text-ink tn:shadow-float tn:surface tn:outline-none"
               >
                 {slide.content}
               </div>
@@ -167,7 +171,7 @@ export function Carousel({
         </div>
         <div
           style={{ left: `calc(${left})`, width: slideWidth }}
-          className="pointer-events-none absolute inset-y-0 flex items-center justify-between rounded-card px-3 outline-offset-2 group-focus-visible:outline-2 group-focus-visible:outline-focus *:pointer-events-auto"
+          className="tn:pointer-events-none tn:absolute tn:inset-y-0 tn:flex tn:items-center tn:justify-between tn:rounded-card tn:px-3 tn:outline-offset-2 tn:group-focus-visible:outline-2 tn:group-focus-visible:outline-focus tn:*:pointer-events-auto"
         >
           {controls === "sides" && (
             <>
@@ -178,20 +182,20 @@ export function Carousel({
         </div>
       </div>
       {controls === "center" && (
-        <div className="relative mx-auto mt-3 flex w-fit rounded-control bg-paper p-1 shadow-control">
+        <div className="tn:relative tn:mx-auto tn:mt-3 tn:flex tn:w-fit tn:rounded-control tn:bg-paper tn:p-1 tn:shadow-control">
           {previousButton}
           {dots}
           {nextButton}
         </div>
       )}
       {controls === "end" && (
-        <div className="relative mt-3 ml-auto flex w-fit rounded-control bg-paper p-1 shadow-control">
+        <div className="tn:relative tn:mt-3 tn:ml-auto tn:flex tn:w-fit tn:rounded-control tn:bg-paper tn:p-1 tn:shadow-control">
           {dots}
           {previousButton}
           {nextButton}
         </div>
       )}
-      {controls === "sides" && <div className="relative mx-auto mt-3 w-fit rounded-control bg-paper shadow-control">{dots}</div>}
+      {controls === "sides" && <div className="tn:relative tn:mx-auto tn:mt-3 tn:w-fit tn:rounded-control tn:bg-paper tn:shadow-control">{dots}</div>}
     </div>
   );
 }

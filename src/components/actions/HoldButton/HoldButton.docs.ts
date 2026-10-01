@@ -12,8 +12,8 @@ export default {
     "duration is measured in milliseconds."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Hold to confirm with a reset action.", Demo: HoldButtonDemo, code: holdButtonDemoCode },
-    { id: "duration", title: "Duration", description: "Custom hold duration.", Demo: HoldButtonDurationDemo, code: holdButtonDurationDemoCode },
+    { id: "usage", title: "Basic usage", description: "Hold to confirm a destructive action, such as deleting a project; release early and it springs back.", Demo: HoldButtonDemo, code: holdButtonDemoCode },
+    { id: "duration", title: "Duration", description: "A longer hold for actions that are harder to undo.", Demo: HoldButtonDurationDemo, code: holdButtonDurationDemoCode },
   ],
   keyboard: [
     {
@@ -32,9 +32,9 @@ export default {
   props: {
     "done": "Whether the confirmed state is shown.",
     "onDone": "Called when the fill reaches the end; set `done` to show the check.",
-    "children": "Content rendered inside the component.",
-    "doneLabel": "Accessible completion label.",
+    "children": "The visible label, also the accessible name until the hold completes.",
+    "doneLabel": "Accessible name once confirmed, since the check has no text.",
     "duration": "How long to hold, in ms.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the button, for placement."
   },
 };

@@ -12,8 +12,8 @@ export default {
     "For link items, update value from your router; onValueChange handles action buttons."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Action-based navigation with active icons.", Demo: TabBarDemo, code: tabBarDemoCode },
-    { id: "links", title: "Links", description: "Link navigation and current-page state.", Demo: TabBarLinksDemo, code: tabBarLinksDemoCode },
+    { id: "usage", title: "Basic usage", description: "Buttons that switch the visible section, with filled icons on the current one.", Demo: TabBarDemo, code: tabBarDemoCode },
+    { id: "links", title: "Links", description: "Items with an href are links; aria-current marks the page your router says is current.", Demo: TabBarLinksDemo, code: tabBarLinksDemoCode },
   ],
   keyboard: [
     {
@@ -36,9 +36,10 @@ export default {
   ],
   props: {
     "items": "Destinations with values, labels, idle and active icons, and optional hrefs.",
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
-    "className": "Additional classes on the outer element."
+    "value": "The current destination's value. Leave it out to let the bar track it for button items, starting from defaultValue.",
+    "defaultValue": "The first current item when the bar tracks it itself. Defaults to the first item.",
+    "onValueChange": "Called with a button item's value when it's pressed. Link items leave the selection to your router.",
+    "label": "Accessible name of the navigation landmark.",
+    "className": "Classes on the bar, for placement such as `fixed inset-x-3 bottom-3`."
   },
 };

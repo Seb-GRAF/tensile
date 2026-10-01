@@ -58,7 +58,7 @@ const meta = {
     const [, updateArgs] = useArgs();
     return (
       <Card className="mx-auto w-96 max-w-[calc(100vw-2rem)] overflow-clip p-5">
-        <Tabs {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <Tabs {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </Card>
     );
   },

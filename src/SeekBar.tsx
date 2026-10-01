@@ -64,16 +64,16 @@ export function SeekBar({ value, duration, onValueChange, onScrubChange, label, 
       aria-valuetext={valueText}
       {...dragHandlers(drag, release)}
       onKeyDown={onKeyDown}
-      className={`relative flex h-5 cursor-pointer touch-none items-center rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+      className={`tn:relative tn:flex tn:h-5 tn:cursor-pointer tn:touch-none tn:items-center tn:rounded-control tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${className}`}
     >
       <motion.div
         initial={false}
         animate={{ height: scrubbing ? 12 : 6 }}
         transition={shape}
         style={{ left, right }}
-        className="absolute overflow-hidden rounded-control bg-ink-3"
+        className="tn:absolute tn:overflow-hidden tn:rounded-control tn:bg-line"
       >
-        <div className="h-full bg-paper" style={{ width: `${(value / duration) * 100}%` }} />
+        <div className="tn:h-full tn:bg-ink" style={{ width: `${(value / duration) * 100}%` }} />
       </motion.div>
     </div>
   );
@@ -81,7 +81,7 @@ export function SeekBar({ value, duration, onValueChange, onScrubChange, label, 
 
 export function TimeReadout({ value, duration, formatTime = clock }: { value: number; duration: number; formatTime?: (seconds: number) => string }) {
   return (
-    <div className="mt-1 flex justify-between text-caption tabular-nums text-paper/55">
+    <div className="tn:mt-1 tn:flex tn:justify-between tn:text-caption tn:tabular-nums tn:text-muted">
       <span>{formatTime(value)}</span>
       <span>−{formatTime(duration - value)}</span>
     </div>

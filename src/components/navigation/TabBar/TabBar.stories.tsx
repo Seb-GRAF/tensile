@@ -60,7 +60,7 @@ export const Default: Story = {
           <TabBar
             {...args}
             onValueChange={(value) => {
-              args.onValueChange(value);
+              args.onValueChange?.(value);
               updateArgs({ value });
             }}
           />
@@ -81,7 +81,7 @@ export const WithLinks: Story = {
             {...args}
             items={args.items.map((item, i) => ({ ...item, href: i < 3 ? `/${item.value}` : undefined }))}
             value={value}
-            onValueChange={(value) => { args.onValueChange(value); setValue(value); setDestination(value); }}
+            onValueChange={(value) => { args.onValueChange?.(value); setValue(value); setDestination(value); }}
             className="w-80 max-w-[calc(100vw-2rem)]"
           />
         </LinkProvider>

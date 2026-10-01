@@ -405,7 +405,7 @@ function DetailPage() {
       <ToastStack
         toasts={toasts}
         onDismiss={(id) => setToasts(toasts.filter((toast) => toast.id !== id))}
-        className="fixed right-4 bottom-24 z-(--layer-sticky) w-80 max-w-[calc(100vw-2rem)] lg:right-6 lg:bottom-6"
+        className="fixed right-4 bottom-24 z-(--tn-layer-sticky) w-80 max-w-[calc(100vw-2rem)] lg:right-6 lg:bottom-6"
       />
       <Drawer open={editing} onOpenChange={setEditing} title="Edit listing">
         <form noValidate onSubmit={save} className="grid gap-5">

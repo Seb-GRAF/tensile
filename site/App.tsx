@@ -29,25 +29,23 @@ import {
   SwipeButton,
   Toggle,
   VolumeSlider,
+  icons,
+  useSprings,
+  useWidth,
   type StatusBadgeProps,
 } from "tensile";
-import { icons } from "../src/icons";
-import { useSprings } from "../src/springs";
-import { useWidth } from "../src/useWidth";
 import { Logo } from "./Logo";
 import { chapters, Reel } from "./Reel";
-import { Docs, docsPages } from "./Docs";
+import { Docs, docsPages, titleOf } from "./Docs";
+import stats from "./docs/stats.json";
 
-const start = "?docs=get-started";
+const start = docsPages[0].href;
 const github = "https://github.com/seb-graf/tensile";
 const install = "npm install tensile";
 const links = [
   { label: "Documentation", href: start },
   { label: "Components", href: "#components" },
 ];
-
-const pill =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-control font-medium shadow-control outline-offset-2 press focus-visible:outline-2 focus-visible:outline-focus";
 
 const channels = [
   { value: "stable", label: "Stable" },
@@ -119,38 +117,38 @@ export function Settings() {
   );
 }`;
 
-const promises = [
-  { title: "You own the state", text: "Each component takes a value and a callback, such as value and onValueChange. It keeps no copy of its own." },
-  { title: "Text is a prop", text: "Labels, empty states and screen reader text have English defaults you can replace." },
-  { title: "Keyboard support", text: "Arrow keys, Home, End and Escape work as the ARIA pattern describes, and focus goes back where it came from when an overlay closes." },
-  { title: "Plain CSS", text: "Import tensile/styles.css. Your app doesn't need Tailwind. Override variables on :root or on any element." },
-  { title: "Reduced motion", text: "--motion-duration-scale multiplies every animation's duration. When the system asks for reduced motion it's 0, and nothing animates." },
+const reasons = [
+  {
+    title: "One motion system",
+    text: "Every component moves on the same few springs. One CSS variable sets the speed for all of them, and it's 0 when the system asks for reduced motion.",
+  },
+  {
+    title: "Accessible behavior",
+    text: "Each component follows its ARIA pattern: the roles, and the arrow keys, Home, End and Escape. When an overlay closes, focus goes back where it was.",
+  },
+  {
+    title: "Forms that submit",
+    text: "Text fields, checkboxes and radios are native inputs. Selects, pickers and sliders add hidden inputs, so a plain form sends every value. Field wires up the label, help text and error.",
+  },
+  { title: "One package", text: "Install tensile and import what you need. Only the components you import end up in your JavaScript bundle." },
 ];
 
-const catalog = [
-  { group: "Actions", names: ["ActionMenu", "Button", "CommandPalette", "CopyButton", "HoldButton", "IconButton", "MorphButton", "SelectionBar", "SwipeButton", "Toolbar"] },
-  {
-    group: "Inputs",
-    names: [
-      "Checkbox", "CheckboxGroup", "ColorPicker", "ColorSwatches", "Combobox", "DatePicker", "DateRangePicker", "EditableText", "Field", "Fieldset", "FileUpload",
-      "Input", "MultiSelect", "NumberInput", "NumberStepper", "OTPInput", "PasswordInput", "RadioGroup", "RangeSlider", "Rating", "SearchField", "Select", "Slider",
-      "TagInput", "TextField", "Textarea", "ThemeToggle", "TimePicker", "TimeWheel", "Toggle", "ToggleGroup",
-    ],
-  },
-  { group: "Navigation", names: ["Breadcrumbs", "CollapsibleSidebar", "Link", "PageDots", "Pagination", "SegmentedTabs", "SidebarNav", "TabBar", "Tabs", "UnderlineTabs", "WizardSteps"] },
-  { group: "Feedback", names: ["Alert", "Badge", "EmptyState", "LoadingState", "NotificationList", "ProgressBar", "ProgressRing", "Skeleton", "Spinner", "StatusBadge", "Toast", "ToastStack"] },
-  {
-    group: "Data display",
-    names: ["Avatar", "AvatarGroup", "BarChart", "DataTable", "DescriptionList", "DonutChart", "Icon", "Kbd", "LineChart", "List", "NumberTicker", "StatTile", "Table", "Tag", "Timeline", "TreeView"],
-  },
-  { group: "Layout", names: ["Accordion", "AppShell", "Card", "ExpandableCard", "Footer", "Header", "PageHeader", "Separator", "SplitPane"] },
-  { group: "Overlays", names: ["AlertDialog", "BottomSheet", "ContextMenu", "Dialog", "Drawer", "Island", "Popover", "Tooltip"] },
-  { group: "Media", names: ["Carousel", "CompareSlider", "Image", "Lightbox", "MusicPlayer", "VideoControls", "VolumeSlider", "WaveformScrubber"] },
+const promises = [
+  { title: "You own the state", text: "Pass value and onValueChange, and your app holds the value. Leave them out, and the component keeps it, starting from defaultValue." },
+  { title: "Text is a prop", text: "Labels, empty states and screen reader text have English defaults you can replace." },
+  { title: "Plain CSS", text: "Import tensile/styles.css. Your app doesn't need Tailwind. Override variables on :root or on any element." },
 ];
+
+const catalog = docsPages
+  .filter((page) => page.documentation)
+  .reduce<Record<string, typeof docsPages>>((result, page) => {
+    (result[page.group] ??= []).push(page);
+    return result;
+  }, {});
 
 function docsFor(name: string) {
   const page = docsPages.find((page) => page.title === name);
-  return page ? `?docs=${page.id}` : undefined;
+  return page ? page.href : undefined;
 }
 
 function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -218,12 +216,13 @@ function Brand() {
 
   return (
     <Link
-      href="./"
+      href={import.meta.env.BASE_URL}
+      underline={false}
       onPointerEnter={() => setOpen(true)}
       onPointerLeave={() => setOpen(false)}
       onFocus={() => setOpen(true)}
       onBlur={() => setOpen(false)}
-      className="flex items-center rounded-sm text-xl tracking-tight no-underline! focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="flex items-center rounded-sm text-xl tracking-tight focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       <Logo open={open} />
       <span className="sr-only">Tensile</span>
@@ -310,16 +309,14 @@ function Hero() {
         </motion.h1>
         <div className="lg:pb-2">
           <motion.p {...rise(2)} className="max-w-md text-lg text-muted">
-            React components where each control is one shape. It changes size, color and content with its state, and follows your pointer when
-            you drag it.
+            React components where each control is one shape that moves with its state. They work with a keyboard and a screen reader, and send
+            their values with your forms.
           </motion.p>
           <motion.div {...rise(3)} className="mt-6 flex flex-wrap items-center gap-3">
-            <Link href={start} className={`${pill} h-11 rounded-control! bg-ink px-5 text-body text-paper no-underline! hover:bg-ink-3`}>
-              Get started
-            </Link>
-            <a href="#play" className={`${pill} h-11 bg-paper px-5 text-body text-ink hover:bg-hover`}>
+            <Button href={start}>Get started</Button>
+            <Button href="#play" variant="secondary">
               Try the components
-            </a>
+            </Button>
           </motion.div>
           <motion.div {...rise(4)} className="mt-4 flex max-w-md items-center gap-3 rounded-control bg-paper/60 p-1.5 pl-5 shadow-control">
             <code className="min-w-0 flex-1 overflow-x-auto text-label whitespace-nowrap">
@@ -328,9 +325,18 @@ function Hero() {
             </code>
             <CopyButton value={install} label="Copy install command" className="shrink-0" />
           </motion.div>
+          <motion.ul {...rise(5)} role="list" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-label text-muted">
+            <li>v{stats.version}</li>
+            <li>{stats.license} license</li>
+            <li>{stats.components} components</li>
+            <li>
+              {Math.round(stats.gzip.js / 1000)} kB JS + {Math.round(stats.gzip.css / 1000)} kB CSS gzipped, plus Motion
+            </li>
+            <li>React 19</li>
+          </motion.ul>
         </div>
       </div>
-      <motion.div {...rise(5)} className="mt-10 md:mt-12">
+      <motion.div {...rise(6)} className="mt-10 md:mt-12">
         <Reel chapter={chapter} onChapterChange={setChapter} />
       </motion.div>
     </section>
@@ -345,11 +351,10 @@ function Tile({ names, title, tone = "paper", demo, children, className = "" }: 
   children: React.ReactNode;
   className?: string;
 }) {
-  const muted = tone === "ink" ? "text-paper/55" : "text-muted";
   return (
     <Reveal className={className}>
       <Card {...demo} tone={tone} className="flex h-full flex-col p-6 sm:p-7">
-        <p className={`flex flex-wrap gap-x-3 text-label ${muted}`}>
+        <p className="flex flex-wrap gap-x-3 text-label text-muted">
           {names.map((name) => {
             const href = docsFor(name);
             return href ? <Link key={name} href={href}>{name}</Link> : <span key={name}>{name}</span>;
@@ -588,6 +593,28 @@ function Playground() {
   );
 }
 
+function Why() {
+  return (
+    <section className="mx-auto max-w-page px-6 pb-24 md:pb-32">
+      <Reveal>
+        <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance md:text-5xl">Why not shadcn/ui and Motion?</h2>
+        <p className="mt-4 max-w-xl text-lg text-muted">
+          You can build these with the two of them, but you write each animation yourself and keep them consistent. Tensile comes with that work
+          done.
+        </p>
+        <dl className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {reasons.map((reason) => (
+            <div key={reason.title} className="grid content-start gap-2 border-t border-ink/10 pt-5">
+              <dt className="text-body font-semibold">{reason.title}</dt>
+              <dd className="text-body text-muted">{reason.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </Reveal>
+    </section>
+  );
+}
+
 function Theming() {
   const [accent, setAccent] = useState("lime");
   const [corner, setCorner] = useState("round");
@@ -602,12 +629,12 @@ function Theming() {
   const chosen = accents.find((option) => option.value === accent)!;
   const { radii } = corners.find((option) => option.value === corner)!;
   const tokens: Record<string, string> = {
-    "--color-accent": chosen.color,
-    "--color-on-accent": chosen.on,
-    "--radius-control": `${radii.control}px`,
-    "--radius-overlay": `${radii.overlay}px`,
-    "--radius-card": `${radii.card}px`,
-    "--radius-dialog": `${radii.dialog}px`,
+    "--tn-color-accent": chosen.color,
+    "--tn-color-on-accent": chosen.on,
+    "--tn-radius-control": `${radii.control}px`,
+    "--tn-radius-overlay": `${radii.overlay}px`,
+    "--tn-radius-card": `${radii.card}px`,
+    "--tn-radius-dialog": `${radii.dialog}px`,
   };
   const css = `:root {\n${Object.entries(tokens).map(([name, value]) => `  ${name}: ${value};`).join("\n")}\n}`;
 
@@ -632,7 +659,7 @@ function Theming() {
           </div>
           <Card tone="ink" className="mt-10 p-5">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-label text-paper/55">app.css</span>
+              <span className="text-label text-muted">app.css</span>
               <CopyButton value={css} label="Copy CSS" />
             </div>
             <pre className="mt-3 overflow-x-auto font-mono text-label">{css}</pre>
@@ -688,12 +715,12 @@ function Code() {
       <Reveal className="min-w-0">
         <Card tone="ink" className="overflow-hidden">
           <div className="flex items-center justify-between gap-3 px-5 pt-5">
-            <span className="text-label text-paper/55">Settings.tsx</span>
+            <span className="text-label text-muted">Settings.tsx</span>
             <CopyButton value={snippet} label="Copy code" />
           </div>
           <pre className="overflow-x-auto px-5 pt-4 pb-6 font-mono text-label">{snippet}</pre>
-          <div className="flex items-center justify-between gap-4 border-t border-line bg-ink-3/50 px-5 py-4">
-            <span className="text-label text-paper/55">Renders</span>
+          <div className="flex items-center justify-between gap-4 border-t border-line bg-line/50 px-5 py-4">
+            <span className="text-label text-muted">Renders</span>
             <Toggle label="Weekly digest" checked={digest} onCheckedChange={setDigest} />
           </div>
         </Card>
@@ -713,13 +740,28 @@ function Code() {
   );
 }
 
+function Preview({ Demo }: { Demo: React.ComponentType }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "200px" });
+
+  return (
+    <div ref={ref} inert aria-hidden className="relative aspect-[4/3] overflow-clip">
+      {inView && (
+        <div className="absolute top-0 left-0 flex size-[200%] origin-top-left scale-50 items-center justify-center p-6 sm:size-[160%] sm:scale-[0.625]">
+          <Demo />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Catalog() {
   const { shape, swap } = useSprings();
   const [query, setQuery] = useState("");
-  const groups = catalog
-    .map((group) => ({ ...group, names: group.names.filter((name) => name.toLowerCase().includes(query.trim().toLowerCase())) }))
-    .filter((group) => group.names.length > 0);
-  const count = groups.reduce((total, group) => total + group.names.length, 0);
+  const groups = Object.entries(catalog)
+    .map(([group, pages]) => ({ group, pages: pages.filter((page) => page.title.toLowerCase().includes(query.trim().toLowerCase())) }))
+    .filter((group) => group.pages.length > 0);
+  const count = groups.reduce((total, group) => total + group.pages.length, 0);
 
   return (
     <section id="components" className="mx-auto max-w-page scroll-mt-20 px-6 pb-24 md:pb-32">
@@ -743,19 +785,21 @@ function Catalog() {
               layout="position"
               transition={shape}
               {...swap}
-              className="grid gap-3 border-t border-ink/10 py-5 md:grid-cols-[10rem_1fr] md:gap-8"
+              className="grid gap-4 border-t border-ink/10 py-6 md:grid-cols-[10rem_1fr] md:gap-8"
             >
               <h3 className="text-body font-semibold">{group.group}</h3>
-              <ul role="list" className="flex flex-wrap gap-x-5 gap-y-2">
+              <ul role="list" className="grid grid-cols-2 gap-3 lg:grid-cols-3">
                 <AnimatePresence mode="popLayout" initial={false}>
-                  {group.names.map((name) => {
-                    const href = docsFor(name);
-                    return (
-                      <motion.li key={name} layout="position" transition={shape} {...swap}>
-                        {href ? <Link href={href} className="text-body">{name}</Link> : <span className="text-body text-muted">{name}</span>}
-                      </motion.li>
-                    );
-                  })}
+                  {group.pages.map((page) => (
+                    <motion.li key={page.id} layout="position" transition={shape} {...swap}>
+                      <Card className="relative grid overflow-clip">
+                        <Preview Demo={page.documentation!.examples[0].Demo} />
+                        <Link href={page.href} underline={false} className="mx-4 mb-3 truncate text-body font-medium after:absolute after:inset-0">
+                          {page.title}
+                        </Link>
+                      </Card>
+                    </motion.li>
+                  ))}
                 </AnimatePresence>
               </ul>
             </motion.div>
@@ -788,11 +832,11 @@ function Closing({ onNavigate }: { onNavigate: (href: string) => void }) {
             <h2 className="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
               Give your interface a little <span className="text-accent">tension</span>
             </h2>
-            <p className="mt-5 max-w-md text-lg text-paper/55">Try one component in an app you already have. The guide goes from npm install to a working Toggle.</p>
+            <p className="mt-5 max-w-md text-lg text-muted">Try one component in an app you already have. The guide goes from npm install to a working Toggle.</p>
           </div>
           <div className="grid gap-4">
             <SwipeButton confirmed={confirmed} onConfirm={() => setConfirmed(true)} label="Slide to get started" confirmedLabel="Opening the guide" />
-            <p className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-label text-paper/55">
+            <p className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-label text-muted">
               <Link href={start}>Read the guide</Link>
               <Link href={github}>GitHub</Link>
             </p>
@@ -803,10 +847,10 @@ function Closing({ onNavigate }: { onNavigate: (href: string) => void }) {
   );
 }
 
-export function App() {
-  const [url, setUrl] = useState(() => window.location.href);
-  const doc = new URL(url).searchParams.get("docs");
-  const page = docsPages.find((page) => page.id === doc);
+export function App({ url: initialUrl }: { url: string }) {
+  const base = import.meta.env.BASE_URL;
+  const [url, setUrl] = useState(initialUrl);
+  const page = docsPages.find((page) => page.href === new URL(url).pathname);
 
   useEffect(() => {
     const onPopState = () => setUrl(window.location.href);
@@ -815,7 +859,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    document.title = page ? `${page.title} · Tensile` : "Tensile · React components in motion";
+    document.title = titleOf(page);
     const section = document.getElementById(new URL(url).hash.slice(1));
     if (section) section.scrollIntoView();
     else window.scrollTo(0, 0);
@@ -824,7 +868,7 @@ export function App() {
 
   function navigate(href: string) {
     const target = new URL(href, window.location.href);
-    if (target.pathname !== window.location.pathname) {
+    if (target.pathname !== base && !docsPages.some((page) => page.href === target.pathname)) {
       window.location.assign(target.href);
       return;
     }
@@ -836,7 +880,7 @@ export function App() {
     <LinkProvider navigate={navigate}>
       {page ? <Docs page={page} brand={<Brand />} onNavigate={navigate} /> : (
         <>
-          <a href="#main" className="sr-only fixed top-3 left-3 z-(--layer-overlay) rounded-control bg-ink px-5 py-3 text-paper focus:not-sr-only">
+          <a href="#main" className="sr-only fixed top-3 left-3 z-(--tn-layer-overlay) rounded-control bg-ink px-5 py-3 text-paper focus:not-sr-only">
             Skip to content
           </a>
           <Header
@@ -848,15 +892,14 @@ export function App() {
                 <Link href={github} className="text-label">
                   GitHub
                 </Link>
-                <Link href={start} className={`${pill} h-11 rounded-control! bg-ink px-5 text-body text-paper no-underline! hover:bg-ink-3`}>
-                  Get started
-                </Link>
+                <Button href={docsPages[0].href}>Get started</Button>
               </div>
             }
           />
           <main id="main" tabIndex={-1} className="outline-none">
             <Hero />
             <Playground />
+            <Why />
             <Theming />
             <Code />
             <Catalog />
@@ -864,18 +907,18 @@ export function App() {
           </main>
           <Footer
             groups={[
-              { title: "Build", links: [links[0], { label: "Components", href: "?docs=button" }] },
+              { title: "Build", links: [links[0], { label: "Components", href: `${base}#components` }] },
               {
                 title: "Learn",
                 links: [
-                  { label: "Styling and themes", href: `${github}#tokens` },
-                  { label: "Motion", href: `${github}#motion` },
-                  { label: "Composition", href: `${github}#patterns-and-recipes` },
+                  { label: "Styling and themes", href: `${base}docs/styling/` },
+                  { label: "Motion", href: `${base}docs/motion/` },
+                  { label: "Patterns and recipes", href: `${base}docs/patterns/` },
                 ],
               },
               {
                 title: "Explore",
-                links: [{ label: "GitHub", href: github }, { label: "MIT license", href: "./LICENSE" }, { label: "Font license", href: "./THIRD_PARTY_NOTICES" }],
+                links: [{ label: "GitHub", href: github }, { label: "MIT license", href: `${base}LICENSE` }, { label: "Font license", href: `${base}THIRD_PARTY_NOTICES` }],
               },
             ]}
             note="Tensile is MIT licensed. Made by Sébastien Graf."

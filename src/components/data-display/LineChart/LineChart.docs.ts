@@ -13,8 +13,8 @@ export default {
     "A live status announces the explored point."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Labeled data with hover and keyboard exploration.", Demo: LineChartDemo, code: lineChartDemoCode },
-    { id: "format", title: "Custom formatting", description: "Formatted values.", Demo: LineChartFormatDemo, code: lineChartFormatDemoCode },
+    { id: "usage", title: "Basic usage", description: "A line through an ordered series; hover it or Tab in and use the arrows to read each point. Use it to show a trend over time.", Demo: LineChartDemo, code: lineChartDemoCode },
+    { id: "format", title: "Custom formatting", description: "`formatValue` adds a unit to the tooltip and the announced value; use it whenever a bare number would be unclear.", Demo: LineChartFormatDemo, code: lineChartFormatDemoCode },
   ],
   keyboard: [
     {
@@ -32,8 +32,8 @@ export default {
   ],
   props: {
     "data": "Labeled points with non-negative values.",
-    "formatValue": "Format a value for display or accessible value text.",
-    "label": "Accessible summary of the chart.",
-    "className": "Additional classes on the outer element."
+    "formatValue": "Turns a value into the text in the tooltip and the live status, such as \"6 h\".",
+    "label": "Names the chart for screen readers with a short summary, such as \"Work hours this week\".",
+    "className": "Classes on the ink card, for width and placement; it fills its container by default."
   },
 };

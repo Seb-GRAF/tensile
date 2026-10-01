@@ -62,7 +62,7 @@ export function Menu({ actions, onAction, onClose, open, id, label, initialIndex
         }
       }}
       style={{ maxHeight }}
-      className="relative m-1.5 overflow-y-auto overscroll-contain outline-none"
+      className="tn:relative tn:m-1.5 tn:overflow-y-auto tn:overscroll-contain tn:outline-none"
     >
       {actions.length > 0 && <ListHighlight index={active} />}
       {actions.map((action, i) => (
@@ -74,10 +74,10 @@ export function Menu({ actions, onAction, onClose, open, id, label, initialIndex
           onMouseDown={(event) => event.preventDefault()}
           onMouseMove={() => setActive(i)}
           onClick={() => run(action)}
-          className={`relative flex h-10 cursor-pointer items-center gap-2.5 px-2.5 text-sm text-ink ${action.disabled ? "opacity-40" : ""}`}
+          className={`tn:relative tn:flex tn:h-10 tn:cursor-pointer tn:items-center tn:gap-2.5 tn:px-2.5 tn:text-sm tn:text-ink ${action.disabled ? "tn:opacity-40" : ""}`}
         >
-          {withIcons && <span className="w-4 shrink-0 text-muted">{action.icon}</span>}
-          <span className="truncate">{action.label}</span>
+          {withIcons && <span className="tn:w-4 tn:shrink-0 tn:text-muted">{action.icon}</span>}
+          <span className="tn:truncate">{action.label}</span>
         </li>
       ))}
     </ul>

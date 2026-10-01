@@ -1,9 +1,13 @@
 import { AnimatePresence, motion, useMotionTemplate, useTransform } from "motion/react";
 import { CalendarView, type CalendarViewProps } from "../../../CalendarView";
+import { useControllable } from "../../../controllable";
 import { useLiquid, useSprings } from "../../../springs";
 import { useField } from "../Field/Field";
 
-export type DatePickerProps = Omit<CalendarViewProps, "isSelected" | "onDayHover" | "selection" | "multiple"> & {
+export type DatePickerProps = Omit<CalendarViewProps, "value" | "onValueChange" | "isSelected" | "onDayHover" | "selection" | "multiple"> & {
+  value?: string | null;
+  defaultValue?: string | null;
+  onValueChange?: (value: string) => void;
   name?: string;
   className?: string;
 };
@@ -16,7 +20,7 @@ function Selection({ index, rows, children }: { index: number; rows: number; chi
   const leftInset = useTransform(left, (value) => `calc(${value * 100 / 7}% + ${value * 4 / 7}px)`);
   const rightInset = useTransform(right, (value) => `calc(${value * 100 / 7}% + ${value * 4 / 7}px)`);
   const [top, bottom] = useLiquid(row * 36, (rows - 1 - row) * 36);
-  const clip = useMotionTemplate`inset(${top}px ${rightInset} ${bottom}px ${leftInset} round var(--radius-control))`;
+  const clip = useMotionTemplate`inset(${top}px ${rightInset} ${bottom}px ${leftInset} round var(--tn-radius-control))`;
 
   return (
     <motion.span
@@ -26,17 +30,26 @@ function Selection({ index, rows, children }: { index: number; rows: number; chi
       exit={{ scale: 0 }}
       transition={shape}
       style={{ transformOrigin: `${(column + 0.5) * 100 / 7}% ${row * 36 + 16}px` }}
-      className="pointer-events-none absolute inset-0"
+      className="tn:pointer-events-none tn:absolute tn:inset-0"
     >
-      <motion.span style={{ left: leftInset, right: rightInset, top, bottom }} className="absolute rounded-control bg-ink" />
-      <motion.span style={{ clipPath: clip }} className="absolute inset-0 grid grid-cols-7 gap-1 text-label font-medium text-paper">
+      <motion.span style={{ left: leftInset, right: rightInset, top, bottom }} className="tn:absolute tn:rounded-control tn:bg-ink" />
+      <motion.span style={{ clipPath: clip }} className="tn:absolute tn:inset-0 tn:grid tn:grid-cols-7 tn:gap-1 tn:text-label tn:font-medium tn:text-paper">
         {children}
       </motion.span>
     </motion.span>
   );
 }
 
-export function DatePicker({ value, onValueChange, name, disabled = false, className = "", ...props }: DatePickerProps) {
+export function DatePicker({
+  value: valueProp,
+  defaultValue = null,
+  onValueChange,
+  name,
+  disabled = false,
+  className = "",
+  ...props
+}: DatePickerProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   return (
     <div className={className}>
@@ -44,7 +57,7 @@ export function DatePicker({ value, onValueChange, name, disabled = false, class
       <CalendarView
         {...props}
         value={value}
-        onValueChange={onValueChange}
+        onValueChange={setValue}
         disabled={disabled}
         isSelected={(day) => day === value}
         selection={(cells, labels) => {

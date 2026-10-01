@@ -51,7 +51,7 @@ export function FloatingLabel({
       initial={false}
       animate={{ y: floated ? -10 : 0, scale: floated ? 11 / 15 : 1 }}
       transition={shape}
-      className={`pointer-events-none absolute top-0 origin-left text-body leading-13 text-muted ${className}`}
+      className={`tn:pointer-events-none tn:absolute tn:top-0 tn:origin-left tn:text-body tn:leading-12 tn:text-muted ${className}`}
     >
       {children}
     </motion.span>
@@ -63,14 +63,14 @@ export function ErrorRow({ id, error, "aria-hidden": hidden }: { id?: string; er
   const { swap } = useSprings();
   return (
     <>
-      <div className="h-px bg-line" />
-      <div id={id} aria-hidden={hidden} className="grid">
+      <div className="tn:h-px tn:bg-line" />
+      <div id={id} aria-hidden={hidden} className="tn:grid">
         <AnimatePresence initial={false}>
           {error && (
             <motion.p
               key={error}
               {...swap}
-              className="col-start-1 row-start-1 flex origin-left items-center gap-2 px-5 py-2.5 text-label text-ink"
+              className="tn:col-start-1 tn:row-start-1 tn:flex tn:origin-left tn:items-center tn:gap-2 tn:px-5 tn:py-2.5 tn:text-label tn:text-ink"
             >
               <Icon size={14}>{icons.alert}</Icon>
               {error}
@@ -100,24 +100,24 @@ export function Field({
   const errorId = `${id}-error`;
   const describedBy = [description && descriptionId, error && errorId].filter(Boolean).join(" ") || undefined;
   const inside = labelPlacement === "inside" ? { label: required ? `${label} *` : label, error } : undefined;
-  const indent = labelPlacement === "above" ? "px-4" : "";
+  const indent = labelPlacement === "above" ? "tn:px-4" : "";
 
   return (
     <FieldContext
       value={{ id, labelId, describedBy, invalid: !!error, required, disabled: disabled || !!fieldset?.disabled, inside }}
     >
-      <div className={`group/field ${className}`}>
+      <div className={`tn:group/field ${className}`}>
         <label
           id={labelId}
           htmlFor={id}
-          className={`mb-1.5 block text-label font-medium text-ink group-has-[[data-label-inside]]/field:sr-only ${indent}`}
+          className={`tn:mb-1.5 tn:block tn:text-label tn:font-medium tn:text-ink tn:group-has-[[data-label-inside]]/field:sr-only ${indent}`}
         >
           {label}
           {required && <span aria-hidden> *</span>}
         </label>
         {children}
         {description && (
-          <p id={descriptionId} className={`mt-1.5 text-label text-muted group-has-[[data-label-inside]]/field:px-5 ${indent}`}>
+          <p id={descriptionId} className={`tn:mt-1.5 tn:text-label tn:text-muted tn:group-has-[[data-label-inside]]/field:px-5 ${indent}`}>
             {description}
           </p>
         )}
@@ -126,16 +126,16 @@ export function Field({
           initial={false}
           animate={{ height: error ? "auto" : 0 }}
           transition={shape}
-          className={`grid overflow-hidden group-has-[[data-label-inside]]/field:sr-only ${indent}`}
+          className={`tn:grid tn:overflow-hidden tn:group-has-[[data-label-inside]]/field:sr-only ${indent}`}
         >
           <AnimatePresence initial={false}>
             {error && (
               <motion.p
                 key={error}
                 {...swap}
-                className="col-start-1 row-start-1 mt-1.5 flex origin-left gap-2 text-label text-ink"
+                className="tn:col-start-1 tn:row-start-1 tn:mt-1.5 tn:flex tn:origin-left tn:gap-2 tn:text-label tn:text-ink"
               >
-                <Icon size={14} className="mt-0.75">
+                <Icon size={14} className="tn:mt-0.75">
                   {icons.alert}
                 </Icon>
                 {error}

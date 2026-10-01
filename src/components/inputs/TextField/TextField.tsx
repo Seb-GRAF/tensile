@@ -1,18 +1,21 @@
 import { motion } from "motion/react";
 import { useId, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useFocusSource } from "../../../focus";
 import { useSprings } from "../../../springs";
 import { ErrorRow, FloatingLabel } from "../Field/Field";
 
-export type TextFieldProps = Omit<React.ComponentProps<"input">, "value" | "onChange" | "placeholder"> & {
-  value: string;
-  onValueChange: (value: string) => void;
+export type TextFieldProps = Omit<React.ComponentProps<"input">, "value" | "defaultValue" | "onChange" | "placeholder"> & {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   label?: string;
   error?: string;
 };
 
 export function TextField({
-  value,
+  value: valueProp,
+  defaultValue = "",
   onValueChange,
   label = "Email",
   error,
@@ -25,6 +28,7 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const { shape } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   useFocusSource();
   const [focused, setFocused] = useState(false);
   const errorId = useId();
@@ -32,13 +36,13 @@ export function TextField({
   return (
     <motion.div
       initial={false}
-      animate={{ height: error ? "auto" : 52, borderRadius: error ? "var(--radius-overlay)" : "var(--radius-control)" }}
+      animate={{ height: error ? "auto" : 48, borderRadius: error ? "var(--tn-radius-overlay)" : "var(--tn-radius-control)" }}
       transition={shape}
       style={style}
-      className={`overflow-hidden bg-paper shadow-control outline-offset-2 has-[input:disabled]:opacity-40 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${className}`}
+      className={`tn:overflow-hidden tn:bg-paper tn:shadow-control tn:outline-offset-2 tn:has-[input:disabled]:opacity-40 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${className}`}
     >
-      <label className="relative block">
-        <FloatingLabel floated={focused || value !== ""} className="left-5">
+      <label className="tn:relative tn:block">
+        <FloatingLabel floated={focused || value !== ""} className="tn:left-5">
           {label}
         </FloatingLabel>
         <input
@@ -48,8 +52,8 @@ export function TextField({
           aria-describedby={[error && errorId, describedBy].filter(Boolean).join(" ") || undefined}
           onFocus={(event) => { setFocused(true); onFocus?.(event); }}
           onBlur={(event) => { setFocused(false); onBlur?.(event); }}
-          onChange={(event) => onValueChange(event.target.value)}
-          className="block h-13 w-full bg-transparent px-5 pt-6 pb-2 text-body text-ink outline-none"
+          onChange={(event) => setValue(event.target.value)}
+          className="tn:block tn:h-12 tn:w-full tn:bg-transparent tn:px-5 tn:pt-5 tn:pb-1 tn:text-body tn:text-ink tn:outline-none"
         />
       </label>
       <ErrorRow id={errorId} error={error} />

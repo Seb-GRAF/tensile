@@ -12,7 +12,7 @@ export default {
   notes: [
     "Spinner does not announce loading by itself. Put status text in a region with role=\"status\", or provide a busy control with an accessible name.",
     "For an action already in progress, disable its button to prevent repeated activation and use aria-busy to describe its state.",
-    "The animation stops when the design system's --motion-duration-scale is 0. The text should still explain what is happening when the arc is stationary.",
+    "The animation stops when the design system's --tn-motion-duration-scale is 0. The text should still explain what is happening when the arc is stationary.",
     "Use LoadingState when you also need a standard loading title and description.",
   ],
   examples: [

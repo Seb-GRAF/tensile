@@ -16,10 +16,10 @@ export default {
     "Required is an ARIA state, not native form validation."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled hour, minute and period wheels.", Demo: TimeWheelDemo, code: timeWheelDemoCode },
-    { id: "steps", title: "Steps", description: "Custom minute step.", Demo: TimeWheelStepsDemo, code: timeWheelStepsDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled wheels.", Demo: TimeWheelDisabledDemo, code: timeWheelDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named time.", Demo: TimeWheelFormDemo, code: timeWheelFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "Hour, minute and AM/PM wheels in a Field: drag or flick a wheel, or focus it and use the arrow keys.", Demo: TimeWheelDemo, code: timeWheelDemoCode },
+    { id: "steps", title: "Steps", description: "minuteStep of 15 leaves four rows on the minutes wheel, for slots such as reminders.", Demo: TimeWheelStepsDemo, code: timeWheelStepsDemoCode },
+    { id: "disabled", title: "Disabled", description: "Dimmed wheels that show the time and take no input.", Demo: TimeWheelDisabledDemo, code: timeWheelDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A time in a form: name submits it as HH:MM, and Reset restores the starting time.", Demo: TimeWheelFormDemo, code: timeWheelFormDemoCode },
   ],
   keyboard: [
     {
@@ -36,20 +36,21 @@ export default {
     "Field"
   ],
   props: {
-    "value": "Hours 0–23; the wheels show them as 12, 1–11 and AM or PM.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "Hours 0–23; the wheels show them as 12, 1–11 and AM or PM. Leave it out to let the wheels track it, starting from defaultValue.",
+    "defaultValue": "The first time when the wheels track it themselves. Defaults to 0:00, shown as 12:00 AM.",
+    "onValueChange": "Called with the new { hours, minutes } when a drag or flick is let go over a new row, or on an arrow, Home or End key.",
     "minuteStep": "Minutes between two rows of the minutes wheel.",
     "formatNumber": "Format the numbers shown in the wheels.",
     "amLabel": "Text for the morning period.",
     "pmLabel": "Text for the afternoon and evening period.",
-    "label": "Accessible name of the control or region.",
+    "label": "Accessible name of the group of wheels when no Field labels it.",
     "hoursLabel": "Accessible name of the hours wheel.",
     "minutesLabel": "Accessible name of the minutes wheel.",
     "periodLabel": "Accessible name of the AM/PM wheel.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the wheels and stops drags and keys. A disabled Field or Fieldset does the same.",
     "required": "Expose the required state. See the form example for validation.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the card that holds the wheels, for placement such as margin. It sizes to its wheels."
   },
 };

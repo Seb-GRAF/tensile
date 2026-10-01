@@ -1,13 +1,13 @@
 export type CardProps = React.ComponentProps<"div"> & {
-  /** Ink also turns focus rings paper and separators ink-3 inside it. */
+  /** Ink is a dark surface: the dark tokens apply inside it, in either theme. */
   tone?: "paper" | "ink";
 };
 
 const tones = {
-  paper: "bg-paper text-ink",
-  ink: "bg-ink text-paper [--color-focus:var(--color-paper)] [--ghost-hover:var(--color-ink-3)] [--color-line:var(--color-ink-3)]",
+  paper: "tn:bg-paper tn:text-ink",
+  ink: "dark tn:bg-paper tn:text-ink",
 };
 
 export function Card({ tone = "paper", className = "", ...props }: CardProps) {
-  return <div {...props} className={`rounded-card shadow-float surface ${tones[tone]} ${className}`} />;
+  return <div {...props} className={`tn:rounded-card tn:shadow-float tn:surface ${tones[tone]} ${className}`} />;
 }

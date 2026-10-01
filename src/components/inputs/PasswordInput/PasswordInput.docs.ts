@@ -14,9 +14,9 @@ export default {
     "Use Field for a visible label, description and error. Without Field, provide an accessible name directly."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled password and visibility toggle.", Demo: PasswordInputDemo, code: passwordInputDemoCode },
-    { id: "form", title: "In a form", description: "Password field inside a form.", Demo: PasswordInputFormDemo, code: passwordInputFormDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled password input.", Demo: PasswordInputDisabledDemo, code: passwordInputDisabledDemoCode },
+    { id: "usage", title: "Basic usage", description: "A password field labelled by a Field; the eye button shows or hides what was typed. Use it for any password entry.", Demo: PasswordInputDemo, code: passwordInputDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits the password; Reset clears it through the parent's state.", Demo: PasswordInputFormDemo, code: passwordInputFormDemoCode },
+    { id: "disabled", title: "Disabled", description: "The field and its eye button are dimmed and can't be used. Use it while the password can't be changed.", Demo: PasswordInputDisabledDemo, code: passwordInputDisabledDemoCode },
   ],
   keyboard: [
     {
@@ -38,16 +38,17 @@ export default {
   ],
   props: {
     "autoComplete": "Native autocomplete hint.",
-    "disabled": "Disable the input and any built-in actions.",
-    "value": "Current text value.",
+    "disabled": "Disables the native input and the eye button, and dims the pill; a disabled Field or Fieldset does the same.",
+    "value": "The password. Pass it to control PasswordInput; leave it out and it keeps its own text.",
+    "defaultValue": "The text PasswordInput starts with when it keeps its own text.",
     "onValueChange": "Called with the new text when the user types.",
     "leading": "Content before the password.",
     "trailing": "Additional content before the visibility button.",
-    "showLabel": "Accessible name for showing the password.",
-    "hideLabel": "Accessible name for hiding the password.",
+    "showLabel": "Names the eye button while the password is hidden.",
+    "hideLabel": "Names the eye button while the password is shown.",
     "name": "Native form field name.",
     "required": "Use native required validation.",
-    "className": "Additional classes on the outer surface, not the native input.",
+    "className": "Classes for the pill around the input, to set its width or place it; other props go to the input.",
     "style": "Inline styles on the outer surface."
   },
 };

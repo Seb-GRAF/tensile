@@ -6,12 +6,19 @@ export const icons = {
       <path d="m6 6 12 12" />
     </>
   ),
+  chevronDown: <path d="m6 9 6 6 6-6" />,
   chevronLeft: <path d="m14.5 7-5 5 5 5" />,
   chevronRight: <path d="m9.5 7 5 5-5 5" />,
   chevronsUpDown: (
     <>
       <path d="m7 15 5 5 5-5" />
       <path d="m7 9 5-5 5 5" />
+    </>
+  ),
+  success: (
+    <>
+      <circle cx="12" cy="12" r="12" className="tn:fill-accent tn:stroke-none" />
+      <path d="M7.125 12.375 10.5 15.75l6.375-6.75" className="tn:stroke-on-accent" />
     </>
   ),
   search: (

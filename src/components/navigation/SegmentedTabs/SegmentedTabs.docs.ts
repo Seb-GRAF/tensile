@@ -12,8 +12,8 @@ export default {
     "Arrow keys both select and focus the next tab."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled tablist wired to a tabpanel.", Demo: SegmentedTabsDemo, code: segmentedTabsDemoCode },
-    { id: "icons", title: "With icons", description: "Tabs with icons and content.", Demo: SegmentedTabsIconsDemo, code: segmentedTabsIconsDemoCode },
+    { id: "usage", title: "Basic usage", description: "A segmented control that switches the panel below, wired with id for tab and panel semantics.", Demo: SegmentedTabsDemo, code: segmentedTabsDemoCode },
+    { id: "icons", title: "With icons", description: "Options with an icon beside the label.", Demo: SegmentedTabsIconsDemo, code: segmentedTabsIconsDemoCode },
   ],
   keyboard: [
     {
@@ -35,10 +35,11 @@ export default {
   ],
   props: {
     "options": "Available choices. Each option supplies a value and visible label.",
-    "value": "Selected option value; must match one option.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "The selected option's value. Leave it out to let the tabs track it, starting from defaultValue.",
+    "defaultValue": "The first selected option when the tabs track it themselves. Defaults to the first option.",
+    "onValueChange": "Called with an option's value when it's picked by click or arrow key.",
+    "label": "Accessible name of the tablist.",
     "id": "Prefix used to link each tab with its associated panel.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the tablist, for placement. It sizes to its labels."
   },
 };

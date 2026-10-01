@@ -17,6 +17,7 @@ export default {
     "The label names the action for assistive technology; it is not drawn beside the icon. Use Button when the action needs visible text.",
     "Icon size is independent of button size. These demos use a 20px icon in a 44px button and a 16px icon in a 32px button.",
     "Wrap IconButton in Tooltip for a visible explanation on hover or focus. Spread Tooltip's trigger bindings onto IconButton and keep its required label.",
+    "With an href, IconButton renders a link with the same look, such as a GitHub icon in a header; inside a LinkProvider, same-origin clicks go to your router.",
     "For a toggle, keep a stable action label and expose the selected state through aria-pressed. The application owns that state.",
   ],
   examples: [
@@ -32,13 +33,14 @@ export default {
   ],
   related: ["Button", "Icon", "Tooltip", "Toolbar"],
   props: {
-    label: "Required accessible name, applied as aria-label to the button.",
+    label: "Required accessible name, applied as aria-label to the button or link.",
+    href: "Render a link to this URL instead of a button, with the same look.",
     children: "Icon content. The button's label names the action.",
     variant: "Visual treatment: primary, secondary, or ghost.",
     size: "Button width and height: md is 44px and sm is 32px.",
-    type: "Native button type. Defaults to button to avoid accidental form submission.",
+    type: "Native button type. Defaults to button to avoid accidental form submission. Ignored with href.",
     disabled: "Prevent activation and remove the button from the Tab order.",
     onClick: "Native click handler, also called by keyboard activation.",
-    className: "Additional classes on the native button.",
+    className: "Classes on the native button or link, for placement, such as `absolute top-3 right-3`.",
   },
 };

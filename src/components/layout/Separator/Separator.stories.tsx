@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** A vertical rule between two details, a horizontal one between two blocks, and one on ink, where the line turns ink-3. */
+/** A vertical rule between two details, a horizontal one between two blocks, and one on an ink card, where the line takes the dark tokens. */
 export const Default: Story = {
   render: () => (
     <div className="grid w-80 gap-4">
@@ -29,7 +29,7 @@ export const Default: Story = {
       </Card>
       <Card tone="ink" className="p-5">
         <h2 className="text-body font-semibold">Pro plan</h2>
-        <p className="mt-1 text-label text-paper/55">Renews on October 12</p>
+        <p className="mt-1 text-label text-muted">Renews on October 12</p>
         <Separator className="my-4" />
         <p className="text-label">3 of 5 seats in use</p>
       </Card>

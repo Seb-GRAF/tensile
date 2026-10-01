@@ -23,6 +23,7 @@ export { CompareSlider, type CompareSliderProps } from "./components/media/Compa
 export { ContextMenu, type ContextMenuProps } from "./components/overlays/ContextMenu/ContextMenu";
 export { CopyButton, type CopyButtonProps } from "./components/actions/CopyButton/CopyButton";
 export { DataTable, type DataTableProps } from "./components/data-display/DataTable/DataTable";
+export { DateField, type DateFieldProps } from "./components/inputs/DateField/DateField";
 export { DatePicker, type DatePickerProps } from "./components/inputs/DatePicker/DatePicker";
 export { DateRangePicker, type DateRangePickerProps } from "./components/inputs/DateRangePicker/DateRangePicker";
 export { DescriptionList, type DescriptionListProps } from "./components/data-display/DescriptionList/DescriptionList";
@@ -38,6 +39,7 @@ export { FileUpload, type FileUploadProps } from "./components/inputs/FileUpload
 export { Footer, type FooterProps } from "./components/layout/Footer/Footer";
 export { Header, type HeaderProps } from "./components/layout/Header/Header";
 export { HoldButton, type HoldButtonProps } from "./components/actions/HoldButton/HoldButton";
+export { HoverCard, type HoverCardProps } from "./components/overlays/HoverCard/HoverCard";
 export { Icon, type IconProps } from "./components/data-display/Icon/Icon";
 export { IconButton, type IconButtonProps } from "./components/actions/IconButton/IconButton";
 export { Image, type ImageProps } from "./components/media/Image/Image";
@@ -52,6 +54,7 @@ export { LoadingState, type LoadingStateProps } from "./components/feedback/Load
 export { MorphButton, type MorphButtonProps } from "./components/actions/MorphButton/MorphButton";
 export { MultiSelect, type MultiSelectProps } from "./components/inputs/MultiSelect/MultiSelect";
 export { MusicPlayer, type MusicPlayerProps } from "./components/media/MusicPlayer/MusicPlayer";
+export { NavigationMenu, type NavigationMenuProps } from "./components/navigation/NavigationMenu/NavigationMenu";
 export { NotificationList, type NotificationListProps } from "./components/feedback/NotificationList/NotificationList";
 export { NumberInput, type NumberInputProps } from "./components/inputs/NumberInput/NumberInput";
 export { NumberStepper, type NumberStepperProps } from "./components/inputs/NumberStepper/NumberStepper";
@@ -93,6 +96,7 @@ export { TimePicker, type TimePickerProps } from "./components/inputs/TimePicker
 export { TimeWheel, type TimeWheelProps } from "./components/inputs/TimeWheel/TimeWheel";
 export { Toast, type ToastProps } from "./components/feedback/Toast/Toast";
 export { ToastStack, type ToastStackProps } from "./components/feedback/ToastStack/ToastStack";
+export { Toaster, toast, type ToasterProps } from "./components/feedback/Toaster/Toaster";
 export { Toggle, type ToggleProps } from "./components/inputs/Toggle/Toggle";
 export { ToggleGroup, type ToggleGroupProps } from "./components/inputs/ToggleGroup/ToggleGroup";
 export { Toolbar, type ToolbarProps } from "./components/actions/Toolbar/Toolbar";
@@ -103,3 +107,7 @@ export { VideoControls, type VideoControlsProps } from "./components/media/Video
 export { VolumeSlider, type VolumeSliderProps } from "./components/media/VolumeSlider/VolumeSlider";
 export { WaveformScrubber, type WaveformScrubberProps } from "./components/media/WaveformScrubber/WaveformScrubber";
 export { WizardSteps, type WizardStepsProps } from "./components/navigation/WizardSteps/WizardSteps";
+export { icons } from "./icons";
+export { useSprings } from "./springs";
+export { useSize } from "./useSize";
+export { useWidth } from "./useWidth";

@@ -11,10 +11,10 @@ export type StatusBadgeProps = {
 };
 
 const colors = {
-  info: { backgroundColor: "var(--color-ink)", color: "var(--color-paper)" },
-  success: { backgroundColor: "var(--color-accent)", color: "var(--color-on-accent)" },
-  warning: { backgroundColor: "var(--color-paper)", color: "var(--color-ink)" },
-  neutral: { backgroundColor: "var(--color-hover)", color: "var(--color-ink)" },
+  info: { backgroundColor: "var(--tn-color-ink)", color: "var(--tn-color-paper)" },
+  success: { backgroundColor: "var(--tn-color-accent)", color: "var(--tn-color-on-accent)" },
+  warning: { backgroundColor: "var(--tn-color-paper)", color: "var(--tn-color-ink)" },
+  neutral: { backgroundColor: "var(--tn-color-hover)", color: "var(--tn-color-ink)" },
 };
 
 export function StatusBadge({ status, label, className = "" }: StatusBadgeProps) {
@@ -26,20 +26,20 @@ export function StatusBadge({ status, label, className = "" }: StatusBadgeProps)
       initial={false}
       animate={{ width, ...colors[status] }}
       transition={{ width: shape, backgroundColor: soft, color: soft }}
-      className={`relative inline-grid h-6 place-content-center place-items-center overflow-hidden rounded-control text-label font-medium ${className}`}
+      className={`tn:relative tn:inline-grid tn:h-6 tn:place-content-center tn:place-items-center tn:overflow-hidden tn:rounded-control tn:text-label tn:font-medium ${className}`}
     >
       <motion.span
         initial={false}
         animate={{ opacity: status === "warning" || status === "neutral" ? 1 : 0 }}
         transition={soft}
-        className="absolute inset-0 rounded-control border border-line"
+        className="tn:absolute tn:inset-0 tn:rounded-control tn:border tn:border-line"
       />
       <AnimatePresence initial={false}>
         <motion.span
           key={`${status} ${label}`}
           ref={measure}
           {...swap}
-          className={`col-start-1 row-start-1 flex items-center gap-1 whitespace-nowrap pr-2.5 ${status === "warning" ? "pl-1.5" : "pl-2.5"}`}
+          className={`tn:col-start-1 tn:row-start-1 tn:flex tn:items-center tn:gap-1 tn:whitespace-nowrap tn:pr-2.5 ${status === "warning" ? "tn:pl-1.5" : "tn:pl-2.5"}`}
         >
           {status === "warning" && <Icon size={14}>{icons.alert}</Icon>}
           {label}

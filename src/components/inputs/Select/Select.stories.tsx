@@ -3,6 +3,8 @@ import { SelectEmptyDemo } from "./demos/SelectEmptyDemo";
 import { SelectIconsDemo } from "./demos/SelectIconsDemo";
 import { SelectDisabledDemo } from "./demos/SelectDisabledDemo";
 import { SelectFormDemo } from "./demos/SelectFormDemo";
+import { SelectDisabledOptionsDemo } from "./demos/SelectDisabledOptionsDemo";
+import { SelectGroupsDemo } from "./demos/SelectGroupsDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "../../actions/Button/Button";
@@ -46,7 +48,7 @@ export const Default: Story = {
         <Select
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -116,4 +118,14 @@ export const DisabledUsage: Story = {
 
 export const FormUsage: Story = {
   render: () => <SelectFormDemo />,
+};
+
+/** Overnight can't be picked: arrows, Home, End and typing pass over it, and a click on it does nothing. */
+export const DisabledOptionsUsage: Story = {
+  render: () => <div className="w-80"><SelectDisabledOptionsDemo /></div>,
+};
+
+/** Time zones under region headings; arrows move across the groups. */
+export const GroupsUsage: Story = {
+  render: () => <div className="w-80"><SelectGroupsDemo /></div>,
 };

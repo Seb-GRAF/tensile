@@ -12,8 +12,8 @@ export default {
     "With name set, the native checkbox submits “on” only when dark is selected."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled light and dark choice applied to a local preview.", Demo: ThemeToggleDemo, code: themeToggleDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled theme choice.", Demo: ThemeToggleDisabledDemo, code: themeToggleDisabledDemoCode },
+    { id: "usage", title: "Basic usage", description: "The toggle switches a Card between paper and ink, to show how an app applies the choice itself.", Demo: ThemeToggleDemo, code: themeToggleDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed toggle that shows the current theme and can't be switched.", Demo: ThemeToggleDisabledDemo, code: themeToggleDisabledDemoCode },
   ],
   keyboard: [
     {
@@ -26,11 +26,12 @@ export default {
     "Card"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "The current theme, light or dark. Leave it out to let the toggle track it, starting from defaultValue.",
+    "defaultValue": "The first theme when the toggle tracks it itself. Defaults to light.",
+    "onValueChange": "Called with light or dark when the toggle is clicked or switched with Space.",
+    "label": "Accessible name of the switch when no Field labels it.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the toggle and stops it from switching. A disabled Field or Fieldset does the same.",
+    "className": "Classes on the track, for placement such as margin. The track keeps its 52 × 32 px size."
   },
 };

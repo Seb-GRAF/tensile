@@ -38,11 +38,11 @@ export function PasswordInput({
             size="sm"
             disabled={field?.disabled || disabled}
             onClick={() => setVisible(!visible)}
-            className="-mr-2.5"
+            className="tn:-mr-2.5"
           >
-            <span className="grid">
+            <span className="tn:grid">
               <AnimatePresence initial={false}>
-                <motion.span key={visible ? "visible" : "hidden"} {...swap} className="col-start-1 row-start-1">
+                <motion.span key={visible ? "visible" : "hidden"} {...swap} className="tn:col-start-1 tn:row-start-1">
                   <Icon>
                     {visible ? (
                       <path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.3A10 10 0 0 1 12 5c7 0 10 7 10 7a16 16 0 0 1-3.1 4.1M6.2 6.2A19 19 0 0 0 2 12s3 7 10 7a11 11 0 0 0 5.8-1.8" />

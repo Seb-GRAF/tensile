@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
 import { Button } from "../../actions/Button/Button";
 import { IconButton } from "../../actions/IconButton/IconButton";
@@ -7,8 +8,9 @@ import { useField } from "../Field/Field";
 
 export type ToggleGroupProps = {
   options: { value: string; label: string; icon?: React.ReactNode }[];
-  value: string[];
-  onValueChange: (value: string[]) => void;
+  value?: string[];
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
   label?: string;
   id?: string;
   name?: string;
@@ -16,7 +18,18 @@ export type ToggleGroupProps = {
   className?: string;
 };
 
-export function ToggleGroup({ options, value, onValueChange, label = "Options", id, name, disabled = false, className = "" }: ToggleGroupProps) {
+export function ToggleGroup({
+  options,
+  value: valueProp,
+  defaultValue = [],
+  onValueChange,
+  label = "Options",
+  id,
+  name,
+  disabled = false,
+  className = "",
+}: ToggleGroupProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const { shape } = useSprings();
   const field = useField();
   disabled = disabled || !!field?.disabled;
@@ -40,7 +53,7 @@ export function ToggleGroup({ options, value, onValueChange, label = "Options", 
       aria-describedby={field?.describedBy}
       aria-disabled={disabled || undefined}
       onKeyDown={onKeyDown}
-      className={`flex flex-wrap gap-2 ${className}`}
+      className={`tn:flex tn:flex-wrap tn:gap-2 ${className}`}
     >
       {name && value.map((item) => <input key={item} type="hidden" name={name} value={item} disabled={disabled} />)}
       {options.map((option, i) => {
@@ -49,17 +62,17 @@ export function ToggleGroup({ options, value, onValueChange, label = "Options", 
           ref: (button: HTMLButtonElement | null) => { buttons.current[i] = button; },
           variant: "secondary" as const,
           size: "sm" as const,
-          className: "relative",
+          className: "tn:relative",
           disabled,
           "aria-pressed": pressed,
           tabIndex: i === focused ? 0 : -1,
           onFocus: () => setFocused(i),
-          onClick: () => onValueChange(pressed ? value.filter((item) => item !== option.value) : [...value, option.value]),
+          onClick: () => setValue(pressed ? value.filter((item) => item !== option.value) : [...value, option.value]),
         };
         const content = (
           <>
             {option.icon ?? option.label}
-            <motion.span aria-hidden initial={false} animate={{ clipPath: pressed ? "inset(0% 0% 0% 0% round var(--radius-control))" : "inset(50% 50% 50% 50% round var(--radius-control))" }} transition={shape} className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-control bg-ink text-paper">
+            <motion.span aria-hidden initial={false} animate={{ clipPath: pressed ? "inset(0% 0% 0% 0% round var(--tn-radius-control))" : "inset(50% 50% 50% 50% round var(--tn-radius-control))" }} transition={shape} className="tn:pointer-events-none tn:absolute tn:inset-0 tn:flex tn:items-center tn:justify-center tn:rounded-control tn:bg-ink tn:text-paper">
               {option.icon ?? option.label}
             </motion.span>
           </>

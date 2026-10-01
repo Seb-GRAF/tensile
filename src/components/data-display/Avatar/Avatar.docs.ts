@@ -14,9 +14,9 @@ export default {
     "Sizes are 24, 32 and 44 pixels."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Image with an accessible name.", Demo: AvatarDemo, code: avatarDemoCode },
-    { id: "initials", title: "Initials", description: "Initials without an image.", Demo: AvatarInitialsDemo, code: avatarInitialsDemoCode },
-    { id: "sizes", title: "Sizes", description: "Small, medium and large sizes.", Demo: AvatarSizesDemo, code: avatarSizesDemoCode },
+    { id: "usage", title: "Basic usage", description: "A portrait named after the person; use it wherever a person with a photo appears.", Demo: AvatarDemo, code: avatarDemoCode },
+    { id: "initials", title: "Initials", description: "Ink initials from the name, shown when there is no photo or it fails to load.", Demo: AvatarInitialsDemo, code: avatarInitialsDemoCode },
+    { id: "sizes", title: "Sizes", description: "The 24, 32 and 44 px sizes, for inline text, list rows and profile headers.", Demo: AvatarSizesDemo, code: avatarSizesDemoCode },
   ],
   keyboard: [],
   related: [
@@ -27,6 +27,6 @@ export default {
     "name": "The accessible name, and the source of the initials.",
     "src": "Portrait image URL; initials appear when it is absent or fails.",
     "size": "24, 32 or 44 px.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the circle, for margin and placement; `size` sets its size."
   },
 };

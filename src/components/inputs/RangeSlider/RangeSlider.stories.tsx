@@ -19,7 +19,7 @@ function StatefulRangeSlider(props: RangeSliderProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -65,7 +65,7 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-60 max-w-full">
-        <StatefulRangeSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulRangeSlider {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

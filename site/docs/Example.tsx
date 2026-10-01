@@ -6,10 +6,10 @@ export function Example({ code, children, label }: { code: string; children?: Re
   const source = (
     <Card tone="ink" className="min-w-0 overflow-hidden">
       <div className="flex items-center justify-between gap-4 px-5 pt-3">
-        <span className="text-label text-paper/65">{label}</span>
+        <span className="text-label text-muted">{label}</span>
         <CopyButton value={code} label={`Copy ${label}`} />
       </div>
-      <pre tabIndex={0} aria-label={`${label} code`} className="max-h-128 overflow-auto px-5 pt-2 pb-6 font-mono text-label leading-6 outline-offset-[-4px] focus-visible:outline-2 focus-visible:outline-paper">
+      <pre tabIndex={0} aria-label={`${label} code`} className="max-h-128 overflow-auto px-5 pt-2 pb-6 font-mono text-label leading-6 outline-offset-[-4px] focus-visible:outline-2 focus-visible:outline-focus">
         <code>{code}</code>
       </pre>
     </Card>

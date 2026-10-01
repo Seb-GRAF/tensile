@@ -18,8 +18,8 @@ export type ActionMenuProps = {
 };
 
 const sizes = {
-  md: { height: 44, box: "h-11", label: "px-4 text-body", trigger: "px-4 text-body" },
-  sm: { height: 32, box: "h-8", label: "px-4 text-label", trigger: "px-2 text-label" },
+  md: { height: 44, box: "tn:h-11", label: "tn:px-4 tn:text-body", trigger: "tn:px-4 tn:text-body" },
+  sm: { height: 32, box: "tn:h-8", label: "tn:px-4 tn:text-label", trigger: "tn:px-2 tn:text-label" },
 };
 
 const MARGIN = 16;
@@ -55,15 +55,15 @@ export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Act
   }
 
   return (
-    <div className={`relative ${sizes[size].box} ${className}`} style={{ width }}>
-      <div ref={frame} className="absolute inset-0">
+    <div className={`tn:relative ${sizes[size].box} ${className}`} style={{ width }}>
+      <div ref={frame} className="tn:absolute tn:inset-0">
         <motion.div
           key={width === undefined ? "measuring" : "measured"}
           initial={false}
-          animate={{ width: open ? menuWidth : width, height, borderRadius: open ? "var(--radius-overlay)" : "var(--radius-control)", x }}
+          animate={{ width: open ? menuWidth : width, height, borderRadius: open ? "var(--tn-radius-overlay)" : "var(--tn-radius-control)", x }}
           transition={shape}
           onAnimationComplete={settle}
-          className={`absolute flex overflow-hidden bg-paper shadow-control transition-shadow duration-[calc(300ms*var(--motion-duration-scale))] ${open ? "[--shadow-control-drop:initial]" : ""} outline-offset-2 has-[button:focus-visible]:outline-2 has-[button:focus-visible]:outline-focus ${up ? "bottom-0 flex-col-reverse" : "top-0 flex-col"} ${left ? "right-0 items-end" : "left-0"}`}
+          className={`tn:absolute tn:flex tn:overflow-hidden tn:bg-paper tn:shadow-control tn:transition-shadow tn:duration-[calc(300ms*var(--tn-motion-duration-scale))] ${open ? "tn:[--tn-shadow-control-drop:initial]" : ""} tn:outline-offset-2 tn:has-[button:focus-visible]:outline-2 tn:has-[button:focus-visible]:outline-focus ${up ? "tn:bottom-0 tn:flex-col-reverse" : "tn:top-0 tn:flex-col"} ${left ? "tn:right-0 tn:items-end" : "tn:left-0"}`}
         >
           <button
             ref={button}
@@ -79,16 +79,16 @@ export function ActionMenu({ actions, onAction, label = "More", menuLabel = "Act
               event.preventDefault();
               show(event.key === "ArrowDown" ? 0 : actions.length - 1);
             }}
-            className={`flex ${sizes[size].box} shrink-0 items-center font-medium text-ink outline-none ${left ? "self-stretch justify-end" : ""} ${open ? "" : "hover:bg-hover"}`}
+            className={`tn:flex ${sizes[size].box} tn:shrink-0 tn:items-center tn:font-medium tn:text-ink tn:outline-none ${left ? "tn:self-stretch tn:justify-end" : ""} ${open ? "" : "tn:hover:bg-hover"}`}
           >
-            <span ref={measure} className={`inline-flex items-center whitespace-nowrap ${trigger === undefined ? sizes[size].label : sizes[size].trigger}`}>{trigger ?? label}</span>
+            <span ref={measure} className={`tn:inline-flex tn:items-center tn:whitespace-nowrap ${trigger === undefined ? sizes[size].label : sizes[size].trigger}`}>{trigger ?? label}</span>
           </button>
           <motion.div
             inert={!open}
             initial={false}
             animate={open ? swap.animate : swap.exit}
             style={{ width: menuWidth }}
-            className={`shrink-0 ${up ? "border-b" : "border-t"} border-line`}
+            className={`tn:shrink-0 ${up ? "tn:border-b" : "tn:border-t"} tn:border-line`}
           >
             <Menu actions={actions} onAction={onAction} onClose={close} open={open} id={menuId} label={menuLabel} initialIndex={initialIndex} maxHeight={maxHeight} />
           </motion.div>

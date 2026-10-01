@@ -15,9 +15,9 @@ export default {
     "slots must be at least five."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled pages with sliced local data.", Demo: PaginationDemo, code: paginationDemoCode },
-    { id: "links", title: "Links", description: "Page links and current-page state.", Demo: PaginationLinksDemo, code: paginationLinksDemoCode },
-    { id: "slots", title: "Content slots", description: "Custom visible slot count.", Demo: PaginationSlotsDemo, code: paginationSlotsDemoCode },
+    { id: "usage", title: "Basic usage", description: "Buttons that change the page of a list the app slices itself.", Demo: PaginationDemo, code: paginationDemoCode },
+    { id: "links", title: "Links", description: "Numbered pages as links built with pageHref, for pages that have their own URLs.", Demo: PaginationLinksDemo, code: paginationLinksDemoCode },
+    { id: "slots", title: "Content slots", description: "Fewer slots for a narrow space; ellipses stand in for the pages left out.", Demo: PaginationSlotsDemo, code: paginationSlotsDemoCode },
   ],
   keyboard: [
     {
@@ -36,15 +36,16 @@ export default {
   ],
   props: {
     "count": "Number of pages.",
-    "value": "Current page, from 1 to `count`.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "The current page, from 1 to count. Leave it out to let Pagination track it, starting from defaultValue.",
+    "defaultValue": "The first page shown when Pagination tracks the page itself.",
+    "onValueChange": "Called with the page the user picks; load or slice that page's data here.",
     "slots": "Slots for pages and ellipses, at least 5.",
     "formatPage": "Format the visible page number.",
-    "label": "Accessible name of the control or region.",
+    "label": "Accessible name of the navigation landmark.",
     "previousLabel": "Accessible label for moving backward.",
     "nextLabel": "Accessible label for moving forward.",
     "pageLabel": "Accessible name of a numbered page.",
     "pageHref": "Makes the numbered pages links; previous and next remain buttons.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the nav element, for placement such as `justify-self-center`."
   },
 };

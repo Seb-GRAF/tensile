@@ -22,11 +22,11 @@ export default {
     "sort only describes an already-sorted column. Table does not sort rows."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Typed rows, headers and caption.", Demo: TableDemo, code: tableDemoCode },
-    { id: "cells", title: "Cells", description: "Custom cells, row headers and numeric alignment.", Demo: TableCellsDemo, code: tableCellsDemoCode },
-    { id: "wide", title: "Wide", description: "Horizontal overflow.", Demo: TableWideDemo, code: tableWideDemoCode },
-    { id: "loading", title: "Loading", description: "Loading rows.", Demo: TableLoadingDemo, code: tableLoadingDemoCode },
-    { id: "empty", title: "Empty state", description: "Empty content.", Demo: TableEmptyDemo, code: tableEmptyDemoCode },
+    { id: "usage", title: "Basic usage", description: "Rows read straight from their fields, with a row header and a hidden caption; use it for a small read-only table.", Demo: TableDemo, code: tableDemoCode },
+    { id: "cells", title: "Cells", description: "`cell` renders a wrapping owner and hours with a unit, and `align: \"end\"` lines the numbers up on the right.", Demo: TableCellsDemo, code: tableCellsDemoCode },
+    { id: "wide", title: "Wide", description: "In a narrow container the table scrolls sideways and its scroll area becomes a focusable region; this is what happens on small screens.", Demo: TableWideDemo, code: tableWideDemoCode },
+    { id: "loading", title: "Loading", description: "Placeholder rows stand in for the data and the table is marked busy; use it while rows are being fetched.", Demo: TableLoadingDemo, code: tableLoadingDemoCode },
+    { id: "empty", title: "Empty state", description: "With no rows, an EmptyState fills one row across every column.", Demo: TableEmptyDemo, code: tableEmptyDemoCode },
   ],
   keyboard: [
     {
@@ -50,6 +50,6 @@ export default {
     "sort": "Marks the sorted column's header with `aria-sort`.",
     "loading": "Shows placeholder rows instead of `rows` and marks the table busy.",
     "empty": "Fills one row spanning every column when there are no rows.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the card around the table, for width, placement, or a height that makes the header stick."
   },
 };

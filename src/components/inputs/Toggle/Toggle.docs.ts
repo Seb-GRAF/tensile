@@ -14,9 +14,9 @@ export default {
     "Named checked switches submit their value; unchecked switches are omitted from FormData."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled switch with a visible label.", Demo: ToggleDemo, code: toggleDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled switch.", Demo: ToggleDisabledDemo, code: toggleDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Native named checkbox form behavior.", Demo: ToggleFormDemo, code: toggleFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A switch named by a Field label and description; the usual way to place one in settings.", Demo: ToggleDemo, code: toggleDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed switch that keeps its state and can't be toggled.", Demo: ToggleDisabledDemo, code: toggleDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A named switch in a form: its value is submitted only while it's on, and Reset turns it off.", Demo: ToggleFormDemo, code: toggleFormDemoCode },
   ],
   keyboard: [
     {
@@ -34,13 +34,14 @@ export default {
     "ThemeToggle"
   ],
   props: {
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the switch and stops it from toggling. A disabled Field or Fieldset does the same.",
     "required": "Expose the required state. See the form example for validation.",
-    "className": "Additional classes on the outer element.",
+    "className": "Classes on the track, for placement such as margin. The track keeps its 52 × 32 px size.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
-    "checked": "Whether the control is checked.",
-    "onCheckedChange": "Called with the next checked state.",
-    "label": "Accessible name when there is no Field label.",
+    "checked": "Whether the switch is on. Leave it out to let the switch track it, starting from defaultChecked.",
+    "defaultChecked": "Whether the switch starts on when it tracks its own state. Defaults to false.",
+    "onCheckedChange": "Called with the new state when the switch is clicked or toggled with Space.",
+    "label": "Accessible name of the switch when no Field labels it. A Field label or aria-label replaces it.",
     "children": "Decorative content inside the moving knob.",
     "name": "Native checkbox form name."
   },

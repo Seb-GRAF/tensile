@@ -14,9 +14,9 @@ export default {
     "When removing the focused tag, move focus to an appropriate remaining control."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Plain tag.", Demo: TagDemo, code: tagDemoCode },
-    { id: "icon", title: "Icon", description: "Tag with an icon.", Demo: TagIconDemo, code: tagIconDemoCode },
-    { id: "removable", title: "Removable", description: "Remove a tag from controlled local data.", Demo: TagRemovableDemo, code: tagRemovableDemoCode },
+    { id: "usage", title: "Basic usage", description: "A tag with only its label; use it to mark a category or keyword on an item.", Demo: TagDemo, code: tagDemoCode },
+    { id: "icon", title: "Icon", description: "A 14 px Icon before the label, to tell kinds of tags apart at a glance.", Demo: TagIconDemo, code: tagIconDemoCode },
+    { id: "removable", title: "Removable", description: "Each tag's remove button drops it from the parent's list and moves focus to the restore button; use it for filters the user can clear.", Demo: TagRemovableDemo, code: tagRemovableDemoCode },
   ],
   keyboard: [
     {
@@ -33,10 +33,10 @@ export default {
     "Badge"
   ],
   props: {
-    "label": "Accessible name of the control or region.",
+    "label": "The text in the pill; the remove button's name is built from it.",
     "icon": "Optional decorative icon before the label.",
     "onRemove": "Shows a remove button beside the label that calls it.",
-    "removeLabel": "Build the accessible name of the remove button.",
-    "className": "Additional classes on the outer element."
+    "removeLabel": "Names the remove button from the label (\"Remove Design\" by default).",
+    "className": "Classes on the pill, for margin and placement."
   },
 };

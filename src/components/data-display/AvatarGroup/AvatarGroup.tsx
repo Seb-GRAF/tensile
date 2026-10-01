@@ -13,9 +13,9 @@ export type AvatarGroupProps = {
 };
 
 const overlaps = {
-  sm: "space-x-0",
-  md: "-space-x-0.5",
-  lg: "-space-x-1.5",
+  sm: "tn:space-x-0",
+  md: "tn:-space-x-0.5",
+  lg: "tn:-space-x-1.5",
 };
 
 export function AvatarGroup({
@@ -28,18 +28,18 @@ export function AvatarGroup({
 }: AvatarGroupProps) {
   const more = people.length - max;
   return (
-    <ul role="list" aria-label={label} className={`flex ${overlaps[size]} ${className}`}>
+    <ul role="list" aria-label={label} className={`tn:flex ${overlaps[size]} ${className}`}>
       {people.slice(0, max).map((person) => (
-        <li key={person.name} className="relative rounded-full ring-2 ring-paper">
+        <li key={person.name} className="tn:relative tn:rounded-full tn:ring-2 tn:ring-paper">
           <Avatar {...person} size={size} />
         </li>
       ))}
       {more > 0 && (
-        <li className="relative rounded-full ring-2 ring-paper">
+        <li className="tn:relative tn:rounded-full tn:ring-2 tn:ring-paper">
           <span
             role="img"
             aria-label={moreLabel(more)}
-            className={`grid place-items-center rounded-full border border-line bg-hover font-semibold text-ink ${sizes[size]}`}
+            className={`tn:grid tn:place-items-center tn:rounded-full tn:border tn:border-line tn:bg-hover tn:font-semibold tn:text-ink ${sizes[size]}`}
           >
             +{more}
           </span>

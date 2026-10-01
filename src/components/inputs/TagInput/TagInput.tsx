@@ -1,5 +1,6 @@
 import { AnimatePresence, animate, motion } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useFocusSource } from "../../../focus";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
@@ -7,8 +8,9 @@ import { Tag } from "../../data-display/Tag/Tag";
 import { ErrorRow, FloatingLabel, useField } from "../Field/Field";
 
 export type TagInputProps = {
-  value: string[];
-  onValueChange: (value: string[]) => void;
+  value?: string[];
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
   label?: string;
   placeholder?: string;
   removeLabel?: (tag: string) => string;
@@ -20,7 +22,8 @@ export type TagInputProps = {
 };
 
 export function TagInput({
-  value,
+  value: valueProp,
+  defaultValue = [],
   onValueChange,
   label = "Tags",
   placeholder = "Add a tag",
@@ -32,6 +35,7 @@ export function TagInput({
   className = "",
 }: TagInputProps) {
   const { shape, swap } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   useFocusSource();
   const [query, setQuery] = useState("");
@@ -65,12 +69,12 @@ export function TagInput({
       event.preventDefault();
       const tag = query.trim();
       if (tag === "" || value.includes(tag)) return;
-      onValueChange([...value, tag]);
+      setValue([...value, tag]);
       setQuery("");
       return;
     }
     if (event.key === "Backspace" && query === "" && value.length > 0) {
-      onValueChange(value.slice(0, -1));
+      setValue(value.slice(0, -1));
     }
   }
 
@@ -78,27 +82,27 @@ export function TagInput({
     <motion.div
       data-label-inside={inside ? true : undefined}
       initial={false}
-      animate={{ borderRadius: inside?.error || (size && size.height > 52) ? "var(--radius-overlay)" : "var(--radius-control)" }}
+      animate={{ borderRadius: inside?.error || (size && size.height > 52) ? "var(--tn-radius-overlay)" : "var(--tn-radius-control)" }}
       transition={shape}
-      className={`bg-paper shadow-control outline-offset-2 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${isDisabled ? "opacity-40" : ""} ${className}`}
+      className={`tn:bg-paper tn:shadow-control tn:outline-offset-2 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${isDisabled ? "tn:opacity-40" : ""} ${className}`}
     >
       {name && value.map((tag) => <input key={tag} type="hidden" name={name} value={tag} disabled={isDisabled} />)}
-      <motion.div initial={false} animate={{ height: size?.height }} transition={shape} className="overflow-hidden">
-        <div ref={row} inert={isDisabled} className={`relative flex flex-wrap gap-1.5 ${inside ? "px-5 pt-5 pb-1" : "px-4 py-3"}`}>
+      <motion.div initial={false} animate={{ height: size?.height }} transition={shape} className="tn:overflow-hidden">
+        <div ref={row} inert={isDisabled} className={`tn:relative tn:flex tn:flex-wrap tn:gap-1.5 ${inside ? "tn:px-5 tn:pt-5 tn:pb-1" : "tn:px-4 tn:py-2"}`}>
           {inside && (
-            <FloatingLabel aria-hidden floated={focused || value.length > 0 || query !== ""} className="left-5">
+            <FloatingLabel aria-hidden floated={focused || value.length > 0 || query !== ""} className="tn:left-5 tn:mt-0.5">
               {inside.label}
             </FloatingLabel>
           )}
-          <ul ref={list} role="list" className="contents">
+          <ul ref={list} role="list" className="tn:contents">
             <AnimatePresence mode="popLayout" initial={false}>
               {value.map((tag) => (
-                <motion.li key={tag} {...swap} className="flex">
+                <motion.li key={tag} {...swap} className="tn:flex">
                   <Tag
                     label={tag}
                     removeLabel={removeLabel}
                     onRemove={() => {
-                      onValueChange(value.filter((other) => other !== tag));
+                      setValue(value.filter((other) => other !== tag));
                       input.current!.focus();
                     }}
                   />
@@ -121,12 +125,12 @@ export function TagInput({
             onKeyDown={onKeyDown}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            className={`h-7 min-w-24 flex-1 bg-transparent text-body text-ink outline-none ${inside ? "placeholder:text-transparent focus:placeholder:text-muted" : "placeholder:text-muted"}`}
+            className={`tn:h-7 tn:min-w-24 tn:flex-1 tn:bg-transparent tn:text-body tn:text-ink tn:outline-none ${inside ? "tn:placeholder:text-transparent tn:focus:placeholder:text-muted" : "tn:placeholder:text-muted"}`}
           />
         </div>
       </motion.div>
       {inside && (
-        <motion.div initial={false} animate={{ height: inside.error ? "auto" : 0 }} transition={shape} className="overflow-hidden">
+        <motion.div initial={false} animate={{ height: inside.error ? "auto" : 0 }} transition={shape} className="tn:overflow-hidden">
           <ErrorRow aria-hidden error={inside.error} />
         </motion.div>
       )}

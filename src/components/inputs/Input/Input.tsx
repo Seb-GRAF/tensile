@@ -1,18 +1,21 @@
 import { motion } from "motion/react";
 import { useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useFocusSource } from "../../../focus";
 import { useSprings } from "../../../springs";
 import { ErrorRow, FloatingLabel, useField } from "../Field/Field";
 
-export type InputProps = Omit<React.ComponentProps<"input">, "value" | "onChange"> & {
-  value: string;
-  onValueChange: (value: string) => void;
+export type InputProps = Omit<React.ComponentProps<"input">, "value" | "defaultValue" | "onChange"> & {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
 };
 
 export function Input({
-  value,
+  value: valueProp,
+  defaultValue = "",
   onValueChange,
   leading,
   trailing,
@@ -29,6 +32,7 @@ export function Input({
   ...props
 }: InputProps) {
   const { shape } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   useFocusSource();
   const [focused, setFocused] = useState(false);
@@ -38,7 +42,7 @@ export function Input({
       {...props}
       id={field?.id ?? id}
       value={value}
-      onChange={(event) => onValueChange(event.target.value)}
+      onChange={(event) => setValue(event.target.value)}
       onFocus={(event) => { setFocused(true); onFocus?.(event); }}
       onBlur={(event) => { setFocused(false); onBlur?.(event); }}
       required={field?.required || required}
@@ -46,7 +50,7 @@ export function Input({
       aria-labelledby={field?.labelId ?? labelledBy}
       aria-invalid={field?.invalid || invalid}
       aria-describedby={[field?.describedBy, describedBy].filter(Boolean).join(" ") || undefined}
-      className={`h-full min-w-0 grow bg-transparent text-body text-ink outline-none ${inside ? "pt-6 pb-2 placeholder:text-transparent focus:placeholder:text-muted" : "placeholder:text-muted"}`}
+      className={`tn:h-full tn:min-w-0 tn:grow tn:bg-transparent tn:text-body tn:text-ink tn:outline-none ${inside ? "tn:pt-5 tn:pb-1 tn:placeholder:text-transparent tn:focus:placeholder:text-muted" : "tn:placeholder:text-muted"}`}
     />
   );
 
@@ -54,7 +58,7 @@ export function Input({
     return (
       <div
         style={style}
-        className={`flex h-11 items-center gap-2.5 rounded-control bg-paper px-4 text-muted shadow-control outline-offset-2 has-[input:disabled]:opacity-40 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${className}`}
+        className={`tn:flex tn:h-11 tn:items-center tn:gap-2.5 tn:rounded-control tn:bg-paper tn:px-4 tn:text-muted tn:shadow-control tn:outline-offset-2 tn:has-[input:disabled]:opacity-40 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${className}`}
       >
         {leading}
         {input}
@@ -67,15 +71,15 @@ export function Input({
     <motion.div
       data-label-inside
       initial={false}
-      animate={{ height: inside.error ? "auto" : 52, borderRadius: inside.error ? "var(--radius-overlay)" : "var(--radius-control)" }}
+      animate={{ height: inside.error ? "auto" : 48, borderRadius: inside.error ? "var(--tn-radius-overlay)" : "var(--tn-radius-control)" }}
       transition={shape}
       style={style}
-      className={`overflow-hidden bg-paper shadow-control outline-offset-2 has-[input:disabled]:opacity-40 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${className}`}
+      className={`tn:overflow-hidden tn:bg-paper tn:shadow-control tn:outline-offset-2 tn:has-[input:disabled]:opacity-40 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${className}`}
     >
-      <div className="flex h-13 items-center gap-2.5 px-5 text-muted">
+      <div className="tn:flex tn:h-12 tn:items-center tn:gap-2.5 tn:px-5 tn:text-muted">
         {leading}
-        <div className="relative flex h-full min-w-0 grow">
-          <FloatingLabel aria-hidden floated={focused || value !== ""} className="left-0">
+        <div className="tn:relative tn:flex tn:h-full tn:min-w-0 tn:grow">
+          <FloatingLabel aria-hidden floated={focused || value !== ""} className="tn:left-0">
             {inside.label}
           </FloatingLabel>
           {input}

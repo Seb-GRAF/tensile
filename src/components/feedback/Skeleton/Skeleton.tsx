@@ -4,5 +4,5 @@ export type SkeletonProps = {
 };
 
 export function Skeleton({ className = "" }: SkeletonProps) {
-  return <div aria-hidden className={`animate-shimmer bg-hover ${className}`} />;
+  return <div aria-hidden className={`tn:animate-shimmer tn:bg-hover ${className}`} />;
 }

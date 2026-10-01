@@ -2,36 +2,6 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 <Meta title="Guides/Motion" />
 
-<a href="../" target="_top">← Tensile</a>
-
 # Motion
 
-Controls share transitions for shape, color, content, and drag release. A state change moves the control that owns that state; a page does not animate simply because it contains animated components.
-
-## Preferences
-
-The CSS token `--motion-duration-scale` sets the speed: `1` is the designed speed, `2` is slower, and `0` makes transitions instant. The library sets it to `0` under `prefers-reduced-motion: reduce`.
-
-Place a custom speed inside `no-preference` so it does not override that preference:
-
-```css
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    --motion-duration-scale: 1.5;
-  }
-}
-```
-
-JavaScript motion reads this token from the document root when a component mounts. A runtime change does not update already-mounted components; remount the affected subtree if your app offers a motion setting. Storybook's Theme control does this.
-
-On the server the scale is `1`. A server-render smoke check does not verify hydration behavior under reduced motion.
-
-## What stays interactive
-
-At scale `0`, state changes are instant and repeating effects stop. Dragging still follows the pointer, and a flick still picks its destination from its velocity.
-
-Functional delays do not scale: hold durations, tooltip delay, copy confirmation reset, toast lifetime, and simulated network requests remain real time. Reduced motion does not make an operation finish sooner.
-
-## Checking your composition
-
-Test with the operating system's reduced-motion setting before loading the page, then reload after changing it. Check pointer and keyboard interactions, focus after a control disappears, and content at narrow widths. See individual component pages for known interaction limits.
+The speed token, reduced motion and the public springs: [read it on the documentation site](https://seb-graf.github.io/tensile/docs/motion/).

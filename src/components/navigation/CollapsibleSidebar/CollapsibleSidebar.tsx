@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
 import { Icon } from "../../data-display/Icon/Icon";
@@ -6,10 +7,12 @@ import { SidebarNav } from "../SidebarNav/SidebarNav";
 
 export type CollapsibleSidebarProps = {
   items: { value: string; label: string; icon: React.ReactNode; href?: string }[];
-  value: string;
-  onValueChange: (value: string) => void;
-  expanded: boolean;
-  onExpandedChange: (expanded: boolean) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  expanded?: boolean;
+  defaultExpanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
   /** At the top, e.g. the brand; clipped to the rail while collapsed. */
   leading?: React.ReactNode;
   /** At the bottom, above the collapse button, e.g. the account; clipped to the rail while collapsed. */
@@ -22,9 +25,11 @@ export type CollapsibleSidebarProps = {
 
 export function CollapsibleSidebar({
   items,
-  value,
+  value: valueProp,
+  defaultValue = "",
   onValueChange,
-  expanded,
+  expanded: expandedProp,
+  defaultExpanded = true,
   onExpandedChange,
   leading,
   trailing,
@@ -33,21 +38,23 @@ export function CollapsibleSidebar({
   collapseLabel = "Collapse sidebar",
   className = "",
 }: CollapsibleSidebarProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
+  const [expanded, setExpanded] = useControllable(expandedProp, defaultExpanded, onExpandedChange);
   const { shape, scale } = useSprings();
   return (
     <motion.div
       initial={false}
       animate={{ width: expanded ? 208 : 48 }}
       transition={expanded ? shape : { ...shape, delay: 0.1 * scale }}
-      className={`shrink-0 overflow-hidden rounded-card bg-paper p-2 shadow-float surface ${className}`}
+      className={`tn:shrink-0 tn:overflow-hidden tn:rounded-card tn:bg-paper tn:p-2 tn:shadow-float tn:surface ${className}`}
     >
       <SidebarNav
         items={items}
         value={value}
-        onValueChange={onValueChange}
+        onValueChange={setValue}
         label={label}
         collapsed={!expanded}
-        className="h-full"
+        className="tn:h-full"
         leading={leading}
         trailing={
           <>
@@ -55,10 +62,10 @@ export function CollapsibleSidebar({
             <IconButton
               size="sm"
               variant="ghost"
-              className="text-muted"
+              className="tn:text-muted"
               label={expanded ? collapseLabel : expandLabel}
               aria-expanded={expanded}
-              onClick={() => onExpandedChange(!expanded)}
+              onClick={() => setExpanded(!expanded)}
             >
               <Icon size={16}>
                 <rect width="18" height="18" x="3" y="3" rx="2" />

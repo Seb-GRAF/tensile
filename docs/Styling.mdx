@@ -1,55 +1,7 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 
-<Meta title="Guides/Styling" />
-
-<a href="../" target="_top">← Tensile</a>
+<Meta title="Guides/Styling and themes" />
 
 # Styling and themes
 
-The default palette uses a warm canvas, paper surfaces, ink text, and a lime accent. Colors, typography, and radii come from CSS custom properties.
-
-## Override tokens
-
-Load your application CSS after the library styles:
-
-```css
-:root {
-  --color-accent: #3355ff;
-  --color-on-accent: #ffffff;
-  --radius-control: 12px;
-  --radius-overlay: 16px;
-}
-
-body {
-  font-family: var(--font-sans);
-  background: var(--color-canvas);
-}
-```
-
-Token declarations live in the `theme` cascade layer. Unlayered application rules override them. Color and radius tokens can be scoped to a subtree; motion scale is read from the document root.
-
-The Storybook Theme control demonstrates alternate tokens. It is not a complete dark theme. On ink surfaces, secondary text needs a suitable light color; the generic muted token is intended for light surfaces.
-
-## Styles and reset
-
-`styles.css` ships precompiled utilities. You do not need Tailwind. It also declares root tokens, global `@font-face` rules, custom properties, animations, and generated property initialization. Utility names are not prefixed, so they can overlap with classes in a host app.
-
-`reset.css` contains Tailwind Preflight and changes native element defaults globally. Import it only when appropriate for your app. Without it, your own reset must supply equivalent native-control and box-sizing behavior. Always review components in the context of your host stylesheet.
-
-Put a custom reset in `@layer base`. Unlayered native-element rules such as `button { color: inherit }` override the library's layered utilities and can make labels disappear against their button backgrounds.
-
-The stylesheet contains only utilities used by the library. It is not a general Tailwind distribution: a class you invent in an application is not automatically generated. Use ordinary CSS for application layout, or your own Tailwind build if you already have one.
-
-## Typography and fonts
-
-Geist Variable is bundled as local WOFF2 files, split by Unicode range, with `font-display: swap`. There is no Google Fonts request. Keep the emitted font assets alongside the CSS when bundling or deploying.
-
-Set `font-family: var(--font-sans)` on your application root if your reset does not already establish it. Override `--font-sans` to use your own font; the bundled Geist font-face declarations remain present.
-
-The font's copyright and SIL Open Font License are included in `THIRD_PARTY_NOTICES`.
-
-## Layout and boundaries
-
-Use `className` for placement and sizing, not to override competing internal utilities. Card has no padding of its own. Fields, tables, charts, and sliders generally fill their container; buttons and pills size to content.
-
-Control heights are part of component geometry. Do not override `--spacing` to resize the system. The compiled `shadow-float` utility does not follow a runtime change to `--shadow-float`; its line color does follow `--color-line`.
+Tokens, dark mode, the stylesheets and fonts: [read it on the documentation site](https://seb-graf.github.io/tensile/docs/styling/).

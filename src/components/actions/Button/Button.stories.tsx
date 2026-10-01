@@ -5,6 +5,7 @@ import { ButtonSizesDemo } from "./demos/ButtonSizesDemo";
 import { ButtonDisabledDemo } from "./demos/ButtonDisabledDemo";
 import { ButtonIconDemo } from "./demos/ButtonIconDemo";
 import { ButtonFormDemo } from "./demos/ButtonFormDemo";
+import { ButtonLinkDemo } from "./demos/ButtonLinkDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { fn } from "storybook/test";
@@ -62,6 +63,12 @@ export const InAForm: Story = {
       </form>
     );
   },
+};
+
+/** With `href` it renders a link that looks the same: Tab to it and press Enter, or click it, to follow it. Inside a LinkProvider a same-origin link goes to the router. */
+export const AsLink: Story = {
+  name: "As a link",
+  render: () => <ButtonLinkDemo />,
 };
 
 export const Usage: Story = {

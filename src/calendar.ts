@@ -56,3 +56,16 @@ export function orderedRange(first: string, second: string): DateRange {
 export function isInRange(day: string, range: DateRange) {
   return day >= range.start && day <= range.end;
 }
+
+export function formatUSDate(day: string) {
+  const [year, month, date] = day.split("-");
+  return `${month}/${date}/${year}`;
+}
+
+export function parseUSDate(text: string) {
+  const match = text.trim().match(/^(\d{1,2})[/.\- ](\d{1,2})[/.\- ](\d{4})$/);
+  if (!match) return null;
+  const [month, date, year] = match.slice(1).map(Number);
+  const day = new Date(year, month - 1, date);
+  return day.getMonth() === month - 1 && day.getDate() === date ? toDay(day) : null;
+}

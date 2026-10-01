@@ -14,13 +14,14 @@ export default {
   notes: [
     "Required is an ARIA state; validate both dates before submitting.",
     "The first selection starts a light preview band. The second emits a complete range ordered from earliest to latest, drawn as an ink band with accent start and end days.",
-    "startName and endName create separate hidden form values."
+    "startName and endName create separate hidden form values.",
+    "Resetting the enclosing form drops a first pick that has no second day yet."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Select an ordered date range.", Demo: DateRangePickerDemo, code: dateRangePickerDemoCode },
-    { id: "bounds", title: "Bounds and steps", description: "Bounded date range.", Demo: DateRangePickerBoundsDemo, code: dateRangePickerBoundsDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled range calendar.", Demo: DateRangePickerDisabledDemo, code: dateRangePickerDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and separate start/end values.", Demo: DateRangePickerFormDemo, code: dateRangePickerFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A range picker in a Field, starting from a chosen range.", Demo: DateRangePickerDemo, code: dateRangePickerDemoCode },
+    { id: "bounds", title: "Bounds and steps", description: "Days outside min and max are disabled and the month arrows stop at their months; use it for booking windows.", Demo: DateRangePickerBoundsDemo, code: dateRangePickerBoundsDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed calendar that shows its range but takes no input.", Demo: DateRangePickerDisabledDemo, code: dateRangePickerDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A required range in a form: startName and endName submit two dates, and Save shows an error until both are picked.", Demo: DateRangePickerFormDemo, code: dateRangePickerFormDemoCode },
   ],
   keyboard: [
     {
@@ -45,11 +46,11 @@ export default {
     "Field"
   ],
   props: {
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the calendar and stops day picks and month changes. A disabled Field or Fieldset does the same.",
     "max": "Latest permitted date as YYYY-MM-DD.",
     "min": "Earliest permitted date as YYYY-MM-DD.",
     "required": "Expose the required state. See the form example for validation.",
-    "className": "Additional classes on the outer element.",
+    "className": "Classes on the wrapper around the calendar, for width and placement. The calendar fills it.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "firstDayOfWeek": "First weekday column: 0 for Sunday through 6 for Saturday.",
     "formatMonth": "Format the month heading from a local Date.",
@@ -57,8 +58,9 @@ export default {
     "formatDay": "Format each day number from a local Date.",
     "previousLabel": "Accessible label for moving backward.",
     "nextLabel": "Accessible label for moving forward.",
-    "value": "Complete ordered date range, or null before selection.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "The complete range, start before end, or null. Leave it out to let the picker track it, starting from defaultValue.",
+    "defaultValue": "The first range when the picker tracks it itself. Defaults to null, no range.",
+    "onValueChange": "Called with the ordered range when the second day is picked. The first pick only previews.",
     "startName": "Name for the start-date hidden input.",
     "endName": "Name for the end-date hidden input."
   },

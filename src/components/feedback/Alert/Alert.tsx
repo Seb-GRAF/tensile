@@ -17,9 +17,9 @@ const glyphs = {
 };
 
 const secondary = {
-  info: "text-paper/55",
-  warning: "text-muted",
-  success: "text-on-accent",
+  info: "tn:text-paper/60",
+  warning: "tn:text-muted",
+  success: "tn:text-on-accent",
 };
 
 export function Alert({
@@ -37,22 +37,22 @@ export function Alert({
       initial={false}
       animate={{
         height: size?.height,
-        backgroundColor: { info: "var(--color-ink)", warning: "var(--color-paper)", success: "var(--color-accent)" }[status],
-        color: { info: "var(--color-paper)", warning: "var(--color-ink)", success: "var(--color-on-accent)" }[status],
+        backgroundColor: { info: "var(--tn-color-ink)", warning: "var(--tn-color-paper)", success: "var(--tn-color-accent)" }[status],
+        color: { info: "var(--tn-color-paper)", warning: "var(--tn-color-ink)", success: "var(--tn-color-on-accent)" }[status],
       }}
       transition={{ height: shape, backgroundColor: soft, color: soft }}
-      className={`w-full overflow-hidden rounded-overlay shadow-float ${className}`}
+      className={`tn:w-full tn:overflow-hidden tn:rounded-overlay tn:shadow-float ${className}`}
     >
-      <div ref={row} className="flex gap-3 p-4">
+      <div ref={row} className="tn:flex tn:gap-3 tn:p-4">
         <Icon size={20}>
           <circle cx="12" cy="12" r="10" />
           <motion.path initial={false} animate={{ d: glyphs[status] }} transition={shape} />
         </Icon>
-        <div className="relative flex-1">
+        <div className="tn:relative tn:flex-1">
           <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div key={`${status} ${title} ${description}`} {...swap} className="origin-left">
-              <p className="text-sm font-medium">{title}</p>
-              <p className={`text-label ${secondary[status]}`}>{description}</p>
+            <motion.div key={`${status} ${title} ${description}`} {...swap} className="tn:origin-left">
+              <p className="tn:text-sm tn:font-medium">{title}</p>
+              <p className={`tn:text-label ${secondary[status]}`}>{description}</p>
             </motion.div>
           </AnimatePresence>
         </div>

@@ -1,10 +1,12 @@
+import { useControllable } from "../../../controllable";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { useField } from "../Field/Field";
 
 export type CheckboxGroupProps = {
   options: { value: string; label: string; disabled?: boolean }[];
-  value: string[];
-  onValueChange: (value: string[]) => void;
+  value?: string[];
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
   label?: string;
   id?: string;
   name?: string;
@@ -14,7 +16,8 @@ export type CheckboxGroupProps = {
 
 export function CheckboxGroup({
   options,
-  value,
+  value: valueProp,
+  defaultValue = [],
   onValueChange,
   label = "Options",
   id,
@@ -22,6 +25,7 @@ export function CheckboxGroup({
   disabled = false,
   className = "",
 }: CheckboxGroupProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
 
   return (
@@ -32,20 +36,20 @@ export function CheckboxGroup({
       aria-labelledby={field?.labelId}
       aria-describedby={field?.describedBy}
       aria-invalid={field?.invalid}
-      className={`grid ${className}`}
+      className={`tn:grid ${className}`}
     >
       {options.map((option) => (
-        <div key={option.value} className="-mx-2 flex h-10 rounded-control has-[:enabled]:hover:bg-hover">
+        <div key={option.value} className="tn:-mx-2 tn:flex tn:h-10 tn:rounded-control tn:has-[:enabled]:hover:bg-hover">
           <Checkbox
             label={option.label}
             name={name}
             value={option.value}
             checked={value.includes(option.value)}
             onCheckedChange={(checked) =>
-              onValueChange(checked ? [...value, option.value] : value.filter((item) => item !== option.value))
+              setValue(checked ? [...value, option.value] : value.filter((item) => item !== option.value))
             }
             disabled={disabled || option.disabled}
-            className="grow px-2"
+            className="tn:grow tn:px-2"
           />
         </div>
       ))}

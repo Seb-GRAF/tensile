@@ -5,13 +5,13 @@ type Swap = { initial: TargetAndTransition; animate: TargetAndTransition; exit: 
 
 const instant: Transition = { duration: 0 };
 
-/** `--motion-duration-scale` on the root element: 1 is the designed speed, 2 twice as slow, 0 no animation (the library CSS sets 0 under prefers-reduced-motion). The server renders with 1. */
+/** `--tn-motion-duration-scale` on the root element: 1 is the designed speed, 2 twice as slow, 0 no animation (the library CSS sets 0 under prefers-reduced-motion). The server renders with 1. */
 function readScale() {
   if (typeof document === "undefined") return 1;
-  return Number(getComputedStyle(document.documentElement).getPropertyValue("--motion-duration-scale"));
+  return Number(getComputedStyle(document.documentElement).getPropertyValue("--tn-motion-duration-scale"));
 }
 
-/** The library's transitions at the speed `--motion-duration-scale` sets, read when the component mounts. Every Motion animation uses one of them; multiply delays and timed effects by `scale`. */
+/** The library's transitions at the speed `--tn-motion-duration-scale` sets, read when the component mounts. Every Motion animation uses one of them; multiply delays and timed effects by `scale`. */
 export function useSprings() {
   const [scale] = useState(readScale);
 

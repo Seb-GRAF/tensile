@@ -14,9 +14,9 @@ export default {
     "There is no dismiss action; keep visibility in the parent when needed."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Informational alert.", Demo: AlertDemo, code: alertDemoCode },
-    { id: "success", title: "Success", description: "Success alert.", Demo: AlertSuccessDemo, code: alertSuccessDemoCode },
-    { id: "warning", title: "Warning", description: "Warning alert.", Demo: AlertWarningDemo, code: alertWarningDemoCode },
+    { id: "usage", title: "Basic usage", description: "An ink info alert for neutral news, such as an upcoming event.", Demo: AlertDemo, code: alertDemoCode },
+    { id: "success", title: "Success", description: "An accent success alert to confirm that an action worked.", Demo: AlertSuccessDemo, code: alertSuccessDemoCode },
+    { id: "warning", title: "Warning", description: "A paper warning alert, announced at once, for a problem the user should act on.", Demo: AlertWarningDemo, code: alertWarningDemoCode },
   ],
   keyboard: [],
   related: [
@@ -25,8 +25,8 @@ export default {
   ],
   props: {
     "status": "Info, warning or success tone and announcement semantics.",
-    "title": "Title displayed by the component.",
-    "description": "Supporting content explaining the control or group.",
-    "className": "Additional classes on the outer element."
+    "title": "The alert's message in a few words.",
+    "description": "Detail under the title; leave it out for a one-line alert.",
+    "className": "Classes on the alert card, for placement; it fills its container's width."
   },
 };

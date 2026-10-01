@@ -36,9 +36,13 @@ export function useLinkClick() {
   };
 }
 
-export type LinkProps = React.ComponentProps<"a"> & { href: string };
+export type LinkProps = React.ComponentProps<"a"> & {
+  href: string;
+  /** Draw the underline; turn it off for links in navigation lists, where position already says they're links. */
+  underline?: boolean;
+};
 
-export function Link({ onClick, className = "", ...props }: LinkProps) {
+export function Link({ underline = true, onClick, className = "", ...props }: LinkProps) {
   const linkClick = useLinkClick();
   return (
     <a
@@ -47,7 +51,7 @@ export function Link({ onClick, className = "", ...props }: LinkProps) {
         onClick?.(event);
         linkClick(event);
       }}
-      className={`rounded-sm underline decoration-current/40 underline-offset-2 outline-offset-2 hover:decoration-current focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+      className={`tn:rounded-sm tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${underline ? "tn:underline tn:decoration-current/40 tn:underline-offset-2 tn:hover:decoration-current" : "tn:no-underline"} ${className}`}
     />
   );
 }

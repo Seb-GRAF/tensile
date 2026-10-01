@@ -16,38 +16,45 @@ export function MorphButton({
   successLabel = "Done",
   type = "button",
   disabled = false,
+  onClick,
   className = "",
   "aria-label": label,
   ...props
 }: MorphButtonProps) {
   const { shape, soft, swap } = useSprings();
+  const busy = status !== "idle";
   return (
     <motion.button
       {...props}
       type={type}
-      disabled={disabled || status !== "idle"}
+      disabled={disabled}
+      aria-disabled={busy || undefined}
+      onClick={(event) => {
+        if (busy) event.preventDefault();
+        else onClick?.(event);
+      }}
       aria-label={status === "idle" ? label : status === "loading" ? loadingLabel : successLabel}
       initial={false}
       animate={{
         width: status === "idle" ? "auto" : 44,
-        backgroundColor: status === "success" ? "var(--color-accent)" : "var(--color-ink)",
+        backgroundColor: status === "success" ? "var(--tn-color-accent)" : "var(--tn-color-ink)",
       }}
       transition={{ width: shape, backgroundColor: soft }}
-      className={`grid h-11 place-content-center place-items-center overflow-hidden rounded-control text-body font-medium text-paper shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus enabled:press ${disabled ? "opacity-40" : ""} ${className}`}
+      className={`tn:grid tn:h-11 tn:place-content-center tn:place-items-center tn:overflow-hidden tn:rounded-control tn:text-body tn:font-medium tn:text-paper tn:shadow-control tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${busy ? "" : "tn:enabled:press"} ${disabled ? "tn:opacity-40" : ""} ${className}`}
     >
       <AnimatePresence initial={false}>
         {status === "idle" && (
-          <motion.span key="idle" {...swap} className="col-start-1 row-start-1 whitespace-nowrap px-5">
+          <motion.span key="idle" {...swap} className="tn:col-start-1 tn:row-start-1 tn:whitespace-nowrap tn:px-5">
             {children}
           </motion.span>
         )}
         {status === "loading" && (
-          <motion.span key="loading" {...swap} className="col-start-1 row-start-1">
+          <motion.span key="loading" {...swap} className="tn:col-start-1 tn:row-start-1">
             <Spinner size={18} />
           </motion.span>
         )}
         {status === "success" && (
-          <motion.span key="success" {...swap} className="col-start-1 row-start-1 text-on-accent">
+          <motion.span key="success" {...swap} className="tn:col-start-1 tn:row-start-1 tn:text-on-accent">
             <Check size={20} />
           </motion.span>
         )}

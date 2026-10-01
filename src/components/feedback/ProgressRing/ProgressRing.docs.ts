@@ -10,7 +10,7 @@ export default {
     "At exactly one, the ring becomes a check and exposes doneLabel."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Progress and completion state.", Demo: ProgressRingDemo, code: progressRingDemoCode },
+    { id: "usage", title: "Basic usage", description: "A ring that fills as an export advances and turns into a check at 1; use it where a full-width bar doesn't fit, as in a toolbar or a row.", Demo: ProgressRingDemo, code: progressRingDemoCode },
   ],
   keyboard: [],
   related: [
@@ -19,9 +19,9 @@ export default {
   ],
   props: {
     "value": "0..1",
-    "label": "Accessible name of the control or region.",
-    "formatValue": "Format a value for display or accessible value text.",
+    "label": "Name of the progress ring, e.g. \"Export progress\".",
+    "formatValue": "Turns the value into the text read out for it, \"45%\" by default.",
     "doneLabel": "Read out instead of the value once it reaches 1.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the 44 px ring, for placement."
   },
 };

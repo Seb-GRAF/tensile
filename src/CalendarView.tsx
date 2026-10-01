@@ -45,7 +45,7 @@ function CalendarMonth({ direction, children }: { direction: number; children: R
       initial="enter"
       animate="center"
       exit="exit"
-      className="relative col-start-1 row-start-1 grid gap-1"
+      className="tn:relative tn:col-start-1 tn:row-start-1 tn:grid tn:gap-1"
     >
       {children}
     </motion.div>
@@ -87,9 +87,9 @@ export function CalendarView({
   const today = toDay(new Date());
   const title = formatMonth(toDate(`${month}-01`));
   const labels = cells.map((day, i) => (
-    <span key={i} className="relative flex h-8 items-center justify-center">
+    <span key={i} className="tn:relative tn:flex tn:h-8 tn:items-center tn:justify-center">
       {day && formatDay(toDate(day))}
-      {day === today && <span className="absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-current" />}
+      {day === today && <span className="tn:absolute tn:bottom-1 tn:left-1/2 tn:size-1 tn:-translate-x-1/2 tn:rounded-full tn:bg-current" />}
     </span>
   ));
   const monthSwap = {
@@ -114,8 +114,8 @@ export function CalendarView({
   }
 
   return (
-    <div className={`rounded-card bg-paper p-3 shadow-control ${disabled ? "opacity-40" : ""}`}>
-      <div className="flex items-center justify-between">
+    <div className={`tn:rounded-card tn:bg-paper tn:p-3 tn:shadow-control ${disabled ? "tn:opacity-40" : ""}`}>
+      <div className="tn:flex tn:items-center tn:justify-between">
         <IconButton
           label={previousLabel}
           variant="ghost"
@@ -125,8 +125,8 @@ export function CalendarView({
         >
           <Icon>{icons.chevronLeft}</Icon>
         </IconButton>
-        <div id={titleId} aria-live="polite" className="grid place-content-center place-items-center text-body font-semibold text-ink">
-          <span className="sr-only">{title}</span>
+        <div id={titleId} aria-live="polite" className="tn:grid tn:place-content-center tn:place-items-center tn:text-body tn:font-semibold tn:text-ink">
+          <span className="tn:sr-only">{title}</span>
           <AnimatePresence initial={false} custom={direction}>
             <motion.span
               key={month}
@@ -136,7 +136,7 @@ export function CalendarView({
               initial="enter"
               animate="center"
               exit="exit"
-              className="col-start-1 row-start-1"
+              className="tn:col-start-1 tn:row-start-1"
             >
               {title}
             </motion.span>
@@ -163,20 +163,20 @@ export function CalendarView({
         aria-multiselectable={multiple || undefined}
         onKeyDown={disabled ? undefined : onKeyDown}
         onMouseLeave={disabled ? undefined : () => onDayHover?.(null)}
-        className="mt-2 grid gap-1"
+        className="tn:mt-2 tn:grid tn:gap-1"
       >
-        <div role="row" className="grid grid-cols-7 gap-1">
+        <div role="row" className="tn:grid tn:grid-cols-7 tn:gap-1">
           {grid.slice(0, 7).map((day) => (
-            <span key={day} role="columnheader" className="flex h-6 items-center justify-center text-caption font-medium text-muted">
+            <span key={day} role="columnheader" className="tn:flex tn:h-6 tn:items-center tn:justify-center tn:text-caption tn:font-medium tn:text-muted">
               {formatWeekday(toDate(day))}
             </span>
           ))}
         </div>
-        <motion.div initial={false} animate={{ height: rows * 36 - 4 }} transition={shape} className="grid items-start">
+        <motion.div initial={false} animate={{ height: rows * 36 - 4 }} transition={shape} className="tn:grid tn:items-start">
           <AnimatePresence initial={false} custom={direction}>
             <CalendarMonth key={month} direction={direction}>
               {Array.from({ length: rows }, (_, row) => (
-                <div key={row} role="row" className="grid h-8 grid-cols-7 gap-1">
+                <div key={row} role="row" className="tn:grid tn:h-8 tn:grid-cols-7 tn:gap-1">
                   {cells.slice(row * 7, row * 7 + 7).map((cell, column) => cell ? (
                     <button
                       key={cell}
@@ -190,10 +190,10 @@ export function CalendarView({
                       onFocus={() => { setFocused(cell); onDayHover?.(cell); }}
                       onMouseMove={disabled || clampDay(cell, min, max) !== cell ? undefined : () => onDayHover?.(cell)}
                       onClick={() => { setFocused(cell); onValueChange(cell); }}
-                      className="relative flex h-8 min-w-0 items-center justify-center rounded-control text-label font-medium text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus enabled:hover:bg-hover disabled:opacity-40"
+                      className="tn:relative tn:flex tn:h-8 tn:min-w-0 tn:items-center tn:justify-center tn:rounded-control tn:text-label tn:font-medium tn:text-ink tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus tn:enabled:hover:bg-hover tn:disabled:opacity-40"
                     >
                       {formatDay(toDate(cell))}
-                      {cell === today && <span className="absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-current" />}
+                      {cell === today && <span className="tn:absolute tn:bottom-1 tn:left-1/2 tn:size-1 tn:-translate-x-1/2 tn:rounded-full tn:bg-current" />}
                     </button>
                   ) : <span key={column} role="gridcell" />)}
                 </div>

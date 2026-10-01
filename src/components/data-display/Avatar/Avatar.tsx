@@ -10,22 +10,22 @@ export type AvatarProps = {
 };
 
 export const sizes = {
-  sm: "size-6 text-caption",
-  md: "size-8 text-label",
-  lg: "size-11 text-body",
+  sm: "tn:size-6 tn:text-caption",
+  md: "tn:size-8 tn:text-label",
+  lg: "tn:size-11 tn:text-body",
 };
 
 export function Avatar({ name, src, size = "md", className = "" }: AvatarProps) {
   const words = name.split(" ");
   const letters = words.length > 1 ? words[0][0] + words[words.length - 1][0] : words[0][0];
   const initials = (
-    <span role="img" aria-label={name} className="grid size-full place-items-center rounded-full bg-ink font-semibold text-paper">
+    <span role="img" aria-label={name} className="tn:grid tn:size-full tn:place-items-center tn:rounded-full tn:bg-ink tn:font-semibold tn:text-paper">
       {letters.toUpperCase()}
     </span>
   );
   return src ? (
-    <Image src={src} alt={name} fallback={initials} className={`rounded-full ${sizes[size]} ${className}`} />
+    <Image src={src} alt={name} fallback={initials} className={`tn:rounded-full ${sizes[size]} ${className}`} />
   ) : (
-    <span className={`block ${sizes[size]} ${className}`}>{initials}</span>
+    <span className={`tn:block ${sizes[size]} ${className}`}>{initials}</span>
   );
 }

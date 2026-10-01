@@ -4,7 +4,7 @@ export function Kbd({ className = "", ...props }: KbdProps) {
   return (
     <kbd
       {...props}
-      className={`inline-flex h-5.5 items-center gap-px rounded-[calc(var(--radius-control)/4)] border border-line px-1.5 font-sans text-caption text-muted ${className}`}
+      className={`tn:inline-flex tn:h-5.5 tn:items-center tn:gap-px tn:rounded-[calc(var(--tn-radius-control)/4)] tn:border tn:border-line tn:px-1.5 tn:font-sans tn:text-caption tn:text-muted ${className}`}
     />
   );
 }

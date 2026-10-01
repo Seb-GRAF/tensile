@@ -12,8 +12,8 @@ export default {
     "The ticker is not a live region; add an announcement only when the update needs one."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Changing numeric value.", Demo: NumberTickerDemo, code: numberTickerDemoCode },
-    { id: "format", title: "Custom formatting", description: "Formatted numbers with inherited typography.", Demo: NumberTickerFormatDemo, code: numberTickerFormatDemoCode },
+    { id: "usage", title: "Basic usage", description: "Digits roll up or down as the buttons change the number, at the size of the text around it; use it for counts that change in place.", Demo: NumberTickerDemo, code: numberTickerDemoCode },
+    { id: "format", title: "Custom formatting", description: "`format` shows the number as CHF currency while the digits still roll; use it for prices and totals.", Demo: NumberTickerFormatDemo, code: numberTickerFormatDemoCode },
   ],
   keyboard: [],
   related: [
@@ -21,8 +21,8 @@ export default {
     "NumberStepper"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
+    "value": "The number shown; when it changes, the digits roll toward it.",
     "format": "Format the value, including separators, decimals or units.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the inline span around the digits, for margin and placement; size and color come from the parent."
   },
 };

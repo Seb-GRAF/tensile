@@ -296,7 +296,6 @@ function PricingSection() {
       </div>
       <div id={`${id}-${index}-panel`} role="tabpanel" aria-labelledby={`${id}-${index}`} className="mt-8 grid gap-4 md:grid-cols-3">
         {plans.map((plan) => {
-          const muted = plan.popular ? "text-paper/55" : "text-muted";
           return (
             <Card key={plan.name} tone={plan.popular ? "ink" : "paper"} className="flex flex-col p-6">
               <div className="flex h-6 items-center justify-between gap-3">
@@ -305,11 +304,11 @@ function PricingSection() {
                   <p className="flex h-6 items-center rounded-control bg-accent px-2.5 text-label font-medium text-on-accent">Most popular</p>
                 )}
               </div>
-              <p className={`mt-1 text-label ${muted}`}>{plan.description}</p>
+              <p className="mt-1 text-label text-muted">{plan.description}</p>
               <p className="mt-6 text-5xl font-semibold tracking-tight">
                 <NumberTicker value={period === "yearly" ? plan.yearly : plan.monthly} format={(value) => `$${value}`} />
               </p>
-              <p className={`mt-2 text-label ${muted}`}>per editor per month</p>
+              <p className="mt-2 text-label text-muted">per editor per month</p>
               <ul role="list" className="mt-6 mb-8 grid gap-2.5 text-label">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex gap-2">

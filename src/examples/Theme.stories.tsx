@@ -22,6 +22,7 @@ import {
 const themes = [
   { value: "default", label: "Default" },
   { value: "alternate", label: "Alternate" },
+  { value: "dark", label: "Dark" },
 ];
 
 const qualities = [
@@ -63,22 +64,22 @@ const sections = [
 ];
 
 const css = `[data-theme="alternate"] {
-  --color-accent: #3355ff;
-  --color-on-accent: #ffffff;
-  --radius-control: 10px;
-  --radius-overlay: 12px;
-  --radius-card: 14px;
-  --radius-dialog: 16px;
+  --tn-color-accent: #3355ff;
+  --tn-color-on-accent: #ffffff;
+  --tn-radius-control: 10px;
+  --tn-radius-overlay: 12px;
+  --tn-radius-card: 14px;
+  --tn-radius-dialog: 16px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   [data-theme="alternate"] {
-    --motion-duration-scale: 1.6;
+    --tn-motion-duration-scale: 1.6;
   }
 }`;
 
 function Showcase() {
-  const [scale] = useState(() => getComputedStyle(document.documentElement).getPropertyValue("--motion-duration-scale"));
+  const [scale] = useState(() => getComputedStyle(document.documentElement).getPropertyValue("--tn-motion-duration-scale"));
   const [reduced] = useState(() => matchMedia("(prefers-reduced-motion: reduce)").matches);
   const [spatial, setSpatial] = useState(true);
   const [quality, setQuality] = useState<string | null>("high");
@@ -172,7 +173,7 @@ function Showcase() {
         </Card>
         <Card tone="ink" className="grid gap-3 p-5 sm:col-span-2 lg:col-span-3">
           <h2 className="text-body font-semibold">Your own theme</h2>
-          <p className="text-label text-paper/55">
+          <p className="text-label text-muted">
             An app sets the tokens in its own CSS, loaded after the library's. This is the alternate theme; the switch above puts
             data-theme="alternate" on the root element. A speed change goes inside the no-preference query, or it would undo reduced motion.
           </p>
@@ -188,12 +189,13 @@ function Showcase() {
 function ThemeAndMotion() {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme!);
   document.documentElement.dataset.theme = theme;
+  document.documentElement.classList.toggle("dark", theme === "dark");
 
   return (
     <div className="mx-auto grid max-w-page gap-6 p-4 sm:p-8">
       <PageHeader
         title="Theme and motion"
-        description="Every component reads the same tokens. Switch the theme to change the accent, the radii and the speed of every animation at once."
+        description="Every component reads the same tokens. Switch the theme to change the colors, the accent, the radii and the speed of every animation at once."
         actions={<SegmentedTabs options={themes} value={theme} onValueChange={setTheme} label="Theme" />}
       />
       <Showcase key={theme} />

@@ -39,17 +39,17 @@ export function SelectionBar({
             initial={{ ...swap.initial, y: 16 }}
             animate={{ ...swap.animate, y: 0, transition: { ...swap.animate.transition, y: { ...shape, delay: 0.1 * scale } } }}
             exit={{ ...swap.exit, y: 16 }}
-            className={`inline-flex h-11 items-center gap-1 rounded-control bg-ink pr-1.5 pl-4 text-label font-medium text-paper shadow-float surface [--color-focus:var(--color-paper)] [--ghost-hover:var(--color-ink-3)] [--color-line:var(--color-ink-3)] ${className}`}
+            className={`tn:inline-flex tn:h-11 tn:items-center tn:gap-1 tn:rounded-control dark tn:bg-paper tn:pr-1.5 tn:pl-4 tn:text-label tn:font-medium tn:text-ink tn:shadow-float tn:surface ${className}`}
           >
-            <NumberTicker value={count} format={countLabel} className="mr-2" />
+            <NumberTicker value={count} format={countLabel} className="tn:mr-2" />
             {children}
-            <IconButton label={clearLabel} variant="ghost" size="sm" onClick={onClear} className="text-paper/55">
+            <IconButton label={clearLabel} variant="ghost" size="sm" onClick={onClear} className="tn:text-muted">
               <Icon size={16}>{icons.close}</Icon>
             </IconButton>
           </motion.div>
         )}
       </AnimatePresence>
-      <span role="status" className="sr-only">
+      <span role="status" className="tn:sr-only">
         {count > 0 && countLabel(count)}
       </span>
     </>

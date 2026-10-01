@@ -53,7 +53,7 @@ const chf = new Intl.NumberFormat("en-US", { style: "currency", currency: "CHF" 
 
 function pageOf(rows: Invoice[], sort: DataTableProps<Invoice>["sort"], page: number) {
   const sorted =
-    sort === null
+    !sort
       ? rows
       : [...rows].sort((a, b) => {
           const key = sort.key as keyof Invoice;
@@ -94,21 +94,21 @@ const meta = {
       <div className="mx-auto grid max-w-4xl gap-4">
         <DataTable
           {...args}
-          rows={pageOf(args.rows, args.sort, args.page)}
+          rows={pageOf(args.rows, args.sort, args.page!)}
           onSortChange={(sort) => {
-            args.onSortChange(sort);
+            args.onSortChange?.(sort);
             updateArgs({ sort, page: 1 });
           }}
           onSelectionChange={(selection) => {
-            args.onSelectionChange(selection);
+            args.onSelectionChange?.(selection);
             updateArgs({ selection });
           }}
           onPageChange={(page) => {
-            args.onPageChange(page);
+            args.onPageChange?.(page);
             updateArgs({ page });
           }}
         />
-        <output className="text-label text-muted">{args.selection.join(", ")}</output>
+        <output className="text-label text-muted">{args.selection!.join(", ")}</output>
       </div>
     );
   },
@@ -143,7 +143,7 @@ export const WithRowActions: Story = {
   render: function Render(args) {
     const [sort, setSort] = useState(args.sort);
     const [selection, setSelection] = useState(args.selection);
-    const [page, setPage] = useState(args.page);
+    const [page, setPage] = useState(args.page!);
     const [action, setAction] = useState("");
     return (
       <div className="mx-auto grid max-w-4xl gap-4">
@@ -152,18 +152,18 @@ export const WithRowActions: Story = {
           rows={pageOf(args.rows, sort, page)}
           sort={sort}
           onSortChange={(next) => {
-            args.onSortChange(next);
+            args.onSortChange?.(next);
             setSort(next);
             setPage(1);
           }}
           selection={selection}
           onSelectionChange={(next) => {
-            args.onSelectionChange(next);
+            args.onSelectionChange?.(next);
             setSelection(next);
           }}
           page={page}
           onPageChange={(next) => {
-            args.onPageChange(next);
+            args.onPageChange?.(next);
             setPage(next);
           }}
           onRowAction={(row, chosen) => {

@@ -23,7 +23,7 @@ export type BreadcrumbsProps = {
 };
 
 const separator = (
-  <Icon size={14} className="mx-0.5 text-muted/50">{icons.chevronRight}</Icon>
+  <Icon size={14} className="tn:mx-0.5 tn:text-muted/50">{icons.chevronRight}</Icon>
 );
 
 export function Breadcrumbs({
@@ -58,7 +58,7 @@ export function Breadcrumbs({
   function crumb(item: Crumb, i: number) {
     if (i === items.length - 1) {
       return (
-        <span aria-current="page" className="flex h-8 items-center gap-1.5 px-1.5 text-ink">
+        <span aria-current="page" className="tn:flex tn:h-8 tn:items-center tn:gap-1.5 tn:px-1.5 tn:text-ink">
           {item.icon}
           {item.label}
         </span>
@@ -68,9 +68,9 @@ export function Breadcrumbs({
       ref: (element: HTMLButtonElement | HTMLAnchorElement | null) => {
         if (i === itemsBeforeCollapse) firstHidden.current = element;
       },
-      className: "flex h-8 min-w-0 items-center gap-1.5 rounded-control px-1.5 outline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-focus",
+      className: "tn:flex tn:h-8 tn:min-w-0 tn:items-center tn:gap-1.5 tn:rounded-control tn:px-1.5 tn:outline-offset-2 tn:hover:text-ink tn:focus-visible:outline-2 tn:focus-visible:outline-focus",
     };
-    const content = <>{item.icon}<span className="truncate">{item.label}</span></>;
+    const content = <>{item.icon}<span className="tn:truncate">{item.label}</span></>;
     return item.href ? (
       <a {...props} href={item.href} onClick={(event) => { onNavigate(item); linkClick(event); }}>{content}</a>
     ) : (
@@ -83,13 +83,13 @@ export function Breadcrumbs({
       initial={false}
       animate={{ width }}
       transition={shape}
-      className="grid h-8 items-center justify-items-start rounded-control [clip-path:inset(-4px)]"
+      className="tn:grid tn:h-8 tn:items-center tn:justify-items-start tn:rounded-control tn:[clip-path:inset(-4px)]"
     >
       <AnimatePresence initial={false}>
         {expanded ? (
-          <motion.ol key="expanded" ref={measure} {...swap} role="list" style={{ maxWidth: room }} className="col-start-1 row-start-1 flex w-max">
+          <motion.ol key="expanded" ref={measure} {...swap} role="list" style={{ maxWidth: room }} className="tn:col-start-1 tn:row-start-1 tn:flex tn:w-max">
             {hidden.map((item, j) => (
-              <li key={j} className="flex min-w-0 items-center">
+              <li key={j} className="tn:flex tn:min-w-0 tn:items-center">
                 {j > 0 && separator}
                 {crumb(item, itemsBeforeCollapse + j)}
               </li>
@@ -104,7 +104,7 @@ export function Breadcrumbs({
             aria-label={expandLabel}
             aria-expanded={false}
             onClick={expand}
-            className="col-start-1 row-start-1 grid h-8 place-items-center rounded-control px-3 outline-offset-2 hover:bg-hover focus-visible:outline-2 focus-visible:outline-focus"
+            className="tn:col-start-1 tn:row-start-1 tn:grid tn:h-8 tn:place-items-center tn:rounded-control tn:px-3 tn:outline-offset-2 tn:hover:bg-hover tn:focus-visible:outline-2 tn:focus-visible:outline-focus"
           >
             <Icon size={16}>{icons.more}</Icon>
           </motion.button>
@@ -115,10 +115,10 @@ export function Breadcrumbs({
 
   return (
     <nav aria-label={label} className={className}>
-      <ol ref={trail} role="list" className="flex w-fit items-center rounded-control bg-paper px-1.5 py-1 text-label font-medium whitespace-nowrap text-muted shadow-control">
+      <ol ref={trail} role="list" className="tn:flex tn:w-fit tn:items-center tn:rounded-control tn:bg-paper tn:px-1.5 tn:py-1 tn:text-label tn:font-medium tn:whitespace-nowrap tn:text-muted tn:shadow-control">
         {items.map((item, i) =>
           i > itemsBeforeCollapse && i < end ? null : (
-            <li key={i} className="flex items-center">
+            <li key={i} className="tn:flex tn:items-center">
               {i > 0 && separator}
               {i === itemsBeforeCollapse && hidden.length > 0 ? pill : crumb(item, i)}
             </li>

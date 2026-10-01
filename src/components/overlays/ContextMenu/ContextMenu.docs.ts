@@ -14,8 +14,8 @@ export default {
     "When any action has an icon, every row keeps a 16 px icon slot so the labels line up."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Context actions and disabled items.", Demo: ContextMenuDemo, code: contextMenuDemoCode },
-    { id: "dialog", title: "Dialog", description: "Context menu inside a modal.", Demo: ContextMenuDialogDemo, code: contextMenuDialogDemoCode },
+    { id: "usage", title: "Basic usage", description: "A card with Rename, a disabled Download and Archive on right-click or long press, for shortcuts on items people already know how to open.", Demo: ContextMenuDemo, code: contextMenuDemoCode },
+    { id: "dialog", title: "Dialog", description: "The same menu on content inside a Dialog, where it opens above the dialog, for item actions in a modal list.", Demo: ContextMenuDialogDemo, code: contextMenuDialogDemoCode },
   ],
   keyboard: [
     {
@@ -46,8 +46,8 @@ export default {
   props: {
     "actions": "Actions with labels, optional icons and disabled states.",
     "onAction": "Called with the chosen action.",
-    "children": "Content rendered inside the component.",
+    "children": "The target area that opens the menu on right-click, long press, Shift+F10 or the menu key.",
     "menuLabel": "Accessible name of the target group and menu.",
-    "className": "Additional classes on the outer element."
+    "className": "Size and placement of the target area."
   },
 };

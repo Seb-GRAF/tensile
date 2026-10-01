@@ -14,9 +14,9 @@ export default {
     "Expanding fits the trail to its container: the revealed items truncate. Collapsed, the trail keeps its intrinsic width; use a scrolling container in a narrow layout."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Action-based breadcrumb navigation.", Demo: BreadcrumbsDemo, code: breadcrumbsDemoCode },
-    { id: "links", title: "Links", description: "Href-based breadcrumb navigation.", Demo: BreadcrumbsLinksDemo, code: breadcrumbsLinksDemoCode },
-    { id: "collapsed", title: "Collapsed", description: "Long trail with configurable visible ends.", Demo: BreadcrumbsCollapsedDemo, code: breadcrumbsCollapsedDemoCode },
+    { id: "usage", title: "Basic usage", description: "Items without an href are buttons that call onNavigate, for a trail inside an app view.", Demo: BreadcrumbsDemo, code: breadcrumbsDemoCode },
+    { id: "links", title: "Links", description: "Items with an href are links, so the trail works as ordinary page navigation.", Demo: BreadcrumbsLinksDemo, code: breadcrumbsLinksDemoCode },
+    { id: "collapsed", title: "Collapsed", description: "A long trail shows its ends and hides the middle behind a pill that expands on click.", Demo: BreadcrumbsCollapsedDemo, code: breadcrumbsCollapsedDemoCode },
   ],
   keyboard: [
     {
@@ -35,10 +35,10 @@ export default {
   props: {
     "items": "The trail from the root; the last item is the current page.",
     "onNavigate": "Called with an activated non-current item.",
-    "label": "Accessible name of the control or region.",
+    "label": "Accessible name of the navigation landmark, so it differs from your main navigation.",
     "expandLabel": "Accessible name of the hidden-trail button.",
     "itemsBeforeCollapse": "Items shown before the \"…\" pill.",
     "itemsAfterCollapse": "Items shown after the \"…\" pill, the current page included.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the nav element, for placement and to limit its width."
   },
 };

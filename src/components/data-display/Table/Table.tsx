@@ -30,7 +30,7 @@ export type TableProps<Row> = {
   className?: string;
 };
 
-const aligns = { start: "text-start", end: "text-end tabular-nums" };
+const aligns = { start: "tn:text-start", end: "tn:text-end tn:tabular-nums" };
 
 function TableRow<Row>({ row, columns, ref }: { row: Row; columns: TableProps<Row>["columns"]; ref?: (element: HTMLTableRowElement | null) => void }) {
   const { shape, swap } = useSprings();
@@ -48,18 +48,18 @@ function TableRow<Row>({ row, columns, ref }: { row: Row; columns: TableProps<Ro
       layout="position"
       {...swap}
       transition={{ layout: shape }}
-      className="hover:bg-hover"
+      className="tn:hover:bg-hover"
     >
       {columns.map((column, i) => {
         const style = widths && { width: widths[i] };
         const content = column.cell ? column.cell(row) : (row as Record<string, React.ReactNode>)[column.key];
         const align = aligns[column.align ?? "start"];
         return column.rowHeader ? (
-          <th key={column.key} scope="row" style={style} className={`h-12 whitespace-nowrap border-line px-4 py-1 font-medium [tr:not([inert])~tr>&]:border-t ${align}`}>
+          <th key={column.key} scope="row" style={style} className={`tn:h-12 tn:whitespace-nowrap tn:border-line tn:px-4 tn:py-1 tn:font-medium tn:[tr:not([inert])~tr>&]:border-t ${align}`}>
             {content}
           </th>
         ) : (
-          <td key={column.key} style={style} className={`h-12 whitespace-nowrap border-line px-4 py-1 [tr:not([inert])~tr>&]:border-t ${align}`}>
+          <td key={column.key} style={style} className={`tn:h-12 tn:whitespace-nowrap tn:border-line tn:px-4 tn:py-1 tn:[tr:not([inert])~tr>&]:border-t ${align}`}>
             {content}
           </td>
         );
@@ -103,25 +103,25 @@ export function Table<Row>({
   }, [rows, loading]);
 
   return (
-    <Card className={`flex flex-col overflow-hidden outline-offset-2 has-[>:focus-visible]:outline-2 has-[>:focus-visible]:outline-focus ${className}`}>
+    <Card className={`tn:flex tn:flex-col tn:overflow-hidden tn:outline-offset-2 tn:has-[>:focus-visible]:outline-2 tn:has-[>:focus-visible]:outline-focus ${className}`}>
       <div
         ref={measureBox}
         tabIndex={scrolls ? 0 : undefined}
         role={scrolls ? "region" : undefined}
         aria-label={scrolls ? caption : undefined}
-        className="scroll-fade-x overflow-auto outline-none"
+        className="tn:scroll-fade-x tn:overflow-auto tn:outline-none"
       >
-        <motion.div initial={false} animate={{ height: table?.height }} transition={shape} className="overflow-y-clip">
-          <table ref={measureTable} aria-busy={loading || undefined} className="relative w-full border-separate border-spacing-0 text-sm">
-            <caption className="sr-only">{caption}</caption>
-            <thead ref={head} className="sticky top-0 z-(--layer-raised) bg-paper">
+        <motion.div initial={false} animate={{ height: table?.height }} transition={shape} className="tn:overflow-y-clip">
+          <table ref={measureTable} aria-busy={loading || undefined} className="tn:relative tn:w-full tn:border-separate tn:border-spacing-0 tn:text-sm">
+            <caption className="tn:sr-only">{caption}</caption>
+            <thead ref={head} className="tn:sticky tn:top-0 tn:z-(--tn-layer-raised) tn:bg-paper">
               <tr>
                 {columns.map((column) => (
                   <th
                     key={column.key}
                     scope="col"
                     aria-sort={sort?.key === column.key ? sort.direction : undefined}
-                    className={`h-10 whitespace-nowrap px-4 text-label font-medium text-muted shadow-[inset_0_-1px_var(--color-line)] ${aligns[column.align ?? "start"]}`}
+                    className={`tn:h-10 tn:whitespace-nowrap tn:px-4 tn:text-label tn:font-medium tn:text-muted tn:shadow-[inset_0_-1px_var(--tn-color-line)] ${aligns[column.align ?? "start"]}`}
                   >
                     <div>{column.header}</div>
                   </th>
@@ -134,8 +134,8 @@ export function Table<Row>({
                   Array.from({ length: 5 }, (_, i) => (
                     <tr key={i}>
                       {columns.map((column) => (
-                        <td key={column.key} className="h-12 border-line px-4 [tr~tr>&]:border-t">
-                          <Skeleton className="h-4 rounded-full" />
+                        <td key={column.key} className="tn:h-12 tn:border-line tn:px-4 tn:[tr~tr>&]:border-t">
+                          <Skeleton className="tn:h-4 tn:rounded-full" />
                         </td>
                       ))}
                     </tr>

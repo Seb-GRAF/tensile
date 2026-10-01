@@ -1,17 +1,20 @@
 import { motion } from "motion/react";
 import { useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useFocusSource } from "../../../focus";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
 import { ErrorRow, FloatingLabel, useField } from "../Field/Field";
 
-export type TextareaProps = Omit<React.ComponentProps<"textarea">, "value" | "onChange"> & {
-  value: string;
-  onValueChange: (value: string) => void;
+export type TextareaProps = Omit<React.ComponentProps<"textarea">, "value" | "defaultValue" | "onChange"> & {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
 };
 
 export function Textarea({
-  value,
+  value: valueProp,
+  defaultValue = "",
   onValueChange,
   rows = 3,
   id,
@@ -27,6 +30,7 @@ export function Textarea({
   ...props
 }: TextareaProps) {
   const { shape } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   useFocusSource();
   const [size, measure] = useSize();
@@ -36,7 +40,7 @@ export function Textarea({
     <div
       data-label-inside={inside ? true : undefined}
       style={style}
-      className={`rounded-overlay bg-paper shadow-control outline-offset-2 has-[textarea:disabled]:opacity-40 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${className}`}
+      className={`tn:rounded-overlay tn:bg-paper tn:shadow-control tn:outline-offset-2 tn:has-[textarea:disabled]:opacity-40 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${className}`}
     >
       <div
         onMouseDown={(event) => {
@@ -45,14 +49,14 @@ export function Textarea({
           event.preventDefault();
           textarea.focus();
         }}
-        className={`cursor-text ${inside ? "relative pt-6 pb-3" : "py-3.5"}`}
+        className={`tn:cursor-text ${inside ? "tn:relative tn:pt-5.5 tn:pb-3" : "tn:py-3.5"}`}
       >
         {inside && (
-          <FloatingLabel aria-hidden floated={focused || value !== ""} className="left-5">
+          <FloatingLabel aria-hidden floated={focused || value !== ""} className="tn:left-5">
             {inside.label}
           </FloatingLabel>
         )}
-        <motion.div initial={false} animate={{ height: size?.height }} transition={shape} className="overflow-clip">
+        <motion.div initial={false} animate={{ height: size?.height }} transition={shape} className="tn:overflow-clip">
           <div ref={measure}>
             <textarea
               {...props}
@@ -60,7 +64,7 @@ export function Textarea({
               style={{ minHeight: `${rows}lh` }}
               id={field?.id ?? id}
               value={value}
-              onChange={(event) => onValueChange(event.target.value)}
+              onChange={(event) => setValue(event.target.value)}
               onFocus={(event) => { setFocused(true); onFocus?.(event); }}
               onBlur={(event) => { setFocused(false); onBlur?.(event); }}
               required={field?.required || required}
@@ -68,13 +72,13 @@ export function Textarea({
               aria-labelledby={field?.labelId ?? labelledBy}
               aria-invalid={field?.invalid || invalid}
               aria-describedby={[field?.describedBy, describedBy].filter(Boolean).join(" ") || undefined}
-              className={`block w-full resize-none bg-transparent px-5 text-body text-ink outline-none field-sizing-content ${inside ? "placeholder:text-transparent focus:placeholder:text-muted" : "placeholder:text-muted"}`}
+              className={`tn:block tn:w-full tn:resize-none tn:bg-transparent tn:px-5 tn:text-body tn:text-ink tn:outline-none tn:field-sizing-content ${inside ? "tn:placeholder:text-transparent tn:focus:placeholder:text-muted" : "tn:placeholder:text-muted"}`}
             />
           </div>
         </motion.div>
       </div>
       {inside && (
-        <motion.div initial={false} animate={{ height: inside.error ? "auto" : 0 }} transition={shape} className="overflow-hidden">
+        <motion.div initial={false} animate={{ height: inside.error ? "auto" : 0 }} transition={shape} className="tn:overflow-hidden">
           <ErrorRow aria-hidden error={inside.error} />
         </motion.div>
       )}

@@ -17,7 +17,7 @@ export function Icon({ children, size = 16, className = "" }: IconProps) {
       strokeWidth={36 / size}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`block shrink-0 fill-none stroke-current ${className}`}
+      className={`tn:block tn:shrink-0 tn:fill-none tn:stroke-current ${className}`}
     >
       {children}
     </svg>

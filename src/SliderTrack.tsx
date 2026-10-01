@@ -85,11 +85,11 @@ function SliderKnobs({
   }
 
   return (
-    <div {...(!disabled && dragHandlers(drag, release))} className={`absolute inset-0 ${disabled ? "" : "cursor-pointer touch-none"}`}>
-      <motion.div style={style} className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control bg-paper shadow-control">
+    <div {...(!disabled && dragHandlers(drag, release))} className={`tn:absolute tn:inset-0 ${disabled ? "" : "tn:cursor-pointer tn:touch-none"}`}>
+      <motion.div style={style} className="tn:absolute tn:top-1/2 tn:left-0 tn:-translate-y-1/2 tn:overflow-hidden tn:rounded-control tn:bg-paper tn:shadow-control">
         <motion.div
           style={{ left: INSET + from * travel, right }}
-          className="absolute inset-y-1 rounded-control bg-ink"
+          className="tn:absolute tn:inset-y-1 tn:rounded-control tn:bg-ink"
         >
           {value.map((v, i) => (
             <div
@@ -109,9 +109,9 @@ function SliderKnobs({
               aria-valuenow={v}
               aria-valuetext={formatValue(v)}
               onKeyDown={disabled ? undefined : (event) => onKeyDown(event, i)}
-              className={`absolute top-1/2 ${range && i === 0 ? "left-1.5" : "right-1.5"} size-6 -translate-y-1/2 rounded-full bg-paper -outline-offset-6 focus-visible:outline-2 focus-visible:outline-focus`}
+              className={`tn:absolute tn:top-1/2 ${range && i === 0 ? "tn:left-1.5" : "tn:right-1.5"} tn:size-6 tn:-translate-y-1/2 tn:rounded-full tn:bg-paper tn:-outline-offset-6 tn:focus-visible:outline-2 tn:focus-visible:outline-focus`}
             >
-              {range && <span id={`${labelId}-${i}`} className="sr-only">{labels[i]}</span>}
+              {range && <span id={`${labelId}-${i}`} className="tn:sr-only">{labels[i]}</span>}
             </div>
           ))}
         </motion.div>
@@ -123,7 +123,7 @@ function SliderKnobs({
 export function SliderTrack({ className = "", ...props }: SliderTrackProps) {
   const [size, measure] = useSize();
   return (
-    <div ref={measure} className={`relative h-11 w-full ${props.disabled ? "opacity-40" : ""} ${className}`}>
+    <div ref={measure} className={`tn:relative tn:h-11 tn:w-full ${props.disabled ? "tn:opacity-40" : ""} ${className}`}>
       {size && <SliderKnobs {...props} width={size.width} />}
     </div>
   );

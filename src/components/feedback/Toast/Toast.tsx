@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
+import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { useWidth } from "../../../useWidth";
 import { Icon } from "../../data-display/Icon/Icon";
@@ -20,22 +21,19 @@ export function Toast({ status, children = "Link copied", className = "" }: Toas
       initial={false}
       animate={{ width }}
       transition={shape}
-      className={`grid h-11 place-content-center place-items-center overflow-hidden rounded-control bg-ink text-sm font-medium text-paper shadow-float ${className}`}
+      className={`tn:grid tn:h-11 tn:place-content-center tn:place-items-center tn:overflow-hidden tn:rounded-control tn:bg-ink tn:text-sm tn:font-medium tn:text-paper tn:shadow-float ${className}`}
     >
       <AnimatePresence initial={false}>
         <motion.span
           key={`${status} ${children}`}
           ref={measure}
           {...swap}
-          className="col-start-1 row-start-1 flex items-center gap-2 whitespace-nowrap px-5"
+          className="tn:col-start-1 tn:row-start-1 tn:flex tn:items-center tn:gap-2 tn:whitespace-nowrap tn:px-5"
         >
           {status === "loading" ? (
             <Spinner size={14} />
           ) : (
-            <Icon size={16}>
-              <circle cx="12" cy="12" r="12" className="fill-accent stroke-none" />
-              <path d="M7.125 12.375 10.5 15.75l6.375-6.75" className="stroke-on-accent" />
-            </Icon>
+            <Icon size={16}>{icons.success}</Icon>
           )}
           {children}
         </motion.span>

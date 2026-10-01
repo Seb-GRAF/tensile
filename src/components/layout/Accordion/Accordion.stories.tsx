@@ -48,27 +48,31 @@ const meta = {
     value: "offline",
     onValueChange: fn(),
   },
-} satisfies Meta<typeof Accordion>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-/** Click a question to open it (the open one closes) and again to close it, or Tab to a header, move with ArrowUp, ArrowDown, Home and End, and toggle with Enter or Space. */
-export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-[360px] max-w-full">
         <Accordion
           {...args}
-          onValueChange={(value) => {
-            args.onValueChange(value);
+          onValueChange={(value: string | null | string[]) => {
+            args.onValueChange?.(value as never);
             updateArgs({ value });
           }}
         />
       </div>
     );
   },
+} satisfies Meta<typeof Accordion>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** Click a question to open it (the open one closes) and again to close it, or Tab to a header, move with ArrowUp, ArrowDown, Home and End, and toggle with Enter or Space. */
+export const Default: Story = {};
+
+/** Open several questions at once: each header opens or closes only its own section. */
+export const Multiple: Story = {
+  args: { type: "multiple", value: ["offline", "plan"] },
 };
 
 export const Usage: Story = {

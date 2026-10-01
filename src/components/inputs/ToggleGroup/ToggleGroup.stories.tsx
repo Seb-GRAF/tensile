@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <ToggleGroup {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />;
+    return <ToggleGroup {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />;
   },
 };
 

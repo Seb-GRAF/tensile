@@ -1,12 +1,14 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect } from "react";
+import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
 import { Icon } from "../../data-display/Icon/Icon";
 import { Toggle } from "../Toggle/Toggle";
 
 export type ThemeToggleProps = {
-  value: "light" | "dark";
-  onValueChange: (value: "light" | "dark") => void;
+  value?: "light" | "dark";
+  defaultValue?: "light" | "dark";
+  onValueChange?: (value: "light" | "dark") => void;
   label?: string;
   name?: string;
   disabled?: boolean;
@@ -34,13 +36,15 @@ function glyph(morph: number) {
 }
 
 export function ThemeToggle({
-  value,
+  value: valueProp,
+  defaultValue = "light",
   onValueChange,
   label = "Dark mode",
   name,
   disabled = false,
   className = "",
 }: ThemeToggleProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const { shape, soft } = useSprings();
   const dark = value === "dark";
   const morph = useMotionValue(dark ? 1 : 0);
@@ -53,16 +57,17 @@ export function ThemeToggle({
   return (
     <Toggle
       checked={dark}
-      onCheckedChange={(checked) => onValueChange(checked ? "dark" : "light")}
+      onCheckedChange={(checked) => setValue(checked ? "dark" : "light")}
       label={label}
       name={name}
       disabled={disabled}
-      className={`[--color-accent:var(--color-paper)] before:absolute before:-inset-px before:bg-ink-3 before:transition-[clip-path] before:duration-[calc(400ms*var(--motion-duration-scale))] before:[clip-path:inset(50%_calc(100%-17px)_50%_17px_round_var(--radius-control))] has-checked:before:[clip-path:inset(0_round_var(--radius-control))] ${className}`}
+      className={`tn:[--tn-color-accent:var(--tn-color-paper)] tn:[--tn-color-on-accent:var(--tn-color-paper)] tn:before:absolute tn:before:-inset-px tn:before:bg-ink tn:before:transition-[clip-path] tn:before:duration-[calc(400ms*var(--tn-motion-duration-scale))] tn:before:[clip-path:inset(50%_calc(100%-17px)_50%_17px_round_var(--tn-radius-control))] tn:has-checked:before:[clip-path:inset(0_round_var(--tn-radius-control))] ${className}`}
     >
-      <motion.span aria-hidden initial={false} animate={{ opacity: dark ? 1 : 0 }} transition={soft} className="absolute inset-0 rounded-full inset-ring inset-ring-paper/20" />
-      <Icon>
-        <motion.path d={d} />
-      </Icon>
+      <motion.span initial={false} animate={{ color: dark ? "var(--tn-color-ink)" : "var(--tn-color-paper)" }} transition={soft}>
+        <Icon>
+          <motion.path d={d} />
+        </Icon>
+      </motion.span>
     </Toggle>
   );
 }

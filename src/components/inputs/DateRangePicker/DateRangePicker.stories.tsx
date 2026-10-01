@@ -18,7 +18,7 @@ function StatefulDateRangePicker(props: DateRangePickerProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -40,7 +40,7 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-68 max-w-full">
-        <StatefulDateRangePicker {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulDateRangePicker {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

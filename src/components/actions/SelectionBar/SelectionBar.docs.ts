@@ -10,7 +10,7 @@ export default {
     "Placement belongs to the caller; the example keeps it within the document list."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Select rows, act on the selection and clear it.", Demo: SelectionBarDemo, code: selectionBarDemoCode },
+    { id: "usage", title: "Basic usage", description: "Select rows to bring the bar in, act on the selection, and clear it to send the bar away.", Demo: SelectionBarDemo, code: selectionBarDemoCode },
   ],
   keyboard: [
     {
@@ -30,9 +30,9 @@ export default {
     "count": "The number of selected items; 0 hides the bar.",
     "onClear": "Clear the caller’s selected items.",
     "children": "The actions, e.g. ghost Buttons.",
-    "label": "Accessible name of the control or region.",
+    "label": "Accessible name of the group that holds the count and the actions.",
     "countLabel": "Format the selected count for display and announcement.",
     "clearLabel": "Accessible name of the clear button.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the bar, for placement, such as `fixed bottom-6 left-1/2 -translate-x-1/2`."
   },
 };

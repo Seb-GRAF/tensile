@@ -1,5 +1,6 @@
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { gzipSync } from "node:zlib";
 import ts from "typescript";
 
 const configFile = ts.readConfigFile("tsconfig.json", ts.sys.readFile);
@@ -19,18 +20,19 @@ const groups = {
 };
 const api = {};
 
-for (const statement of entry.statements) {
+for (const statement of entry.statements.filter((node) => node.moduleSpecifier.text.startsWith("./components/"))) {
   const name = statement.exportClause.elements[0].name.text;
   const path = resolve("src", `${statement.moduleSpecifier.text}.tsx`);
   const file = program.getSourceFile(path);
   const component = file.statements.find((node) => ts.isFunctionDeclaration(node) && node.name.text === name);
   const parameter = component.parameters[0];
+  const elements = ts.isObjectBindingPattern(parameter.name) ? parameter.name.elements : [];
   const defaults = Object.fromEntries(
-    parameter.name.elements
+    elements
       .filter((element) => element.initializer)
       .map((element) => [element.name.text, element.initializer.getText(file)]),
   );
-  const namedProps = parameter.name.elements.map((element) => element.name.text);
+  const namedProps = elements.map((element) => element.name.text);
   const docs = program.getSourceFile(path.replace(/\.tsx$/, ".docs.ts"));
   const descriptions = docs
     ? Object.fromEntries(
@@ -59,4 +61,8 @@ for (const statement of entry.statements) {
 }
 
 writeFileSync("site/docs/api.json", `${JSON.stringify(api, null, 2)}\n`);
+const { version, license } = JSON.parse(readFileSync("package.json", "utf8"));
+const gzip = (path) => gzipSync(readFileSync(path)).length;
+const stats = { version, license, components: Object.keys(api).length, gzip: { js: gzip("dist/index.js"), css: gzip("dist/styles.css") } };
+writeFileSync("site/docs/stats.json", `${JSON.stringify(stats, null, 2)}\n`);
 console.log(`Generated API references for ${Object.keys(api).length} components from TypeScript.`);

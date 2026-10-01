@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { addMonths, clampDay, isInRange, keyboardDay, monthDays, orderedRange, toDate, toDay } from "./calendar.ts";
+import { addMonths, clampDay, formatUSDate, isInRange, keyboardDay, monthDays, orderedRange, parseUSDate, toDate, toDay } from "./calendar.ts";
 
 test("ISO days use local calendar dates through leap day and year boundaries", () => {
   for (const day of ["2024-02-29", "2025-12-31", "2026-01-01"]) {
@@ -76,4 +76,23 @@ test("ranges order reverse picks and include both endpoints", () => {
   assert.equal(isInRange("2026-09-27", range), false);
   assert.equal(isInRange("2026-10-03", range), false);
   assert.deepEqual(orderedRange("2026-09-18", "2026-09-18"), { start: "2026-09-18", end: "2026-09-18" });
+});
+
+test("US dates format as MM/DD/YYYY and parse back with one-digit parts and common separators", () => {
+  assert.equal(formatUSDate("2026-03-04"), "03/04/2026");
+  assert.equal(parseUSDate(formatUSDate("2024-02-29")), "2024-02-29");
+  assert.equal(parseUSDate("3/4/2026"), "2026-03-04");
+  assert.equal(parseUSDate(" 12-31-2025 "), "2025-12-31");
+  assert.equal(parseUSDate("1.9.2026"), "2026-01-09");
+  assert.equal(parseUSDate("10 1 2026"), "2026-10-01");
+});
+
+test("US date parsing rejects days that don't exist and text that isn't a date", () => {
+  assert.equal(parseUSDate("02/29/2025"), null);
+  assert.equal(parseUSDate("13/01/2026"), null);
+  assert.equal(parseUSDate("04/31/2026"), null);
+  assert.equal(parseUSDate("3/4/26"), null);
+  assert.equal(parseUSDate("2026-03-04"), null);
+  assert.equal(parseUSDate("tomorrow"), null);
+  assert.equal(parseUSDate(""), null);
 });

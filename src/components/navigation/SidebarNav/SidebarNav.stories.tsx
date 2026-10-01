@@ -62,7 +62,7 @@ export const Default: Story = {
         <SidebarNav
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -106,7 +106,7 @@ export const WithLinks: Story = {
               {...args}
               items={meta.args.items.map((item, index) => ({ ...item, href: index < 4 ? `/${item.value}` : undefined }))}
               value={value}
-              onValueChange={(next) => { args.onValueChange(next); setValue(next); }}
+              onValueChange={(next) => { args.onValueChange?.(next); setValue(next); }}
             />
           </Card>
           <output className="text-label text-muted">{value} {path}</output>

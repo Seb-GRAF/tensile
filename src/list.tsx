@@ -23,8 +23,29 @@ export function filterByWords<T extends { label: string }>(items: T[], query: st
   });
 }
 
-/** Index of the highlighted row; arrows wrap, Home and End reach the first and last rows. */
-export function useActiveIndex(count: number) {
+/** A listbox option; a disabled one is skipped by the keyboard and can't be picked. */
+export type Option = { value: string; label: string; icon?: React.ReactNode; disabled?: boolean };
+
+/** Options, or groups of them under a heading. */
+export type Options = (Option | { label: string; options: Option[] })[];
+
+/** The options in order, the list row of each (a group's heading takes the row before its options) and the number of rows. */
+export function optionRows(entries: Options) {
+  const options: Option[] = [];
+  const rows: number[] = [];
+  let row = 0;
+  for (const entry of entries) {
+    if ("options" in entry) row++;
+    for (const option of "options" in entry ? entry.options : [entry]) {
+      options.push(option);
+      rows.push(row++);
+    }
+  }
+  return { options, rows, count: row };
+}
+
+/** Index of the highlighted row; arrows wrap, Home and End reach the first and last rows, passing over rows `disabled` returns true for. */
+export function useActiveIndex(count: number, disabled?: (index: number) => boolean) {
   const [active, setActive] = useState(0);
 
   function onArrowKey(event: React.KeyboardEvent) {
@@ -32,14 +53,22 @@ export function useActiveIndex(count: number) {
     const move = moves[event.key];
     if (!move && event.key !== "Home" && event.key !== "End") return;
     event.preventDefault();
-    setActive((a) => event.key === "Home" ? 0 : event.key === "End" ? count - 1 : (a + move + count) % count);
+    setActive((a) => {
+      const step = event.key === "Home" ? 1 : event.key === "End" ? -1 : move;
+      let next = event.key === "Home" ? 0 : event.key === "End" ? count - 1 : (a + move + count) % count;
+      for (let tries = 0; tries < count; tries++) {
+        if (!disabled?.(next)) return next;
+        next = (next + step + count) % count;
+      }
+      return a;
+    });
   }
 
   return [active, setActive, onArrowKey] as const;
 }
 
-/** Match typed label prefixes, starting after the active row; the prefix expires after 700 ms. */
-export function useTypeahead(items: { label: string }[], active: number, setActive: (index: number) => void) {
+/** Match typed label prefixes, starting after the active row and passing over rows `disabled` returns true for; the prefix expires after 700 ms. */
+export function useTypeahead(items: { label: string }[], active: number, setActive: (index: number) => void, disabled?: (index: number) => boolean) {
   const typed = useRef({ text: "", time: 0 });
   return (event: React.KeyboardEvent) => {
     if (event.key.length !== 1 || event.key === " " || event.ctrlKey || event.metaKey || event.altKey) return;
@@ -49,7 +78,7 @@ export function useTypeahead(items: { label: string }[], active: number, setActi
     const prefix = text.split("").every((letter) => letter === text[0]) ? text[0] : text;
     for (let offset = 1; offset <= items.length; offset++) {
       const index = (active + offset) % items.length;
-      if (items[index].label.toLowerCase().startsWith(prefix)) {
+      if (!disabled?.(index) && items[index].label.toLowerCase().startsWith(prefix)) {
         event.preventDefault();
         setActive(index);
         return;
@@ -62,5 +91,5 @@ export function useTypeahead(items: { label: string }[], active: number, setActi
 export function ListHighlight({ index }: { index: number }) {
   const [top, bottom] = useLiquid(index * ROW, -(index + 1) * ROW);
   const height = useTransform(() => -bottom.get() - top.get());
-  return <motion.li aria-hidden style={{ top, height }} className="absolute inset-x-0 rounded-[calc(var(--radius-overlay)/2)] bg-hover" />;
+  return <motion.li aria-hidden style={{ top, height }} className="tn:absolute tn:inset-x-0 tn:rounded-[calc(var(--tn-radius-overlay)/2)] tn:bg-hover" />;
 }

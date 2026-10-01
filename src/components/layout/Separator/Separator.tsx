@@ -8,7 +8,7 @@ export function Separator({ orientation = "horizontal", className = "", ...props
     <hr
       {...props}
       aria-orientation={orientation === "vertical" ? orientation : undefined}
-      className={`${orientation === "vertical" ? "h-auto w-px self-stretch" : "h-px"} border-0 bg-line ${className}`}
+      className={`${orientation === "vertical" ? "tn:h-auto tn:w-px tn:self-stretch" : "tn:h-px"} tn:border-0 tn:bg-line ${className}`}
     />
   );
 }

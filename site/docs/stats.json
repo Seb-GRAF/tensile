@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "components": 109,
+  "gzip": {
+    "js": 70693,
+    "css": 9003
+  }
+}

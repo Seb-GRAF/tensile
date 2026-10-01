@@ -20,7 +20,7 @@ export function MorphButtonExample() {
       >
         Save changes
       </MorphButton>
-      <p role="status" style={{ color: "var(--color-muted)", fontSize: 13 }}>
+      <p role="status" style={{ color: "var(--tn-color-muted)", fontSize: 13 }}>
         {status === "idle" ? "Try it. This saves no data." : status === "loading" ? "Simulating a request…" : "Saved. Ready to try again shortly."}
       </p>
     </div>

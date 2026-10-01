@@ -2,6 +2,7 @@ import { ComboboxDemo } from "./demos/ComboboxDemo";
 import { ComboboxEmptyDemo } from "./demos/ComboboxEmptyDemo";
 import { ComboboxDisabledDemo } from "./demos/ComboboxDisabledDemo";
 import { ComboboxFormDemo } from "./demos/ComboboxFormDemo";
+import { ComboboxGroupsDemo } from "./demos/ComboboxGroupsDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "../../actions/Button/Button";
@@ -44,7 +45,7 @@ export const Default: Story = {
         <Combobox
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -95,4 +96,9 @@ export const DisabledUsage: Story = {
 
 export const FormUsage: Story = {
   render: () => <ComboboxFormDemo />,
+};
+
+/** People under team headings; type "e" to filter, and see the groups close up. People on leave are dimmed, and the arrows pass over them. */
+export const GroupsUsage: Story = {
+  render: () => <div className="w-80"><ComboboxGroupsDemo /></div>,
 };

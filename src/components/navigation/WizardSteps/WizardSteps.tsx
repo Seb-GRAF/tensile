@@ -16,9 +16,9 @@ export type WizardStepsProps = {
 };
 
 const dotColors = {
-  done: { backgroundColor: "var(--color-accent)", color: "var(--color-on-accent)" },
-  current: { backgroundColor: "var(--color-ink)", color: "var(--color-paper)" },
-  upcoming: { backgroundColor: "var(--color-hover)", color: "var(--color-muted)" },
+  done: { backgroundColor: "var(--tn-color-accent)", color: "var(--tn-color-on-accent)" },
+  current: { backgroundColor: "var(--tn-color-ink)", color: "var(--tn-color-paper)" },
+  upcoming: { backgroundColor: "var(--tn-color-hover)", color: "var(--tn-color-muted)" },
 };
 
 export function WizardSteps({
@@ -32,9 +32,9 @@ export function WizardSteps({
   const { soft, draw, swap, scale } = useSprings();
   const arrive = { ...soft, delay: 0.4 * scale };
   return (
-    <div className={`relative ${className}`}>
-      <svg aria-hidden className="absolute top-[15px] h-0.5" style={{ left: `${50 / steps.length}%`, width: `${100 - 100 / steps.length}%` }} strokeWidth={2}>
-        <line x1={0} x2="100%" y1={1} y2={1} className="stroke-line" />
+    <div className={`tn:relative ${className}`}>
+      <svg aria-hidden className="tn:absolute tn:top-[15px] tn:h-0.5" style={{ left: `${50 / steps.length}%`, width: `${100 - 100 / steps.length}%` }} strokeWidth={2}>
+        <line x1={0} x2="100%" y1={1} y2={1} className="tn:stroke-line" />
         <motion.line
           x1={0}
           x2="100%"
@@ -43,32 +43,32 @@ export function WizardSteps({
           initial={false}
           animate={{ pathLength: value / (steps.length - 1) }}
           transition={draw}
-          className="stroke-ink"
+          className="tn:stroke-ink"
         />
       </svg>
-      <ol role="list" className="grid auto-cols-fr grid-flow-col">
+      <ol role="list" className="tn:grid tn:auto-cols-fr tn:grid-flow-col">
         {steps.map((step, i) => {
           const state = i < value ? "done" : i === value ? "current" : "upcoming";
           return (
             <li
               key={step.label}
               aria-current={state === "current" ? "step" : undefined}
-              className="flex min-w-0 flex-col items-center gap-2"
+              className="tn:flex tn:min-w-0 tn:flex-col tn:items-center tn:gap-2"
             >
               <motion.span
                 aria-hidden
                 initial={false}
                 animate={dotColors[state]}
                 transition={state === "current" ? arrive : soft}
-                className="relative grid size-8 place-content-center place-items-center rounded-full"
+                className="tn:relative tn:grid tn:size-8 tn:place-content-center tn:place-items-center tn:rounded-full"
               >
                 <AnimatePresence initial={false}>
                   {state === "done" ? (
-                    <motion.span key="done" {...swap} className="col-start-1 row-start-1">
+                    <motion.span key="done" {...swap} className="tn:col-start-1 tn:row-start-1">
                       <Check size={16} />
                     </motion.span>
                   ) : (
-                    <motion.span key="icon" {...swap} className="col-start-1 row-start-1 grid">
+                    <motion.span key="icon" {...swap} className="tn:col-start-1 tn:row-start-1 tn:grid">
                       {step.icon}
                     </motion.span>
                   )}
@@ -76,13 +76,13 @@ export function WizardSteps({
               </motion.span>
               <motion.span
                 initial={false}
-                animate={{ color: state === "current" ? "var(--color-ink)" : "var(--color-muted)" }}
+                animate={{ color: state === "current" ? "var(--tn-color-ink)" : "var(--tn-color-muted)" }}
                 transition={state === "current" ? arrive : soft}
-                className="max-w-full truncate px-2 text-label font-medium"
+                className="tn:max-w-full tn:truncate tn:px-2 tn:text-label tn:font-medium"
               >
                 {step.label}
               </motion.span>
-              <span className="sr-only">{{ done: doneLabel, current: currentLabel, upcoming: upcomingLabel }[state]}</span>
+              <span className="tn:sr-only">{{ done: doneLabel, current: currentLabel, upcoming: upcomingLabel }[state]}</span>
             </li>
           );
         })}

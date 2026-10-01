@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSprings } from "../src/springs";
+import { useSprings } from "tensile";
 
 type Spring = { x: number; v: number; target: number; k: number; c: number };
 
