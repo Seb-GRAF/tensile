@@ -17,6 +17,8 @@
   {"press": "Shift+Tab"},
   {"attr": ":focus", "name": "aria-label", "equals": "Email"},
   {"type": "ada@example.com"},
+  {"css": "dialog [data-autofocus] > [aria-hidden=true]", "name": "opacity", "equals": "0"},
+  {"css": "dialog [data-autofocus] > div:not([aria-hidden])", "name": "filter", "equals": "blur(0px)"},
   {"a11y": true},
   {"press": "Escape"},
   {"hidden": "dialog[open]"},
