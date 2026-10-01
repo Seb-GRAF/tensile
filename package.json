@@ -1,6 +1,6 @@
 {
   "name": "tensile",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React components where each control is one shape that moves with its state. Accessible, and they work in forms.",
   "license": "MIT",
   "type": "module",
