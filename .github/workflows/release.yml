@@ -30,10 +30,10 @@ jobs:
       mode: ${{ steps.mode.outputs.mode }}
       package: ${{ steps.pack.outputs.pack-dir-artifact-id }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -55,7 +55,7 @@ jobs:
           publish-plan-artifact-id: ${{ steps.mode.outputs.publish-plan-artifact-id }}
         env:
           npm_config_ignore_scripts: true
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: steps.mode.outputs.mode == 'publish'
         with:
           artifact-ids: ${{ steps.pack.outputs.pack-dir-artifact-id }}
@@ -71,7 +71,7 @@ jobs:
           export TENSILE_TARBALL="$PWD/release-artifacts/packages/tensile-$(node -p 'require("./package.json").version').tgz"
           tar -tzf "$TENSILE_TARBALL"
           npm run check
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: release-keyboard-failures
@@ -88,8 +88,8 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -115,8 +115,8 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -134,7 +134,7 @@ jobs:
           echo "TENSILE_TARBALL=$RUNNER_TEMP/tensile-$(node -p 'require("./package.json").version').tgz" >> "$GITHUB_ENV"
       - run: npm run check
       - run: npm publish "$TENSILE_TARBALL" --tag next --access public --ignore-scripts
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: next-keyboard-failures
