@@ -23,6 +23,6 @@
   {"wait": 300},
   {"text": ":focus", "equals": "19"},
   {"attr": ":focus", "name": "aria-selected", "equals": "true"},
-  {"text": "[role=gridcell][aria-selected=true]", "equals": "19"},
+  {"text": "[role=gridcell][aria-selected=true]:not([inert] *)", "equals": "19"},
   {"shot": "picked"}
 ]

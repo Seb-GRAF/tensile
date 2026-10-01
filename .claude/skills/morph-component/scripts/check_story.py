@@ -133,6 +133,8 @@ def run(page, steps, out):
                 else:
                     print(f"step {i} {what} = {json.dumps(value)}")
             elif "visible" in step or "hidden" in step:
+                state = "visible" if "visible" in step else "hidden"
+                find(page, step[state]).wait_for(state=state)
                 value, what = read(page, step)
                 failures += check(i, what, value, True)
             else:
