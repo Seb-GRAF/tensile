@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
 import { createContext, useContext, useId } from "react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { Icon } from "../../data-display/Icon/Icon";
 
@@ -72,7 +71,7 @@ export function ErrorRow({ id, error, "aria-hidden": hidden }: { id?: string; er
               {...swap}
               className="tn:col-start-1 tn:row-start-1 tn:flex tn:origin-left tn:items-center tn:gap-2 tn:px-5 tn:py-2.5 tn:text-label tn:text-ink"
             >
-              <Icon size={14}>{icons.alert}</Icon>
+              <Icon name="alert" size={14} />
               {error}
             </motion.p>
           )}
@@ -135,9 +134,7 @@ export function Field({
                 {...swap}
                 className="tn:col-start-1 tn:row-start-1 tn:mt-1.5 tn:flex tn:origin-left tn:gap-2 tn:text-label tn:text-ink"
               >
-                <Icon size={14} className="tn:mt-0.75">
-                  {icons.alert}
-                </Icon>
+                <Icon name="alert" size={14} className="tn:mt-0.75" />
                 {error}
               </motion.p>
             )}

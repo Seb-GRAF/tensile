@@ -60,7 +60,7 @@ export function Toggle({
         initial={false}
         animate={{ backgroundColor: checked ? "var(--tn-color-on-accent)" : "var(--tn-color-ink)" }}
         transition={soft}
-        className="tn:pointer-events-none tn:absolute tn:inset-y-[3px] tn:grid tn:place-items-center tn:rounded-full tn:text-paper"
+        className="tn:pointer-events-none tn:absolute tn:inset-y-[3px] tn:grid tn:place-items-center tn:rounded-[calc(var(--tn-radius-control)-3px)] tn:text-paper"
       >
         {children}
       </motion.span>

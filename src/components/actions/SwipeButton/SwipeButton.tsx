@@ -63,7 +63,7 @@ function SwipeTrack({ confirmed, onConfirm, label, confirmedLabel, width }: Swip
           <motion.span
             key="label"
             {...swap}
-            className="tn:absolute tn:inset-y-0 tn:right-0 tn:left-10 tn:grid tn:place-items-center tn:text-body tn:font-medium tn:whitespace-nowrap tn:text-muted"
+            className="tn:absolute tn:inset-0 tn:grid tn:place-items-center tn:text-body tn:font-medium tn:whitespace-nowrap tn:text-muted"
           >
             {label}
           </motion.span>
@@ -75,28 +75,13 @@ function SwipeTrack({ confirmed, onConfirm, label, confirmedLabel, width }: Swip
         className="tn:absolute tn:inset-y-1 tn:left-1 tn:cursor-grab tn:touch-none tn:overflow-hidden tn:rounded-control"
       >
         <motion.span style={{ opacity: trail }} className="tn:absolute tn:inset-y-0 tn:right-4.5 tn:left-0 tn:bg-accent" />
-        <AnimatePresence initial={false}>
-          {!confirmed && (
-            <motion.span
-              key="label"
-              aria-hidden
-              {...swap}
-              style={{ width: width - INSET - KNOB }}
-              className="tn:absolute tn:inset-y-0 tn:left-9 tn:grid tn:place-items-center tn:text-body tn:font-medium tn:whitespace-nowrap tn:text-on-accent"
-            >
-              {label}
-            </motion.span>
-          )}
-        </AnimatePresence>
         <span className="tn:absolute tn:inset-y-0 tn:right-0 tn:grid tn:w-9 tn:place-content-center tn:place-items-center tn:rounded-control tn:bg-ink tn:text-paper">
           <AnimatePresence initial={false}>
             <motion.span key={confirmed ? "check" : "arrow"} {...swap} className="tn:col-start-1 tn:row-start-1">
               {confirmed ? (
                 <Check size={18} />
               ) : (
-                <Icon size={16}>
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </Icon>
+                <Icon name="arrowRight" size={16} />
               )}
             </motion.span>
           </AnimatePresence>
@@ -107,7 +92,7 @@ function SwipeTrack({ confirmed, onConfirm, label, confirmedLabel, width }: Swip
           <motion.span
             key="confirmed"
             {...swap}
-            className="tn:absolute tn:inset-y-0 tn:right-10 tn:left-0 tn:grid tn:place-items-center tn:text-body tn:font-medium tn:whitespace-nowrap tn:text-on-accent"
+            className="tn:absolute tn:inset-0 tn:grid tn:place-items-center tn:text-body tn:font-medium tn:whitespace-nowrap tn:text-on-accent"
           >
             {confirmedLabel}
           </motion.span>

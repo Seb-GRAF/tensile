@@ -14,6 +14,7 @@ export { Card, type CardProps } from "./components/layout/Card/Card";
 export { Carousel, type CarouselProps } from "./components/media/Carousel/Carousel";
 export { Checkbox, type CheckboxProps } from "./components/inputs/Checkbox/Checkbox";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/inputs/CheckboxGroup/CheckboxGroup";
+export { CodeBlock, type CodeBlockProps } from "./components/data-display/CodeBlock/CodeBlock";
 export { CollapsibleSidebar, type CollapsibleSidebarProps } from "./components/navigation/CollapsibleSidebar/CollapsibleSidebar";
 export { ColorPicker, type ColorPickerProps } from "./components/inputs/ColorPicker/ColorPicker";
 export { ColorSwatches, type ColorSwatchesProps } from "./components/inputs/ColorSwatches/ColorSwatches";
@@ -71,7 +72,6 @@ export { RadioGroup, type RadioGroupProps } from "./components/inputs/RadioGroup
 export { RangeSlider, type RangeSliderProps } from "./components/inputs/RangeSlider/RangeSlider";
 export { Rating, type RatingProps } from "./components/inputs/Rating/Rating";
 export { SearchField, type SearchFieldProps } from "./components/inputs/SearchField/SearchField";
-export { SegmentedTabs, type SegmentedTabsProps } from "./components/navigation/SegmentedTabs/SegmentedTabs";
 export { Select, type SelectProps } from "./components/inputs/Select/Select";
 export { SelectionBar, type SelectionBarProps } from "./components/actions/SelectionBar/SelectionBar";
 export { Separator, type SeparatorProps } from "./components/layout/Separator/Separator";
@@ -85,6 +85,7 @@ export { StatusBadge, type StatusBadgeProps } from "./components/feedback/Status
 export { SwipeButton, type SwipeButtonProps } from "./components/actions/SwipeButton/SwipeButton";
 export { TabBar, type TabBarProps } from "./components/navigation/TabBar/TabBar";
 export { Table, type TableProps, type TableSort } from "./components/data-display/Table/Table";
+export { TableOfContents, type TableOfContentsProps } from "./components/navigation/TableOfContents/TableOfContents";
 export { Tabs, type TabsProps } from "./components/navigation/Tabs/Tabs";
 export { Tag, type TagProps } from "./components/data-display/Tag/Tag";
 export { TagInput, type TagInputProps } from "./components/inputs/TagInput/TagInput";
@@ -102,12 +103,11 @@ export { ToggleGroup, type ToggleGroupProps } from "./components/inputs/ToggleGr
 export { Toolbar, type ToolbarProps } from "./components/actions/Toolbar/Toolbar";
 export { Tooltip, type TooltipProps } from "./components/overlays/Tooltip/Tooltip";
 export { TreeView, type TreeViewProps } from "./components/data-display/TreeView/TreeView";
-export { UnderlineTabs, type UnderlineTabsProps } from "./components/navigation/UnderlineTabs/UnderlineTabs";
 export { VideoControls, type VideoControlsProps } from "./components/media/VideoControls/VideoControls";
 export { VolumeSlider, type VolumeSliderProps } from "./components/media/VolumeSlider/VolumeSlider";
 export { WaveformScrubber, type WaveformScrubberProps } from "./components/media/WaveformScrubber/WaveformScrubber";
 export { WizardSteps, type WizardStepsProps } from "./components/navigation/WizardSteps/WizardSteps";
-export { icons } from "./icons";
+export type { IconName } from "./icons";
 export { useSprings } from "./springs";
 export { useSize } from "./useSize";
 export { useWidth } from "./useWidth";

@@ -1,6 +1,7 @@
 import { DateFieldDemo } from "./demos/DateFieldDemo";
 import { DateFieldBoundsDemo } from "./demos/DateFieldBoundsDemo";
 import { DateFieldFormDemo } from "./demos/DateFieldFormDemo";
+import { DateFieldFormatDemo } from "./demos/DateFieldFormatDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -75,6 +76,10 @@ export const Usage: Story = {
 
 export const BoundsUsage: Story = {
   render: () => <DateFieldBoundsDemo />,
+};
+
+export const FormatUsage: Story = {
+  render: () => <DateFieldFormatDemo />,
 };
 
 export const FormUsage: Story = {

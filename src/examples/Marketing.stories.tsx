@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useId, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { action } from "storybook/actions";
 import {
@@ -17,9 +17,9 @@ import {
   LinkProvider,
   NumberTicker,
   ProgressBar,
-  SegmentedTabs,
   StatTile,
   StatusBadge,
+  ToggleGroup,
 } from "../index";
 
 const sections = [
@@ -42,62 +42,34 @@ const features = [
   {
     title: "Boards, lists and timelines",
     line: "Switch any project between views without losing a comment or a due date.",
-    icon: (
-      <>
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M9 3v18M15 3v18" />
-      </>
-    ),
+    icon: "columns",
   },
   {
     title: "Workload at a glance",
     line: "See who has room this week before you assign the next task.",
-    icon: (
-      <>
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </>
-    ),
+    icon: "users",
   },
   {
     title: "Automations",
     line: "Move tasks, ping owners and update statuses when work changes hands.",
-    icon: <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" />,
+    icon: "zap",
   },
   {
     title: "Docs beside the work",
     line: "Keep specs, notes and decisions next to the tasks they belong to.",
-    icon: (
-      <>
-        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-        <path d="M10 9H8M16 13H8M16 17H8" />
-      </>
-    ),
+    icon: "fileText",
   },
   {
     title: "Weekly reports",
     line: "A summary of what actually shipped lands in every inbox on Friday.",
-    icon: (
-      <>
-        <path d="M3 3v16a2 2 0 0 0 2 2h16" />
-        <path d="M18 17V9M13 17V5M8 17v-3" />
-      </>
-    ),
+    icon: "chart",
   },
   {
     title: "Integrations",
     line: "Connect GitHub, Slack, Figma and 40 more tools in a few clicks.",
-    icon: (
-      <>
-        <path d="M12 22v-5M9 8V2M15 8V2" />
-        <path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" />
-      </>
-    ),
+    icon: "plug",
   },
-];
+] as const;
 
 const periods = [
   { value: "monthly", label: "Monthly" },
@@ -220,11 +192,7 @@ const footerGroups = [
 
 const brand = (
   <span className="flex items-center gap-2 text-body font-semibold text-ink">
-    <Icon size={20}>
-      <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-      <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-      <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-    </Icon>
+    <Icon name="waves" size={20} />
     Harbor
   </span>
 );
@@ -270,7 +238,7 @@ function FeaturesSection() {
         {features.map((feature) => (
           <li key={feature.title}>
             <Card className="h-full p-6">
-              <Icon size={24}>{feature.icon}</Icon>
+              <Icon name={feature.icon} size={24} />
               <h3 className="mt-6 text-body font-semibold">{feature.title}</h3>
               <p className="mt-1 text-label text-muted">{feature.line}</p>
             </Card>
@@ -283,18 +251,16 @@ function FeaturesSection() {
 
 function PricingSection() {
   const [period, setPeriod] = useState("monthly");
-  const id = useId();
-  const index = periods.findIndex((option) => option.value === period);
 
   return (
     <section id="pricing" className="mx-auto max-w-page scroll-mt-20 px-6 py-12 text-ink md:py-16">
       <h2 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">Pay for editors. Viewers are free.</h2>
       <p className="mt-3 max-w-xl text-base text-muted">Every plan includes unlimited projects and a 14-day free trial.</p>
       <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2">
-        <SegmentedTabs id={id} options={periods} value={period} onValueChange={setPeriod} label="Billing period" />
+        <ToggleGroup type="single" options={periods} value={period} onValueChange={setPeriod} label="Billing period" />
         <p className="text-label text-muted">Yearly billing saves 20%.</p>
       </div>
-      <div id={`${id}-${index}-panel`} role="tabpanel" aria-labelledby={`${id}-${index}`} className="mt-8 grid gap-4 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 md:grid-cols-3">
         {plans.map((plan) => {
           return (
             <Card key={plan.name} tone={plan.popular ? "ink" : "paper"} className="flex flex-col p-6">
@@ -312,9 +278,7 @@ function PricingSection() {
               <ul role="list" className="mt-6 mb-8 grid gap-2.5 text-label">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex gap-2">
-                    <Icon size={16} className={`mt-0.5 ${plan.popular ? "text-accent" : ""}`}>
-                      <path d="M20 6 9 17l-5-5" />
-                    </Icon>
+                    <Icon name="check" size={16} className={`mt-0.5 ${plan.popular ? "text-accent" : ""}`} />
                     {feature}
                   </li>
                 ))}
@@ -427,7 +391,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Tab through the page: Enter on a header link scrolls to its section, the arrows switch the billing period and move between questions, Enter or Space opens one, and the signup form checks the email. Below 768 px the menu button opens the links in a drawer. */
+/** Tab through the page: Enter on a header link scrolls to its section, Space picks the billing period, the arrows move between questions, Enter or Space opens one, and the signup form checks the email. Below 768 px the menu button opens the links in a drawer. */
 export const Page: Story = {
   render: () => (
     <LinkProvider navigate={action("navigate")}>

@@ -104,10 +104,7 @@ export function CompareSlider({
         style={{ left: `${value * 100}%`, x: stretch }}
         className="tn:absolute tn:top-1/2 tn:grid tn:-translate-x-1/2 tn:-translate-y-1/2 tn:place-items-center tn:rounded-full tn:bg-paper tn:text-ink tn:shadow-control tn:outline-none"
       >
-        <Icon size={16}>
-          <path d="m9 7-5 5 5 5" />
-          <path d="m15 7 5 5-5 5" />
-        </Icon>
+        <Icon name="chevronsLeftRight" size={16} />
       </motion.div>
     </div>
   );

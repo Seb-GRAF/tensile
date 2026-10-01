@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { useControllable } from "../../../controllable";
-import { icons } from "../../../icons";
 import { useFocusSource } from "../../../focus";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
@@ -62,7 +61,7 @@ export function SearchField({
           transition={soft}
           className="tn:absolute tn:top-3.5 tn:left-3.5"
         >
-          <Icon>{icons.search}</Icon>
+          <Icon name="search" />
         </motion.span>
         <AnimatePresence initial={false}>
           {open && (
@@ -91,15 +90,14 @@ export function SearchField({
             >
               <IconButton
                 label={clearLabel}
+                icon="close"
                 variant="ghost"
                 size="sm"
                 onClick={() => {
                   setValue("");
                   input.current!.focus();
                 }}
-              >
-                <Icon>{icons.close}</Icon>
-              </IconButton>
+              />
             </motion.span>
           )}
         </AnimatePresence>

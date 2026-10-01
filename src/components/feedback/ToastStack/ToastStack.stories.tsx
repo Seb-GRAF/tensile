@@ -7,12 +7,7 @@ import { Icon } from "../../data-display/Icon/Icon";
 import { ToastStack, type ToastStackProps } from "./ToastStack";
 
 function Done() {
-  return (
-    <Icon size={16}>
-      <circle cx="12" cy="12" r="12" className="fill-accent stroke-none" />
-      <path d="M7.125 12.375 10.5 15.75l6.375-6.75" className="stroke-on-accent" />
-    </Icon>
-  );
+  return <Icon name="success" size={16} />;
 }
 
 const messages = ["Photo uploaded", "Reminder set", "Playlist shared", "Draft saved", "Password changed"];

@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { SidebarNav } from "../SidebarNav/SidebarNav";
 
 export type CollapsibleSidebarProps = {
@@ -13,9 +12,9 @@ export type CollapsibleSidebarProps = {
   expanded?: boolean;
   defaultExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
-  /** At the top, e.g. the brand; clipped to the rail while collapsed. */
+  /** At the top, e.g. the brand; laid out at the expanded width, so the rail clips it to its first 32 px. */
   leading?: React.ReactNode;
-  /** At the bottom, above the collapse button, e.g. the account; clipped to the rail while collapsed. */
+  /** At the bottom, above the collapse button, e.g. the account; laid out at the expanded width, so the rail clips it to its first 32 px. */
   trailing?: React.ReactNode;
   label?: string;
   expandLabel?: string;
@@ -55,23 +54,19 @@ export function CollapsibleSidebar({
         label={label}
         collapsed={!expanded}
         className="tn:h-full"
-        leading={leading}
+        leading={leading && <div className="tn:w-48">{leading}</div>}
         trailing={
           <>
-            {trailing}
+            {trailing && <div className="tn:w-48">{trailing}</div>}
             <IconButton
               size="sm"
               variant="ghost"
               className="tn:text-muted"
               label={expanded ? collapseLabel : expandLabel}
+              icon="sidebar"
               aria-expanded={expanded}
               onClick={() => setExpanded(!expanded)}
-            >
-              <Icon size={16}>
-                <rect width="18" height="18" x="3" y="3" rx="2" />
-                <path d="M9 3v18" />
-              </Icon>
-            </IconButton>
+            />
           </>
         }
       />

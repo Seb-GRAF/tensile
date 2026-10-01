@@ -1,7 +1,6 @@
 import { AnimatePresence, motion, useMotionTemplate } from "motion/react";
 import { useControllable } from "../../../controllable";
 import { useSprings, useLiquid } from "../../../springs";
-import { icons } from "../../../icons";
 import { IconButton } from "../../actions/IconButton/IconButton";
 import { Icon } from "../../data-display/Icon/Icon";
 import { useLinkClick } from "../Link/Link";
@@ -38,11 +37,7 @@ function slotItems(count: number, page: number, slots: number): (number | "gap")
 }
 
 function Ellipsis() {
-  return (
-    <Icon size={16}>
-      <path d="M5 12h.01M12 12h.01M19 12h.01" />
-    </Icon>
-  );
+  return <Icon name="more" size={16} />;
 }
 
 export function Pagination({
@@ -76,11 +71,10 @@ export function Pagination({
         size="sm"
         variant="ghost"
         label={previousLabel}
+        icon="chevronLeft"
         disabled={value === 1}
         onClick={() => setValue(value - 1)}
-      >
-        <Icon size={16}>{icons.chevronLeft}</Icon>
-      </IconButton>
+      />
       <div className="tn:relative tn:grid tn:auto-cols-[32px] tn:grid-flow-col tn:text-label tn:font-medium">
         {items.map((item, i) => {
           const props = item === "gap" ? undefined : {
@@ -141,11 +135,10 @@ export function Pagination({
         size="sm"
         variant="ghost"
         label={nextLabel}
+        icon="chevronRight"
         disabled={value === count}
         onClick={() => setValue(value + 1)}
-      >
-        <Icon size={16}>{icons.chevronRight}</Icon>
-      </IconButton>
+      />
     </nav>
   );
 }

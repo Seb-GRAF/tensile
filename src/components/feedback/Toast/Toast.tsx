@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "motion/react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { useWidth } from "../../../useWidth";
 import { Icon } from "../../data-display/Icon/Icon";
@@ -33,7 +32,7 @@ export function Toast({ status, children = "Link copied", className = "" }: Toas
           {status === "loading" ? (
             <Spinner size={14} />
           ) : (
-            <Icon size={16}>{icons.success}</Icon>
+            <Icon name="success" size={16} />
           )}
           {children}
         </motion.span>

@@ -13,7 +13,7 @@ const meta = {
   args: {
     title: "No playlists yet",
     description: "Create a playlist to keep your favorite tracks together.",
-    icon: <Icon size={24}><path d="M9 18V5l12-2v13M9 9l12-2" /><ellipse cx="6" cy="18" rx="3" ry="2" /><ellipse cx="18" cy="16" rx="3" ry="2" /></Icon>,
+    icon: <Icon name="music" size={24} />,
     action: <Button>Create playlist</Button>,
   },
   render: (args) => <Card className="w-96 max-w-[calc(100vw-2rem)]"><EmptyState {...args} /></Card>,

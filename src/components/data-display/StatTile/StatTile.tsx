@@ -38,7 +38,7 @@ export function StatTile({
   const content = (
     <>
       <motion.span initial={false} animate={{ rotate: up ? 0 : 90 }} transition={shape}>
-        <Icon size={14}><path d="M7 17 17 7M7 7h10v10" /></Icon>
+        <Icon name="arrowUpRight" size={14} />
       </motion.span>
       <motion.span initial={false} animate={{ width }} transition={shape} className="tn:grid tn:justify-items-start tn:overflow-x-clip">
         <AnimatePresence initial={false}>

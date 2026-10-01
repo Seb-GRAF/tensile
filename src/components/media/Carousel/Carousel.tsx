@@ -2,10 +2,8 @@ import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useControllable } from "../../../controllable";
 import { dragHandlers, rubber } from "../../../drag";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { PageDots } from "../../navigation/PageDots/PageDots";
 
 export type CarouselProps = {
@@ -20,7 +18,7 @@ export type CarouselProps = {
   align?: "center" | "start";
   /** "visible" keeps the slides past the carousel's edges visible; the page is expected to clip them. */
   overflow?: "clip" | "visible";
-  /** "center": one pill below, arrows around the dots; "end": the pill at the end of the row below, dots before the arrows; "sides": arrows over the current slide's edges, dots in the pill below. */
+  /** "center": one pill below, arrows around the dots; "end": the pill at the end of the row below, dots before the arrows; "sides": arrows over the carousel's left and right edges, dots in the pill below. */
   controls?: "center" | "end" | "sides";
   label?: string;
   previousLabel?: string;
@@ -126,14 +124,10 @@ export function Carousel({
 
   const handlers = dragHandlers(drag, release);
   const previousButton = (
-    <IconButton label={previousLabel} variant={controls === "sides" ? "secondary" : "ghost"} size="sm" disabled={value === 0} onClick={() => moveTo(value - 1)}>
-      <Icon>{icons.chevronLeft}</Icon>
-    </IconButton>
+    <IconButton label={previousLabel} variant={controls === "sides" ? "secondary" : "ghost"} size="sm" disabled={value === 0} onClick={() => moveTo(value - 1)} icon="chevronLeft" />
   );
   const nextButton = (
-    <IconButton label={nextLabel} variant={controls === "sides" ? "secondary" : "ghost"} size="sm" disabled={value === last} onClick={() => moveTo(value + 1)}>
-      <Icon>{icons.chevronRight}</Icon>
-    </IconButton>
+    <IconButton label={nextLabel} variant={controls === "sides" ? "secondary" : "ghost"} size="sm" disabled={value === last} onClick={() => moveTo(value + 1)} icon="chevronRight" />
   );
   const dots = <PageDots count={slides.length} value={value} onValueChange={setValue} label={label} pageLabel={slideLabel} />;
   return (
@@ -171,15 +165,14 @@ export function Carousel({
         </div>
         <div
           style={{ left: `calc(${left})`, width: slideWidth }}
-          className="tn:pointer-events-none tn:absolute tn:inset-y-0 tn:flex tn:items-center tn:justify-between tn:rounded-card tn:px-3 tn:outline-offset-2 tn:group-focus-visible:outline-2 tn:group-focus-visible:outline-focus tn:*:pointer-events-auto"
-        >
-          {controls === "sides" && (
-            <>
-              {previousButton}
-              {nextButton}
-            </>
-          )}
-        </div>
+          className="tn:pointer-events-none tn:absolute tn:inset-y-0 tn:rounded-card tn:outline-offset-2 tn:group-focus-visible:outline-2 tn:group-focus-visible:outline-focus"
+        />
+        {controls === "sides" && (
+          <div className="tn:pointer-events-none tn:absolute tn:inset-0 tn:flex tn:items-center tn:justify-between tn:px-3 tn:*:pointer-events-auto">
+            {previousButton}
+            {nextButton}
+          </div>
+        )}
       </div>
       {controls === "center" && (
         <div className="tn:relative tn:mx-auto tn:mt-3 tn:flex tn:w-fit tn:rounded-control tn:bg-paper tn:p-1 tn:shadow-control">

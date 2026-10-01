@@ -5,9 +5,7 @@ export function TagIconDemo() {
     <Tag
       label="Design"
       icon={
-        <Icon size={14}>
-          <path d="m4 16 12-12 4 4L8 20H4Z" />
-        </Icon>
+        <Icon name="pencil" size={14} />
       }
     />
   );

@@ -31,7 +31,7 @@ Read the component named in your brief, in full, and its story. Copy its shape: 
 
 - Controlled value plus callback; temporary UI state (hover, highlight, drag) inside.
 - Transitions from `useSprings()`; delays times `scale`; press feedback with the `press` class; functional timers left alone.
-- Token utilities for color, type, radius, focus and layers; `Icon` and `icons` for icons.
+- Token utilities for color, type, radius, focus and layers; `<Icon name="…" />` for icons, adding a missing shape to the set in `src/icons.tsx`.
 - No hardcoded user-facing text. Text with data in it is a function prop.
 - Full width where the component is a field, track, table, chart or card; `className` on the outer element.
 - Right ARIA role, full keyboard support, focus ring `outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus`.

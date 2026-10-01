@@ -3,7 +3,6 @@ import { useEffect, useId, useRef, useState } from "react";
 import { filterByWords, ListHighlight, scrollToRow, ROW, useActiveIndex } from "../../../list";
 import { useSprings } from "../../../springs";
 import { useFocusSource } from "../../../focus";
-import { icons } from "../../../icons";
 import { Icon } from "../../data-display/Icon/Icon";
 import { Kbd } from "../../data-display/Kbd/Kbd";
 
@@ -90,7 +89,7 @@ export function CommandPalette({
       className={`tn:overflow-hidden tn:bg-paper tn:shadow-control tn:outline-offset-2 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${className}`}
     >
       <label className="tn:flex tn:h-11 tn:cursor-text tn:items-center tn:gap-2.5 tn:px-4">
-        <Icon className="tn:shrink-0 tn:text-muted">{icons.search}</Icon>
+        <Icon name="search" className="tn:shrink-0 tn:text-muted" />
         <input
           ref={input}
           role="combobox"
@@ -111,7 +110,7 @@ export function CommandPalette({
           className="tn:h-full tn:min-w-0 tn:grow tn:bg-transparent tn:text-body tn:text-ink tn:outline-none tn:placeholder:text-muted"
         />
         <Kbd className="tn:pointer-coarse:hidden">
-          <Icon size={12}><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" /></Icon>K
+          <Icon name="command" size={12} />K
         </Kbd>
       </label>
       <div inert={!open}>
@@ -136,12 +135,7 @@ export function CommandPalette({
               >
                 {command.icon && <span className="tn:text-muted">{command.icon}</span>}
                 <span className="tn:truncate">{command.label}</span>
-                {i === active && (
-                  <Icon size={14} className="tn:ml-auto tn:shrink-0 tn:text-muted">
-                    <path d="m9 10-5 5 5 5" />
-                    <path d="M20 4v7a4 4 0 0 1-4 4H4" />
-                  </Icon>
-                )}
+                {i === active && <Icon name="enter" size={14} className="tn:ml-auto tn:shrink-0 tn:text-muted" />}
               </motion.li>
             ))}
           </AnimatePresence>

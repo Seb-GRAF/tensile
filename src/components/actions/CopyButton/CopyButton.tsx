@@ -53,10 +53,7 @@ export function CopyButton({ value, label = "Copy", copiedLabel = "Copied", clas
             </motion.span>
           ) : (
             <motion.span key="idle" {...swap} className="tn:col-start-1 tn:row-start-1">
-              <Icon size={18}>
-                <rect x="8" y="8" width="13" height="13" rx="2.5" />
-                <path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8" />
-              </Icon>
+              <Icon name="copy" size={18} />
             </motion.span>
           )}
         </AnimatePresence>

@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId } from "react";
 import { useControllable } from "../../../controllable";
-import { icons } from "../../../icons";
 import type { MenuAction } from "../../../Menu";
 import { useSprings } from "../../../springs";
 import { ActionMenu } from "../../actions/ActionMenu/ActionMenu";
@@ -125,15 +124,12 @@ export function DataTable<Row>({
                 {sorted ? (
                   <motion.span key="sorted" {...swap} className="tn:col-start-1 tn:row-start-1">
                     <motion.span initial={false} animate={{ rotate: sort.direction === "descending" ? 180 : 0 }} transition={shape} className="tn:block">
-                      <Icon size={14}>
-                        <path d="M12 19V5" />
-                        <path d="m5 12 7-7 7 7" />
-                      </Icon>
+                      <Icon name="arrowUp" size={14} />
                     </motion.span>
                   </motion.span>
                 ) : (
                   <motion.span key="unsorted" {...swap} className="tn:col-start-1 tn:row-start-1">
-                    <Icon size={14}>{icons.chevronsUpDown}</Icon>
+                    <Icon name="chevronsUpDown" size={14} />
                   </motion.span>
                 )}
               </AnimatePresence>
@@ -155,7 +151,7 @@ export function DataTable<Row>({
           onAction={(action) => onRowAction!(row, action)}
           label={rowActionsLabel(row)}
           menuLabel={rowActionsLabel(row)}
-          trigger={<Icon size={16}>{icons.more}</Icon>}
+          trigger={<Icon name="more" size={16} />}
           size="sm"
           className="tn:ml-auto"
         />

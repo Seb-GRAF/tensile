@@ -46,6 +46,7 @@ export function TagInput({
   const places = useRef(new Map<Element, { top: number; left: number }>());
   const isDisabled = field?.disabled || disabled;
   const inside = field?.inside;
+  const floated = focused || value.length > 0 || query !== "";
 
   useLayoutEffect(() => {
     for (const item of [...list.current!.children, input.current!] as HTMLElement[]) {
@@ -90,9 +91,11 @@ export function TagInput({
       <motion.div initial={false} animate={{ height: size?.height }} transition={shape} className="tn:overflow-hidden">
         <div ref={row} inert={isDisabled} className={`tn:relative tn:flex tn:flex-wrap tn:gap-1.5 ${inside ? "tn:px-5 tn:pt-5 tn:pb-1" : "tn:px-4 tn:py-2"}`}>
           {inside && (
-            <FloatingLabel aria-hidden floated={focused || value.length > 0 || query !== ""} className="tn:left-5 tn:mt-0.5">
-              {inside.label}
-            </FloatingLabel>
+            <motion.span initial={false} animate={{ y: floated ? -4 : 0 }} transition={shape} className="tn:absolute tn:inset-x-5 tn:top-0.5">
+              <FloatingLabel aria-hidden floated={floated} className="tn:left-0">
+                {inside.label}
+              </FloatingLabel>
+            </motion.span>
           )}
           <ul ref={list} role="list" className="tn:contents">
             <AnimatePresence mode="popLayout" initial={false}>

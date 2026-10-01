@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId } from "react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { Icon } from "../../data-display/Icon/Icon";
 import { FieldContext } from "../Field/Field";
@@ -48,9 +47,7 @@ export function Fieldset({ legend, description, error, disabled = false, childre
                 {...swap}
                 className="tn:col-start-1 tn:row-start-1 tn:mt-4 tn:flex tn:origin-left tn:gap-2 tn:text-label tn:text-ink"
               >
-                <Icon size={14} className="tn:mt-0.75">
-                  {icons.alert}
-                </Icon>
+                <Icon name="alert" size={14} className="tn:mt-0.75" />
                 {error}
               </motion.p>
             )}

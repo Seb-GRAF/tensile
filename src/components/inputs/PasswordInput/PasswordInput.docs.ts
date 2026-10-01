@@ -8,7 +8,7 @@ import passwordInputDisabledDemoCode from "./demos/PasswordInputDisabledDemo.tsx
 export default {
   description: "A password input with a named visibility toggle.",
   usage: "Store the value in React state and pass its setter to onValueChange.",
-  anatomy: "The outer surface contains a native input with the design-system focus and error treatment.",
+  anatomy: "The outer surface contains a native input with the design-system focus and error treatment. The eye button blurs the text out, switches the input between password and text, and blurs it back in.",
   notes: [
     "Native input attributes such as name and autoComplete pass through. Reset controlled values in the form’s onReset handler.",
     "Use Field for a visible label, description and error. Without Field, provide an accessible name directly."
@@ -37,6 +37,7 @@ export default {
     "Button"
   ],
   props: {
+    "ref": "Ref to the native input, for focus and selection.",
     "autoComplete": "Native autocomplete hint.",
     "disabled": "Disables the native input and the eye button, and dims the pill; a disabled Field or Fieldset does the same.",
     "value": "The password. Pass it to control PasswordInput; leave it out and it keeps its own text.",

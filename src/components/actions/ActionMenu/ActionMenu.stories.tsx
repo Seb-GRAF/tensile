@@ -14,14 +14,11 @@ const meta = {
   args: {
     onAction: fn(),
     actions: [
-      { label: "Add to queue", icon: <Icon><path d="M11 12H3" /><path d="M16 6H3" /><path d="M16 18H3" /><path d="M18 9v6" /><path d="M21 12h-6" /></Icon> },
-      { label: "Go to artist", icon: <Icon><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0" /></Icon> },
-      { label: "Share", icon: <Icon><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><path d="m16 6-4-4-4 4" /><path d="M12 2v13" /></Icon> },
-      { label: "Download", icon: <Icon><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></Icon> },
-      {
-        label: "Remove from library",
-        icon: <Icon><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></Icon>,
-      },
+      { label: "Add to queue", icon: <Icon name="listPlus" /> },
+      { label: "Go to artist", icon: <Icon name="user" /> },
+      { label: "Share", icon: <Icon name="share" /> },
+      { label: "Download", icon: <Icon name="download" /> },
+      { label: "Remove from library", icon: <Icon name="trash" /> },
     ],
   },
 } satisfies Meta<typeof ActionMenu>;
@@ -35,7 +32,7 @@ export const Default: Story = {};
 export const IconTrigger: Story = {
   args: {
     label: "Track actions",
-    trigger: <Icon><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></Icon>,
+    trigger: <Icon name="more" />,
     actions: [
       { label: "Rename" },
       { label: "Download", disabled: true },

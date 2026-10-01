@@ -146,7 +146,7 @@ export const Rail: Story = {
 /** Press the arrows at the end of the row, or drag the dots at its start. */
 export const ArrowsAtEnd: Story = { ...Default, args: { controls: "end" } };
 
-/** Press the arrows over the photo's edges, or drag the photo; the dots below follow. */
+/** Press the arrows at the carousel's left and right edges, or drag the photo; the dots below follow. */
 export const ArrowsOnSides: Story = { ...Default, args: { controls: "sides" } };
 
 export const Usage: Story = {

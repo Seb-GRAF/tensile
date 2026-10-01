@@ -1,5 +1,4 @@
 import { useSyncExternalStore } from "react";
-import { icons } from "../../../icons";
 import { Icon } from "../../data-display/Icon/Icon";
 import { Spinner } from "../Spinner/Spinner";
 import { ToastStack, type ToastStackProps } from "../ToastStack/ToastStack";
@@ -17,7 +16,7 @@ const LIFETIME = 4000;
 
 const statusIcons = {
   loading: <Spinner size={14} />,
-  success: <Icon size={16}>{icons.success}</Icon>,
+  success: <Icon name="success" size={16} />,
 };
 
 let toasts: ToastStackProps["toasts"] = [];

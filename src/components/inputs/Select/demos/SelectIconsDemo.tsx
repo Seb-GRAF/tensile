@@ -2,26 +2,8 @@ import { useState } from "react";
 import { Select, Field, Icon } from "tensile";
 
 const options = [
-  {
-    value: "personal",
-    label: "Personal",
-    icon: (
-      <Icon>
-        <circle cx="12" cy="8" r="3" />
-        <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
-      </Icon>
-    ),
-  },
-  {
-    value: "team",
-    label: "Team",
-    icon: (
-      <Icon>
-        <rect x="4" y="7" width="16" height="14" rx="2" />
-        <path d="M9 7V3h6v4" />
-      </Icon>
-    ),
-  },
+  { value: "personal", label: "Personal", icon: <Icon name="user" /> },
+  { value: "team", label: "Team", icon: <Icon name="briefcase" /> },
 ];
 
 export function SelectIconsDemo() {

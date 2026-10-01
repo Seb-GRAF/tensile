@@ -1,10 +1,8 @@
 import { AnimatePresence, motion, useIsPresent } from "motion/react";
 import { useRef } from "react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
 import { Avatar } from "../../data-display/Avatar/Avatar";
-import { Icon } from "../../data-display/Icon/Icon";
 import { ListContent } from "../../data-display/List/List";
 import { EmptyState } from "../EmptyState/EmptyState";
 
@@ -56,7 +54,7 @@ function NotificationRow({ notification, onRead, onDismiss, readLabel, dismissLa
               </>
             ),
             leading: (
-              <div className="tn:flex tn:items-center tn:gap-2">
+              <div className="tn:flex tn:items-center tn:gap-3">
                 <motion.span
                   initial={false}
                   animate={{ opacity: notification.read ? 0 : 1 }}
@@ -71,23 +69,23 @@ function NotificationRow({ notification, onRead, onDismiss, readLabel, dismissLa
                 <IconButton
                   variant="ghost"
                   size="sm"
+                  iconSize={14}
                   label={readLabel(notification.title)}
+                  icon="check"
                   disabled={notification.read}
                   onClick={(event) => {
                     (event.currentTarget.nextElementSibling as HTMLButtonElement).focus();
                     onRead(notification.id);
                   }}
-                >
-                  <Icon size={14}><path d="m5 12 4 4 10-10" /></Icon>
-                </IconButton>
+                />
                 <IconButton
                   variant="ghost"
                   size="sm"
+                  iconSize={14}
                   label={dismissLabel(notification.title)}
+                  icon="close"
                   onClick={(event) => onDismiss(event, notification.id)}
-                >
-                  <Icon size={14}>{icons.close}</Icon>
-                </IconButton>
+                />
               </div>
             ),
           }}

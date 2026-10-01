@@ -99,10 +99,7 @@ function UploadShape({
               className="tn:absolute tn:inset-0 tn:grid tn:place-content-center tn:place-items-center tn:outline-none tn:enabled:hover:bg-hover"
             >
               <span style={{ width }} className={`tn:flex tn:flex-col tn:items-center tn:gap-2.5 tn:px-6 tn:text-center tn:text-body tn:font-medium ${over ? "tn:text-on-accent" : "tn:text-ink"}`}>
-                <Icon size={24}>
-                  <path d="M12 15V4m-5 5 5-5 5 5" />
-                  <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
-                </Icon>
+                <Icon name="upload" size={24} />
                 {label}
               </span>
             </UploadTrigger>

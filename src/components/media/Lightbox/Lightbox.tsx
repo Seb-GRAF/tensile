@@ -1,11 +1,10 @@
-import { AnimatePresence, motion, useIsPresent } from "motion/react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { animate, motion, useIsPresent, useMotionValue, useTransform, type MotionValue } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useControllable } from "../../../controllable";
+import { dragHandlers } from "../../../drag";
 import { Modal } from "../../../Modal";
 import { useSprings } from "../../../springs";
-import { icons } from "../../../icons";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type LightboxProps = {
   /** Each image fills a square thumbnail and a 3:2 full view, e.g. an img with size-full object-cover; its label is its accessible name. */
@@ -33,39 +32,66 @@ function fullView(): Box {
   return { left: (window.innerWidth - width) / 2, top: (window.innerHeight - height) / 2, width, height, borderRadius: "var(--tn-radius-card)" };
 }
 
-function LightboxImage({ image, direction }: { image: LightboxProps["images"][number]; direction: number }) {
-  const { soft } = useSprings();
-  const present = useIsPresent();
+function mod(a: number, n: number) {
+  return ((a % n) + n) % n;
+}
+
+function LightboxImage({ image, i, count, current, position }: {
+  image: LightboxProps["images"][number];
+  i: number;
+  count: number;
+  current: boolean;
+  position: MotionValue<number>;
+}) {
+  const x = useTransform(position, (p) => `${(mod(i - p + count / 2, count) - count / 2) * 100}%`);
   return (
-    <motion.div
-      role="img"
-      aria-label={image.label}
-      aria-hidden={!present}
-      inert={!present}
-      initial={{ opacity: 0, filter: "blur(4px)", x: direction * 24 }}
-      animate={{ opacity: 1, filter: "blur(0px)", x: 0 }}
-      exit={{ filter: "blur(4px)" }}
-      transition={soft}
-      className="tn:absolute tn:inset-0"
-    >
+    <motion.div role="img" aria-label={image.label} aria-hidden={!current} style={{ x }} className="tn:absolute tn:inset-0">
       {image.image}
     </motion.div>
   );
 }
 
-function LightboxFlight({ images, index, direction, buttons, onClosed }: {
+function LightboxFlight({ images, index, direction, buttons, onIndexChange, onClosed }: {
   images: LightboxProps["images"];
   index: number;
   direction: number;
   buttons: React.RefObject<(HTMLButtonElement | null)[]>;
-  onClosed: () => void;
+  onIndexChange: (index: number) => void;
+  onClosed: (index: number) => void;
 }) {
-  const { shape } = useSprings();
+  const { shape, snap } = useSprings();
   const present = useIsPresent();
+  const position = useMotionValue(index);
+  const target = useRef(index);
+  const start = useRef<{ pointer: number; position: number } | null>(null);
+  const frame = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const step = mod(index - target.current, images.length);
+    if (step === 0) return;
+    target.current += direction < 0 ? step - images.length : step;
+    animate(position, target.current, snap);
+  }, [index]);
 
   function thumbnail(): Box {
     const { left, top, width, height } = buttons.current[index]!.getBoundingClientRect();
     return { left, top, width, height, borderRadius: "var(--tn-radius-overlay)" };
+  }
+
+  function drag(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.type === "pointerdown") {
+      position.stop();
+      start.current = { pointer: event.clientX, position: position.get() };
+    }
+    position.set(start.current!.position + (start.current!.pointer - event.clientX) / frame.current!.offsetWidth);
+  }
+
+  function release() {
+    if (!start.current) return;
+    start.current = null;
+    target.current = Math.round(position.get() + position.getVelocity() * 0.2);
+    animate(position, target.current, snap);
+    onIndexChange(mod(target.current, images.length));
   }
 
   return (
@@ -75,12 +101,14 @@ function LightboxFlight({ images, index, direction, buttons, onClosed }: {
       animate={fullView()}
       exit="thumbnail"
       transition={shape}
-      onAnimationComplete={() => { if (!present) onClosed(); }}
+      onAnimationComplete={() => { if (!present) onClosed(index); }}
       className="tn:absolute tn:overflow-hidden tn:bg-ink tn:shadow-float"
     >
-      <AnimatePresence initial={false}>
-        <LightboxImage key={index} image={images[index]} direction={direction} />
-      </AnimatePresence>
+      <div ref={frame} {...dragHandlers(drag, release)} onDragStart={(event) => event.preventDefault()} className="tn:absolute tn:inset-0 tn:touch-none tn:select-none">
+        {images.map((image, i) => (
+          <LightboxImage key={image.label} image={image} i={i} count={images.length} current={i === index} position={position} />
+        ))}
+      </div>
     </motion.div>
   );
 }
@@ -99,8 +127,14 @@ export function Lightbox({
   const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
   const [hidden, setHidden] = useState(value);
+  const [shown, setShown] = useState(value);
+  const [flight, setFlight] = useState(0);
   const [direction, setDirection] = useState(1);
-  if (value !== null && hidden !== value) setHidden(value);
+  if (value !== shown) {
+    setShown(value);
+    if (shown === null && value !== hidden) setFlight(flight + 1);
+    if (value !== null) setHidden(value);
+  }
 
   useLayoutEffect(() => {
     if (value === null && hidden !== null) buttons.current[hidden]!.focus({ preventScroll: true });
@@ -141,15 +175,25 @@ export function Lightbox({
         className="tn:[--tn-color-focus:var(--tn-color-white)] tn:[--tn-color-line:var(--tn-color-ink-3)]"
       >
         <motion.div key="backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={soft} onClick={() => setValue(null)} className="tn:absolute tn:inset-0 tn:bg-scrim/80" />
-        {value !== null && <LightboxFlight key="image" images={images} index={value} direction={direction} buttons={buttons} onClosed={() => setHidden(null)} />}
+        {value !== null && (
+          <LightboxFlight
+            key={`image-${flight}`}
+            images={images}
+            index={value}
+            direction={direction}
+            buttons={buttons}
+            onIndexChange={setValue}
+            onClosed={(index) => setHidden((current) => (current === index ? null : current))}
+          />
+        )}
         <motion.div key="close" {...swap} className="tn:absolute tn:top-4 tn:right-4">
-          <IconButton label={closeLabel} variant="secondary" data-autofocus onClick={() => setValue(null)}><Icon>{icons.close}</Icon></IconButton>
+          <IconButton label={closeLabel} variant="secondary" iconSize={16} data-autofocus onClick={() => setValue(null)} icon="close" />
         </motion.div>
         <motion.div key="previous" {...swap} className="tn:absolute tn:bottom-4 tn:left-4 tn:sm:top-1/2 tn:sm:bottom-auto tn:sm:-translate-y-1/2">
-          <IconButton label={previousLabel} variant="secondary" onClick={() => move(-1)}><Icon>{icons.chevronLeft}</Icon></IconButton>
+          <IconButton label={previousLabel} variant="secondary" iconSize={16} onClick={() => move(-1)} icon="chevronLeft" />
         </motion.div>
         <motion.div key="next" {...swap} className="tn:absolute tn:right-4 tn:bottom-4 tn:sm:top-1/2 tn:sm:bottom-auto tn:sm:-translate-y-1/2">
-          <IconButton label={nextLabel} variant="secondary" onClick={() => move(1)}><Icon>{icons.chevronRight}</Icon></IconButton>
+          <IconButton label={nextLabel} variant="secondary" iconSize={16} onClick={() => move(1)} icon="chevronRight" />
         </motion.div>
       </Modal>
     </div>

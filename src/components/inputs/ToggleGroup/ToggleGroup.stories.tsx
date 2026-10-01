@@ -2,6 +2,7 @@ import { ToggleGroupDemo } from "./demos/ToggleGroupDemo";
 import { ToggleGroupIconsDemo } from "./demos/ToggleGroupIconsDemo";
 import { ToggleGroupDisabledDemo } from "./demos/ToggleGroupDisabledDemo";
 import { ToggleGroupFormDemo } from "./demos/ToggleGroupFormDemo";
+import { ToggleGroupSingleDemo } from "./demos/ToggleGroupSingleDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -29,7 +30,18 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <ToggleGroup {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />;
+    return <ToggleGroup {...args} onValueChange={(value: string | string[]) => { args.onValueChange?.(value as never); updateArgs({ value }); }} />;
+  },
+};
+
+/** Click a choice, or Tab in and move with the arrow keys, Home and End: each move picks that choice, and the ink pill slides to it. */
+export const Single: Story = {
+  ...Default,
+  args: {
+    type: "single",
+    value: "week",
+    label: "Calendar view",
+    options: [{ value: "day", label: "Day" }, { value: "week", label: "Week" }, { value: "month", label: "Month" }, { value: "quarter", label: "Fiscal quarter" }],
   },
 };
 
@@ -39,9 +51,9 @@ export const Formatting: Story = {
     label: "Text formatting",
     value: [],
     options: [
-      { value: "bold", label: "Bold", icon: <Icon><path d="M6 4h7a4 4 0 0 1 0 8H6zm0 8h8a4 4 0 0 1 0 8H6z" /></Icon> },
-      { value: "italic", label: "Italic", icon: <Icon><path d="M10 4h10M4 20h10M15 4 9 20" /></Icon> },
-      { value: "underline", label: "Underline", icon: <Icon><path d="M6 3v7a6 6 0 0 0 12 0V3M4 21h16" /></Icon> },
+      { value: "bold", label: "Bold", icon: <Icon name="bold" /> },
+      { value: "italic", label: "Italic", icon: <Icon name="italic" /> },
+      { value: "underline", label: "Underline", icon: <Icon name="underline" /> },
     ],
   },
 };
@@ -57,7 +69,7 @@ export const InAFieldInsideAForm: Story = {
         setData(JSON.stringify(new FormData(event.currentTarget).getAll("media")));
       }} onReset={() => { setValue(args.value); setData(""); }}>
         <Field label="Media types" description="Show any combination of media." disabled={disabled}>
-          <ToggleGroup {...args} name="media" value={value} onValueChange={setValue} />
+          <ToggleGroup {...args} name="media" value={value as never} onValueChange={setValue as never} />
         </Field>
         <div className="flex gap-2"><Button type="submit">Save</Button><Button type="reset" variant="secondary">Reset</Button><Button variant="secondary" onClick={() => setDisabled(!disabled)}>{disabled ? "Enable" : "Disable"}</Button></div>
         <output className="text-label">{data}</output>
@@ -80,4 +92,8 @@ export const DisabledUsage: Story = {
 
 export const FormUsage: Story = {
   render: () => <ToggleGroupFormDemo />,
+};
+
+export const SingleUsage: Story = {
+  render: () => <ToggleGroupSingleDemo />,
 };

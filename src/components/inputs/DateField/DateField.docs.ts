@@ -4,6 +4,8 @@ import { DateFieldBoundsDemo } from "./demos/DateFieldBoundsDemo";
 import dateFieldBoundsDemoCode from "./demos/DateFieldBoundsDemo.tsx?raw";
 import { DateFieldFormDemo } from "./demos/DateFieldFormDemo";
 import dateFieldFormDemoCode from "./demos/DateFieldFormDemo.tsx?raw";
+import { DateFieldFormatDemo } from "./demos/DateFieldFormatDemo";
+import dateFieldFormatDemoCode from "./demos/DateFieldFormatDemo.tsx?raw";
 
 export default {
   description: "Type a date or pick one from a calendar.",
@@ -12,12 +14,13 @@ export default {
   notes: [
     "An empty field commits null. Text that isn't a date, or a date outside min and max, goes back to the previous value.",
     "By default it shows MM/DD/YYYY and reads one-digit months and days with /, -, . or a space between the parts.",
-    "Change formatDate and parseDate together, so the text people see can be typed back in.",
+    "For another format, pass formatDate, parseDate and placeholder together, so the text people see can be typed back in. The value and the submitted date stay YYYY-MM-DD.",
     "Picking a day commits it, closes the calendar and puts focus back in the input."
   ],
   examples: [
     { id: "usage", title: "Basic usage", description: "A due date in a Field. Type 3/4/2026 and press Enter, or pick a day from the calendar.", Demo: DateFieldDemo, code: dateFieldDemoCode },
     { id: "bounds", title: "Bounds", description: "Days outside October 5–30 are disabled in the calendar, and typing one keeps the previous date. Use it for booking windows.", Demo: DateFieldBoundsDemo, code: dateFieldBoundsDemoCode },
+    { id: "format", title: "Another format", description: "DD.MM.YYYY through formatDate, parseDate and placeholder. Type 3.4.2026 and press Enter.", Demo: DateFieldFormatDemo, code: dateFieldFormatDemoCode },
     { id: "form", title: "In a form", description: "name submits the ISO date (\"2026-10-14\", not \"10/14/2026\"), and Reset clears it through state.", Demo: DateFieldFormDemo, code: dateFieldFormDemoCode },
   ],
   keyboard: [
@@ -67,6 +70,8 @@ export default {
     "formatDay": "Format each day number from a local Date.",
     "previousLabel": "Accessible name of the calendar's previous-month button.",
     "nextLabel": "Accessible name of the calendar's next-month button.",
+    "firstDayOfWeek": "First calendar column: 0 for Sunday through 6 for Saturday. Set 1 for Monday independently of the typed date format.",
+    "todayLabel": "Text of the calendar's button that shows today's month.",
     "name": "Name of the hidden input that submits the ISO date.",
     "form": "ID of the form that owns the visible and hidden inputs.",
     "disabled": "Disables the input and the calendar button and dims the pill; the hidden input is left out of the form. A disabled Field or Fieldset does the same.",

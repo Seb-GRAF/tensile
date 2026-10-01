@@ -1,8 +1,6 @@
 import { useControllable } from "../../../controllable";
 import { Expand } from "../../../Expand";
-import { icons } from "../../../icons";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type ExpandableCardProps = {
   title: string;
@@ -59,9 +57,7 @@ export function ExpandableCard({
             <p className="tn:truncate tn:text-base tn:font-semibold tn:tracking-[-0.01em]">{title}</p>
             <p className="tn:truncate tn:text-sm tn:text-muted">{subtitle}</p>
           </div>
-          <IconButton label={closeLabel} variant="ghost" size="sm" onClick={() => setOpen(false)} className="tn:shrink-0 tn:self-start tn:text-muted">
-            <Icon size={16}>{icons.close}</Icon>
-          </IconButton>
+          <IconButton label={closeLabel} variant="ghost" size="sm" onClick={() => setOpen(false)} className="tn:shrink-0 tn:self-start tn:text-muted" icon="close" />
         </div>
         <div className="tn:px-5">{children}</div>
       </Expand>

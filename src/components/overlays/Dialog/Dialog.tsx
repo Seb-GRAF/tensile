@@ -2,12 +2,10 @@ import { motion, useIsPresent } from "motion/react";
 import { useId, useRef, useState } from "react";
 import { useControllable } from "../../../controllable";
 import { Modal } from "../../../Modal";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
 import { Button } from "../../actions/Button/Button";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type DialogProps = {
   open?: boolean;
@@ -120,17 +118,19 @@ function DialogPanel({
       const { left, top, width, height } = button.current.getBoundingClientRect();
       return { left, top, width, height, borderRadius: "var(--tn-radius-control)" };
     }
-    return { ...centered(0, 0), borderRadius: "var(--tn-radius-dialog)", opacity: 0 };
+    return { borderRadius: "var(--tn-radius-dialog)", opacity: 0, scale: 0.96 };
   });
+  const [placed, setPlaced] = useState(button.current !== null);
 
   return (
     <motion.div
       initial={origin}
-      animate={size ? { ...centered(size.width, size.height), borderRadius: "var(--tn-radius-dialog)", opacity: 1 } : origin}
+      animate={size ? { ...centered(size.width, size.height), borderRadius: "var(--tn-radius-dialog)", opacity: 1, scale: 1 } : origin}
       exit={origin}
-      transition={{ default: shape, opacity: soft }}
+      transition={placed ? { default: shape, opacity: soft } : { default: { duration: 0 }, opacity: soft, scale: shape }}
       onAnimationComplete={() => {
         if (!present) onClosed();
+        else setPlaced(true);
       }}
       tabIndex={-1}
       data-autofocus={role === "dialog" ? "" : undefined}
@@ -149,9 +149,7 @@ function DialogPanel({
         <div className="tn:flex tn:shrink-0 tn:items-center tn:justify-between tn:gap-3 tn:px-5 tn:pt-5">
           <h2 id={titleId} className="tn:text-body tn:font-semibold">{title}</h2>
           {role === "dialog" && (
-            <IconButton label={closeLabel} variant="ghost" size="sm" onClick={onClose} className="tn:-my-1.5 tn:-mr-2 tn:shrink-0 tn:text-muted">
-              <Icon size={16}>{icons.close}</Icon>
-            </IconButton>
+            <IconButton label={closeLabel} variant="ghost" size="sm" onClick={onClose} className="tn:-my-1.5 tn:-mr-2 tn:shrink-0 tn:text-muted" icon="close" />
           )}
         </div>
         <div className="tn:scroll-fade tn:min-h-0 tn:overflow-y-auto tn:px-5 tn:pt-1 tn:pb-5">{children}</div>

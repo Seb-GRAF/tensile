@@ -11,11 +11,7 @@ export function TimelineIconsDemo() {
           title: "Draft approved",
           description: "The team signed off on the final version.",
           time: "Today",
-          icon: (
-            <Icon size={14}>
-              <path d="m5 12 4 4L19 6" />
-            </Icon>
-          ),
+          icon: <Icon name="check" size={14} />,
         },
         {
           id: "created",

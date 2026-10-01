@@ -496,14 +496,14 @@
         "type": "Crumb[]",
         "required": true,
         "default": "—",
-        "description": "The trail from the root; the last item is the current page."
+        "description": "The trail from the root; the last item is the current page. A crumb's optional `siblings` (label, icon, href) are the other pages at its level."
       },
       {
         "prop": "onNavigate",
-        "type": "(item: Crumb) => void",
+        "type": "(item: Page) => void",
         "required": true,
         "default": "—",
-        "description": "Called with an activated non-current item."
+        "description": "Called with an activated non-current item or sibling."
       },
       {
         "prop": "label",
@@ -518,6 +518,13 @@
         "required": false,
         "default": "\"Show full path\"",
         "description": "Accessible name of the hidden-trail button."
+      },
+      {
+        "prop": "siblingsLabel",
+        "type": "((label: string) => string) | undefined",
+        "required": false,
+        "default": "(label: string) => `Pages next to ${label}`",
+        "description": "Names the chevron button that lists a crumb's siblings, and the menu it opens, from the crumb's label."
       },
       {
         "prop": "itemsBeforeCollapse",
@@ -605,6 +612,13 @@
     "group": "Layout",
     "description": "",
     "props": [
+      {
+        "prop": "ref",
+        "type": "Ref<HTMLDivElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Allows getting a ref to the component instance.\nOnce the component unmounts, React will set `ref.current` to `null`\n(or call the ref with `null` if you passed a callback ref)."
+      },
       {
         "prop": "className",
         "type": "string | undefined",
@@ -695,7 +709,7 @@
         "type": "\"center\" | \"end\" | \"sides\" | undefined",
         "required": false,
         "default": "\"center\"",
-        "description": "\"center\": one pill below, arrows around the dots; \"end\": the pill at the end of the row below, dots before the arrows; \"sides\": arrows over the current slide's edges, dots in the pill below."
+        "description": "\"center\": one pill below, arrows around the dots; \"end\": the pill at the end of the row below, dots before the arrows; \"sides\": arrows over the carousel's left and right edges, dots in the pill below."
       },
       {
         "prop": "label",
@@ -890,6 +904,63 @@
       }
     ]
   },
+  "CodeBlock": {
+    "id": "codeblock",
+    "title": "CodeBlock",
+    "group": "Data display",
+    "description": "",
+    "props": [
+      {
+        "prop": "code",
+        "type": "string",
+        "required": true,
+        "default": "—",
+        "description": "The source text shown and copied."
+      },
+      {
+        "prop": "language",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"tsx\"",
+        "description": "Syntax language, such as tsx, javascript, css or json. Defaults to tsx."
+      },
+      {
+        "prop": "title",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "A filename or caption shown above the code."
+      },
+      {
+        "prop": "label",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"Code\"",
+        "description": "Names the scrolling code region for screen readers."
+      },
+      {
+        "prop": "copyLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"Copy code\"",
+        "description": "Accessible name of the copy button."
+      },
+      {
+        "prop": "copiedLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"Copied\"",
+        "description": "Text shown and announced after copying."
+      },
+      {
+        "prop": "className",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "Classes on the Card, for width, max height and placement."
+      }
+    ]
+  },
   "CollapsibleSidebar": {
     "id": "collapsiblesidebar",
     "title": "CollapsibleSidebar",
@@ -950,14 +1021,14 @@
         "type": "ReactNode",
         "required": false,
         "default": "—",
-        "description": "At the top, e.g. the brand; clipped to the rail while collapsed."
+        "description": "At the top, e.g. the brand; laid out at the expanded width, so the rail clips it to its first 32 px."
       },
       {
         "prop": "trailing",
         "type": "ReactNode",
         "required": false,
         "default": "—",
-        "description": "At the bottom, above the collapse button, e.g. the account; clipped to the rail while collapsed."
+        "description": "At the bottom, above the collapse button, e.g. the account; laid out at the expanded width, so the rail clips it to its first 32 px."
       },
       {
         "prop": "label",
@@ -1732,6 +1803,13 @@
         "description": "Content before the text, inside the pill."
       },
       {
+        "prop": "firstDayOfWeek",
+        "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined",
+        "required": false,
+        "default": "—",
+        "description": "First calendar column: 0 for Sunday through 6 for Saturday. Set 1 for Monday independently of the typed date format."
+      },
+      {
         "prop": "formatMonth",
         "type": "((month: Date) => string) | undefined",
         "required": false,
@@ -1765,6 +1843,13 @@
         "required": false,
         "default": "—",
         "description": "Accessible name of the calendar's next-month button."
+      },
+      {
+        "prop": "todayLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Text of the calendar's button that shows today's month."
       },
       {
         "prop": "value",
@@ -1908,6 +1993,13 @@
         "description": "Accessible label for moving forward."
       },
       {
+        "prop": "todayLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Text of the button that shows today's month."
+      },
+      {
         "prop": "value",
         "type": "string | null | undefined",
         "required": false,
@@ -2033,6 +2125,13 @@
         "required": false,
         "default": "—",
         "description": "Accessible label for moving forward."
+      },
+      {
+        "prop": "todayLabel",
+        "type": "string | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Text of the button that shows today's month."
       },
       {
         "prop": "value",
@@ -2890,11 +2989,11 @@
     "description": "A line icon in the current text color, hidden from screen readers: the control around it carries the name.",
     "props": [
       {
-        "prop": "children",
-        "type": "ReactNode",
+        "prop": "name",
+        "type": "\"info\" | \"success\" | \"code\" | \"link\" | \"menu\" | \"search\" | \"video\" | \"image\" | \"text\" | \"enter\" | \"alert\" | \"grid\" | \"timer\" | \"type\" | \"columns\" | \"arrowRight\" | \"arrowUp\" | \"arrowUpRight\" | \"bell\" | \"bold\" | \"bookmark\" | \"briefcase\" | \"calendar\" | \"chart\" | \"check\" | \"chevronDown\" | \"chevronLeft\" | \"chevronRight\" | \"chevronsLeftRight\" | \"chevronsUpDown\" | \"circleX\" | \"clock\" | \"close\" | \"command\" | \"copy\" | \"creditCard\" | \"disc\" | \"download\" | \"eye\" | \"eyeOff\" | \"file\" | \"fileSpreadsheet\" | \"fileText\" | \"folder\" | \"headphones\" | \"heart\" | \"home\" | \"imageOff\" | \"italic\" | \"laptop\" | \"layers\" | \"library\" | \"listPlus\" | \"mapPin\" | \"message\" | \"mic\" | \"minus\" | \"moon\" | \"more\" | \"mountain\" | \"music\" | \"pause\" | \"pencil\" | \"phone\" | \"plug\" | \"plus\" | \"share\" | \"shuffle\" | \"sidebar\" | \"speaker\" | \"square\" | \"star\" | \"strikethrough\" | \"trash\" | \"truck\" | \"tv\" | \"underline\" | \"upload\" | \"user\" | \"users\" | \"waves\" | \"zap\"",
         "required": true,
         "default": "—",
-        "description": "SVG shapes drawn on a 24 × 24 coordinate grid."
+        "description": "Which icon of the set to draw."
       },
       {
         "prop": "size",
@@ -2919,11 +3018,18 @@
     "description": "",
     "props": [
       {
-        "prop": "children",
-        "type": "ReactNode",
+        "prop": "label",
+        "type": "string",
         "required": true,
         "default": "—",
-        "description": "Icon content. The button's label names the action."
+        "description": "Required accessible name, applied as aria-label to the button or link."
+      },
+      {
+        "prop": "icon",
+        "type": "\"info\" | \"success\" | \"code\" | \"link\" | \"menu\" | \"search\" | \"video\" | \"image\" | \"text\" | \"enter\" | \"alert\" | \"grid\" | \"timer\" | \"type\" | \"columns\" | \"arrowRight\" | \"arrowUp\" | \"arrowUpRight\" | \"bell\" | \"bold\" | \"bookmark\" | \"briefcase\" | \"calendar\" | \"chart\" | \"check\" | \"chevronDown\" | \"chevronLeft\" | \"chevronRight\" | \"chevronsLeftRight\" | \"chevronsUpDown\" | \"circleX\" | \"clock\" | \"close\" | \"command\" | \"copy\" | \"creditCard\" | \"disc\" | \"download\" | \"eye\" | \"eyeOff\" | \"file\" | \"fileSpreadsheet\" | \"fileText\" | \"folder\" | \"headphones\" | \"heart\" | \"home\" | \"imageOff\" | \"italic\" | \"laptop\" | \"layers\" | \"library\" | \"listPlus\" | \"mapPin\" | \"message\" | \"mic\" | \"minus\" | \"moon\" | \"more\" | \"mountain\" | \"music\" | \"pause\" | \"pencil\" | \"phone\" | \"plug\" | \"plus\" | \"share\" | \"shuffle\" | \"sidebar\" | \"speaker\" | \"square\" | \"star\" | \"strikethrough\" | \"trash\" | \"truck\" | \"tv\" | \"underline\" | \"upload\" | \"user\" | \"users\" | \"waves\" | \"zap\" | ReactElement<unknown, string | JSXElementConstructor<any>>",
+        "required": true,
+        "default": "—",
+        "description": "The name of an icon in the set, or an element to draw instead. The button's label names the action."
       },
       {
         "prop": "variant",
@@ -2938,6 +3044,13 @@
         "required": false,
         "default": "\"md\"",
         "description": "Button width and height: md is 44px and sm is 32px."
+      },
+      {
+        "prop": "iconSize",
+        "type": "number | undefined",
+        "required": false,
+        "default": "iconSizes[size]",
+        "description": "Size in pixels for a named icon. Custom elements keep their own size."
       },
       {
         "prop": "type",
@@ -2966,13 +3079,6 @@
         "required": false,
         "default": "—",
         "description": "Render a link to this URL instead of a button, with the same look."
-      },
-      {
-        "prop": "label",
-        "type": "string",
-        "required": true,
-        "default": "—",
-        "description": "Required accessible name, applied as aria-label to the button or link."
       }
     ]
   },
@@ -3744,6 +3850,13 @@
         "description": "Accessible name of the navigation landmark."
       },
       {
+        "prop": "openOnHover",
+        "type": "boolean | undefined",
+        "required": false,
+        "default": "true",
+        "description": "Open a panel when the pointer rests on its trigger; turn off to open panels only by click or keyboard."
+      },
+      {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
@@ -4397,6 +4510,13 @@
         "description": "Native form field name."
       },
       {
+        "prop": "ref",
+        "type": "Ref<HTMLInputElement> | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Ref to the native input, for focus and selection."
+      },
+      {
         "prop": "autoComplete",
         "type": "HTMLInputAutoCompleteAttribute | undefined",
         "required": false,
@@ -4534,7 +4654,7 @@
         "prop": "placement",
         "type": "\"top-center\" | \"top-right\" | \"top-left\" | \"bottom-center\" | \"bottom-right\" | \"bottom-left\" | undefined",
         "required": false,
-        "default": "\"bottom-left\"",
+        "default": "\"top-center\"",
         "description": "The side the panel opens toward and the trigger edge it stays aligned with; it flips when the other side has more room."
       },
       {
@@ -5007,63 +5127,6 @@
       }
     ]
   },
-  "SegmentedTabs": {
-    "id": "segmentedtabs",
-    "title": "SegmentedTabs",
-    "group": "Navigation",
-    "description": "",
-    "props": [
-      {
-        "prop": "options",
-        "type": "{ value: string; label: string; icon?: ReactNode; }[]",
-        "required": true,
-        "default": "—",
-        "description": "Available choices. Each option supplies a value and visible label."
-      },
-      {
-        "prop": "value",
-        "type": "string | undefined",
-        "required": false,
-        "default": "—",
-        "description": "The selected option's value. Leave it out to let the tabs track it, starting from defaultValue."
-      },
-      {
-        "prop": "defaultValue",
-        "type": "string | undefined",
-        "required": false,
-        "default": "options[0].value",
-        "description": "The first selected option when the tabs track it themselves. Defaults to the first option."
-      },
-      {
-        "prop": "onValueChange",
-        "type": "((value: string) => void) | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Called with an option's value when it's picked by click or arrow key."
-      },
-      {
-        "prop": "label",
-        "type": "string | undefined",
-        "required": false,
-        "default": "\"Range\"",
-        "description": "Accessible name of the tablist."
-      },
-      {
-        "prop": "id",
-        "type": "string | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Prefix used to link each tab with its associated panel."
-      },
-      {
-        "prop": "className",
-        "type": "string | undefined",
-        "required": false,
-        "default": "\"\"",
-        "description": "Classes on the tablist, for placement. It sizes to its labels."
-      }
-    ]
-  },
   "Select": {
     "id": "select",
     "title": "Select",
@@ -5313,11 +5376,25 @@
     "description": "",
     "props": [
       {
+        "prop": "variant",
+        "type": "\"circle\" | \"text\" | \"media\" | \"block\" | undefined",
+        "required": false,
+        "default": "\"block\"",
+        "description": "`block` (default) takes its size and radius from className; `text` draws lines of text; `circle` is round; `media` has the card radius."
+      },
+      {
+        "prop": "lines",
+        "type": "number | undefined",
+        "required": false,
+        "default": "1",
+        "description": "Number of lines for the text variant. Defaults to 1."
+      },
+      {
         "prop": "className",
         "type": "string | undefined",
         "required": false,
         "default": "\"\"",
-        "description": "Size and radius, e.g. `h-4 w-48 rounded-full`."
+        "description": "Size, and the radius of a block, e.g. `h-4 w-48 rounded-full`. A circle needs a width, media a size such as `aspect-video w-full`."
       }
     ]
   },
@@ -5763,6 +5840,42 @@
       }
     ]
   },
+  "TableOfContents": {
+    "id": "tableofcontents",
+    "title": "TableOfContents",
+    "group": "Navigation",
+    "description": "",
+    "props": [
+      {
+        "prop": "items",
+        "type": "(Item & { items?: Item[] | undefined; })[]",
+        "required": true,
+        "default": "—",
+        "description": "Sections of the page by element id, in page order, each with a label and optionally one level of subsections."
+      },
+      {
+        "prop": "label",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"On this page\"",
+        "description": "The visible heading, which also names the navigation landmark."
+      },
+      {
+        "prop": "offset",
+        "type": "number | undefined",
+        "required": false,
+        "default": "100",
+        "description": "Distance in px from the top of the viewport to the line a section's top passes to become current. Set it at or below the sections' scroll-margin-top."
+      },
+      {
+        "prop": "className",
+        "type": "string | undefined",
+        "required": false,
+        "default": "\"\"",
+        "description": "Classes on the nav element, for placement, such as `sticky top-16`."
+      }
+    ]
+  },
   "Tabs": {
     "id": "tabs",
     "title": "Tabs",
@@ -5809,7 +5922,7 @@
         "type": "\"underline\" | \"segmented\" | undefined",
         "required": false,
         "default": "\"underline\"",
-        "description": "Tablist appearance: underline or segmented."
+        "description": "Tablist appearance: underline, label-sized tabs with a sliding underline, or segmented, equal columns with a sliding ink pill."
       },
       {
         "prop": "className",
@@ -6672,27 +6785,6 @@
         "description": "Available choices. Each option supplies a value and visible label."
       },
       {
-        "prop": "value",
-        "type": "string[] | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Values of the pressed buttons. Leave it out to let the group track them, starting from defaultValue."
-      },
-      {
-        "prop": "defaultValue",
-        "type": "string[] | undefined",
-        "required": false,
-        "default": "[]",
-        "description": "The first pressed values when the group tracks them itself. Defaults to none."
-      },
-      {
-        "prop": "onValueChange",
-        "type": "((value: string[]) => void) | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Called with every pressed value, in the order they were pressed, when a button is clicked or toggled with Enter or Space."
-      },
-      {
         "prop": "label",
         "type": "string | undefined",
         "required": false,
@@ -6726,6 +6818,34 @@
         "required": false,
         "default": "\"\"",
         "description": "Classes on the wrapping row of buttons, for width and placement. Buttons wrap onto new lines when it's narrow."
+      },
+      {
+        "prop": "type",
+        "type": "\"single\" | \"multiple\" | undefined",
+        "required": false,
+        "default": "\"multiple\"",
+        "description": "\"multiple\" (default) lets any number of buttons be pressed; \"single\" picks exactly one in a segmented row."
+      },
+      {
+        "prop": "value",
+        "type": "string | string[] | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Values of the pressed buttons, or the picked value in single mode. Leave it out to let the group track it, starting from defaultValue."
+      },
+      {
+        "prop": "defaultValue",
+        "type": "string | string[] | undefined",
+        "required": false,
+        "default": "type === \"single\" ? options[0].value : []",
+        "description": "The first value when the group tracks it itself. Defaults to none, or the first option in single mode."
+      },
+      {
+        "prop": "onValueChange",
+        "type": "((value: string[]) => void) | ((value: string) => void) | undefined",
+        "required": false,
+        "default": "—",
+        "description": "Called with every pressed value, in the order they were pressed, when a button is clicked or toggled with Enter or Space. In single mode, called with the picked value."
       }
     ]
   },
@@ -6826,7 +6946,7 @@
         "type": "((value: string) => void) | undefined",
         "required": false,
         "default": "—",
-        "description": "Called with an item's value when the user clicks it or presses Enter or Space on it."
+        "description": "Called with an item's value when the user clicks its row or presses Enter or Space on it."
       },
       {
         "prop": "expanded",
@@ -6847,7 +6967,7 @@
         "type": "((expanded: string[]) => void) | undefined",
         "required": false,
         "default": "—",
-        "description": "Called with the new list of open parents when the user opens or closes one."
+        "description": "Called with the new list of open parents when the user opens or closes one: a click on its row or chevron, Enter, or ArrowRight and ArrowLeft."
       },
       {
         "prop": "label",
@@ -6862,63 +6982,6 @@
         "required": false,
         "default": "\"\"",
         "description": "Classes on the tree element, for width and placement. It draws no card; place it in a Card."
-      }
-    ]
-  },
-  "UnderlineTabs": {
-    "id": "underlinetabs",
-    "title": "UnderlineTabs",
-    "group": "Navigation",
-    "description": "",
-    "props": [
-      {
-        "prop": "options",
-        "type": "{ value: string; label: string; icon?: ReactNode; }[]",
-        "required": true,
-        "default": "—",
-        "description": "Available choices. Each option supplies a value and visible label."
-      },
-      {
-        "prop": "value",
-        "type": "string | undefined",
-        "required": false,
-        "default": "—",
-        "description": "The selected option's value. Leave it out to let the tabs track it, starting from defaultValue."
-      },
-      {
-        "prop": "defaultValue",
-        "type": "string | undefined",
-        "required": false,
-        "default": "options[0].value",
-        "description": "The first selected option when the tabs track it themselves. Defaults to the first option."
-      },
-      {
-        "prop": "onValueChange",
-        "type": "((value: string) => void) | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Called with an option's value when it's picked by click or arrow key."
-      },
-      {
-        "prop": "label",
-        "type": "string | undefined",
-        "required": false,
-        "default": "\"Sections\"",
-        "description": "Accessible name of the tablist."
-      },
-      {
-        "prop": "id",
-        "type": "string | undefined",
-        "required": false,
-        "default": "—",
-        "description": "Prefix used to link each tab with its associated panel."
-      },
-      {
-        "prop": "className",
-        "type": "string | undefined",
-        "required": false,
-        "default": "\"\"",
-        "description": "Classes on the tablist, for placement. It sizes to its labels."
       }
     ]
   },

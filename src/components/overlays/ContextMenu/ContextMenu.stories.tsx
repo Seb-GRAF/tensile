@@ -15,7 +15,7 @@ const meta = {
   component: ContextMenu,
   args: {
     actions: [
-      { label: "Rename", icon: <Icon><path d="m16 3 5 5-12 12H4v-5zM14 5l5 5" /></Icon> },
+      { label: "Rename", icon: <Icon name="pencil" /> },
       { label: "Download", disabled: true },
       { label: "Share" },
       { label: "Move to archive" },

@@ -2,7 +2,6 @@ import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect } from "react";
 import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
-import { Icon } from "../../data-display/Icon/Icon";
 import { Toggle } from "../Toggle/Toggle";
 
 export type ThemeToggleProps = {
@@ -64,9 +63,18 @@ export function ThemeToggle({
       className={`tn:[--tn-color-accent:var(--tn-color-paper)] tn:[--tn-color-on-accent:var(--tn-color-paper)] tn:before:absolute tn:before:-inset-px tn:before:bg-ink tn:before:transition-[clip-path] tn:before:duration-[calc(400ms*var(--tn-motion-duration-scale))] tn:before:[clip-path:inset(50%_calc(100%-17px)_50%_17px_round_var(--tn-radius-control))] tn:has-checked:before:[clip-path:inset(0_round_var(--tn-radius-control))] ${className}`}
     >
       <motion.span initial={false} animate={{ color: dark ? "var(--tn-color-ink)" : "var(--tn-color-paper)" }} transition={soft}>
-        <Icon>
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          width={16}
+          height={16}
+          strokeWidth={36 / 16}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="tn:block tn:fill-none tn:stroke-current"
+        >
           <motion.path d={d} />
-        </Icon>
+        </svg>
       </motion.span>
     </Toggle>
   );

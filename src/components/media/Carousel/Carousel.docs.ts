@@ -47,7 +47,7 @@ export default {
     "slideWidth": "CSS width of each slide; \"80%\" or \"min(320px, 80%)\" shows the neighbours.",
     "align": "Where the current slide sits when it's narrower than the carousel.",
     "overflow": "\"visible\" keeps the slides past the carousel's edges visible; the page is expected to clip them.",
-    "controls": "\"center\": one pill below, arrows around the dots; \"end\": the pill at the end of the row below, dots before the arrows; \"sides\": arrows over the current slide's edges, dots in the pill below.",
+    "controls": "\"center\": one pill below, arrows around the dots; \"end\": the pill at the end of the row below, dots before the arrows; \"sides\": arrows over the carousel's left and right edges, dots in the pill below.",
     "label": "Name of the carousel region and of its dots.",
     "previousLabel": "Name of the arrow button that shows the previous slide.",
     "nextLabel": "Name of the arrow button that shows the next slide.",

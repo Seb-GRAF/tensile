@@ -2,10 +2,9 @@ import { AnimatePresence, motion, useIsPresent } from "motion/react";
 import { useId, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { addMonths, clampDay, keyboardDay, monthDays, toDate, toDay } from "./calendar";
-import { icons } from "./icons";
 import { useSprings } from "./springs";
+import { Button } from "./components/actions/Button/Button";
 import { IconButton } from "./components/actions/IconButton/IconButton";
-import { Icon } from "./components/data-display/Icon/Icon";
 import { useField } from "./components/inputs/Field/Field";
 
 export type CalendarViewProps = {
@@ -17,6 +16,8 @@ export type CalendarViewProps = {
   formatDay?: (day: Date) => string;
   previousLabel?: string;
   nextLabel?: string;
+  /** Text of the button that shows today's month. */
+  todayLabel?: string;
   min?: string;
   max?: string;
   id?: string;
@@ -45,10 +46,35 @@ function CalendarMonth({ direction, children }: { direction: number; children: R
       initial="enter"
       animate="center"
       exit="exit"
-      className="tn:relative tn:col-start-1 tn:row-start-1 tn:grid tn:gap-1"
+      className="tn:relative tn:isolate tn:col-start-1 tn:row-start-1 tn:grid tn:gap-1"
     >
       {children}
     </motion.div>
+  );
+}
+
+/** An ink pill over the day at `index` of a month's cells, with a paper copy of the day labels clipped to it; a new index moves it there on `shape`, at its size. */
+export function SelectedDay({ index, rows, children }: { index: number; rows: number; children: React.ReactNode }) {
+  const { shape } = useSprings();
+  const position = { "--column": index % 7, "--row": Math.floor(index / 7) };
+  return (
+    <motion.span
+      aria-hidden
+      initial={{ scale: 0, ...position }}
+      animate={{ scale: 1, ...position }}
+      exit={{ scale: 0 }}
+      transition={shape}
+      style={{ transformOrigin: "calc((var(--column) + 0.5) * 100% / 7) calc(var(--row) * 36px + 16px)" }}
+      className="tn:pointer-events-none tn:absolute tn:inset-0"
+    >
+      <span className="tn:absolute tn:top-[calc(var(--row)*36px)] tn:left-[calc(var(--column)*(100%+4px)/7)] tn:h-8 tn:w-[calc((100%-24px)/7)] tn:rounded-control tn:bg-ink" />
+      <span
+        style={{ clipPath: `inset(calc(var(--row) * 36px) calc((6 - var(--column)) * (100% + 4px) / 7) calc((${rows - 1} - var(--row)) * 36px) calc(var(--column) * (100% + 4px) / 7) round var(--tn-radius-control))` }}
+        className="tn:absolute tn:inset-0 tn:grid tn:grid-cols-7 tn:gap-1 tn:text-label tn:font-medium tn:text-paper"
+      >
+        {children}
+      </span>
+    </motion.span>
   );
 }
 
@@ -61,6 +87,7 @@ export function CalendarView({
   formatDay = (day: Date) => day.toLocaleDateString("en-US", { day: "numeric" }),
   previousLabel = "Previous month",
   nextLabel = "Next month",
+  todayLabel = "Today",
   min,
   max,
   id,
@@ -115,17 +142,8 @@ export function CalendarView({
 
   return (
     <div className={`tn:rounded-card tn:bg-paper tn:p-3 tn:shadow-control ${disabled ? "tn:opacity-40" : ""}`}>
-      <div className="tn:flex tn:items-center tn:justify-between">
-        <IconButton
-          label={previousLabel}
-          variant="ghost"
-          size="sm"
-          disabled={disabled || (min !== undefined && month <= min.slice(0, 7))}
-          onClick={() => goTo(toDay(addMonths(current, -1)))}
-        >
-          <Icon>{icons.chevronLeft}</Icon>
-        </IconButton>
-        <div id={titleId} aria-live="polite" className="tn:grid tn:place-content-center tn:place-items-center tn:text-body tn:font-semibold tn:text-ink">
+      <div className="tn:flex tn:items-center">
+        <div id={titleId} aria-live="polite" className="tn:grid tn:min-w-0 tn:flex-1 tn:grid-cols-1 tn:pl-1 tn:text-body tn:font-semibold tn:text-ink">
           <span className="tn:sr-only">{title}</span>
           <AnimatePresence initial={false} custom={direction}>
             <motion.span
@@ -136,21 +154,28 @@ export function CalendarView({
               initial="enter"
               animate="center"
               exit="exit"
-              className="tn:col-start-1 tn:row-start-1"
+              className="tn:col-start-1 tn:row-start-1 tn:truncate"
             >
               {title}
             </motion.span>
           </AnimatePresence>
         </div>
         <IconButton
+          label={previousLabel}
+          icon="chevronLeft"
+          variant="ghost"
+          size="sm"
+          disabled={disabled || (min !== undefined && month <= min.slice(0, 7))}
+          onClick={() => goTo(toDay(addMonths(current, -1)))}
+        />
+        <IconButton
           label={nextLabel}
+          icon="chevronRight"
           variant="ghost"
           size="sm"
           disabled={disabled || (max !== undefined && month >= max.slice(0, 7))}
           onClick={() => goTo(toDay(addMonths(current, 1)))}
-        >
-          <Icon>{icons.chevronRight}</Icon>
-        </IconButton>
+        />
       </div>
       <div
         id={field?.id ?? id}
@@ -202,6 +227,11 @@ export function CalendarView({
             </CalendarMonth>
           </AnimatePresence>
         </motion.div>
+      </div>
+      <div className="tn:mt-2 tn:flex tn:justify-end tn:border-t tn:border-line tn:pt-2">
+        <Button variant="ghost" size="sm" disabled={disabled} onClick={() => goTo(today)}>
+          {todayLabel}
+        </Button>
       </div>
     </div>
   );

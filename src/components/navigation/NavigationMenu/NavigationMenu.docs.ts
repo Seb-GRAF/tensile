@@ -6,7 +6,7 @@ export default {
   usage: "Pass top-level items: a link has an href, a trigger has links that open in a panel. Place it in a paper header and wrap the app in LinkProvider to route clicks.",
   anatomy: "A row of 44px pills: links, and triggers with a chevron. One paper panel opens 8px below the row, aligned to its trigger and kept 16px from the viewport's edges. Moving to another trigger springs the same panel to that trigger's position and size while its links blur-swap. It draws no surface of its own.",
   notes: [
-    "Resting the pointer on a trigger opens its panel after 200 ms; once a panel is open, other triggers switch at once. Leaving closes it after 150 ms.",
+    "Resting the pointer on a trigger opens its panel after 200 ms; once a panel is open, other triggers switch at once. Leaving closes it after 150 ms. With openOnHover off, panels open and switch only by click or keyboard, and stay open until a click outside, Escape or focus leaving.",
     "Below 768px, show the links in a Drawer instead, as Header does.",
   ],
   examples: [
@@ -30,6 +30,7 @@ export default {
     defaultValue: "The open item when uncontrolled.",
     onValueChange: "Called with the item that opens, or null when the panel closes.",
     label: "Accessible name of the navigation landmark.",
+    openOnHover: "Open a panel when the pointer rests on its trigger; turn off to open panels only by click or keyboard.",
     className: "Placement of the navigation.",
   },
 };

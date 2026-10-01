@@ -40,7 +40,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click a thumbnail to grow it into the full view; the arrow keys or the arrow buttons move between images, the next one sliding in from its side; Escape, the backdrop or the close button shrink it back. */
+/** Click a thumbnail to grow it into the full view; drag or flick it, or use the arrow keys or the arrow buttons, to slide to the next or previous image; Escape, the backdrop or the close button shrink it back. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();

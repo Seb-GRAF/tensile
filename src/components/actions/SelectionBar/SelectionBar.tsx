@@ -1,7 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
-import { Icon } from "../../data-display/Icon/Icon";
 import { NumberTicker } from "../../data-display/NumberTicker/NumberTicker";
 import { IconButton } from "../IconButton/IconButton";
 
@@ -43,9 +41,7 @@ export function SelectionBar({
           >
             <NumberTicker value={count} format={countLabel} className="tn:mr-2" />
             {children}
-            <IconButton label={clearLabel} variant="ghost" size="sm" onClick={onClear} className="tn:text-muted">
-              <Icon size={16}>{icons.close}</Icon>
-            </IconButton>
+            <IconButton label={clearLabel} variant="ghost" size="sm" onClick={onClear} className="tn:text-muted" icon="close" />
           </motion.div>
         )}
       </AnimatePresence>

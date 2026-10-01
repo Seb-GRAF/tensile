@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId } from "react";
 import { useControllable } from "../../../controllable";
-import { useLiquid, useSprings } from "../../../springs";
+import { useSprings } from "../../../springs";
 import { useField } from "../Field/Field";
 
 export type RadioGroupProps = {
@@ -19,18 +19,16 @@ export type RadioGroupProps = {
 
 const ROW = 40;
 
-function Dot({ index, count, disabled }: { index: number; count: number; disabled: boolean }) {
+function Dot({ index, disabled }: { index: number; disabled: boolean }) {
   const { shape, soft } = useSprings();
-  const [top, bottom] = useLiquid(index * ROW + 15, (count - 1 - index) * ROW + 15);
   return (
     <motion.span
       aria-hidden
-      initial={{ scale: 0 }}
-      animate={{ scale: 1, opacity: disabled ? 0.4 : 1 }}
+      initial={{ scale: 0, y: index * ROW }}
+      animate={{ scale: 1, y: index * ROW, opacity: disabled ? 0.4 : 1 }}
       exit={{ scale: 0 }}
-      transition={{ scale: shape, opacity: soft }}
-      style={{ top, bottom }}
-      className="tn:pointer-events-none tn:absolute tn:left-3.75 tn:w-2.5 tn:rounded-full tn:bg-ink"
+      transition={{ scale: shape, y: shape, opacity: soft }}
+      className="tn:pointer-events-none tn:absolute tn:top-3.75 tn:left-3.75 tn:size-2.5 tn:rounded-full tn:bg-ink"
     />
   );
 }
@@ -69,7 +67,6 @@ export function RadioGroup({
             <Dot
               key="dot"
               index={index}
-              count={options.length}
               disabled={!!(field?.disabled || disabled || options[index].disabled)}
             />
           )}

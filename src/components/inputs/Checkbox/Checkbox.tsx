@@ -1,10 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef } from "react";
-import { Check } from "../../../Check";
 import { useControllable } from "../../../controllable";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
-import { Icon } from "../../data-display/Icon/Icon";
 import { useField } from "../Field/Field";
 
 export type CheckboxProps = Omit<React.ComponentProps<"input">, "type" | "checked" | "defaultChecked" | "onChange" | "children"> & {
@@ -14,6 +11,9 @@ export type CheckboxProps = Omit<React.ComponentProps<"input">, "type" | "checke
   label?: string;
   indeterminate?: boolean;
 };
+
+const DASH = "M5 12L12 12L19 12";
+const CHECK = "M4 12.5L9 17.5L20 6.5";
 
 export function Checkbox({
   checked: checkedProp,
@@ -26,7 +26,7 @@ export function Checkbox({
   ...props
 }: CheckboxProps) {
   const [checked, setChecked] = useControllable(checkedProp, defaultChecked, onCheckedChange);
-  const { soft, swap } = useSprings();
+  const { shape, soft, swap, scale } = useSprings();
   const field = useField();
   const box = useRef<HTMLLabelElement>(null);
 
@@ -57,9 +57,24 @@ export function Checkbox({
         />
         <AnimatePresence initial={false}>
           {(checked || indeterminate) && (
-            <motion.span aria-hidden key={indeterminate ? "mixed" : "check"} {...swap} className="tn:pointer-events-none tn:relative">
-              {indeterminate ? <Icon size={20}>{icons.minus}</Icon> : <Check size={20} />}
-            </motion.span>
+            <motion.svg
+              key="mark"
+              aria-hidden
+              {...swap}
+              viewBox="0 0 24 24"
+              width={20}
+              height={20}
+              strokeWidth={36 / 20}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="tn:pointer-events-none tn:relative tn:fill-none tn:stroke-current"
+            >
+              <motion.path
+                initial={{ pathLength: 0, d: indeterminate ? DASH : CHECK }}
+                animate={{ pathLength: 1, d: indeterminate ? DASH : CHECK }}
+                transition={{ pathLength: { ...soft, delay: 0.15 * scale }, d: shape }}
+              />
+            </motion.svg>
           )}
         </AnimatePresence>
       </span>

@@ -11,35 +11,12 @@ import { AppShell } from "./AppShell";
 import { Card } from "../Card/Card";
 import { PageHeader } from "../PageHeader/PageHeader";
 
-function NavIcon({ paths, size, filled = false }: { paths: string[]; size: number; filled?: boolean }) {
-  return (
-    <Icon size={size}>
-      {paths.map((d) => (
-        <path key={d} d={d} className={filled ? "fill-current" : ""} />
-      ))}
-    </Icon>
-  );
-}
-
 const sections = [
-  { value: "home", label: "Home", paths: ["M3.5 10 12 3.5l8.5 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4v-6h-6v6H5A1.5 1.5 0 0 1 3.5 19Z"] },
-  {
-    value: "board",
-    label: "Board",
-    paths: [
-      "M3 4.5a1.5 1.5 0 0 1 1.5-1.5h4a1.5 1.5 0 0 1 1.5 1.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a1.5 1.5 0 0 1-1.5-1.5Z",
-      "M14 4.5a1.5 1.5 0 0 1 1.5-1.5h4a1.5 1.5 0 0 1 1.5 1.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a1.5 1.5 0 0 1-1.5-1.5Z",
-      "M3 15.5a1.5 1.5 0 0 1 1.5-1.5h4a1.5 1.5 0 0 1 1.5 1.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a1.5 1.5 0 0 1-1.5-1.5Z",
-      "M14 15.5a1.5 1.5 0 0 1 1.5-1.5h4a1.5 1.5 0 0 1 1.5 1.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a1.5 1.5 0 0 1-1.5-1.5Z",
-    ],
-  },
-  {
-    value: "files",
-    label: "Files",
-    paths: ["M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"],
-  },
-  { value: "messages", label: "Messages", paths: ["M7.9 20A9 9 0 1 0 4 16.1L2 22Z"] },
-];
+  { value: "home", label: "Home", icon: "home" },
+  { value: "board", label: "Board", icon: "grid" },
+  { value: "files", label: "Files", icon: "folder" },
+  { value: "messages", label: "Messages", icon: "message" },
+] as const;
 
 const tasks = [
   { title: "Homepage copy", detail: "Review the new hero text with Maya before Friday's sign-off." },
@@ -79,11 +56,7 @@ export const Default: Story = {
     const [expanded, setExpanded] = useState(true);
     const brand = (
       <span className="flex h-10 items-center gap-2.5 overflow-hidden px-1.5 text-body font-semibold whitespace-nowrap text-ink">
-        <Icon size={20} className="shrink-0">
-          <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-          <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-          <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
-        </Icon>
+        <Icon name="waves" size={20} className="shrink-0" />
         Harbor
       </span>
     );
@@ -98,7 +71,7 @@ export const Default: Story = {
         }
         sidebar={
           <CollapsibleSidebar
-            items={sections.map((item) => ({ value: item.value, label: item.label, icon: <NavIcon paths={item.paths} size={16} /> }))}
+            items={sections.map((item) => ({ value: item.value, label: item.label, icon: <Icon name={item.icon} /> }))}
             value={section}
             onValueChange={setSection}
             expanded={expanded}
@@ -122,8 +95,8 @@ export const Default: Story = {
             items={sections.map((item) => ({
               value: item.value,
               label: item.label,
-              icon: <NavIcon paths={item.paths} size={20} />,
-              activeIcon: <NavIcon paths={item.paths} size={20} filled />,
+              icon: <Icon name={item.icon} size={20} />,
+              activeIcon: <Icon name={item.icon} size={20} className="*:fill-current" />,
             }))}
             value={section}
             onValueChange={setSection}

@@ -23,14 +23,6 @@ export type RatingProps = {
   className?: string;
 };
 
-function Star({ className }: { className: string }) {
-  return (
-    <Icon size={24}>
-      <path className={className} d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
-    </Icon>
-  );
-}
-
 export function Rating({
   value: valueProp,
   defaultValue = 0,
@@ -95,7 +87,7 @@ export function Rating({
         <motion.span style={{ clipPath: clip }} className="tn:absolute tn:inset-0 tn:grid tn:auto-cols-[32px] tn:grid-flow-col">
           {stars.map((star) => (
             <span key={star} className="tn:grid tn:place-items-center">
-              <Star className="tn:fill-accent tn:stroke-none" />
+              <Icon name="star" size={24} className="tn:*:fill-accent tn:*:stroke-none" />
             </span>
           ))}
         </motion.span>
@@ -106,7 +98,7 @@ export function Rating({
             onClick={interactive ? () => setValue(star) : undefined}
             className="tn:relative tn:grid tn:h-8 tn:place-items-center"
           >
-            <Star className="tn:fill-none tn:stroke-ink" />
+            <Icon name="star" size={24} className="tn:text-ink" />
           </span>
         ))}
       </div>

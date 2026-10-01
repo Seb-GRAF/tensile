@@ -9,12 +9,12 @@ import {
   List,
   PageHeader,
   Popover,
-  SegmentedTabs,
   Select,
   Spinner,
   StatusBadge,
   Tabs,
   Toggle,
+  ToggleGroup,
   VolumeSlider,
   type StatusBadgeProps,
 } from "../index";
@@ -196,7 +196,7 @@ function ThemeAndMotion() {
       <PageHeader
         title="Theme and motion"
         description="Every component reads the same tokens. Switch the theme to change the colors, the accent, the radii and the speed of every animation at once."
-        actions={<SegmentedTabs options={themes} value={theme} onValueChange={setTheme} label="Theme" />}
+        actions={<ToggleGroup type="single" options={themes} value={theme} onValueChange={setTheme} label="Theme" />}
       />
       <Showcase key={theme} />
     </div>
@@ -212,7 +212,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Switch the theme by click or with the arrow keys: the showcase remounts with the new accent, radii and motion speed. Open Track details and Invite people to compare the speed; Next status fades the badges. */
+/** Switch the theme by click, or with the arrow keys and Space: the showcase remounts with the new accent, radii and motion speed. Open Track details and Invite people to compare the speed; Next status fades the badges. */
 export const Default: Story = {
   render: () => <ThemeAndMotion />,
 };

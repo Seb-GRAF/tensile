@@ -2,7 +2,6 @@ import { AnimatePresence, motion, useIsPresent } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { useControllable } from "../../../controllable";
 import { useOutsidePress, useTopLayer } from "../../../overlay";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
 import { Icon } from "../../data-display/Icon/Icon";
@@ -18,6 +17,8 @@ export type NavigationMenuProps = {
   defaultValue?: string | null;
   onValueChange?: (value: string | null) => void;
   label?: string;
+  /** Open a panel when the pointer rests on its trigger; turn off to open panels only by click or keyboard. */
+  openOnHover?: boolean;
   className?: string;
 };
 
@@ -109,6 +110,7 @@ export function NavigationMenu({
   defaultValue = null,
   onValueChange,
   label = "Main",
+  openOnHover = true,
   className = "",
 }: NavigationMenuProps) {
   const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
@@ -132,7 +134,7 @@ export function NavigationMenu({
   }
 
   function onPointerEnter(event: React.PointerEvent, next: string) {
-    if (event.pointerType !== "mouse") return;
+    if (!openOnHover || event.pointerType !== "mouse") return;
     if (open === -1) later(next, OPEN_DELAY);
     else {
       clearTimeout(timer.current);
@@ -141,7 +143,7 @@ export function NavigationMenu({
   }
 
   function onPointerLeave(event: React.PointerEvent) {
-    if (event.pointerType === "mouse") later(null, CLOSE_DELAY);
+    if (openOnHover && event.pointerType === "mouse") later(null, CLOSE_DELAY);
   }
 
   function onItemKeyDown(event: React.KeyboardEvent, i: number) {
@@ -208,7 +210,7 @@ export function NavigationMenu({
                 >
                   {item.label}
                   <motion.span initial={false} animate={{ rotate: i === open ? 180 : 0 }} transition={shape} className="tn:-mr-1 tn:flex">
-                    <Icon size={16}>{icons.chevronDown}</Icon>
+                    <Icon name="chevronDown" size={16} />
                   </motion.span>
                 </button>
               ) : (

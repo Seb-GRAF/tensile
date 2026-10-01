@@ -8,7 +8,7 @@ export default {
   notes: [
     "Image content fills square thumbnails and a 3:2 full view.",
     "Closing returns focus to the current image’s thumbnail.",
-    "Previous and next navigation wraps around the gallery; the next picture slides in from the side it comes from."
+    "Previous and next navigation wraps around the gallery; the pictures slide side by side, and dragging or flicking the full view moves between them."
   ],
   examples: [
     { id: "usage", title: "Basic usage", description: "A row of thumbnails that open into a full view with previous and next buttons; use it for a photo gallery or a set of product shots.", Demo: LightboxDemo, code: lightboxDemoCode },

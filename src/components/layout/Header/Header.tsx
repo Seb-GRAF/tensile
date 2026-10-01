@@ -3,10 +3,9 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useLiquid, useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { useLinkClick } from "../../navigation/Link/Link";
 import { SidebarNav } from "../../navigation/SidebarNav/SidebarNav";
-import { Underline } from "../../navigation/UnderlineTabs/UnderlineTabs";
+import { Underline } from "../../navigation/Tabs/UnderlineTabList";
 import { Drawer } from "../../overlays/Drawer/Drawer";
 
 export type HeaderProps = {
@@ -78,16 +77,13 @@ export function Header({
       <div className={`tn:mx-auto tn:flex tn:max-w-page tn:items-center ${floating ? "tn:h-13 tn:gap-2 tn:rounded-control tn:bg-paper tn:py-1 tn:pr-1 tn:pl-4 tn:shadow-float tn:surface" : "tn:h-16 tn:gap-4 tn:px-6"}`}>
         <IconButton
           label={menuLabel}
+          icon="menu"
           variant="ghost"
           aria-haspopup="dialog"
           aria-expanded={open}
           onClick={() => setOpen(true)}
           className="tn:-ml-3 tn:md:hidden"
-        >
-          <Icon size={20}>
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </Icon>
-        </IconButton>
+        />
         {brand}
         <nav ref={measureNav} aria-label={navLabel} className="tn:relative tn:hidden tn:min-w-0 tn:md:block">
           <ul role="list" className="tn:flex">

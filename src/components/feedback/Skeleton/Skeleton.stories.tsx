@@ -1,5 +1,7 @@
 import { SkeletonDemo } from "./demos/SkeletonDemo";
 import { SkeletonCardDemo } from "./demos/SkeletonCardDemo";
+import { SkeletonMediaDemo } from "./demos/SkeletonMediaDemo";
+import { SkeletonListDemo } from "./demos/SkeletonListDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Card } from "../../layout/Card/Card";
 import { Skeleton } from "./Skeleton";
@@ -17,11 +19,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Card className="flex w-80 items-center gap-3 p-4">
-      <Skeleton className="size-10 shrink-0 rounded-full" />
-      <div className="grid flex-1 gap-2">
-        <Skeleton className="h-4 w-48 rounded-full" />
-        <Skeleton className="h-3 w-32 rounded-full" />
-      </div>
+      <Skeleton variant="circle" className="w-10" />
+      <Skeleton variant="text" lines={2} className="flex-1" />
     </Card>
   ),
 };
@@ -32,4 +31,12 @@ export const Usage: Story = {
 
 export const CardUsage: Story = {
   render: () => <SkeletonCardDemo />,
+};
+
+export const MediaUsage: Story = {
+  render: () => <SkeletonMediaDemo />,
+};
+
+export const ListUsage: Story = {
+  render: () => <SkeletonListDemo />,
 };

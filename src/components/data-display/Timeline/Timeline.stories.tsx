@@ -1,7 +1,6 @@
 import { TimelineDemo } from "./demos/TimelineDemo";
 import { TimelineIconsDemo } from "./demos/TimelineIconsDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { icons } from "../../../icons";
 import { Card } from "../../layout/Card/Card";
 import { Icon } from "../Icon/Icon";
 import { Timeline } from "./Timeline";
@@ -14,26 +13,13 @@ const meta = {
   args: {
     label: "Activity",
     items: [
-      {
-        id: "approved",
-        title: "Maya Chen approved the homepage design",
-        time: "2 min ago",
-        icon: (
-          <Icon size={14}>
-            <path d="M20 6 9 17l-5-5" />
-          </Icon>
-        ),
-      },
+      { id: "approved", title: "Maya Chen approved the homepage design", time: "2 min ago", icon: <Icon name="check" size={14} /> },
       {
         id: "commented",
         title: "Leo Park commented on Homepage hero.png",
         description: "“Can we try the darker background? The headline gets lost on white.”",
         time: "1 h ago",
-        icon: (
-          <Icon size={14}>
-            <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-          </Icon>
-        ),
+        icon: <Icon name="message" size={14} />,
       },
       {
         id: "uploaded",
@@ -51,7 +37,7 @@ const meta = {
         title: "Maya Chen created Brand refresh",
         description: "From the Website template",
         time: "Sep 22",
-        icon: <Icon size={14}>{icons.plus}</Icon>,
+        icon: <Icon name="plus" size={14} />,
       },
     ],
   },

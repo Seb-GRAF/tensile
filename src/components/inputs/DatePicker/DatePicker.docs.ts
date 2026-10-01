@@ -12,10 +12,12 @@ import datePickerFormDemoCode from "./demos/DatePickerFormDemo.tsx?raw";
 export default {
   description: "Choose a date in a calendar.",
   usage: "Keep an ISO date string or null in state. Dates use local YYYY-MM-DD strings.",
-  anatomy: "Month navigation and a keyboard-accessible day grid with as many rows as the month has weeks; the calendar's height springs between months. Field provides the group label, description and error.",
+  anatomy: "A header with the month and month arrows, a Today button in the footer, and a keyboard-accessible day grid with as many rows as the month has weeks; the calendar's height springs between months. Field provides the group label, description and error.",
   notes: [
     "Required is an ARIA state; validate the selected date before submitting.",
-    "name creates a hidden input with the selected ISO date."
+    "name creates a hidden input with the selected ISO date.",
+    "Today shows today's month and makes today the day Tab reaches in the grid; it doesn't pick it. With min or max, it stops at the nearest allowed month.",
+    "Picking another day moves the ink pill there at its size."
   ],
   examples: [
     { id: "usage", title: "Basic usage", description: "A date picker in a Field, starting from a chosen date.", Demo: DatePickerDemo, code: datePickerDemoCode },
@@ -61,6 +63,7 @@ export default {
     "formatDay": "Format each day number from a local Date.",
     "previousLabel": "Accessible label for moving backward.",
     "nextLabel": "Accessible label for moving forward.",
+    "todayLabel": "Text of the button that shows today's month.",
     "name": "Name used for the submitted form value.",
     "className": "Classes on the wrapper around the calendar, for width and placement. The calendar fills it."
   },

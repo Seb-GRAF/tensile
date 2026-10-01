@@ -1,4 +1,3 @@
-import { icons } from "../../../icons";
 import { Icon } from "../Icon/Icon";
 
 export type TagProps = {
@@ -30,7 +29,7 @@ export function Tag({
           onClick={onRemove}
           className="tn:grid tn:size-5 tn:place-items-center tn:rounded-full tn:text-muted tn:outline-none tn:hover:bg-paper tn:hover:text-ink"
         >
-          <Icon size={12}>{icons.close}</Icon>
+          <Icon name="close" size={12} />
         </button>
       )}
     </span>

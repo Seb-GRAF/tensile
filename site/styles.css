@@ -4,7 +4,7 @@
 @source "./";
 @source "../src/components/**/demos/**";
 
-html {
+html:not(.dark) {
   color-scheme: light;
 }
 

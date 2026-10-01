@@ -10,10 +10,11 @@ import dateRangePickerFormDemoCode from "./demos/DateRangePickerFormDemo.tsx?raw
 export default {
   description: "Choose a date range in a calendar.",
   usage: "Keep a { start, end } date pair or null in state. Dates use local YYYY-MM-DD strings.",
-  anatomy: "Month navigation and a keyboard-accessible day grid with as many rows as the month has weeks; the calendar's height springs between months. Field provides the group label, description and error.",
+  anatomy: "A header with the month and month arrows, a Today button in the footer, and a keyboard-accessible day grid with as many rows as the month has weeks; the calendar's height springs between months. Field provides the group label, description and error.",
   notes: [
     "Required is an ARIA state; validate both dates before submitting.",
-    "The first selection starts a light preview band. The second emits a complete range ordered from earliest to latest, drawn as an ink band with accent start and end days.",
+    "The range is drawn as ink pills on its start and end days with a light band between them. The first pick moves both pills to that day, and the band grows from it toward the hovered or focused day. The second pick emits a complete range ordered from earliest to latest, and the pill for the other end moves to it.",
+    "Today shows today's month without picking a day.",
     "startName and endName create separate hidden form values.",
     "Resetting the enclosing form drops a first pick that has no second day yet."
   ],
@@ -58,6 +59,7 @@ export default {
     "formatDay": "Format each day number from a local Date.",
     "previousLabel": "Accessible label for moving backward.",
     "nextLabel": "Accessible label for moving forward.",
+    "todayLabel": "Text of the button that shows today's month.",
     "value": "The complete range, start before end, or null. Leave it out to let the picker track it, starting from defaultValue.",
     "defaultValue": "The first range when the picker tracks it itself. Defaults to null, no range.",
     "onValueChange": "Called with the ordered range when the second day is picked. The first pick only previews.",

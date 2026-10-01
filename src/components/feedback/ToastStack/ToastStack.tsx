@@ -1,9 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type ToastStackProps = {
   /** Oldest first: the last toast is in front. */
@@ -89,12 +87,12 @@ export function ToastStack({
                     <IconButton
                       variant="ghost"
                       size="sm"
+                      iconSize={14}
                       label={dismissLabel(toast.label)}
+                      icon="close"
                       onClick={(event) => dismiss(event, toast.id)}
                       className="tn:shrink-0 tn:text-paper/60"
-                    >
-                      <Icon size={14}>{icons.close}</Icon>
-                    </IconButton>
+                    />
                   </motion.div>
                 </div>
               </motion.li>

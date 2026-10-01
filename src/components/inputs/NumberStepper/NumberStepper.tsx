@@ -1,10 +1,8 @@
 import { animate, motion } from "motion/react";
 import { useControllable } from "../../../controllable";
 import { useStretch } from "../../../drag";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { NumberTicker } from "../../data-display/NumberTicker/NumberTicker";
 import { useField } from "../Field/Field";
 
@@ -79,11 +77,10 @@ export function NumberStepper({
           size="sm"
           tabIndex={-1}
           label={decreaseLabel}
+          icon="minus"
           disabled={disabled}
           onClick={() => stepTo(value - step)}
-        >
-          <Icon size={16}>{icons.minus}</Icon>
-        </IconButton>
+        />
         <span
           id={field?.id ?? id}
           role="spinbutton"
@@ -107,11 +104,10 @@ export function NumberStepper({
           size="sm"
           tabIndex={-1}
           label={increaseLabel}
+          icon="plus"
           disabled={disabled}
           onClick={() => stepTo(value + step)}
-        >
-          <Icon size={16}>{icons.plus}</Icon>
-        </IconButton>
+        />
       </motion.div>
     </div>
   );

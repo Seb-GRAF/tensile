@@ -1,17 +1,6 @@
 import { motion, useTransform } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
-import { useControllable } from "../../../controllable";
 import { useLiquid } from "../../../springs";
-
-export type UnderlineTabsProps = {
-  options: { value: string; label: string; icon?: React.ReactNode }[];
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (value: string) => void;
-  label?: string;
-  id?: string;
-  className?: string;
-};
 
 /** The liquid underline under the current item of a row, between the `left` and `right` edges measured from the row. */
 export function Underline({ left, right }: { left: number; right: number }) {
@@ -26,16 +15,14 @@ export function Underline({ left, right }: { left: number; right: number }) {
   );
 }
 
-export function UnderlineTabs({
-  options,
-  value: valueProp,
-  defaultValue = options[0].value,
-  onValueChange,
-  label = "Sections",
-  id,
-  className = "",
-}: UnderlineTabsProps) {
-  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
+export function UnderlineTabList({ options, value, onValueChange, label, id, className }: {
+  options: { value: string; label: string; icon?: React.ReactNode }[];
+  value: string;
+  onValueChange: (value: string) => void;
+  label: string;
+  id: string;
+  className: string;
+}) {
   const index = options.findIndex((option) => option.value === value);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const [edges, setEdges] = useState<{ left: number; right: number }>();
@@ -53,7 +40,7 @@ export function UnderlineTabs({
     if (target === undefined) return;
     event.preventDefault();
     const next = (target + options.length) % options.length;
-    setValue(options[next].value);
+    onValueChange(options[next].value);
     tabs.current[next]!.focus();
   }
 
@@ -68,11 +55,11 @@ export function UnderlineTabs({
             }}
             type="button"
             role="tab"
-            id={id ? `${id}-${i}` : undefined}
-            aria-controls={id ? `${id}-${i}-panel` : undefined}
+            id={`${id}-${i}`}
+            aria-controls={`${id}-${i}-panel`}
             aria-selected={i === index}
             tabIndex={i === index ? 0 : -1}
-            onClick={() => setValue(option.value)}
+            onClick={() => onValueChange(option.value)}
             className={`tn:flex tn:h-8 tn:min-w-0 tn:items-center tn:gap-1.5 tn:rounded-control tn:px-3 tn:text-label tn:font-medium tn:outline-offset-2 tn:transition-colors tn:duration-[calc(300ms*var(--tn-motion-duration-scale))] tn:hover:transition-none tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${i === index ? "tn:text-ink" : "tn:text-muted tn:hover:text-ink"}`}
           >
             {option.icon}

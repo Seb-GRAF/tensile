@@ -17,8 +17,8 @@ type SheetProps = {
 
 const panels = {
   bottom: "tn:inset-x-0 tn:bottom-0 tn:max-h-dvh tn:rounded-t-dialog tn:sm:mx-auto tn:sm:max-w-lg",
-  left: "tn:inset-y-3 tn:left-3 tn:w-[min(360px,calc(100vw-48px))] tn:overflow-clip tn:rounded-dialog",
-  right: "tn:inset-y-3 tn:right-3 tn:w-[min(360px,calc(100vw-48px))] tn:overflow-clip tn:rounded-dialog",
+  left: "tn:inset-y-0 tn:left-0 tn:w-full tn:overflow-clip tn:sm:inset-y-3 tn:sm:left-3 tn:sm:w-100 tn:sm:rounded-dialog",
+  right: "tn:inset-y-0 tn:right-0 tn:w-full tn:overflow-clip tn:sm:inset-y-3 tn:sm:right-3 tn:sm:w-100 tn:sm:rounded-dialog",
 };
 
 const CLOSED_GAP = 40;

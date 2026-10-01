@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Button, Dialog, Field, Icon, Input, MorphButton, SegmentedTabs, Select, Toggle } from "tensile";
+import { Button, Dialog, Field, Icon, Input, MorphButton, Select, Toggle, ToggleGroup } from "tensile";
 
 const ranges = [
   { value: "day", label: "Day" },
@@ -40,12 +40,10 @@ export function App() {
   return (
     <main className="app">
       <h1>
-        <Icon size={20}>
-          <path d="M12 3v18M3 12h18" />
-        </Icon>
+        <Icon name="plus" size={20} />
         A consumer without Tailwind
       </h1>
-      <SegmentedTabs options={ranges} value={range} onValueChange={setRange} />
+      <ToggleGroup type="single" options={ranges} value={range} onValueChange={setRange} />
       <Toggle checked={notify} onCheckedChange={setNotify} label="Notifications" />
       <div className="actions">
         <Dialog open={open} onOpenChange={setOpen} trigger="Invite people" title="Invite people">

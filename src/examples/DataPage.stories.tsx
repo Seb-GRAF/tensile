@@ -67,11 +67,11 @@ const mockInvoices: Invoice[] = Array.from({ length: 48 }, (_, i) => {
 const rowActions = [{ label: "View" }, { label: "Duplicate" }, { label: "Delete" }];
 
 const sections = [
-  { href: "/overview", label: "Overview", paths: ["M3.5 10 12 3.5l8.5 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4v-6h-6v6H5A1.5 1.5 0 0 1 3.5 19Z"] },
-  { href: "/invoices", label: "Invoices", paths: ["M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z", "M14 2v4a2 2 0 0 0 2 2h4"] },
-  { href: "/payments", label: "Payments", paths: ["M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z", "M2 10h20"] },
-  { href: "/customers", label: "Customers", paths: ["M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2Z"] },
-];
+  { href: "/overview", label: "Overview", icon: "home" },
+  { href: "/invoices", label: "Invoices", icon: "file" },
+  { href: "/payments", label: "Payments", icon: "creditCard" },
+  { href: "/customers", label: "Customers", icon: "user" },
+] as const;
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -81,23 +81,9 @@ function total(invoices: Invoice[]) {
   return invoices.reduce((sum, invoice) => sum + invoice.amount, 0);
 }
 
-function NavIcon({ paths, size, filled = false }: { paths: string[]; size: number; filled?: boolean }) {
-  return (
-    <Icon size={size}>
-      {paths.map((d) => (
-        <path key={d} d={d} className={filled ? "fill-current" : ""} />
-      ))}
-    </Icon>
-  );
-}
-
 const brand = (
   <span className="flex h-10 items-center gap-2.5 overflow-hidden px-1.5 text-body font-semibold whitespace-nowrap text-ink">
-    <Icon size={20} className="shrink-0">
-      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
-      <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
-      <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" />
-    </Icon>
+    <Icon name="layers" size={20} className="shrink-0" />
     Ledger
   </span>
 );
@@ -187,10 +173,7 @@ function Invoices() {
             aria-label="Search invoices"
             placeholder="Search by customer or number"
             leading={
-              <Icon size={16} className="shrink-0">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </Icon>
+              <Icon name="search" size={16} className="shrink-0" />
             }
             className="min-w-0 flex-1 basis-64"
           />
@@ -311,7 +294,7 @@ function DataPage() {
               value: section.href,
               href: section.href,
               label: section.label,
-              icon: <NavIcon paths={section.paths} size={16} />,
+              icon: <Icon name={section.icon} />,
             }))}
             value={path}
             onValueChange={setPath}
@@ -336,8 +319,8 @@ function DataPage() {
               value: section.href,
               href: section.href,
               label: section.label,
-              icon: <NavIcon paths={section.paths} size={20} />,
-              activeIcon: <NavIcon paths={section.paths} size={20} filled />,
+              icon: <Icon name={section.icon} size={20} />,
+              activeIcon: <Icon name={section.icon} size={20} className="*:fill-current" />,
             }))}
             value={path}
             onValueChange={setPath}

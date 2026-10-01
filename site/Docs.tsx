@@ -1,5 +1,5 @@
 import { useState, type ComponentType } from "react";
-import { Button, CommandPalette, Drawer, Header, Link, PageHeader, Separator, SidebarNav, Table } from "tensile";
+import { Button, CommandPalette, Drawer, Header, Link, PageHeader, Separator, SidebarNav, Table, TableOfContents } from "tensile";
 import { Accessibility } from "./docs/Accessibility";
 import { Forms } from "./docs/Forms";
 import { GettingStarted } from "./docs/GettingStarted";
@@ -100,8 +100,7 @@ const pages = [
       description: documentation?.description ?? component.description,
       documentation,
       sections: documentation ? [
-        { id: "examples", label: "Usage and variants" },
-        ...documentation.examples.map((example) => ({ id: example.id, label: example.title })),
+        { id: "examples", label: "Usage and variants", items: documentation.examples.map((example) => ({ id: example.id, label: example.title })) },
         { id: "composition", label: "Composition" },
         ...(documentation.keyboard.length > 0 ? [{ id: "keyboard", label: "Keyboard" }] : []),
         { id: "api", label: "API reference" },
@@ -124,10 +123,10 @@ const groups = docsPages.reduce<Record<string, typeof docsPages>>((result, page)
 
 const commands = docsPages.flatMap((page) => [
   { label: page.title, href: page.href },
-  ...page.sections.map((section) => ({ label: `${page.title} / ${section.label}`, href: `${page.href}#${section.id}` })),
+  ...page.sections.flatMap((section) => [section, ...("items" in section ? section.items ?? [] : [])]).map((section) => ({ label: `${page.title} / ${section.label}`, href: `${page.href}#${section.id}` })),
 ]);
 
-export function Docs({ page, brand, onNavigate }: { page: typeof docsPages[number]; brand: React.ReactNode; onNavigate: (href: string) => void }) {
+export function Docs({ page, brand, toggle, onNavigate }: { page: typeof docsPages[number]; brand: React.ReactNode; toggle: React.ReactNode; onNavigate: (href: string) => void }) {
   const [open, setOpen] = useState(false);
   const index = docsPages.indexOf(page);
   const previous = docsPages[index - 1];
@@ -162,6 +161,7 @@ export function Docs({ page, brand, onNavigate }: { page: typeof docsPages[numbe
         value={docsPages[0].href}
         actions={
           <>
+            {toggle}
             <div className="relative h-11 w-40 sm:w-60 lg:w-72">
               <CommandPalette
                 commands={commands}
@@ -253,12 +253,7 @@ export function Docs({ page, brand, onNavigate }: { page: typeof docsPages[numbe
           <p className="mt-12 text-label text-muted">Tensile is <Link href={`${base}LICENSE`}>MIT licensed</Link>. Made by Sébastien Graf.</p>
         </main>
         <aside className="sticky top-16 hidden max-h-[calc(100dvh-4rem)] self-start overflow-y-auto py-10 xl:block">
-          <nav aria-label="On this page">
-            <p className="mb-4 text-label font-medium">On this page</p>
-            <ul role="list" className="grid gap-3 border-l border-line pl-4">
-              {page.sections.map((section) => <li key={section.id}><Link href={`#${section.id}`} underline={false} className="text-label text-muted hover:text-ink">{section.label}</Link></li>)}
-            </ul>
-          </nav>
+          <TableOfContents items={page.sections} />
         </aside>
       </div>
     </div>

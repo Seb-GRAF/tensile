@@ -10,7 +10,7 @@ import { FieldContext, useField } from "../Field/Field";
 import { Input, type InputProps } from "../Input/Input";
 
 export type DateFieldProps = Omit<InputProps, "value" | "defaultValue" | "onValueChange" | "type" | "min" | "max" | "ref" | "trailing"> &
-  Pick<DatePickerProps, "formatMonth" | "formatWeekday" | "formatDay" | "previousLabel" | "nextLabel"> & {
+  Pick<DatePickerProps, "firstDayOfWeek" | "formatMonth" | "formatWeekday" | "formatDay" | "previousLabel" | "nextLabel" | "todayLabel"> & {
     /** The date as YYYY-MM-DD, or null when empty. */
     value?: string | null;
     defaultValue?: string | null;
@@ -34,11 +34,13 @@ export function DateField({
   parseDate = parseUSDate,
   placeholder = "MM/DD/YYYY",
   calendarLabel = "Choose date",
+  firstDayOfWeek,
   formatMonth,
   formatWeekday,
   formatDay,
   previousLabel,
   nextLabel,
+  todayLabel,
   name,
   form,
   disabled = false,
@@ -119,10 +121,7 @@ export function DateField({
               panelLabel={calendarLabel}
               trigger={
                 <span className="tn:grid tn:h-full tn:place-items-center tn:text-muted">
-                  <Icon>
-                    <rect x="3.5" y="5" width="17" height="15.5" rx="3" />
-                    <path d="M3.5 10h17M8 3v4M16 3v4" />
-                  </Icon>
+                  <Icon name="calendar" />
                 </span>
               }
               className="tn:bg-paper tn:text-ink"
@@ -137,11 +136,13 @@ export function DateField({
                     }}
                     min={min}
                     max={max}
+                    firstDayOfWeek={firstDayOfWeek}
                     formatMonth={formatMonth}
                     formatWeekday={formatWeekday}
                     formatDay={formatDay}
                     previousLabel={previousLabel}
                     nextLabel={nextLabel}
+                    todayLabel={todayLabel}
                   />
                 </FieldContext>
               </div>

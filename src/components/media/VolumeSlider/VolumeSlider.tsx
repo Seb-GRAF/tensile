@@ -3,7 +3,6 @@ import { useControllable } from "../../../controllable";
 import { dragHandlers, rubber, useStretch } from "../../../drag";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type VolumeSliderProps = {
   /** 0..1 */
@@ -64,7 +63,16 @@ function VolumeTrack({ value, onValueChange, label, tone, formatValue, width }: 
         className={`tn:absolute tn:top-1/2 tn:left-0 tn:-translate-y-1/2 tn:overflow-hidden tn:rounded-control tn:shadow-control ${tone === "ink" ? "tn:bg-line" : "tn:bg-paper"}`}
       >
         <motion.div style={{ width: fill }} className="tn:absolute tn:inset-y-1 tn:left-1 tn:rounded-control tn:bg-ink tn:text-paper">
-          <Icon size={16} className="tn:absolute tn:top-1/2 tn:left-2.5 tn:-translate-y-1/2">
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            width={16}
+            height={16}
+            strokeWidth={36 / 16}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="tn:absolute tn:top-1/2 tn:left-2.5 tn:-translate-y-1/2 tn:fill-none tn:stroke-current"
+          >
             <path d="M11 5 6 9H2v6h4l5 4z" />
             <motion.path d="M15.54 8.46a5 5 0 0 1 0 7.07" initial={false} animate={{ opacity: value > 0 ? 1 : 0 }} transition={soft} />
             <motion.path
@@ -73,7 +81,7 @@ function VolumeTrack({ value, onValueChange, label, tone, formatValue, width }: 
               animate={{ opacity: value > 0.5 ? 1 : 0 }}
               transition={soft}
             />
-          </Icon>
+          </svg>
         </motion.div>
       </motion.div>
     </div>

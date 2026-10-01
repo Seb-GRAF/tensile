@@ -48,16 +48,6 @@ function Scene({ colors, sun }: { colors: string[]; sun: number[] }) {
   );
 }
 
-function NavIcon({ paths, size, filled = false }: { paths: string[]; size: number; filled?: boolean }) {
-  return (
-    <Icon size={size}>
-      {paths.map((d) => (
-        <path key={d} d={d} className={filled ? "fill-current" : ""} />
-      ))}
-    </Icon>
-  );
-}
-
 const photos = [
   { label: "View from the terrace at dawn", colors: ["#e8ddd7", "#f6d2bb", "#c3b5b6", "#a89b9f", "#857a80"], sun: [120, 168] },
   { label: "The valley in the morning, after the fog lifts over Le Châble", colors: ["#dae6ea", "#fbeaa8", "#b0c3bd", "#93aba5", "#647d77"], sun: [170, 112] },
@@ -67,11 +57,11 @@ const photos = [
 ];
 
 const sections = [
-  { href: "/listings", label: "Listings", paths: ["M3.5 10 12 3.5l8.5 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4v-6h-6v6H5A1.5 1.5 0 0 1 3.5 19Z"] },
-  { href: "/viewings", label: "Viewings", paths: ["M8 2v4", "M16 2v4", "M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z", "M3 10h18"] },
-  { href: "/clients", label: "Clients", paths: ["M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2Z"] },
-  { href: "/reports", label: "Reports", paths: ["M3 3v16a2 2 0 0 0 2 2h16", "M7 16V11", "M12 16V7", "M17 16v-3"] },
-];
+  { href: "/listings", label: "Listings", icon: "home" },
+  { href: "/viewings", label: "Viewings", icon: "calendar" },
+  { href: "/clients", label: "Clients", icon: "user" },
+  { href: "/reports", label: "Reports", icon: "chart" },
+] as const;
 
 const trail = [
   { label: "Listings", href: "/listings" },
@@ -140,9 +130,7 @@ const files = [
 
 const brand = (
   <span className="flex h-10 items-center gap-2.5 overflow-hidden px-1.5 text-body font-semibold whitespace-nowrap text-ink">
-    <Icon size={20} className="shrink-0">
-      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-    </Icon>
+    <Icon name="mountain" size={20} className="shrink-0" />
     Alpina Estates
   </span>
 );
@@ -220,11 +208,7 @@ function DetailPage() {
             <ActionMenu
               label="More actions"
               trigger={
-                <Icon>
-                  <circle cx="5" cy="12" r="1" />
-                  <circle cx="12" cy="12" r="1" />
-                  <circle cx="19" cy="12" r="1" />
-                </Icon>
+                <Icon name="more" />
               }
               actions={moreActions}
               onAction={(chosen) => notify(chosen.label)}
@@ -305,20 +289,9 @@ function DetailPage() {
                   <List
                     items={files.map((file) => ({
                       ...file,
-                      leading: (
-                        <Icon size={20}>
-                          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                          <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                        </Icon>
-                      ),
+                      leading: <Icon name="file" size={20} />,
                       trailing: (
-                        <IconButton label={`Download ${file.title}`} variant="ghost" size="sm" onClick={() => notify(`Downloading ${file.title}`)}>
-                          <Icon>
-                            <path d="M12 15V3" />
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <path d="m7 10 5 5 5-5" />
-                          </Icon>
-                        </IconButton>
+                        <IconButton label={`Download ${file.title}`} variant="ghost" size="sm" onClick={() => notify(`Downloading ${file.title}`)} icon="download" />
                       ),
                     }))}
                   />
@@ -367,7 +340,7 @@ function DetailPage() {
               value: section.href,
               href: section.href,
               label: section.label,
-              icon: <NavIcon paths={section.paths} size={16} />,
+              icon: <Icon name={section.icon} />,
             }))}
             value={sections.find((section) => path.startsWith(section.href))!.href}
             onValueChange={setPath}
@@ -392,8 +365,8 @@ function DetailPage() {
               value: section.href,
               href: section.href,
               label: section.label,
-              icon: <NavIcon paths={section.paths} size={20} />,
-              activeIcon: <NavIcon paths={section.paths} size={20} filled />,
+              icon: <Icon name={section.icon} size={20} />,
+              activeIcon: <Icon name={section.icon} size={20} className="*:fill-current" />,
             }))}
             value={sections.find((section) => path.startsWith(section.href))!.href}
             onValueChange={setPath}

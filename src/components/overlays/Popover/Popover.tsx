@@ -32,7 +32,7 @@ export function Popover({
   label,
   panelLabel = "Details",
   panelWidth = 288,
-  placement = "bottom-left",
+  placement = "top-center",
   id,
   disabled = false,
   "aria-labelledby": labelledBy,
@@ -46,7 +46,7 @@ export function Popover({
   const width = triggerSize?.width;
   const [size, measurePanel] = useSize();
   useOutsidePress(root, open, () => setOpen(false));
-  const content = <span ref={measureTrigger} className="tn:inline-flex tn:items-center tn:whitespace-nowrap tn:px-4 tn:text-sm tn:font-medium">{trigger}</span>;
+  const content = <span ref={measureTrigger} className={`tn:inline-flex tn:h-11 tn:items-center tn:whitespace-nowrap tn:align-top tn:text-sm tn:font-medium ${label ? "tn:px-3.5" : "tn:px-4"}`}>{trigger}</span>;
 
   return (
     <div ref={root} className={`tn:w-fit ${className}`}>

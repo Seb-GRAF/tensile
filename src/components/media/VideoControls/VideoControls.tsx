@@ -4,7 +4,6 @@ import { clock, playPausePath } from "../../../playback";
 import { SeekBar, TimeReadout } from "../../../SeekBar";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { VolumeSlider } from "../VolumeSlider/VolumeSlider";
 
 export type VideoControlsProps = {
@@ -58,12 +57,22 @@ export function VideoControls({
         variant="ghost"
         label={playing ? pauseLabel : playLabel}
         onClick={() => onPlayingChange(!playing)}
+        icon={
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            width={24}
+            height={24}
+            strokeWidth={36 / 24}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="tn:block tn:fill-none tn:stroke-current"
+          >
+            <motion.path d={d} className="tn:fill-current" />
+          </svg>
+        }
         className="tn:shrink-0"
-      >
-        <Icon size={24}>
-          <motion.path d={d} className="tn:fill-current" />
-        </Icon>
-      </IconButton>
+      />
       <div className="tn:mr-6 tn:ml-3 tn:min-w-0 tn:grow">
         <SeekBar
           value={currentTime}

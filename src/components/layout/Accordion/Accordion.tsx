@@ -1,7 +1,6 @@
 import { motion } from "motion/react";
 import { useId, useRef } from "react";
 import { useControllable } from "../../../controllable";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { Icon } from "../../data-display/Icon/Icon";
 
@@ -68,7 +67,7 @@ export function Accordion({ items, type = "single", value, defaultValue = type =
               {item.icon && <span className="tn:text-muted">{item.icon}</span>}
               <span className="tn:truncate">{item.label}</span>
               <motion.span initial={false} animate={{ rotate: open ? 180 : 0 }} transition={shape} className="tn:ml-auto tn:shrink-0 tn:text-muted">
-                <Icon size={16}>{icons.chevronDown}</Icon>
+                <Icon name="chevronDown" size={16} />
               </motion.span>
             </button>
             <motion.div

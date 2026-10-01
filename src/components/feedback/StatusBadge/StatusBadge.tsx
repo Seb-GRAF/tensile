@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "motion/react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { useWidth } from "../../../useWidth";
 import { Icon } from "../../data-display/Icon/Icon";
@@ -41,7 +40,7 @@ export function StatusBadge({ status, label, className = "" }: StatusBadgeProps)
           {...swap}
           className={`tn:col-start-1 tn:row-start-1 tn:flex tn:items-center tn:gap-1 tn:whitespace-nowrap tn:pr-2.5 ${status === "warning" ? "tn:pl-1.5" : "tn:pl-2.5"}`}
         >
-          {status === "warning" && <Icon size={14}>{icons.alert}</Icon>}
+          {status === "warning" && <Icon name="alert" size={14} />}
           {label}
         </motion.span>
       </AnimatePresence>

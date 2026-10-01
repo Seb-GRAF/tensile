@@ -7,7 +7,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
-import { icons } from "../../../icons";
 import { Icon } from "../../data-display/Icon/Icon";
 import { Input, type InputProps } from "./Input";
 
@@ -57,7 +56,7 @@ export const WithIcons: Story = {
   args: {
     "aria-label": "Search",
     placeholder: "Search songs, artists and albums",
-    leading: <Icon>{icons.search}</Icon>,
+    leading: <Icon name="search" />,
   },
 };
 

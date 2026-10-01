@@ -6,7 +6,6 @@ import { clock, playPausePath } from "../../../playback";
 import { SeekBar, TimeReadout } from "../../../SeekBar";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type MusicPlayerProps = {
   title: string;
@@ -93,9 +92,18 @@ export function MusicPlayer({
           <span className="tn:flex tn:size-full tn:items-center tn:gap-2.5 tn:pr-3.5 tn:pl-2 tn:text-label tn:font-medium">
             <Art className="tn:size-6 tn:shrink-0" />
             <span className="tn:truncate">{title}</span>
-            <Icon size={12} className="tn:ml-auto tn:shrink-0">
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              width={12}
+              height={12}
+              strokeWidth={36 / 12}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="tn:ml-auto tn:block tn:shrink-0 tn:fill-none tn:stroke-current"
+            >
               <motion.path d={d} className="tn:fill-current" />
-            </Icon>
+            </svg>
           </span>
         }
         className="dark tn:bg-paper tn:text-ink"
@@ -106,10 +114,9 @@ export function MusicPlayer({
               variant="ghost"
               label={minimizeLabel}
               onClick={() => setExpanded(false)}
+              icon={<Art className="tn:size-11" />}
               className="tn:shrink-0"
-            >
-              <Art className="tn:size-11" />
-            </IconButton>
+            />
             <div className="tn:min-w-0 tn:grow">
               <p className="tn:truncate tn:text-base tn:font-semibold tn:tracking-[-0.01em]">{title}</p>
               <p className="tn:truncate tn:text-sm tn:text-muted">{artist}</p>
@@ -118,12 +125,22 @@ export function MusicPlayer({
               variant="ghost"
               label={playing ? pauseLabel : playLabel}
               onClick={() => setPlaying(!playing)}
+              icon={
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  width={28}
+                  height={28}
+                  strokeWidth={36 / 28}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="tn:block tn:fill-none tn:stroke-current"
+                >
+                  <motion.path d={d} className="tn:fill-current" />
+                </svg>
+              }
               className="tn:shrink-0"
-            >
-              <Icon size={28}>
-                <motion.path d={d} className="tn:fill-current" />
-              </Icon>
-            </IconButton>
+            />
           </div>
           <div className="tn:mt-5">
             <SeekBar

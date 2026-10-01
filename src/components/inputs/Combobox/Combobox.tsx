@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Check } from "../../../Check";
 import { useControllable } from "../../../controllable";
-import { icons } from "../../../icons";
 import { filterByWords, ListHighlight, optionRows, scrollToRow, ROW, useActiveIndex, type Option, type Options } from "../../../list";
 import { useFocusSource } from "../../../focus";
 import { useOutsidePress, useTopLayer } from "../../../overlay";
@@ -193,7 +192,7 @@ export function Combobox({
                 onKeyDown={onKeyDown}
                 className={`tn:block tn:w-full tn:bg-transparent tn:text-body tn:text-ink tn:outline-none ${inside ? "tn:h-12 tn:pt-5 tn:pr-11 tn:pb-1 tn:pl-5 tn:placeholder:text-transparent tn:focus:placeholder:text-muted" : "tn:h-11 tn:pr-10 tn:pl-4 tn:placeholder:text-muted"}`}
               />
-              <Icon className={`tn:pointer-events-none tn:absolute tn:text-muted ${inside ? "tn:top-4.5 tn:right-5" : "tn:top-3.5 tn:right-4"}`}>{icons.chevronsUpDown}</Icon>
+              <Icon name="chevronsUpDown" className={`tn:pointer-events-none tn:absolute tn:text-muted ${inside ? "tn:top-4.5 tn:right-5" : "tn:top-3.5 tn:right-4"}`} />
               {inside && (
                 <motion.div
                   initial={false}

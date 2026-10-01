@@ -116,10 +116,7 @@ export function TimePicker({
                       {(!inside || floated) && <motion.span key={text} {...swap} className={`tn:col-start-1 tn:row-start-1 tn:truncate ${value ? "tn:text-ink" : "tn:text-muted"}`}>{text}</motion.span>}
                     </AnimatePresence>
                   </span>
-                  <Icon className="tn:shrink-0 tn:text-muted">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 7v5l3 2" />
-                  </Icon>
+                  <Icon name="clock" className="tn:shrink-0 tn:text-muted" />
                 </span>
                 {inside && (
                   <span ref={measureError}>

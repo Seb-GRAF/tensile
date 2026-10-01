@@ -8,7 +8,7 @@ import drawerLongContentDemoCode from "./demos/DrawerLongContentDemo.tsx?raw";
 export default {
   description: "Show modal content from a side of the viewport.",
   usage: "Control open from a Button and pass your content. The body pads it to line up with the title. Without open, the drawer keeps its own state, starting from defaultOpen.",
-  anatomy: "A native modal dialog contains the backdrop and a panel that floats 12px from the top, bottom and its side, with rounded corners. The header is the drag handle. Long content scrolls inside the panel.",
+  anatomy: "A native modal dialog contains the backdrop and a panel. From 640px up it is 400px wide and floats 12px from the top, bottom and its side, with rounded corners; on narrower screens it fills the viewport. The header is the drag handle. Long content scrolls inside the panel.",
   notes: [
     "Drag the header toward its edge to dismiss. A short drag springs back.",
     "Closing restores focus to the opening control."

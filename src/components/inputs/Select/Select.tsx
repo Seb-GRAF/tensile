@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Check } from "../../../Check";
 import { useControllable } from "../../../controllable";
-import { icons } from "../../../icons";
 import { ListHighlight, optionRows, scrollToRow, ROW, useActiveIndex, useTypeahead, type Option, type Options } from "../../../list";
 import { useOutsidePress, useTopLayer } from "../../../overlay";
 import { useSprings } from "../../../springs";
@@ -180,7 +179,7 @@ export function Select({
                     {(!inside || floated) && <motion.span key={text} {...swap} className={`tn:col-start-1 tn:row-start-1 tn:truncate ${index === -1 ? "tn:text-muted" : "tn:text-ink"}`}>{text}</motion.span>}
                   </AnimatePresence>
                 </span>
-                <Icon className="tn:shrink-0 tn:text-muted">{icons.chevronsUpDown}</Icon>
+                <Icon name="chevronsUpDown" className="tn:shrink-0 tn:text-muted" />
               </div>
               {inside && (
                 <motion.div

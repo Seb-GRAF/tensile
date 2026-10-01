@@ -5,7 +5,7 @@ export function CardInkDemo() {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Card tone="ink" className="w-full max-w-sm p-5">
+    <Card tone="ink" className="w-80 max-w-full p-5">
       <h3 className="text-body font-semibold">Pro plan</h3>
       <p className="mt-2 text-label text-muted">Three of five seats in use.</p>
       <Separator className="my-4" />

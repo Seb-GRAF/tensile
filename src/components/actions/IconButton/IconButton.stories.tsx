@@ -6,14 +6,14 @@ import { IconButtonDisabledDemo } from "./demos/IconButtonDisabledDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
 import { icons } from "../../../icons";
-import { Icon } from "../../data-display/Icon/Icon";
 import { IconButton } from "./IconButton";
 
 const meta = {
   title: "Actions/IconButton",
   id: "components-iconbutton",
   component: IconButton,
-  args: { label: "Close", children: <Icon size={20}>{icons.close}</Icon>, onClick: fn() },
+  args: { label: "Close", icon: "close", onClick: fn() },
+  argTypes: { icon: { control: "select", options: Object.keys(icons) } },
 } satisfies Meta<typeof IconButton>;
 
 export default meta;

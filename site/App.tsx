@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   Checkbox,
+  CodeBlock,
   ColorSwatches,
   Combobox,
   CopyButton,
@@ -23,13 +24,14 @@ import {
   NumberStepper,
   NumberTicker,
   PageDots,
-  SegmentedTabs,
   Select,
   StatusBadge,
   SwipeButton,
+  Tabs,
+  ThemeToggle,
   Toggle,
+  ToggleGroup,
   VolumeSlider,
-  icons,
   useSprings,
   useWidth,
   type StatusBadgeProps,
@@ -54,10 +56,10 @@ const channels = [
 ];
 
 const ranges = [
-  { value: "day", label: "Day" },
-  { value: "week", label: "Week" },
-  { value: "month", label: "Month" },
-  { value: "year", label: "Year" },
+  { value: "day", label: "Day", content: "312 visits today" },
+  { value: "week", label: "Week", content: "2,184 visits this week" },
+  { value: "month", label: "Month", content: "9,460 visits this month" },
+  { value: "year", label: "Year", content: "118,200 visits this year" },
 ];
 
 const stages: StatusBadgeProps[] = [
@@ -269,7 +271,7 @@ function ReleaseCard() {
       <div className="grid gap-4">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <span className="text-body">Channel</span>
-          <SegmentedTabs options={channels} value={channel} onValueChange={setChannel} label="Release channel" />
+          <ToggleGroup type="single" options={channels} value={channel} onValueChange={setChannel} label="Release channel" />
         </div>
         <div className="flex items-center justify-between gap-4">
           <span className="text-body">Reviewers</span>
@@ -285,7 +287,7 @@ function ReleaseCard() {
   );
 }
 
-function Hero() {
+function Hero({ theme }: { theme: "light" | "dark" }) {
   const { spring, scale } = useSprings();
   const [chapter, setChapter] = useState(0);
 
@@ -337,7 +339,7 @@ function Hero() {
         </div>
       </div>
       <motion.div {...rise(6)} className="mt-10 md:mt-12">
-        <Reel chapter={chapter} onChapterChange={setChapter} />
+        <Reel chapter={chapter} onChapterChange={setChapter} theme={theme} />
       </motion.div>
     </section>
   );
@@ -425,13 +427,13 @@ function LiquidDemo() {
 
   return (
     <Tile
-      names={["SegmentedTabs", "PageDots"]}
+      names={["Tabs", "PageDots"]}
       title="Selections slide"
       demo={demo}
       className="md:col-span-2"
     >
       <div className="grid justify-items-center gap-6">
-        <SegmentedTabs options={ranges} value={range} onValueChange={setRange} label="Range" />
+        <Tabs variant="segmented" items={ranges} value={range} onValueChange={setRange} label="Range" />
         <PageDots count={5} value={page} onValueChange={setPage} label="Pages" />
       </div>
     </Tile>
@@ -454,12 +456,7 @@ function NumbersDemo() {
       <div className="grid justify-items-center gap-6">
         <NumberStepper value={guests} onValueChange={setGuests} min={0} max={12} label="Guests" />
         <div className="relative">
-          <IconButton label={`Notifications, ${unread} unread`} variant="secondary" onClick={() => setUnread(unread === 12 ? 0 : unread + 1)}>
-            <Icon size={20}>
-              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-            </Icon>
-          </IconButton>
+          <IconButton label={`Notifications, ${unread} unread`} variant="secondary" onClick={() => setUnread(unread === 12 ? 0 : unread + 1)} icon="bell" />
           <Badge count={unread} className="absolute -top-1 -right-1" />
         </div>
       </div>
@@ -654,16 +651,10 @@ function Theming() {
             </div>
             <div className="flex flex-wrap items-center justify-between gap-4">
               <span className="text-body font-medium">Corners</span>
-              <SegmentedTabs options={corners} value={corner} onValueChange={setCorner} label="Corners" />
+              <ToggleGroup type="single" options={corners} value={corner} onValueChange={setCorner} label="Corners" />
             </div>
           </div>
-          <Card tone="ink" className="mt-10 p-5">
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-label text-muted">app.css</span>
-              <CopyButton value={css} label="Copy CSS" />
-            </div>
-            <pre className="mt-3 overflow-x-auto font-mono text-label">{css}</pre>
-          </Card>
+          <CodeBlock code={css} language="css" title="app.css" label="app.css code" copyLabel="Copy CSS" className="mt-10" />
         </Reveal>
         <Reveal className="lg:pt-6">
           <div style={tokens as React.CSSProperties} className="rounded-dialog bg-canvas p-5 sm:p-8">
@@ -713,16 +704,10 @@ function Code() {
   return (
     <section className="mx-auto grid max-w-page gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
       <Reveal className="min-w-0">
-        <Card tone="ink" className="overflow-hidden">
-          <div className="flex items-center justify-between gap-3 px-5 pt-5">
-            <span className="text-label text-muted">Settings.tsx</span>
-            <CopyButton value={snippet} label="Copy code" />
-          </div>
-          <pre className="overflow-x-auto px-5 pt-4 pb-6 font-mono text-label">{snippet}</pre>
-          <div className="flex items-center justify-between gap-4 border-t border-line bg-line/50 px-5 py-4">
-            <span className="text-label text-muted">Renders</span>
-            <Toggle label="Weekly digest" checked={digest} onCheckedChange={setDigest} />
-          </div>
+        <CodeBlock code={snippet} title="Settings.tsx" label="Settings.tsx code" />
+        <Card className="mt-3 flex items-center justify-between gap-4 px-5 py-4">
+          <span className="text-label text-muted">Live example · Weekly digest</span>
+          <Toggle label="Weekly digest" checked={digest} onCheckedChange={setDigest} />
         </Card>
       </Reveal>
       <Reveal>
@@ -774,7 +759,7 @@ function Catalog() {
           onValueChange={setQuery}
           aria-label="Filter components"
           placeholder="Filter: slider, picker, menu…"
-          leading={<Icon size={16}>{icons.search}</Icon>}
+          leading={<Icon name="search" size={16} />}
         />
       </Reveal>
       <div className="mt-12">
@@ -851,6 +836,19 @@ export function App({ url: initialUrl }: { url: string }) {
   const base = import.meta.env.BASE_URL;
   const [url, setUrl] = useState(initialUrl);
   const page = docsPages.find((page) => page.href === new URL(url).pathname);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+  }, []);
+
+  function changeTheme(value: "light" | "dark") {
+    document.documentElement.classList.toggle("dark", value === "dark");
+    localStorage.setItem("tensile-theme", value);
+    setTheme(value);
+  }
+
+  const toggle = <ThemeToggle value={theme} onValueChange={changeTheme} />;
 
   useEffect(() => {
     const onPopState = () => setUrl(window.location.href);
@@ -878,7 +876,7 @@ export function App({ url: initialUrl }: { url: string }) {
 
   return (
     <LinkProvider navigate={navigate}>
-      {page ? <Docs page={page} brand={<Brand />} onNavigate={navigate} /> : (
+      {page ? <Docs page={page} brand={<Brand />} toggle={toggle} onNavigate={navigate} /> : (
         <>
           <a href="#main" className="sr-only fixed top-3 left-3 z-(--tn-layer-overlay) rounded-control bg-ink px-5 py-3 text-paper focus:not-sr-only">
             Skip to content
@@ -889,6 +887,7 @@ export function App({ url: initialUrl }: { url: string }) {
             value="./"
             actions={
               <div className="flex items-center gap-4">
+                {toggle}
                 <Link href={github} className="text-label">
                   GitHub
                 </Link>
@@ -897,7 +896,7 @@ export function App({ url: initialUrl }: { url: string }) {
             }
           />
           <main id="main" tabIndex={-1} className="outline-none">
-            <Hero />
+            <Hero theme={theme} />
             <Playground />
             <Why />
             <Theming />

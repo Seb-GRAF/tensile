@@ -3,8 +3,8 @@ import { useId, useState } from "react";
 import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
-import { SegmentedTabs } from "../SegmentedTabs/SegmentedTabs";
-import { UnderlineTabs } from "../UnderlineTabs/UnderlineTabs";
+import { SegmentedTabList } from "./SegmentedTabList";
+import { UnderlineTabList } from "./UnderlineTabList";
 
 export type TabsProps = {
   items: { value: string; label: string; icon?: React.ReactNode; content: React.ReactNode }[];
@@ -58,7 +58,7 @@ export function Tabs({
     setPrevious(index);
     setDirection(index > previous ? 1 : -1);
   }
-  const TabList = variant === "segmented" ? SegmentedTabs : UnderlineTabs;
+  const TabList = variant === "segmented" ? SegmentedTabList : UnderlineTabList;
 
   return (
     <div className={`tn:grid tn:grid-cols-1 tn:gap-4 ${className}`}>
