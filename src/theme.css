@@ -1,0 +1,121 @@
+@theme static {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: #f3f1ec;
+  --color-ink: #111110;
+  --color-ink-3: #2e2e2c;
+  --color-paper: #ffffff;
+  --color-accent: #b8f23e;
+  --color-on-accent: #111110;
+  --color-muted: #6b6964;
+  --color-line: #e9e7e2;
+  --color-hover: #f3f1ed;
+  --color-focus: var(--tn-color-ink);
+  --color-scrim: #111110;
+
+  --text-caption: 0.6875rem;
+  --text-caption--line-height: 1rem;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.25rem;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.375rem;
+
+  --radius-control: 26px;
+  --radius-overlay: 16px;
+  --radius-card: 20px;
+  --radius-dialog: 24px;
+
+  --shadow-float: 0 0 0 1px var(--tn-color-line), 0 1px 2px rgb(38 34 26 / 0.06), 0 10px 28px -8px rgb(38 34 26 / 0.2);
+
+  --container-page: 72rem;
+
+  --animate-spinner: tn-spinner calc(var(--tn-motion-duration-scale) * 0.8s) linear infinite;
+  --animate-shimmer: tn-shimmer calc(var(--tn-motion-duration-scale) * 1.6s) ease-in-out infinite;
+
+  @keyframes tn-spinner {
+    to {
+      rotate: 1turn;
+    }
+  }
+
+  @keyframes tn-shimmer {
+    50% {
+      opacity: 0.5;
+    }
+  }
+}
+
+@layer theme {
+  :root {
+    --tn-motion-duration-scale: 1;
+    --tn-layer-raised: 10;
+    --tn-layer-sticky: 20;
+    --tn-layer-overlay: 50;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --tn-color-canvas: #000000;
+    --tn-color-paper: #111110;
+    --tn-color-ink: #ffffff;
+    --tn-color-ink-3: #dad9d5;
+    --tn-color-muted: #8f8d88;
+    --tn-color-line: #2e2e2c;
+    --tn-color-hover: #232321;
+    --tn-color-focus: var(--tn-color-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --tn-motion-duration-scale: 0;
+    }
+  }
+}
+
+@property --tn-scroll-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --tn-scroll-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes tn-scroll-fade-top {
+  to {
+    --tn-scroll-fade-top: 1.5rem;
+  }
+}
+
+@keyframes tn-scroll-fade-bottom {
+  from {
+    --tn-scroll-fade-bottom: 1.5rem;
+  }
+}
+
+@property --tn-scroll-fade-left {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --tn-scroll-fade-right {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes tn-scroll-fade-left {
+  to {
+    --tn-scroll-fade-left: 1.5rem;
+  }
+}
+
+@keyframes tn-scroll-fade-right {
+  from {
+    --tn-scroll-fade-right: 1.5rem;
+  }
+}

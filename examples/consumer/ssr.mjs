@@ -1,0 +1,153 @@
+import { createElement as h } from "react";
+import { renderToString } from "react-dom/server";
+import * as ui from "tensile";
+
+const noop = () => {};
+const options = [
+  { value: "a", label: "First" },
+  { value: "b", label: "Second" },
+];
+const icon = h("svg", { viewBox: "0 0 24 24" });
+const nav = [
+  { value: "a", label: "First", icon, activeIcon: icon },
+  { value: "b", label: "Second", icon, activeIcon: icon },
+];
+const data = [
+  { label: "Mon", value: 3 },
+  { label: "Tue", value: 5 },
+  { label: "Wed", value: 4 },
+];
+
+const table = { columns: [{ key: "name", header: "Name" }], rows: [{ name: "Report" }], rowKey: (row) => row.name, caption: "Files" };
+
+const cases = {
+  Accordion: { items: [{ value: "a", label: "First", content: "Text" }], value: null, onValueChange: noop },
+  ActionMenu: { actions: [{ label: "Rename" }], onAction: noop },
+  Alert: { status: "info" },
+  AlertDialog: { open: false, onOpenChange: noop, title: "Confirm", description: "Continue?", onConfirm: noop, trigger: "Confirm" },
+  AppShell: { children: "Main" },
+  Avatar: { name: "Maya Chen" },
+  AvatarGroup: { people: [{ name: "Maya Chen" }, { name: "Leo Park" }] },
+  Badge: { count: 3 },
+  BarChart: { data },
+  BottomSheet: { open: false, onOpenChange: noop, children: "Sheet" },
+  Breadcrumbs: { items: [{ label: "Home" }, { label: "Library" }, { label: "Track" }], onNavigate: noop },
+  Button: { children: "Save" },
+  Card: { children: "Body" },
+  Carousel: { slides: [{ label: "One", content: "Slide" }], value: 0, onValueChange: noop },
+  Checkbox: { checked: false, onCheckedChange: noop },
+  CheckboxGroup: { options, value: ["a"], onValueChange: noop },
+  CollapsibleSidebar: { items: nav, value: "a", onValueChange: noop, expanded: true, onExpandedChange: noop },
+  ColorPicker: { value: "#3a7bd5", onValueChange: noop },
+  ColorSwatches: { options: [{ value: "ink", label: "Ink", color: "#111110" }], value: "ink", onValueChange: noop },
+  Combobox: { options, value: null, onValueChange: noop },
+  CodeBlock: { code: "npm install tensile" },
+  CommandPalette: { commands: [{ label: "Open" }], onSelect: noop },
+  CompareSlider: { before: "Before", after: "After", value: 0.5, onValueChange: noop },
+  ContextMenu: { actions: [{ label: "Rename" }], onAction: noop, children: "Target" },
+  CopyButton: { value: "text" },
+  DataTable: { ...table, sort: null, onSortChange: noop, selection: [], onSelectionChange: noop, page: 1, pageCount: 1, onPageChange: noop },
+  DateField: { defaultValue: "2026-10-01" },
+  DatePicker: { value: "2026-09-18", onValueChange: noop },
+  DateRangePicker: { value: { start: "2026-09-18", end: "2026-09-22" }, onValueChange: noop },
+  DescriptionList: { items: [{ label: "Status", value: "Shipped" }] },
+  Dialog: { open: false, onOpenChange: noop, children: "Body" },
+  DonutChart: { data },
+  Drawer: { open: false, onOpenChange: noop, title: "Details", children: "Body" },
+  EditableText: { value: "Title", onValueChange: noop, label: "Title" },
+  EmptyState: { title: "No items" },
+  ExpandableCard: { title: "Card", subtitle: "Detail", visual: icon, children: "Body", open: false, onOpenChange: noop },
+  Field: { label: "Email", children: h(ui.Input, { value: "", onValueChange: noop }) },
+  Fieldset: { legend: "Contact", children: "Fields" },
+  FileUpload: { status: "idle", progress: 0, onFiles: noop },
+  Footer: { groups: [{ title: "Product", links: [{ label: "Docs", href: "/docs" }] }] },
+  Header: { brand: "Brand", links: [{ label: "Home", href: "/" }], value: "/" },
+  HoldButton: { done: false, onDone: noop },
+  HoverCard: { content: "Maya Chen, designer", children: (trigger) => h(ui.Link, { ...trigger, href: "/maya" }, "Maya") },
+  Icon: { name: "minus" },
+  IconButton: { label: "Close", icon: "close" },
+  Image: { src: "data:,", alt: "" },
+  Input: { value: "", onValueChange: noop },
+  Island: { activity: "Timer", leading: "4:59", trailing: "", children: "Panel", expanded: false, onExpandedChange: noop },
+  Kbd: { children: "⌘K" },
+  Lightbox: { images: [{ label: "Photo", image: icon }], value: null, onValueChange: noop },
+  LineChart: { data },
+  Link: { href: "/help", children: "Help" },
+  LinkProvider: { navigate: noop, children: h(ui.Link, { href: "/help" }, "Help") },
+  List: { items: [{ id: "1", title: "Report.pdf" }] },
+  LoadingState: {},
+  MorphButton: { status: "idle", onClick: noop },
+  MultiSelect: { options, value: ["a"], onValueChange: noop },
+  MusicPlayer: { title: "Song", artist: "Artist", duration: 120, expanded: false, onExpandedChange: noop },
+  NavigationMenu: { items: [{ label: "Products", links: [{ label: "Analytics", href: "/analytics" }] }, { label: "Pricing", href: "/pricing" }] },
+  NotificationList: { notifications: [{ id: "1", title: "Updated", time: "Today" }], onRead: noop, onDismiss: noop },
+  NumberInput: { value: 1200, onValueChange: noop },
+  NumberStepper: { value: 1, onValueChange: noop },
+  NumberTicker: { value: 42 },
+  OTPInput: { value: "", onValueChange: noop },
+  PageHeader: { title: "Overview" },
+  PageDots: { count: 5, value: 0, onValueChange: noop },
+  Pagination: { count: 10, value: 1, onValueChange: noop },
+  PasswordInput: { value: "", onValueChange: noop, "aria-label": "Password" },
+  Popover: { open: false, onOpenChange: noop, children: "Body" },
+  ProgressBar: { value: null },
+  ProgressRing: { value: 0.4 },
+  RadioGroup: { options, value: "a", onValueChange: noop },
+  RangeSlider: { value: [20, 80], onValueChange: noop },
+  Rating: { value: 3, onValueChange: noop },
+  SearchField: { value: "", onValueChange: noop },
+  Select: { options, value: null, onValueChange: noop },
+  SelectionBar: { count: 2, onClear: noop, children: h(ui.Button, {}, "Archive") },
+  Separator: {},
+  SidebarNav: { items: nav, value: "a", onValueChange: noop },
+  Slider: { value: 50, onValueChange: noop },
+  Skeleton: { className: "h-4 w-40" },
+  Spinner: {},
+  SplitPane: { left: "Left", right: "Right", value: 0.5, onValueChange: noop },
+  StatTile: { value: 1200, change: 0.12 },
+  StatusBadge: { status: "success", label: "Done" },
+  SwipeButton: { confirmed: false, onConfirm: noop },
+  Table: table,
+  TableOfContents: { items: [{ id: "usage", label: "Usage" }] },
+  Tabs: { items: [{ value: "a", label: "First", content: "Panel" }], value: "a", onValueChange: noop },
+  TabBar: { items: nav, value: "a", onValueChange: noop },
+  Tag: { label: "Design", onRemove: noop },
+  TagInput: { value: ["one"], onValueChange: noop },
+  Textarea: { value: "", onValueChange: noop },
+  TextField: { value: "", onValueChange: noop },
+  ThemeToggle: { value: "light", onValueChange: noop },
+  Timeline: { items: [{ id: "1", title: "Created" }] },
+  TimePicker: { value: null, onValueChange: noop },
+  TimeWheel: { value: { hours: 9, minutes: 30 }, onValueChange: noop },
+  Toast: { status: "success" },
+  ToastStack: { toasts: [{ id: "1", label: "Saved" }], onDismiss: noop },
+  Toaster: {},
+  Toggle: { checked: true, onCheckedChange: noop },
+  ToggleGroup: { options, value: ["a"], onValueChange: noop },
+  Toolbar: { label: "Actions", children: h(ui.Button, {}, "Copy") },
+  Tooltip: { label: "Copy", children: (trigger) => h(ui.Button, trigger, "Copy") },
+  TreeView: { items: [{ value: "a", label: "First", children: [{ value: "b", label: "Second" }] }], value: "b", onValueChange: noop, expanded: ["a"], onExpandedChange: noop },
+  VideoControls: {
+    duration: 60,
+    playing: false,
+    onPlayingChange: noop,
+    currentTime: 0,
+    onCurrentTimeChange: noop,
+    volume: 0.5,
+    onVolumeChange: noop,
+  },
+  VolumeSlider: { value: 0.5, onValueChange: noop },
+  WaveformScrubber: { peaks: [0.2, 0.8, 0.5], value: 0, onValueChange: noop, duration: 60 },
+  WizardSteps: { steps: [{ label: "One" }, { label: "Two" }], value: 0 },
+};
+
+const missing = Object.keys(ui).filter((name) => /^[A-Z]/.test(name) && !(name in cases));
+if (missing.length) throw new Error(`No server-render case for: ${missing.join(", ")}`);
+
+for (const [name, props] of Object.entries(cases)) {
+  const html = renderToString(h(ui[name], props));
+  if (name === "BottomSheet" || name === "Drawer") {
+    if (html !== "") throw new Error(`${name} should render no modal markup on the server`);
+  } else if (!html.startsWith("<")) throw new Error(`${name} rendered no markup`);
+}
+console.log(`Server-rendered ${Object.keys(cases).length} components without a DOM.`);

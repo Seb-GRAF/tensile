@@ -1,0 +1,21 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@import "../src/tailwind.css";
+@source "./";
+@source "../src/components/**/demos/**";
+
+html:not(.dark) {
+  color-scheme: light;
+}
+
+body {
+  background: var(--tn-color-canvas);
+  color: var(--tn-color-ink);
+  font-family: var(--tn-font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--tn-color-accent);
+  color: var(--tn-color-on-accent);
+}

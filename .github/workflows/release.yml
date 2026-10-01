@@ -1,0 +1,142 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Release channel
+        type: choice
+        options: [stable, next]
+        default: stable
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.repository == 'Seb-GRAF/tensile' && github.ref == 'refs/heads/main' && inputs.channel != 'next'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      mode: ${{ steps.mode.outputs.mode }}
+      package: ${{ steps.pack.outputs.pack-dir-artifact-id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51
+        id: mode
+      - uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51
+        if: steps.mode.outputs.mode == 'version'
+        with:
+          script: npm run version:release
+          commit-message: "chore: release Tensile"
+          pr-title: "Release Tensile"
+      - run: npm run build
+        if: steps.mode.outputs.mode == 'publish'
+      - uses: changesets/action/pack@ae32849d5ba541f9ae29e40e22a623bc13562f51
+        if: steps.mode.outputs.mode == 'publish'
+        id: pack
+        with:
+          publish-plan-artifact-id: ${{ steps.mode.outputs.publish-plan-artifact-id }}
+        env:
+          npm_config_ignore_scripts: true
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        if: steps.mode.outputs.mode == 'publish'
+        with:
+          artifact-ids: ${{ steps.pack.outputs.pack-dir-artifact-id }}
+          path: release-artifacts
+          merge-multiple: true
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        if: steps.mode.outputs.mode == 'publish'
+      - run: uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
+        if: steps.mode.outputs.mode == 'publish'
+      - name: Check the release tarball
+        if: steps.mode.outputs.mode == 'publish'
+        run: |
+          export TENSILE_TARBALL="$PWD/release-artifacts/packages/tensile-$(node -p 'require("./package.json").version').tgz"
+          tar -tzf "$TENSILE_TARBALL"
+          npm run check
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always() && steps.mode.outputs.mode == 'publish'
+        with:
+          name: release-keyboard-results
+          path: /tmp/keyboard
+          retention-days: 7
+
+  publish:
+    needs: prepare
+    if: needs.prepare.outputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: npm
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51
+        with:
+          pack-dir-artifact-id: ${{ needs.prepare.outputs.package }}
+
+  deploy:
+    needs: publish
+    uses: ./.github/workflows/site.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+  next:
+    if: github.repository == 'Seb-GRAF/tensile' && github.ref == 'refs/heads/main' && inputs.channel == 'next'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+      - run: npm ci
+      - run: uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
+      - name: Version the prerelease
+        run: |
+          npx changeset version --snapshot next
+          node -e 'require("node:assert/strict").match(require("./package.json").version, /-next-/, "A next release needs pending changesets")'
+      - run: npm run build
+      - name: Pack the prerelease
+        run: |
+          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
+          echo "TENSILE_TARBALL=$RUNNER_TEMP/tensile-$(node -p 'require("./package.json").version').tgz" >> "$GITHUB_ENV"
+      - run: npm run check
+      - run: npm publish "$TENSILE_TARBALL" --tag next --access public --ignore-scripts
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: next-keyboard-results
+          path: /tmp/keyboard
+          retention-days: 7

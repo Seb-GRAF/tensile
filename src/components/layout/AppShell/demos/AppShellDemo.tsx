@@ -1,0 +1,60 @@
+import { useState } from "react";
+import {
+  AppShell,
+  SidebarNav,
+  Header,
+  PageHeader,
+  Card,
+  Icon,
+  LinkProvider,
+} from "tensile";
+
+const items = [
+  { value: "home", label: "Home", icon: <Icon name="home" size={16} /> },
+  { value: "projects", label: "Projects", icon: <Icon name="briefcase" size={16} /> },
+];
+
+export function AppShellDemo() {
+  const [section, setSection] = useState("home");
+
+  return (
+    <div className="relative h-120 w-full overflow-auto rounded-card [transform:translateZ(0)]">
+      <LinkProvider navigate={(href) => setSection(href.slice(1))}>
+        <AppShell
+          sidebar={
+            <Card className="h-full w-40 p-2">
+              <SidebarNav
+                items={items}
+                value={section}
+                onValueChange={setSection}
+                label="Demo sidebar"
+              />
+            </Card>
+          }
+          header={
+            <Header
+              brand={<span className="font-semibold">Studio</span>}
+              links={items.map((item) => ({
+                label: item.label,
+                href: `/${item.value}`,
+              }))}
+              value={`/${section}`}
+              navLabel="Demo header"
+              menuLabel="Demo menu"
+            />
+          }
+        >
+          <div className="grid gap-6">
+            <PageHeader
+              title={section === "home" ? "Home" : "Projects"}
+              description="Your shared workspace."
+            />
+            <Card className="p-5">
+              The selected section’s content appears here.
+            </Card>
+          </div>
+        </AppShell>
+      </LinkProvider>
+    </div>
+  );
+}

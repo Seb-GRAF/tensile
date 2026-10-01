@@ -1,0 +1,114 @@
+import { animate, motion } from "motion/react";
+import { useControllable } from "../../../controllable";
+import { useStretch } from "../../../drag";
+import { useSprings } from "../../../springs";
+import { IconButton } from "../../actions/IconButton/IconButton";
+import { NumberTicker } from "../../data-display/NumberTicker/NumberTicker";
+import { useField } from "../Field/Field";
+
+export type NumberStepperProps = {
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  formatValue?: (value: number) => string;
+  label?: string;
+  decreaseLabel?: string;
+  increaseLabel?: string;
+  id?: string;
+  name?: string;
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
+};
+
+const WIDTH = 128;
+const HEIGHT = 44;
+const KICK = 480;
+
+export function NumberStepper({
+  value: valueProp,
+  defaultValue = 0,
+  onValueChange,
+  min = 0,
+  max = 10,
+  step = 1,
+  formatValue = (value: number) => value.toLocaleString("en-US"),
+  label = "Quantity",
+  decreaseLabel = "Decrease",
+  increaseLabel = "Increase",
+  id,
+  name,
+  required = false,
+  disabled = false,
+  className = "",
+}: NumberStepperProps) {
+  const { snap, scale } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
+  const field = useField();
+  disabled = field?.disabled || disabled;
+  const [stretch, style] = useStretch(WIDTH, HEIGHT);
+
+  function stepTo(target: number) {
+    const next = Math.min(max, Math.max(min, target));
+    if (next !== value) setValue(next);
+    else if (target !== value && scale > 0) animate(stretch, 0, { ...snap, velocity: (target > value ? KICK : -KICK) / scale });
+  }
+
+  function onKeyDown(event: React.KeyboardEvent) {
+    const targets: Record<string, number> = { ArrowUp: value + step, ArrowDown: value - step, Home: min, End: max };
+    const target = targets[event.key];
+    if (target === undefined) return;
+    event.preventDefault();
+    stepTo(target);
+  }
+
+  return (
+    <div role="group" aria-label={field?.labelId ? undefined : label} onKeyDown={disabled ? undefined : onKeyDown} className={`tn:relative tn:h-11 tn:w-32 ${disabled ? "tn:opacity-40" : ""} ${className}`}>
+      {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
+      <motion.div
+        style={style}
+        className="tn:absolute tn:top-1/2 tn:left-0 tn:flex tn:-translate-y-1/2 tn:items-center tn:justify-between tn:rounded-control tn:bg-paper tn:px-1.5 tn:text-body tn:font-medium tn:text-ink tn:shadow-control tn:outline-offset-2 tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus"
+      >
+        <IconButton
+          variant="ghost"
+          size="sm"
+          tabIndex={-1}
+          label={decreaseLabel}
+          icon="minus"
+          disabled={disabled}
+          onClick={() => stepTo(value - step)}
+        />
+        <span
+          id={field?.id ?? id}
+          role="spinbutton"
+          tabIndex={disabled ? -1 : 0}
+          aria-label={field?.labelId ? undefined : label}
+          aria-labelledby={field?.labelId}
+          aria-describedby={field?.describedBy}
+          aria-invalid={field?.invalid}
+          aria-required={field?.required || required}
+          aria-disabled={disabled}
+          aria-valuenow={value}
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuetext={formatValue(value)}
+          className="tn:outline-none"
+        >
+          <NumberTicker value={value} format={formatValue} />
+        </span>
+        <IconButton
+          variant="ghost"
+          size="sm"
+          tabIndex={-1}
+          label={increaseLabel}
+          icon="plus"
+          disabled={disabled}
+          onClick={() => stepTo(value + step)}
+        />
+      </motion.div>
+    </div>
+  );
+}

@@ -1,0 +1,14 @@
+[
+  {"focus": "input[name=value]"},
+  {"type": "Ada Lovelace"},
+  {"press": "Enter"},
+  {"text": "output", "equals": "Submitted: Ada Lovelace"},
+  {"a11y": true},
+  {"click": "button[type=reset]"},
+  {"prop": "input[name=value]", "name": "value", "equals": ""},
+  {"text": "output", "equals": ""},
+  {"focus": "input[name=value]"},
+  {"type": "Grace Hopper"},
+  {"press": "Enter"},
+  {"text": "output", "equals": "Submitted: Grace Hopper"}
+]

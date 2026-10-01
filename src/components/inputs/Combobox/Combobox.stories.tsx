@@ -1,0 +1,100 @@
+import { ComboboxDemo } from "./demos/ComboboxDemo";
+import { ComboboxEmptyDemo } from "./demos/ComboboxEmptyDemo";
+import { ComboboxDisabledDemo } from "./demos/ComboboxDisabledDemo";
+import { ComboboxFormDemo } from "./demos/ComboboxFormDemo";
+import { ComboboxGroupsDemo } from "./demos/ComboboxGroupsDemo";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { Button } from "../../actions/Button/Button";
+import { Field } from "../Field/Field";
+import { useArgs } from "storybook/preview-api";
+import { fn } from "storybook/test";
+import { Combobox } from "./Combobox";
+import { Icon } from "../../data-display/Icon/Icon";
+
+const meta = {
+  title: "Inputs/Combobox",
+  id: "components-combobox",
+  component: Combobox,
+  args: {
+    options: [
+      { value: "added", label: "Date added", icon: <Icon name="calendar" /> },
+      { value: "title", label: "Title", icon: <Icon name="type" /> },
+      { value: "artist", label: "Artist", icon: <Icon name="user" /> },
+      { value: "album", label: "Album", icon: <Icon name="disc" /> },
+      { value: "duration", label: "Duration", icon: <Icon name="timer" /> },
+    ],
+    value: null,
+    onValueChange: fn(),
+  },
+} satisfies Meta<typeof Combobox>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** Click the field or press ArrowDown to open, or type to filter ("a", then "al"); the arrows move, Enter or a click picks, Escape closes. */
+export const Default: Story = {
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+    return (
+      <div className="w-60">
+        <Combobox
+          {...args}
+          onValueChange={(value) => {
+            args.onValueChange?.(value);
+            updateArgs({ value });
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+/** Press Save without a sort order: the error shows inside the field until you pick one. Reset clears it. */
+export const InAForm: Story = {
+  render: function Render(args) {
+    const [value, setValue] = useState<string | null>(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [data, setData] = useState("");
+    return (
+      <form className="grid w-80 gap-4" noValidate onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(true);
+        setData(JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))));
+      }} onReset={() => { setValue(null); setSubmitted(false); setData(""); }}>
+        <Field label="Sort order" description="Search the available library orders." required error={submitted && value === null ? "Choose a sort order" : undefined}>
+          <Combobox {...args} name="sort" value={value} onValueChange={setValue} />
+        </Field>
+        <div className="flex gap-2"><Button type="submit">Save</Button><Button type="reset" variant="secondary">Reset</Button></div>
+        <output className="text-label text-ink">{data}</output>
+      </form>
+    );
+  },
+};
+
+/** Near the bottom the menu opens upward and the pill stays in place; press Save first to see the list take the error row's place. */
+export const InAFieldNearTheBottom: Story = {
+  ...InAForm,
+  decorators: [(Story) => <div className="flex h-[calc(100vh-4rem)] items-end"><Story /></div>],
+};
+
+export const Usage: Story = {
+  render: () => <ComboboxDemo />,
+};
+
+export const EmptyUsage: Story = {
+  render: () => <ComboboxEmptyDemo />,
+};
+
+export const DisabledUsage: Story = {
+  render: () => <ComboboxDisabledDemo />,
+};
+
+export const FormUsage: Story = {
+  render: () => <ComboboxFormDemo />,
+};
+
+/** People under team headings; type "e" to filter, and see the groups close up. People on leave are dimmed, and the arrows pass over them. */
+export const GroupsUsage: Story = {
+  render: () => <div className="w-80"><ComboboxGroupsDemo /></div>,
+};

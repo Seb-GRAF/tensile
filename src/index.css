@@ -1,0 +1,13 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(tn);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@import "./theme.css";
+@import "./utilities.css";
+@import "@fontsource-variable/geist";
+
+@source "./";
+@source not "./**/*.stories.tsx";
+@source not "./**/*.docs.ts";
+@source not "./**/demos/**";
+@source not "./examples";
+@source not "./foundations";

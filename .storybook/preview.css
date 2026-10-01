@@ -1,0 +1,42 @@
+@import "tailwindcss" source(none);
+@import "../src/tailwind.css";
+@source "../src/**/*.stories.tsx";
+@source "../src/**/demos/**";
+@source "../src/examples";
+@source "../src/foundations";
+@source "../docs";
+
+body {
+  background: var(--tn-color-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+.sbdocs-wrapper {
+  font-family: var(--tn-font-sans);
+}
+
+.sbdocs-content :not(pre) > code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.sbdocs-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+[data-theme="alternate"] {
+  --tn-color-accent: #3355ff;
+  --tn-color-on-accent: #ffffff;
+  --tn-radius-control: 10px;
+  --tn-radius-overlay: 12px;
+  --tn-radius-card: 14px;
+  --tn-radius-dialog: 16px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="alternate"] {
+    --tn-motion-duration-scale: 1.6;
+  }
+}

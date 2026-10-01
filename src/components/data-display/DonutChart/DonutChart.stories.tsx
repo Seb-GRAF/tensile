@@ -1,0 +1,70 @@
+import { DonutChartDemo } from "./demos/DonutChartDemo";
+import { DonutChartFormatDemo } from "./demos/DonutChartFormatDemo";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useArgs } from "storybook/preview-api";
+import { Button } from "../../actions/Button/Button";
+import { DonutChart } from "./DonutChart";
+
+const weeks = [
+  [
+    { label: "Music", value: 540 },
+    { label: "Podcasts", value: 260 },
+    { label: "Audiobooks", value: 130 },
+    { label: "Radio", value: 70 },
+  ],
+  [
+    { label: "Music", value: 310 },
+    { label: "Podcasts", value: 450 },
+    { label: "Audiobooks", value: 95 },
+    { label: "Radio", value: 175 },
+  ],
+  [
+    { label: "Music", value: 660 },
+    { label: "Podcasts", value: 110 },
+    { label: "Audiobooks", value: 250 },
+    { label: "Radio", value: 25 },
+  ],
+];
+
+const meta = {
+  title: "Data display/DonutChart",
+  id: "components-donutchart",
+  component: DonutChart,
+  args: {
+    label: "Minutes listened by category",
+    formatValue: (minutes) => `${Math.floor(minutes / 60)}h ${minutes % 60}m`,
+    data: weeks[0],
+  },
+} satisfies Meta<typeof DonutChart>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** Hover a segment, or Tab in and use the arrow keys, to see its value; Change data springs the arcs to another week. */
+export const Default: Story = {
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+    return (
+      <div className="w-60 max-w-[calc(100vw-2rem)]">
+        <DonutChart {...args} />
+        <div className="mt-4 text-center">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => updateArgs({ data: weeks[(weeks.findIndex((week) => week[0].value === args.data[0].value) + 1) % weeks.length] })}
+          >
+            Change data
+          </Button>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const Usage: Story = {
+  render: () => <DonutChartDemo />,
+};
+
+export const FormatUsage: Story = {
+  render: () => <DonutChartFormatDemo />,
+};
