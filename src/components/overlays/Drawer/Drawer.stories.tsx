@@ -26,7 +26,7 @@ const meta = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     function onOpenChange(open: boolean) {
-      args.onOpenChange(open);
+      args.onOpenChange?.(open);
       updateArgs({ open });
     }
     return (

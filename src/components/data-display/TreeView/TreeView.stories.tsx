@@ -7,18 +7,9 @@ import { Card } from "../../layout/Card/Card";
 import { Icon } from "../Icon/Icon";
 import { TreeView } from "./TreeView";
 
-const folder = (
-  <Icon size={16}>
-    <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
-  </Icon>
-);
+const folder = <Icon name="folder" size={16} />;
 
-const file = (
-  <Icon size={16}>
-    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-  </Icon>
-);
+const file = <Icon name="file" size={16} />;
 
 const meta = {
   title: "Data display/TreeView",
@@ -79,7 +70,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click a row to select it and a chevron to open or close its folder; or Tab in, move with ArrowUp, ArrowDown, Home and End, open, enter and leave folders with ArrowRight and ArrowLeft, type a name to jump, and select with Enter or Space. */
+/** Click a row to select it, which also opens or closes a folder, or click a chevron to open or close a folder without selecting it; or Tab in, move with ArrowUp, ArrowDown, Home and End, open, enter and leave folders with ArrowRight and ArrowLeft, type a name to jump, press Enter to select and open or close, and Space to select only. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
@@ -88,11 +79,11 @@ export const Default: Story = {
         <TreeView
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
           onExpandedChange={(expanded) => {
-            args.onExpandedChange(expanded);
+            args.onExpandedChange?.(expanded);
             updateArgs({ expanded });
           }}
         />
@@ -101,7 +92,7 @@ export const Default: Story = {
   },
 };
 
-/** The selected file is inside closed folders, so the pill rests on the nearest visible folder; open src, then components, and it slides down to CommandPalette.tsx. */
+/** The selected file is inside closed folders, so the pill rests on the nearest visible folder; open src, then components, with their chevrons, and it slides down to CommandPalette.tsx. */
 export const SelectionInClosedFolder: Story = {
   ...Default,
   args: { value: "src/components/CommandPalette.tsx", expanded: [] },

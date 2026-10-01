@@ -16,6 +16,6 @@ export default {
   related: ["CommandPalette", "Tooltip"],
   props: {
     children: "The key name, symbol or shortcut to display.",
-    className: "Additional classes on the native kbd element.",
+    className: "Classes on the `<kbd>`, for margin and placement.",
   },
 };

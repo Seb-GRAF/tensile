@@ -1,10 +1,12 @@
 import { useId } from "react";
+import { useControllable } from "../../../controllable";
 import { Button } from "../../actions/Button/Button";
 import { Dialog } from "../Dialog/Dialog";
 
 export type AlertDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   title: string;
   description: React.ReactNode;
   onConfirm: () => void;
@@ -15,7 +17,8 @@ export type AlertDialogProps = {
 };
 
 export function AlertDialog({
-  open,
+  open: openProp,
+  defaultOpen = false,
   onOpenChange,
   title,
   description,
@@ -25,13 +28,14 @@ export function AlertDialog({
   trigger = null,
   className = "",
 }: AlertDialogProps) {
+  const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
   const descriptionId = useId();
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} title={title} trigger={trigger} role="alertdialog" aria-describedby={descriptionId} className={className}>
-      <div id={descriptionId} className="mt-2 text-sm text-muted">{description}</div>
-      <div className="mt-5 flex flex-wrap justify-end gap-2">
-        <Button variant="secondary" data-autofocus onClick={() => onOpenChange(false)}>{cancelLabel}</Button>
-        <Button onClick={() => { onConfirm(); onOpenChange(false); }}>{confirmLabel}</Button>
+    <Dialog open={open} onOpenChange={setOpen} title={title} trigger={trigger} role="alertdialog" aria-describedby={descriptionId} className={className}>
+      <div id={descriptionId} className="tn:mt-2 tn:text-sm tn:text-muted">{description}</div>
+      <div className="tn:mt-5 tn:flex tn:flex-wrap tn:justify-end tn:gap-2">
+        <Button variant="secondary" data-autofocus onClick={() => setOpen(false)}>{cancelLabel}</Button>
+        <Button onClick={() => { onConfirm(); setOpen(false); }}>{confirmLabel}</Button>
       </div>
     </Dialog>
   );

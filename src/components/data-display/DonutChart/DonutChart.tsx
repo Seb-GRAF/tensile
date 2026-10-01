@@ -22,7 +22,7 @@ const RADIUS = 80;
 const STROKE = 20;
 const LIFT = 6;
 const GAP = 3 / (2 * Math.PI * RADIUS);
-const colors = ["stroke-accent", "stroke-paper", "stroke-paper/65", "stroke-paper/40"];
+const colors = ["tn:stroke-accent", "tn:stroke-ink", "tn:stroke-ink/65", "tn:stroke-ink/40"];
 const moves: Record<string, number> = { ArrowUp: -1, ArrowLeft: -1, ArrowDown: 1, ArrowRight: 1 };
 
 export function DonutChart({
@@ -58,10 +58,10 @@ export function DonutChart({
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setActive(null);
       }}
-      className={`p-5 outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${className}`}
+      className={`tn:p-5 tn:outline-offset-2 tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus ${className}`}
     >
-      <div className="relative">
-        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} onPointerLeave={() => setActive(null)} className="block w-full -rotate-90">
+      <div className="tn:relative">
+        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} onPointerLeave={() => setActive(null)} className="tn:block tn:w-full tn:-rotate-90">
           {data.map((segment, i) => {
             const share = segment.value / total;
             const offset = start;
@@ -91,20 +91,20 @@ export function DonutChart({
                   setFocused(i);
                   setActive(i);
                 }}
-                className={`fill-none outline-none ${colors[i % colors.length]}`}
+                className={`tn:fill-none tn:outline-none ${colors[i % colors.length]}`}
               />
             );
           })}
         </svg>
-        <div className="pointer-events-none absolute inset-0 grid place-content-center place-items-center">
+        <div className="tn:pointer-events-none tn:absolute tn:inset-0 tn:grid tn:place-content-center tn:place-items-center">
           <AnimatePresence initial={false}>
             <motion.div
               key={`${caption} ${text}`}
               {...swap}
-              className="col-start-1 row-start-1 flex flex-col items-center"
+              className="tn:col-start-1 tn:row-start-1 tn:flex tn:flex-col tn:items-center"
             >
-              <span className="text-label font-medium text-paper/55">{caption}</span>
-              <span className="text-2xl font-semibold text-paper tabular-nums">{text}</span>
+              <span className="tn:text-label tn:font-medium tn:text-muted">{caption}</span>
+              <span className="tn:text-2xl tn:font-semibold tn:text-ink tn:tabular-nums">{text}</span>
             </motion.div>
           </AnimatePresence>
         </div>

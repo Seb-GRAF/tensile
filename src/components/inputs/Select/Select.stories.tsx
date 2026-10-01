@@ -3,6 +3,8 @@ import { SelectEmptyDemo } from "./demos/SelectEmptyDemo";
 import { SelectIconsDemo } from "./demos/SelectIconsDemo";
 import { SelectDisabledDemo } from "./demos/SelectDisabledDemo";
 import { SelectFormDemo } from "./demos/SelectFormDemo";
+import { SelectDisabledOptionsDemo } from "./demos/SelectDisabledOptionsDemo";
+import { SelectGroupsDemo } from "./demos/SelectGroupsDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "../../actions/Button/Button";
@@ -19,15 +21,11 @@ const meta = {
   component: Select,
   args: {
     options: [
-      {
-        value: "added",
-        label: "Date added",
-        icon: <Icon><path d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" /><path d="M16 2v4" /><path d="M8 2v4" /><path d="M3 10h18" /></Icon>,
-      },
-      { value: "title", label: "Title", icon: <Icon><path d="M4 7V4h16v3" /><path d="M9 20h6" /><path d="M12 4v16" /></Icon> },
-      { value: "artist", label: "Artist", icon: <Icon><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0" /></Icon> },
-      { value: "album", label: "Album", icon: <Icon><path d="M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0" /><path d="M14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0" /></Icon> },
-      { value: "duration", label: "Duration", icon: <Icon><path d="M10 2h4" /><path d="m12 14 3-3" /><path d="M20 14a8 8 0 1 1-16 0 8 8 0 0 1 16 0" /></Icon> },
+      { value: "added", label: "Date added", icon: <Icon name="calendar" /> },
+      { value: "title", label: "Title", icon: <Icon name="type" /> },
+      { value: "artist", label: "Artist", icon: <Icon name="user" /> },
+      { value: "album", label: "Album", icon: <Icon name="disc" /> },
+      { value: "duration", label: "Duration", icon: <Icon name="timer" /> },
     ],
     value: null,
     onValueChange: fn(),
@@ -46,7 +44,7 @@ export const Default: Story = {
         <Select
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -116,4 +114,14 @@ export const DisabledUsage: Story = {
 
 export const FormUsage: Story = {
   render: () => <SelectFormDemo />,
+};
+
+/** Overnight can't be picked: arrows, Home, End and typing pass over it, and a click on it does nothing. */
+export const DisabledOptionsUsage: Story = {
+  render: () => <div className="w-80"><SelectDisabledOptionsDemo /></div>,
+};
+
+/** Time zones under region headings; arrows move across the groups. */
+export const GroupsUsage: Story = {
+  render: () => <div className="w-80"><SelectGroupsDemo /></div>,
 };

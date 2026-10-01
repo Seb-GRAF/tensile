@@ -1,3 +1,4 @@
+import { TabsIconsDemo } from "./demos/TabsIconsDemo";
 import { TabsSegmentedDemo } from "./demos/TabsSegmentedDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
@@ -58,7 +59,7 @@ const meta = {
     const [, updateArgs] = useArgs();
     return (
       <Card className="mx-auto w-96 max-w-[calc(100vw-2rem)] overflow-clip p-5">
-        <Tabs {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <Tabs {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </Card>
     );
   },
@@ -72,6 +73,18 @@ export const Default: Story = {};
 
 export const Segmented: Story = { args: { variant: "segmented" } };
 
+export const LongLabels: Story = {
+  args: {
+    variant: "segmented",
+    items: [
+      { value: "quarter", label: "This quarter", content: <p>Revenue is up 12% on the same period last year.</p> },
+      { value: "previous", label: "Previous quarter", content: <p>Revenue grew 8%, driven by renewals.</p> },
+      { value: "year", label: "Year to date", content: <p>Revenue is on track for the annual target.</p> },
+    ],
+    value: "previous",
+  },
+};
+
 export const Usage: Story = {
   render: () => <div style={{ maxWidth: 400 }}><TabsExample /></div>,
   parameters: { docs: { source: { code: exampleSource, language: "tsx" } } },
@@ -79,4 +92,8 @@ export const Usage: Story = {
 
 export const SegmentedUsage: Story = {
   render: () => <TabsSegmentedDemo />,
+};
+
+export const IconsUsage: Story = {
+  render: () => <TabsIconsDemo />,
 };

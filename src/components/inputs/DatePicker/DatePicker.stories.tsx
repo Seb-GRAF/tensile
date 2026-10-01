@@ -21,16 +21,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Click a day, or Tab in, move with the arrow keys, Page Up/Down and Home/End, and press Enter or Space: the pill slides to the picked day, and months blur-swap in the direction you move. */
+/** Click a day, or Tab in, move with the arrow keys, Page Up/Down and Home/End, and press Enter or Space: the pill moves to the picked day, and months blur-swap in the direction you move; Today shows today's month. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="w-68 max-w-full">
+      <div className="w-72 max-w-full">
         <DatePicker
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />

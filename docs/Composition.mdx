@@ -1,41 +1,7 @@
-import { Meta, Source } from "@storybook/addon-docs/blocks";
-import { FieldExample } from "../src/components/inputs/Field/demos/FieldExample";
-import source from "../src/components/inputs/Field/demos/FieldExample.tsx?raw";
+import { Meta } from "@storybook/addon-docs/blocks";
 
 <Meta title="Guides/Composition" />
 
-<a href="../" target="_top">← Tensile</a>
-
 # Composition
 
-The application owns values, requests, and routing. Components accept content and controlled props; temporary interaction state stays inside the component.
-
-## A field with validation
-
-Field owns the label and error relationship. Input owns the text control. Button owns the submit action. The form decides what a valid value means.
-
-<div style={{ maxWidth: 400, padding: "24px 0" }}><FieldExample /></div>
-
-<Source code={source} language="tsx" />
-
-This exact example is also used on the landing page and type-checked against the packed package. It does not submit data to a server.
-
-## State and native forms
-
-Use `value` and `onValueChange`, `checked` and `onCheckedChange`, or `open` and `onOpenChange`, as the component's props specify. There is no general uncontrolled mode.
-
-Pass `name` to form controls when reading FormData. Composite controls may serialize through hidden inputs. Required and disabled behavior varies with the native element; inspect the component's form story rather than assuming browser validation for a custom control.
-
-Field describes errors to its control; it does not provide a universal live validation announcer. Move focus deliberately after a save, dismissal, or removal if the focused element disappears.
-
-## Layout and content
-
-Use ordinary HTML for page structure and the existing Card, Header, Footer, and navigation components where they fit. Do not nest a button inside another button or a link. Keep all visible text and data in your application.
-
-Use public imports from `tensile`. Internal helpers and relative paths under `src/` are not supported package entry points.
-
-## Storybook and documentation
-
-Component docs explain usage and props. Individual stories isolate default, disabled, loading, error, empty, and composed states. Shared examples are rendered directly and their source is displayed, so the code you copy matches what you try.
-
-The Examples group contains development recipes. Some use fictional data and simulated actions; those examples do not provide backend services or make claims about real customers.
+Layout, a field with validation and other recipes: [read it on the documentation site](https://seb-graf.github.io/tensile/docs/patterns/).

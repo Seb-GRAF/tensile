@@ -1,6 +1,6 @@
 # Contributing
 
-Use Node 24 and npm. Install with `npm ci`. Read `AGENTS.md` before changing a component, then read the closest implementation in full. Keep changes focused and preserve unrelated work.
+Use Node 24 (`nvm use`) and npm. Install with `npm ci`. Read `AGENTS.md` before changing a component, then read the closest implementation in full. Keep changes focused and preserve unrelated work.
 
 ## Development
 
@@ -15,11 +15,11 @@ Each component lives in `src/components/<category>/<Name>/` with its implementat
 ## Checks
 
 ```sh
-npx tsc --noEmit
-npm test
-npm run check:consumer
-npm run build:site
+uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
+npm run check
 ```
+
+`npm run check` runs TypeScript, unit tests, Vite and Next.js consumer checks, keyboard scenarios in Chromium/Firefox/WebKit, and the documentation build. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) for the browser checks.
 
 Run build commands sequentially: they share `dist/`. The consumer check packs the library, installs the tarball outside the checkout, checks types including documentation examples, builds without Tailwind, and server-renders every export. Add an SSR fixture when adding an export.
 
@@ -33,17 +33,42 @@ Describe the expected behavior, actual behavior, component and version, and a mi
 
 Use [seb-graf/tensile](https://github.com/seb-graf/tensile) for pull requests and [GitHub Issues](https://github.com/seb-graf/tensile/issues) for bug reports.
 
-## Release procedure
+## Changesets
 
-Publication and deployment require maintainer authorization. The approved package name is `tensile` and the repository is `seb-graf/tensile`. The library is licensed under MIT, copyright 2026 Sébastien Graf. The site is hosted on GitHub Pages at https://seb-graf.github.io/tensile/. Do not publish with placeholder metadata.
+For a user-facing package change, run `npm run changeset` and commit the generated file with your code. Describe the behavior users will see and any migration steps. Choose `patch` for compatible fixes and `minor` for new features. During 0.x, breaking changes also use `minor`; once 1.0 is released, breaking changes use `major`. Documentation and tooling changes do not need a changeset.
 
-1. Verify npm publishing rights for `tensile` and repository access. Include the license and bundled-font notices in the package. Confirm the package version and npm account before publishing.
-2. Finish and review concurrent component work. Release from a clean, reviewed commit.
-3. Update `version` in `package.json` and synchronize `package-lock.json`; update `CHANGELOG.md`. Start at `0.1.0`. During 0.x, document breaking changes in minor releases; reserve patches for compatible fixes.
-4. Run the checks above, sequentially. Verify lower peer-version bounds before advertising them as tested.
-5. Run `npm pack --dry-run --json`, then `npm pack`. Inspect the tarball: JS, declarations, both CSS entries, all font URLs and assets, README, package metadata, license, and third-party notices; no stories, site, tests, or development configuration.
-6. Install that exact final tarball into a clean consumer, repeat types, build, SSR and browser checks, then retain it for publication. Do not rebuild a different artifact for publishing.
-7. After authorization, create the matching version tag and publish the tested tarball with `npm publish ./tensile-0.1.0.tgz --access public`. Add release notes from the changelog.
-8. After deployment authorization, manually run the site workflow for the release commit. Review the deployed base path, assets, documentation, and links. GitHub Pages serves the landing page and authored documentation under `/tensile/`. Storybook is built separately for development and review.
+Do not update `package.json` versions or `CHANGELOG.md` by hand. Changesets collects the release notes and the release workflow keeps a single release PR up to date, including the lockfile.
 
-For subsequent releases, npm trusted publishing can replace local publication. Configure the approved repository and workflow in npm first. It requires npm 11.5.1 or newer and Node 22.14.0 or newer on supported hosted runners. No automatic publishing workflow is enabled here.
+## Environments
+
+- Local: Storybook and the documentation site.
+- Preview: Vercel deploys development branches and posts preview links on PRs. Open `/tensile/` on the preview URL. Fork contributions may need deployment approval in Vercel. Preview pages are marked `noindex`.
+- Production: GitHub Pages serves the documentation for the released commit; npm's `latest` tag is the stable package. Vercel does not deploy `main`.
+- Prerelease: maintainers can run the Release workflow on `main` with channel `next`. It versions pending changesets as a snapshot, validates the packed artifact, and publishes only to `tensile@next`. It does not commit the snapshot or update production docs. Use this while a release PR is still pending.
+
+Use short-lived branches and PRs into `main`. The required `check` job must pass before merging. No separate develop or staging branch is needed.
+
+## Releases
+
+Merging the release PR authorizes stable publication and documentation deployment. The Release workflow:
+
+1. Builds and packs the release with Changesets, retaining the artifact for 30 days.
+2. Runs the full check command. Both consumer checks install that exact tarball through `TENSILE_TARBALL`, an absolute path, without rebuilding it.
+3. Publishes the validated artifact through npm trusted publishing in the `npm` GitHub environment, then creates the version tag and GitHub release from the changelog.
+4. Calls Deploy site for the same commit, updating GitHub Pages.
+
+If npm publication succeeds but tag or GitHub release creation fails, recover the missing tag and release from the same commit and changelog; do not bump or republish the package. If only documentation deployment fails, rerun that job. Deploy site also supports manual dispatch for documentation-only updates; select the intended released tag when starting it.
+
+Review the release PR's migration notes and inspect the tarball listing in the workflow. Verify lower peer-version bounds before advertising them as tested. Browser automation does not replace manual visual or screen-reader review.
+
+### Hosting and repository settings
+
+- GitHub: protect `main`, require the `check` status and PRs, and enable “Allow GitHub Actions to create and approve pull requests.” A solo maintainer does not need a second reviewer. Keep default workflow permissions read-only; each workflow requests the permissions it needs.
+- npm: configure a GitHub Actions trusted publisher for owner `Seb-GRAF`, repository `tensile`, workflow `release.yml`, environment `npm`, with direct publishing allowed. No `NPM_TOKEN` secret is used.
+- GitHub environment `npm`: restrict deployments to the `main` branch. The release PR merge is the release approval.
+- Vercel: connect the repository to the `tensile-preview` project, using the root directory and Node 24. `vercel.json` provides the build, output directory, `/tensile/` routing, and preview-only branch policy. No Vercel credentials are exposed to PR workflows.
+- GitHub Pages: use GitHub Actions as the source. The existing `github-pages` environment hosts production.
+
+GitHub may ask a maintainer to approve CI runs for a bot-created release PR. Approve those runs before merging; do not bypass the required check.
+
+Dependabot opens weekly grouped updates for compatible npm dependencies and GitHub Actions. Review major updates individually and add a changeset when an update changes the published package's behavior or requirements.

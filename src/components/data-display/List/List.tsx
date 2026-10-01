@@ -8,21 +8,21 @@ export type ListProps = {
 export function ListContent({ item }: { item: ListProps["items"][number] }) {
   return (
     <>
-      {item.leading && <div className="text-muted">{item.leading}</div>}
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-ink">{item.title}</p>
-        {item.description && <div className="text-label text-muted">{item.description}</div>}
+      {item.leading && <div className="tn:text-muted">{item.leading}</div>}
+      <div className="tn:min-w-0 tn:flex-1">
+        <p className="tn:truncate tn:text-sm tn:font-medium tn:text-ink">{item.title}</p>
+        {item.description && <div className="tn:text-label tn:text-muted">{item.description}</div>}
       </div>
-      {item.trailing && <div className="text-label text-muted">{item.trailing}</div>}
+      {item.trailing && <div className="tn:text-label tn:text-muted">{item.trailing}</div>}
     </>
   );
 }
 
 export function List({ items, label, className = "" }: ListProps) {
   return (
-    <ul role="list" aria-label={label} className={`divide-y divide-line ${className}`}>
+    <ul role="list" aria-label={label} className={`tn:divide-y tn:divide-line ${className}`}>
       {items.map((item) => (
-        <li key={item.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+        <li key={item.id} className="tn:flex tn:items-center tn:gap-3 tn:py-2.5 tn:first:pt-0 tn:last:pb-0">
           <ListContent item={item} />
         </li>
       ))}

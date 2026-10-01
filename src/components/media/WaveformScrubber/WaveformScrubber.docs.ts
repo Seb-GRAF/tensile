@@ -10,7 +10,7 @@ export default {
     "Keep position between zero and duration and peak heights between zero and one."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled waveform position and duration.", Demo: WaveformScrubberDemo, code: waveformScrubberDemoCode },
+    { id: "usage", title: "Basic usage", description: "A clip's waveform that you scrub by dragging or with the arrow keys; use it for voice messages or audio clips, where the shape of the sound helps find a spot.", Demo: WaveformScrubberDemo, code: waveformScrubberDemoCode },
   ],
   keyboard: [
     {
@@ -28,11 +28,11 @@ export default {
   ],
   props: {
     "peaks": "Bar heights from 0 to 1, one bar per peak.",
-    "value": "Position in seconds.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "Position in seconds, kept by the parent so it can follow playback.",
+    "onValueChange": "Called with the position in seconds while the waveform is dragged or an arrow, Home or End key moves it; seek the media element to it.",
     "duration": "Length in seconds.",
-    "label": "Accessible name of the control or region.",
+    "label": "Name of the position slider.",
     "formatTime": "Format a time in seconds for display.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the ink card, for placement and width; it fills its container by default."
   },
 };

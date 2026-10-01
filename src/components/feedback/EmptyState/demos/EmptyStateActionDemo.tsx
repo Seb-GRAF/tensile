@@ -15,9 +15,7 @@ export function EmptyStateActionDemo() {
           title="No projects yet"
           description="Create your first project to get started."
           icon={
-            <Icon size={24}>
-              <path d="M12 5v14M5 12h14" />
-            </Icon>
+            <Icon name="plus" size={24} />
           }
           action={
             <Button onClick={() => setCreated(true)}>Create project</Button>

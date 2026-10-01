@@ -1,5 +1,6 @@
 import { animate, motion, useMotionValue } from "motion/react";
 import { useState } from "react";
+import { useControllable } from "../../../controllable";
 import { dragHandlers, rubber } from "../../../drag";
 import { useSprings } from "../../../springs";
 import { Icon } from "../../data-display/Icon/Icon";
@@ -9,8 +10,9 @@ export type CompareSliderProps = {
   before: React.ReactNode;
   after: React.ReactNode;
   /** Divider position from the left, 0..1 */
-  value: number;
-  onValueChange: (value: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
   beforeLabel?: string;
   afterLabel?: string;
   /** The handle's accessible name. */
@@ -23,7 +25,8 @@ const STEP = 0.05;
 export function CompareSlider({
   before,
   after,
-  value,
+  value: valueProp,
+  defaultValue = 0.5,
   onValueChange,
   beforeLabel = "Before",
   afterLabel = "After",
@@ -31,6 +34,7 @@ export function CompareSlider({
   className = "",
 }: CompareSliderProps) {
   const { shape, snap } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const [held, setHeld] = useState(false);
   const stretch = useMotionValue(0);
 
@@ -41,7 +45,7 @@ export function CompareSlider({
     }
     const box = event.currentTarget.getBoundingClientRect();
     const px = event.clientX - box.left;
-    onValueChange(Math.min(1, Math.max(0, px / box.width)));
+    setValue(Math.min(1, Math.max(0, px / box.width)));
     const over = px > box.width ? px - box.width : Math.min(0, px);
     stretch.set(rubber(over));
   }
@@ -63,28 +67,28 @@ export function CompareSlider({
     const target = targets[event.key];
     if (target === undefined) return;
     event.preventDefault();
-    onValueChange(Math.min(1, Math.max(0, target)));
+    setValue(Math.min(1, Math.max(0, target)));
   }
 
   return (
     <div
       {...dragHandlers(drag, release)}
-      className={`relative cursor-ew-resize touch-none rounded-card outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${className}`}
+      className={`tn:relative tn:cursor-ew-resize tn:touch-none tn:rounded-card tn:outline-offset-2 tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus ${className}`}
     >
-      <div className="absolute inset-0 overflow-hidden rounded-card bg-paper shadow-float">
-        <div className="absolute inset-0">
+      <div className="tn:absolute tn:inset-0 tn:overflow-hidden tn:rounded-card tn:bg-paper tn:shadow-float">
+        <div className="tn:absolute tn:inset-0">
           {before}
-          <span className="absolute top-3 left-3 rounded-control bg-paper px-3 py-1 text-label font-medium text-ink">
+          <span className="tn:absolute tn:top-3 tn:left-3 tn:rounded-control tn:bg-paper tn:px-3 tn:py-1 tn:text-label tn:font-medium tn:text-ink">
             {beforeLabel}
           </span>
         </div>
-        <div style={{ clipPath: `inset(0 0 0 ${value * 100}%)` }} className="absolute inset-0">
+        <div style={{ clipPath: `inset(0 0 0 ${value * 100}%)` }} className="tn:absolute tn:inset-0">
           {after}
-          <span className="absolute top-3 right-3 rounded-control bg-paper px-3 py-1 text-label font-medium text-ink">
+          <span className="tn:absolute tn:top-3 tn:right-3 tn:rounded-control tn:bg-paper tn:px-3 tn:py-1 tn:text-label tn:font-medium tn:text-ink">
             {afterLabel}
           </span>
         </div>
-        <motion.div style={{ left: `${value * 100}%`, x: stretch }} className="absolute inset-y-0 w-0.5 -translate-x-1/2 bg-paper" />
+        <motion.div style={{ left: `${value * 100}%`, x: stretch }} className="tn:absolute tn:inset-y-0 tn:w-0.5 tn:-translate-x-1/2 tn:bg-paper" />
       </div>
       <motion.div
         role="slider"
@@ -98,12 +102,9 @@ export function CompareSlider({
         animate={{ width: held ? 52 : 44, height: held ? 52 : 44 }}
         transition={shape}
         style={{ left: `${value * 100}%`, x: stretch }}
-        className="absolute top-1/2 grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-paper text-ink shadow-control outline-none"
+        className="tn:absolute tn:top-1/2 tn:grid tn:-translate-x-1/2 tn:-translate-y-1/2 tn:place-items-center tn:rounded-full tn:bg-paper tn:text-ink tn:shadow-control tn:outline-none"
       >
-        <Icon size={16}>
-          <path d="m9 7-5 5 5 5" />
-          <path d="m15 7 5 5-5 5" />
-        </Icon>
+        <Icon name="chevronsLeftRight" size={16} />
       </motion.div>
     </div>
   );

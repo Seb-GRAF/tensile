@@ -37,7 +37,7 @@ export const Default: Story = {
       <ColorSwatches
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />

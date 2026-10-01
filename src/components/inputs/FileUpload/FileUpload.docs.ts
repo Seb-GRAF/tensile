@@ -17,10 +17,10 @@ export default {
     "The component has no name prop; append the received File objects to your upload request yourself."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Select files and show the chosen filenames.", Demo: FileUploadDemo, code: fileUploadDemoCode },
-    { id: "multiple", title: "Multiple files", description: "Accepted file types and multiple selection.", Demo: FileUploadMultipleDemo, code: fileUploadMultipleDemoCode },
-    { id: "progress", title: "Upload progress", description: "Caller-controlled uploading and completion states, explicitly simulated.", Demo: FileUploadProgressDemo, code: fileUploadProgressDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled file selection.", Demo: FileUploadDisabledDemo, code: fileUploadDisabledDemoCode },
+    { id: "usage", title: "Basic usage", description: "The idle drop target on its own, with the picked file names listed below it.", Demo: FileUploadDemo, code: fileUploadDemoCode },
+    { id: "multiple", title: "Multiple files", description: "multiple passes every picked file to onFiles, and accept limits the chooser to PDFs and PNGs.", Demo: FileUploadMultipleDemo, code: fileUploadMultipleDemoCode },
+    { id: "progress", title: "Upload progress", description: "A simulated upload: the caller moves status and progress, so the target turns into a progress pill and then a done pill.", Demo: FileUploadProgressDemo, code: fileUploadProgressDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed target that neither opens the chooser nor takes drops.", Demo: FileUploadDisabledDemo, code: fileUploadDisabledDemoCode },
   ],
   keyboard: [
     {
@@ -34,15 +34,15 @@ export default {
   ],
   props: {
     "status": "Current display state: idle, uploading or done.",
-    "progress": "0..1",
+    "progress": "Upload progress from 0 to 1, shown while status is uploading.",
     "onFiles": "Called with the files the user picked or dropped. Start the upload here and set `status` and `progress`.",
-    "label": "Accessible name of the control or region.",
+    "label": "Text on the drop target while idle, which also names its button.",
     "uploadingLabel": "Build the progress label from selected filenames.",
     "formatProgress": "Format progress, which ranges from 0 to 1.",
     "doneLabel": "Completion announcement for assistive technology.",
     "accept": "Native file chooser hint, such as .pdf,.png.",
     "multiple": "Allow several files; otherwise only the first is passed to onFiles.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the target; it doesn't open the chooser or take drops.",
+    "className": "Classes on the 128 px tall area that holds the target, for placement. The target fills its width."
   },
 };

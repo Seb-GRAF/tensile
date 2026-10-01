@@ -15,7 +15,7 @@ function StatefulPasswordInput(props: PasswordInputProps) {
     <PasswordInput
       {...props}
       value={value}
-      onValueChange={(value) => { setValue(value); props.onValueChange(value); }}
+      onValueChange={(value) => { setValue(value); props.onValueChange?.(value); }}
     />
   );
 }
@@ -36,7 +36,7 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-80 max-w-full">
-        <StatefulPasswordInput {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulPasswordInput {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

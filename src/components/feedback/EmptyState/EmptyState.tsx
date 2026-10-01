@@ -8,11 +8,11 @@ export type EmptyStateProps = {
 
 export function EmptyState({ title, description, icon, action, className = "" }: EmptyStateProps) {
   return (
-    <div className={`flex w-full flex-col items-center gap-3 p-6 text-center ${className}`}>
-      {icon && <div className="text-muted">{icon}</div>}
-      <h2 className="text-body font-semibold text-ink">{title}</h2>
-      {description && <div className="max-w-sm text-sm text-muted">{description}</div>}
-      {action && <div className="mt-1">{action}</div>}
+    <div className={`tn:flex tn:w-full tn:flex-col tn:items-center tn:gap-3 tn:p-6 tn:text-center ${className}`}>
+      {icon && <div className="tn:text-muted">{icon}</div>}
+      <h2 className="tn:text-body tn:font-semibold tn:text-ink">{title}</h2>
+      {description && <div className="tn:max-w-sm tn:text-sm tn:text-muted">{description}</div>}
+      {action && <div className="tn:mt-1">{action}</div>}
     </div>
   );
 }

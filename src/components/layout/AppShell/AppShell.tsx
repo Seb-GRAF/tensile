@@ -15,21 +15,21 @@ export type AppShellProps = {
 export function AppShell({ sidebar, header, mobileNav, children, skipLabel = "Skip to content", className = "" }: AppShellProps) {
   const id = useId();
   return (
-    <div className={`lg:flex ${className}`}>
+    <div className={`tn:lg:flex ${className}`}>
       <a
         href={`#${id}`}
-        className="fixed top-3 left-3 z-(--layer-overlay) flex h-11 items-center rounded-control bg-paper px-5 text-body font-medium text-ink shadow-float outline-offset-2 not-focus:sr-only focus-visible:outline-2 focus-visible:outline-focus"
+        className="tn:fixed tn:top-3 tn:left-3 tn:z-(--tn-layer-overlay) tn:flex tn:h-11 tn:items-center tn:rounded-control tn:bg-paper tn:px-5 tn:text-body tn:font-medium tn:text-ink tn:shadow-float tn:outline-offset-2 tn:not-focus:sr-only tn:focus-visible:outline-2 tn:focus-visible:outline-focus"
       >
         {skipLabel}
       </a>
-      {sidebar && <div className="sticky top-0 hidden h-dvh shrink-0 p-3 lg:block">{sidebar}</div>}
-      <div className="min-w-0 flex-1 overflow-x-clip">
+      {sidebar && <div className="tn:sticky tn:top-0 tn:hidden tn:h-dvh tn:shrink-0 tn:p-3 tn:lg:block">{sidebar}</div>}
+      <div className="tn:min-w-0 tn:flex-1 tn:overflow-x-clip">
         {header}
-        <main id={id} tabIndex={-1} className={`mx-auto max-w-page p-6 outline-none ${mobileNav ? "pb-23 lg:pb-6" : ""}`}>
+        <main id={id} tabIndex={-1} className={`tn:mx-auto tn:max-w-page tn:p-6 tn:outline-none ${mobileNav ? "tn:pb-23 tn:lg:pb-6" : ""}`}>
           {children}
         </main>
       </div>
-      {mobileNav && <div className="fixed inset-x-4 bottom-4 lg:hidden">{mobileNav}</div>}
+      {mobileNav && <div className="tn:fixed tn:inset-x-4 tn:bottom-4 tn:lg:hidden">{mobileNav}</div>}
     </div>
   );
 }

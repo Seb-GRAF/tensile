@@ -1,9 +1,11 @@
+import { useControllable } from "../../../controllable";
 import { SliderTrack } from "../../../SliderTrack";
 import { useField } from "../Field/Field";
 
 export type SliderProps = {
-  value: number;
-  onValueChange: (value: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
@@ -17,9 +19,10 @@ export type SliderProps = {
 };
 
 export function Slider({
-  value,
+  value: valueProp,
   onValueChange,
   min = 0,
+  defaultValue = min,
   max = 100,
   step = 1,
   formatValue = (value: number) => value.toLocaleString("en-US"),
@@ -30,13 +33,14 @@ export function Slider({
   disabled = false,
   className = "",
 }: SliderProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   const isDisabled = field?.disabled || disabled;
   return (
     <>
       <SliderTrack
         value={[value]}
-        onValueChange={(_, next) => onValueChange(next)}
+        onValueChange={(_, next) => setValue(next)}
         min={min}
         max={max}
         step={step}

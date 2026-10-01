@@ -11,8 +11,8 @@ export default {
     "Enter, Tab and blur commit the draft; Escape cancels it. Committing or cancelling returns focus to the display button."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Edit, commit and cancel a named value.", Demo: EditableTextDemo, code: editableTextDemoCode },
-    { id: "empty", title: "Empty state", description: "Empty value with a placeholder.", Demo: EditableTextEmptyDemo, code: editableTextEmptyDemoCode },
+    { id: "usage", title: "Basic usage", description: "A project name shown as text; click it to edit, Enter or leaving the field saves, Escape cancels. Use it for names and titles edited in place.", Demo: EditableTextDemo, code: editableTextDemoCode },
+    { id: "empty", title: "Empty state", description: "With no name yet, the placeholder shows in muted text, so there is still something to click. Use it for values people fill in later.", Demo: EditableTextEmptyDemo, code: editableTextEmptyDemoCode },
   ],
   keyboard: [
     {
@@ -33,11 +33,12 @@ export default {
     "Button"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "The saved text. Pass it to control EditableText; leave it out and EditableText keeps its own text.",
+    "defaultValue": "The text EditableText starts with when it keeps its own text.",
+    "onValueChange": "Called with the new text when an edit is saved, not on every keystroke.",
+    "label": "Names the input while editing, and goes into the edit button's name through `editLabel`.",
     "placeholder": "Hint shown while the value is empty.",
-    "editLabel": "Build the accessible name of the edit button from its label and value.",
-    "className": "Additional classes on the outer element."
+    "editLabel": "Names the button that starts editing, given the label and the saved text.",
+    "className": "Classes for the outer box, to place it in a layout."
   },
 };

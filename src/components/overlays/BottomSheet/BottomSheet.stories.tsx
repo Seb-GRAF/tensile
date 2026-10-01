@@ -9,11 +9,11 @@ import { Separator } from "../../layout/Separator/Separator";
 import { BottomSheet } from "./BottomSheet";
 
 const actions = [
-  { label: "Add to queue", paths: ["M11 12H3", "M16 6H3", "M16 18H3", "M18 9v6", "M21 12h-6"] },
-  { label: "Go to artist", paths: ["M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", "M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0"] },
-  { label: "Share", paths: ["M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8", "m16 6-4-4-4 4", "M12 2v13"] },
-  { label: "Download", paths: ["M12 15V3", "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", "m7 10 5 5 5-5"] },
-];
+  { label: "Add to queue", icon: "listPlus" },
+  { label: "Go to artist", icon: "user" },
+  { label: "Share", icon: "share" },
+  { label: "Download", icon: "download" },
+] as const;
 
 const meta = {
   title: "Overlays/BottomSheet",
@@ -30,10 +30,10 @@ const meta = {
           <p className="text-label text-muted">Arulo</p>
         </div>
         <Separator className="mx-5 mb-2" />
-        {actions.map(({ label, paths }) => (
+        {actions.map(({ label, icon }) => (
           <Button key={label} variant="ghost" className="w-full">
             <span className="flex w-full items-center gap-3">
-              <Icon size={20} className="text-muted">{paths.map((d) => <path key={d} d={d} />)}</Icon>
+              <Icon name={icon} size={20} className="text-muted" />
               {label}
             </span>
           </Button>
@@ -46,7 +46,7 @@ const meta = {
     return (
       <div className="grid min-h-screen place-items-center">
         <Button aria-haspopup="dialog" aria-expanded={args.open} onClick={() => updateArgs({ open: true })}>Open sheet</Button>
-        <BottomSheet {...args} onOpenChange={(open) => { args.onOpenChange(open); updateArgs({ open }); }} />
+        <BottomSheet {...args} onOpenChange={(open) => { args.onOpenChange?.(open); updateArgs({ open }); }} />
       </div>
     );
   },

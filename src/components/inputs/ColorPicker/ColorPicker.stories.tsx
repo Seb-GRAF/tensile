@@ -17,7 +17,7 @@ function StatefulColorPicker(props: ColorPickerProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -63,7 +63,7 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-80 max-w-full">
-        <StatefulColorPicker {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulColorPicker {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

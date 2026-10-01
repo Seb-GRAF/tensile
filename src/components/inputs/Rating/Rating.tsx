@@ -1,13 +1,15 @@
 import { motion, useMotionTemplate } from "motion/react";
 import { useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useLiquid } from "../../../springs";
 import { Icon } from "../../data-display/Icon/Icon";
 import { useField } from "../Field/Field";
 
 export type RatingProps = {
   /** Whole stars, from 0 to `count`. */
-  value: number;
-  onValueChange: (value: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
   /** Number of stars. */
   count?: number;
   label?: string;
@@ -21,16 +23,9 @@ export type RatingProps = {
   className?: string;
 };
 
-function Star({ className }: { className: string }) {
-  return (
-    <Icon size={24}>
-      <path className={className} d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
-    </Icon>
-  );
-}
-
 export function Rating({
-  value,
+  value: valueProp,
+  defaultValue = 0,
   onValueChange,
   count = 5,
   label = "Rating",
@@ -42,6 +37,7 @@ export function Rating({
   disabled = false,
   className = "",
 }: RatingProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   disabled = field?.disabled || disabled;
   const interactive = !readOnly && !disabled;
@@ -64,7 +60,7 @@ export function Rating({
     if (target === undefined) return;
     event.preventDefault();
     setHover(null);
-    onValueChange(Math.min(count, Math.max(0, target)));
+    setValue(Math.min(count, Math.max(0, target)));
   }
 
   return (
@@ -84,14 +80,14 @@ export function Rating({
       aria-valuetext={readOnly ? undefined : valueLabel(value, count)}
       onKeyDown={interactive ? onKeyDown : undefined}
       onPointerLeave={interactive ? () => setHover(null) : undefined}
-      className={`inline-block rounded-control bg-paper p-[3px] shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${interactive ? "cursor-pointer" : ""} ${disabled ? "opacity-40" : ""} ${className}`}
+      className={`tn:inline-block tn:rounded-control tn:bg-paper tn:p-[3px] tn:shadow-control tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${interactive ? "tn:cursor-pointer" : ""} ${disabled ? "tn:opacity-40" : ""} ${className}`}
     >
       {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
-      <div className="relative grid auto-cols-[32px] grid-flow-col">
-        <motion.span style={{ clipPath: clip }} className="absolute inset-0 grid auto-cols-[32px] grid-flow-col">
+      <div className="tn:relative tn:grid tn:auto-cols-[32px] tn:grid-flow-col">
+        <motion.span style={{ clipPath: clip }} className="tn:absolute tn:inset-0 tn:grid tn:auto-cols-[32px] tn:grid-flow-col">
           {stars.map((star) => (
-            <span key={star} className="grid place-items-center">
-              <Star className="fill-accent stroke-none" />
+            <span key={star} className="tn:grid tn:place-items-center">
+              <Icon name="star" size={24} className="tn:*:fill-accent tn:*:stroke-none" />
             </span>
           ))}
         </motion.span>
@@ -99,10 +95,10 @@ export function Rating({
           <span
             key={star}
             onPointerMove={interactive ? () => setHover(star) : undefined}
-            onClick={interactive ? () => onValueChange(star) : undefined}
-            className="relative grid h-8 place-items-center"
+            onClick={interactive ? () => setValue(star) : undefined}
+            className="tn:relative tn:grid tn:h-8 tn:place-items-center"
           >
-            <Star className="fill-none stroke-ink" />
+            <Icon name="star" size={24} className="tn:text-ink" />
           </span>
         ))}
       </div>

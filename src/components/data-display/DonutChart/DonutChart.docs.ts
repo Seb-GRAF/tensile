@@ -12,8 +12,8 @@ export default {
     "The center shows the total until a segment is hovered or focused."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Labeled segments and total.", Demo: DonutChartDemo, code: donutChartDemoCode },
-    { id: "format", title: "Custom formatting", description: "Formatted values and customized labels.", Demo: DonutChartFormatDemo, code: donutChartFormatDemoCode },
+    { id: "usage", title: "Basic usage", description: "A few categories as arcs around their total; hover or focus an arc to read it. Use it to show shares of a whole.", Demo: DonutChartDemo, code: donutChartDemoCode },
+    { id: "format", title: "Custom formatting", description: "Hours as the unit, a center title and spoken segment text set by `formatValue`, `totalLabel` and `segmentLabel`, for data with a unit.", Demo: DonutChartFormatDemo, code: donutChartFormatDemoCode },
   ],
   keyboard: [
     {
@@ -27,10 +27,10 @@ export default {
   ],
   props: {
     "data": "Labeled segments with non-negative values.",
-    "formatValue": "Format a value for display or accessible value text.",
-    "label": "Accessible summary of the chart.",
+    "formatValue": "Turns a value into the text in the center and the spoken segment text, such as \"6 h\".",
+    "label": "Names the chart for screen readers with a short summary, such as \"Work hours this week\".",
     "totalLabel": "Shown in the center above the total.",
     "segmentLabel": "Read out for a segment, given its label and formatted value.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the ink card, for width and placement; it fills its container by default."
   },
 };

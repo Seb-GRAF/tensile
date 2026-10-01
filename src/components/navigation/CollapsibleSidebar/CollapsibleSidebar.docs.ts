@@ -12,8 +12,8 @@ export default {
     "Collapsed labels remain accessible."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled expansion alongside page content.", Demo: CollapsibleSidebarDemo, code: collapsibleSidebarDemoCode },
-    { id: "slots", title: "Content slots", description: "Brand and account content in expanded and collapsed states.", Demo: CollapsibleSidebarSlotsDemo, code: collapsibleSidebarSlotsDemoCode },
+    { id: "usage", title: "Basic usage", description: "The sidebar's width springs between the rail and the full sidebar while the page beside it makes room.", Demo: CollapsibleSidebarDemo, code: collapsibleSidebarDemoCode },
+    { id: "slots", title: "Content slots", description: "A brand at the top and an account at the bottom, shown in full when expanded and as their first 32 px in the rail.", Demo: CollapsibleSidebarSlotsDemo, code: collapsibleSidebarSlotsDemoCode },
   ],
   keyboard: [
     {
@@ -36,15 +36,17 @@ export default {
   ],
   props: {
     "items": "Destinations with values, labels, icons and optional hrefs.",
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "expanded": "Whether the content is expanded.",
-    "onExpandedChange": "Called when the expanded state changes.",
-    "leading": "At the top, e.g. the brand; clipped to the rail while collapsed.",
-    "trailing": "At the bottom, above the collapse button, e.g. the account; clipped to the rail while collapsed.",
-    "label": "Accessible name of the control or region.",
+    "value": "The current destination's value. Leave it out to let the sidebar track it, starting from defaultValue.",
+    "defaultValue": "The current destination when the sidebar tracks it itself. Empty marks none.",
+    "onValueChange": "Called with an item's value when it's activated.",
+    "expanded": "Whether the sidebar shows its labels. Leave it out to let the sidebar track it, starting from defaultExpanded.",
+    "defaultExpanded": "Whether the sidebar starts expanded when it tracks this itself. Defaults to true.",
+    "onExpandedChange": "Called when the collapse button is pressed.",
+    "leading": "At the top, e.g. the brand; laid out at the expanded width, so the rail clips it to its first 32 px.",
+    "trailing": "At the bottom, above the collapse button, e.g. the account; laid out at the expanded width, so the rail clips it to its first 32 px.",
+    "label": "Accessible name of the navigation landmark.",
     "expandLabel": "Accessible name of the expand action.",
     "collapseLabel": "Accessible name of the collapse action.",
-    "className": "Additional classes on the outer element.",
+    "className": "Classes on the sidebar's card, for height and placement, such as `h-full`.",
   },
 };

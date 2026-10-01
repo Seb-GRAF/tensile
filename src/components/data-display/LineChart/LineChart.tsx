@@ -68,18 +68,18 @@ export function LineChart({
       onKeyDown={onKeyDown}
       onFocus={() => setHover((index) => index ?? 0)}
       onBlur={() => setHover(null)}
-      className={`p-5 outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+      className={`tn:p-5 tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${className}`}
     >
-      <div className="relative">
+      <div className="tn:relative">
         <svg
           aria-hidden
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           onPointerMove={onPointerMove}
           onPointerLeave={() => setHover(null)}
-          className="block w-full overflow-visible"
+          className="tn:block tn:w-full tn:overflow-visible"
         >
           {[TOP, (TOP + HEIGHT) / 2, HEIGHT].map((y) => (
-            <line key={y} x1={0} x2={WIDTH} y1={y} y2={y} className="stroke-ink-3" />
+            <line key={y} x1={0} x2={WIDTH} y1={y} y2={y} className="tn:stroke-line" />
           ))}
           <AnimatePresence>
             {hover !== null && (
@@ -91,7 +91,7 @@ export function LineChart({
                 animate={{ opacity: 1, x: points[hover][0] }}
                 exit={{ opacity: 0 }}
                 transition={{ x: glide, opacity: soft }}
-                className="stroke-muted"
+                className="tn:stroke-muted"
               />
             )}
           </AnimatePresence>
@@ -101,7 +101,7 @@ export function LineChart({
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
             transition={draw}
-            className="fill-none stroke-accent"
+            className="tn:fill-none tn:stroke-accent"
             strokeWidth={2}
             strokeLinecap="round"
           />
@@ -113,7 +113,7 @@ export function LineChart({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ ...shape, delay: 0.55 * scale }}
-            className="fill-accent stroke-ink"
+            className="tn:fill-accent tn:stroke-paper"
             strokeWidth={2}
           />
           <AnimatePresence>
@@ -125,7 +125,7 @@ export function LineChart({
                 animate={{ opacity: 1, cx: points[hover][0], cy: points[hover][1] }}
                 exit={{ opacity: 0 }}
                 transition={{ cx: glide, cy: glide, opacity: soft }}
-                className="pointer-events-none fill-ink stroke-accent"
+                className="tn:pointer-events-none tn:fill-paper tn:stroke-accent"
                 strokeWidth={2}
               />
             )}
@@ -140,16 +140,16 @@ export function LineChart({
               animate={{ opacity: 1, left: `${(points[hover][0] / WIDTH) * 100}%`, top: `${(points[hover][1] / HEIGHT) * 100}%` }}
               exit={{ opacity: 0 }}
               transition={{ left: glide, top: glide, opacity: soft }}
-              className="pointer-events-none absolute w-0"
+              className="tn:pointer-events-none tn:absolute tn:w-0"
             >
               <motion.div
                 initial={false}
                 animate={{ x: hover === 0 ? "0%" : hover === data.length - 1 ? "-100%" : "-50%" }}
                 transition={glide}
-                className="grid h-6 w-max -translate-y-[calc(100%+10px)] place-content-center place-items-center rounded-control bg-paper px-2.5 text-label font-medium whitespace-nowrap text-ink tabular-nums"
+                className="tn:grid tn:h-6 tn:w-max tn:-translate-y-[calc(100%+10px)] tn:place-content-center tn:place-items-center tn:rounded-control tn:bg-ink tn:px-2.5 tn:text-label tn:font-medium tn:whitespace-nowrap tn:text-paper tn:tabular-nums"
               >
                 <AnimatePresence initial={false}>
-                  <motion.span key={hover} {...swap} className="col-start-1 row-start-1">
+                  <motion.span key={hover} {...swap} className="tn:col-start-1 tn:row-start-1">
                     {text}
                   </motion.span>
                 </AnimatePresence>
@@ -158,18 +158,18 @@ export function LineChart({
           )}
         </AnimatePresence>
       </div>
-      <div className="relative mt-3 h-3.5">
+      <div className="tn:relative tn:mt-3 tn:h-3.5">
         {data.map((point, i) => (
           <span
             key={point.label}
-            className="absolute top-0 -translate-x-1/2 text-caption leading-none text-paper/55"
+            className="tn:absolute tn:top-0 tn:-translate-x-1/2 tn:text-caption tn:leading-none tn:text-muted"
             style={{ left: `${(i / (data.length - 1)) * 100}%` }}
           >
             {point.label}
           </span>
         ))}
       </div>
-      <span role="status" className="sr-only">{text}</span>
+      <span role="status" className="tn:sr-only">{text}</span>
     </Card>
   );
 }

@@ -8,6 +8,8 @@ import { MultiSelectDisabledDemo } from "./demos/MultiSelectDisabledDemo";
 import multiSelectDisabledDemoCode from "./demos/MultiSelectDisabledDemo.tsx?raw";
 import { MultiSelectFormDemo } from "./demos/MultiSelectFormDemo";
 import multiSelectFormDemoCode from "./demos/MultiSelectFormDemo.tsx?raw";
+import { MultiSelectGroupsDemo } from "./demos/MultiSelectGroupsDemo";
+import multiSelectGroupsDemoCode from "./demos/MultiSelectGroupsDemo.tsx?raw";
 
 export default {
   description: "Choose several options without closing the list.",
@@ -18,16 +20,17 @@ export default {
     "Reset controlled state explicitly when resetting a form."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled multiple selection.", Demo: MultiSelectDemo, code: multiSelectDemoCode },
-    { id: "summary", title: "Summary", description: "Custom selected-value summary.", Demo: MultiSelectSummaryDemo, code: multiSelectSummaryDemoCode },
-    { id: "empty", title: "Empty state", description: "Empty options.", Demo: MultiSelectEmptyDemo, code: multiSelectEmptyDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled multiselect.", Demo: MultiSelectDisabledDemo, code: multiSelectDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and repeated named values.", Demo: MultiSelectFormDemo, code: multiSelectFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A team picker whose list stays open while you tick several teams, with the values in the parent's state. Start here when more than one answer is allowed.", Demo: MultiSelectDemo, code: multiSelectDemoCode },
+    { id: "summary", title: "Summary", description: "`summary` turns the picked labels into a count, \"2 teams selected\". Use it when the labels are long or many are usually picked.", Demo: MultiSelectSummaryDemo, code: multiSelectSummaryDemoCode },
+    { id: "empty", title: "Empty state", description: "With no options, the open list shows the empty text. Use it when the list can come back empty.", Demo: MultiSelectEmptyDemo, code: multiSelectEmptyDemoCode },
+    { id: "disabled", title: "Disabled", description: "The whole control is dimmed and won't open, but still shows the summary of its values. Use it while the choice is locked.", Demo: MultiSelectDisabledDemo, code: multiSelectDisabledDemoCode },
+    { id: "groups", title: "Groups and disabled options", description: "Toppings listed under headings, with sold-out ones dimmed and skipped by the keyboard. Use it for longer lists with natural categories.", Demo: MultiSelectGroupsDemo, code: multiSelectGroupsDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits one value per picked option under the same name, and the Field shows the label and error.", Demo: MultiSelectFormDemo, code: multiSelectFormDemoCode },
   ],
   keyboard: [
     {
       "key": "Arrow Up / Arrow Down",
-      "description": "Open the list and move between options."
+      "description": "Open the list and move between options, across groups, passing over disabled ones."
     },
     {
       "key": "Home / End",
@@ -48,17 +51,18 @@ export default {
     "TagInput"
   ],
   props: {
-    "options": "Choices with a stable value, visible label and optional icon.",
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "options": "The choices: `{ value, label, icon?, disabled? }`, or groups `{ label, options }` whose options show under a heading. A disabled option is dimmed and can't be picked.",
+    "value": "The picked values. Pass it to control MultiSelect; leave it out and MultiSelect keeps its own values.",
+    "defaultValue": "The values MultiSelect starts with when it keeps its own values.",
+    "onValueChange": "Called with all picked values each time an option is ticked or unticked.",
     "placeholder": "Hint shown while the value is empty.",
-    "label": "Accessible name of the control or region.",
-    "emptyText": "Message shown when there are no options or results.",
+    "label": "Names the pill and its list for screen readers when no Field labels them.",
+    "emptyText": "Shown in the open list when there are no options.",
     "summary": "Format the selected labels in the closed control.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the pill and stops it from opening or taking focus; the hidden inputs are left out of the form. A disabled Field or Fieldset does the same.",
     "required": "Expose the required state. See the form example for validation.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes for the outer box, to set its width or place it in a layout."
   },
 };

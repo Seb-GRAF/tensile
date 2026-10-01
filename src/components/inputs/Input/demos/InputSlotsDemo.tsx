@@ -10,22 +10,16 @@ export function InputSlotsDemo() {
         value={value}
         onValueChange={setValue}
         leading={
-          <Icon>
-            <circle cx="10" cy="10" r="6" />
-            <path d="m15 15 6 6" />
-          </Icon>
+          <Icon name="search" />
         }
         trailing={
           <IconButton
             label="Clear search"
+            icon="close"
             variant="ghost"
             size="sm"
             onClick={() => setValue("")}
-          >
-            <Icon>
-              <path d="m6 6 12 12M6 18 18 6" />
-            </Icon>
-          </IconButton>
+          />
         }
       />
     </Field>

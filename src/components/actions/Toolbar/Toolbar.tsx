@@ -43,7 +43,7 @@ export function Toolbar({ label, children, orientation = "horizontal", className
         onFocusCapture={(event) => {
           for (const button of event.currentTarget.querySelectorAll("button")) button.tabIndex = button === document.activeElement ? 0 : -1;
         }}
-        className={`flex w-fit rounded-control bg-paper p-1 shadow-control ${orientation === "vertical" ? "flex-col" : "items-center"}`}
+        className={`tn:flex tn:w-fit tn:rounded-control tn:bg-paper tn:p-1 tn:shadow-control ${orientation === "vertical" ? "tn:flex-col" : "tn:items-center"}`}
       >
         {children}
       </div>

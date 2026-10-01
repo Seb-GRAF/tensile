@@ -14,7 +14,7 @@ function StatefulSplitPane(props: SplitPaneProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );

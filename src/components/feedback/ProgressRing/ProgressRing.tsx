@@ -31,20 +31,20 @@ export function ProgressRing({
       aria-valuenow={Math.round(value * 100)}
       aria-valuetext={done ? doneLabel : formatValue(value)}
       initial={false}
-      animate={{ backgroundColor: done ? "var(--color-accent)" : "var(--color-ink)" }}
+      animate={{ backgroundColor: done ? "var(--tn-color-accent)" : "var(--tn-color-ink)" }}
       transition={soft}
-      className={`grid size-11 place-items-center rounded-full shadow-control ${className}`}
+      className={`tn:grid tn:size-11 tn:place-items-center tn:rounded-full tn:shadow-control ${className}`}
     >
       <motion.svg
         viewBox="0 0 28 28"
         initial={false}
         animate={{ opacity: done ? 0 : 1 }}
         transition={soft}
-        className="col-start-1 row-start-1 size-7 -rotate-90 fill-none"
+        className="tn:col-start-1 tn:row-start-1 tn:size-7 tn:-rotate-90 tn:fill-none"
         strokeWidth={3}
         strokeLinecap="round"
       >
-        <circle cx="14" cy="14" r="12" className="stroke-ink-3" />
+        <circle cx="14" cy="14" r="12" className="tn:stroke-ink-3" />
         <motion.circle
           cx="14"
           cy="14"
@@ -52,12 +52,12 @@ export function ProgressRing({
           initial={false}
           animate={{ pathLength: value, opacity: value > 0 ? 1 : 0 }}
           transition={soft}
-          className="stroke-paper"
+          className="tn:stroke-paper"
         />
       </motion.svg>
       <AnimatePresence initial={false}>
         {done && (
-          <motion.span key="done" {...swap} className="col-start-1 row-start-1 text-on-accent">
+          <motion.span key="done" {...swap} className="tn:col-start-1 tn:row-start-1 tn:text-on-accent">
             <Check size={20} />
           </motion.span>
         )}

@@ -74,7 +74,7 @@ export const Default: Story = {
         <Carousel
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -85,6 +85,7 @@ export const Default: Story = {
 
 /** Click Save trail or Trail guide: the click prints below. A press on them doesn't start a drag, and a drag that starts elsewhere on the slide never clicks them. */
 export const InteractiveContent: Story = {
+  parameters: { docs: { source: { type: "code" } } },
   render: function Render(args) {
     const [value, setValue] = useState(args.value);
     const [clicked, setClicked] = useState("Nothing clicked");
@@ -108,7 +109,7 @@ export const InteractiveContent: Story = {
             }))}
             value={value}
             onValueChange={(next) => {
-              args.onValueChange(next);
+              args.onValueChange?.(next);
               setValue(next);
             }}
           />
@@ -133,7 +134,7 @@ export const Rail: Story = {
           {...args}
           className="max-w-100"
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -145,7 +146,7 @@ export const Rail: Story = {
 /** Press the arrows at the end of the row, or drag the dots at its start. */
 export const ArrowsAtEnd: Story = { ...Default, args: { controls: "end" } };
 
-/** Press the arrows over the photo's edges, or drag the photo; the dots below follow. */
+/** Press the arrows at the carousel's left and right edges, or drag the photo; the dots below follow. */
 export const ArrowsOnSides: Story = { ...Default, args: { controls: "sides" } };
 
 export const Usage: Story = {

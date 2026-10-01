@@ -8,7 +8,7 @@ import { EditableText, type EditableTextProps } from "./EditableText";
 
 function StatefulEditableText(props: EditableTextProps) {
   const [value, setValue] = useState(props.value);
-  return <EditableText {...props} value={value} onValueChange={(value) => { setValue(value); props.onValueChange(value); }} />;
+  return <EditableText {...props} value={value} onValueChange={(value) => { setValue(value); props.onValueChange?.(value); }} />;
 }
 
 const meta = {
@@ -20,7 +20,7 @@ const meta = {
     const [, updateArgs] = useArgs();
     return (
       <div className="flex w-80 max-w-[calc(100vw-2rem)] justify-center">
-        <StatefulEditableText {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulEditableText {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

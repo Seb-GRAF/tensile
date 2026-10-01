@@ -11,8 +11,8 @@ export default {
     "Use one PageHeader for the page’s primary heading."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Title and description.", Demo: PageHeaderDemo, code: pageHeaderDemoCode },
-    { id: "actions", title: "Actions", description: "Breadcrumbs and working page actions.", Demo: PageHeaderActionsDemo, code: pageHeaderActionsDemoCode },
+    { id: "usage", title: "Basic usage", description: "A page title with one line of description, for pages without actions.", Demo: PageHeaderDemo, code: pageHeaderDemoCode },
+    { id: "actions", title: "Actions", description: "Breadcrumbs above the title and buttons beside it, for detail pages where the main actions belong to the whole page.", Demo: PageHeaderActionsDemo, code: pageHeaderActionsDemoCode },
   ],
   keyboard: [],
   related: [
@@ -20,10 +20,10 @@ export default {
     "Header"
   ],
   props: {
-    "title": "Title displayed by the component.",
-    "description": "Supporting content explaining the control or group.",
+    "title": "The page’s h1.",
+    "description": "Muted text under the title that says what the page is for.",
     "breadcrumbs": "Navigation shown above the title.",
     "actions": "Page-level controls, usually Buttons.",
-    "className": "Additional classes on the outer element."
+    "className": "Placement of the header, such as its margin."
   },
 };

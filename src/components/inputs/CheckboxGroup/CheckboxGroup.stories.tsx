@@ -37,7 +37,7 @@ export const Default: Story = {
         <CheckboxGroup
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />

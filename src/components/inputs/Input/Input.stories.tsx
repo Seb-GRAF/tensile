@@ -7,7 +7,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
-import { icons } from "../../../icons";
 import { Icon } from "../../data-display/Icon/Icon";
 import { Input, type InputProps } from "./Input";
 
@@ -19,7 +18,7 @@ function StatefulInput(props: InputProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -37,7 +36,7 @@ const meta = {
         <StatefulInput
           {...args}
           onValueChange={(value) => {
-            args.onValueChange(value);
+            args.onValueChange?.(value);
             updateArgs({ value });
           }}
         />
@@ -57,7 +56,7 @@ export const WithIcons: Story = {
   args: {
     "aria-label": "Search",
     placeholder: "Search songs, artists and albums",
-    leading: <Icon>{icons.search}</Icon>,
+    leading: <Icon name="search" />,
   },
 };
 

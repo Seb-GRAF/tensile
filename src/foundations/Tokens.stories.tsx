@@ -6,7 +6,7 @@ const pairs = [
   { name: "ink on paper", className: "bg-paper text-ink" },
   { name: "muted on paper", className: "bg-paper text-muted" },
   { name: "paper on ink", className: "bg-ink text-paper" },
-  { name: "paper/55 on ink", className: "bg-ink text-paper/55" },
+  { name: "paper/60 on ink", className: "bg-ink text-paper/60" },
   { name: "on-accent on accent", className: "bg-accent text-on-accent" },
   { name: "accent on ink", className: "bg-ink text-accent" },
 ];
@@ -37,10 +37,10 @@ function Tokens() {
         <ul className="grid grid-cols-5 gap-3">
           {colors.map((name) => (
             <li key={name} className="grid gap-1.5">
-              <span style={{ background: `var(--color-${name})` }} className="h-12 rounded-xl shadow-float" />
+              <span style={{ background: `var(--tn-color-${name})` }} className="h-12 rounded-xl shadow-float" />
               <span className="text-label font-medium">{name}</span>
-              <span data-token={`--color-${name}`} className="text-caption text-muted">
-                {value(`--color-${name}`)}
+              <span data-token={`--tn-color-${name}`} className="text-caption text-muted">
+                {value(`--tn-color-${name}`)}
               </span>
             </li>
           ))}
@@ -78,8 +78,8 @@ function Tokens() {
             <li key={name} className="grid gap-1.5">
               <span className={`bg-paper shadow-float ${className}`} />
               <span className="text-label font-medium">{name}</span>
-              <span data-token={`--radius-${name}`} className="text-caption text-muted">
-                {value(`--radius-${name}`)}
+              <span data-token={`--tn-radius-${name}`} className="text-caption text-muted">
+                {value(`--tn-radius-${name}`)}
               </span>
             </li>
           ))}
@@ -92,14 +92,14 @@ function Tokens() {
           <span className="grid h-11 place-items-center rounded-control bg-ink px-5 text-body font-medium text-paper outline-2 outline-offset-2 outline-focus">
             Focused on canvas
           </span>
-          <span className="rounded-card bg-ink p-3 [--color-focus:var(--color-paper)]">
-            <span className="grid h-11 place-items-center rounded-control bg-ink-3 px-5 text-body font-medium text-paper outline-2 outline-offset-2 outline-focus">
+          <span className="dark rounded-card bg-paper p-3">
+            <span className="grid h-11 place-items-center rounded-control bg-hover px-5 text-body font-medium text-ink outline-2 outline-offset-2 outline-focus">
               Focused on ink
             </span>
           </span>
         </div>
         <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-label">
-          {["--layer-raised", "--layer-sticky", "--layer-overlay", "--container-page", "--motion-duration-scale"].map((name) => (
+          {["--tn-layer-raised", "--tn-layer-sticky", "--tn-layer-overlay", "--tn-container-page", "--tn-motion-duration-scale"].map((name) => (
             <div key={name} className="contents">
               <dt className="text-muted">{name}</dt>
               <dd data-token={name}>{value(name)}</dd>

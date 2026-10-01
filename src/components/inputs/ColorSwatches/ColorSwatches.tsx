@@ -1,12 +1,14 @@
 import { motion } from "motion/react";
 import { useId } from "react";
+import { useControllable } from "../../../controllable";
 import { useLiquid } from "../../../springs";
 import { useField } from "../Field/Field";
 
 export type ColorSwatchesProps = {
   options: { value: string; label: string; color: string }[];
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   label?: string;
   id?: string;
   name?: string;
@@ -19,7 +21,8 @@ const SLOT = 36;
 
 export function ColorSwatches({
   options,
-  value,
+  value: valueProp,
+  defaultValue = options[0].value,
   onValueChange,
   label = "Color",
   id,
@@ -28,6 +31,7 @@ export function ColorSwatches({
   required = false,
   className = "",
 }: ColorSwatchesProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   const groupName = useId();
   const index = options.findIndex((option) => option.value === value);
@@ -42,32 +46,32 @@ export function ColorSwatches({
       aria-describedby={field?.describedBy}
       aria-invalid={field?.invalid}
       aria-required={field?.required || required}
-      className={`w-fit rounded-control bg-paper p-[3px] shadow-control has-[:disabled]:opacity-40 ${className}`}
+      className={`tn:w-fit tn:rounded-control tn:bg-paper tn:p-[3px] tn:shadow-control tn:has-[:disabled]:opacity-40 ${className}`}
     >
-      <div className="relative grid auto-cols-[32px] grid-flow-col gap-1">
+      <div className="tn:relative tn:grid tn:auto-cols-[32px] tn:grid-flow-col tn:gap-1">
         {options.map((option) => (
           <label
             key={option.value}
-            className="relative flex h-8 cursor-pointer items-center justify-center rounded-full outline-offset-2 has-[:enabled]:hover:bg-hover has-focus-visible:outline-2 has-focus-visible:outline-focus has-[:disabled]:cursor-default"
+            className="tn:relative tn:flex tn:h-8 tn:cursor-pointer tn:items-center tn:justify-center tn:rounded-full tn:outline-offset-2 tn:has-[:enabled]:hover:bg-hover tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus tn:has-[:disabled]:cursor-default"
           >
             <input
               type="radio"
               name={name ?? groupName}
               value={option.value}
               checked={option.value === value}
-              onChange={() => onValueChange(option.value)}
+              onChange={() => setValue(option.value)}
               aria-label={option.label}
               disabled={field?.disabled || disabled}
               required={field?.required || required}
-              className="absolute inset-0 size-full appearance-none rounded-full outline-none"
+              className="tn:absolute tn:inset-0 tn:size-full tn:appearance-none tn:rounded-full tn:outline-none"
             />
-            <span aria-hidden style={{ backgroundColor: option.color }} className="pointer-events-none size-6 rounded-full" />
+            <span aria-hidden style={{ backgroundColor: option.color }} className="tn:pointer-events-none tn:size-6 tn:rounded-full" />
           </label>
         ))}
         <motion.span
           aria-hidden
           style={{ left, right }}
-          className="pointer-events-none absolute inset-y-0 rounded-full border-2 border-ink inset-ring-2 inset-ring-paper"
+          className="tn:pointer-events-none tn:absolute tn:inset-y-0 tn:rounded-full tn:border-2 tn:border-ink tn:inset-ring-2 tn:inset-ring-paper"
         />
       </div>
     </div>

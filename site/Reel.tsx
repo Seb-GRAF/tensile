@@ -1,9 +1,8 @@
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { Icon, IconButton } from "tensile";
+import { Icon, IconButton, useSize, useSprings } from "tensile";
+import { parseHex } from "../src/color";
 import { playPausePath } from "../src/playback";
-import { useSprings } from "../src/springs";
-import { useSize } from "../src/useSize";
 
 type Spring = { response: number; damping: number };
 type Key = [at: number, target: number[], spring?: Spring];
@@ -39,7 +38,7 @@ const CUT = spring(0.001);
 export const chapters = [
   { name: "MorphButton", verb: "morph.", start: 0 },
   { name: "Toggle", verb: "switch.", start: 3.4 },
-  { name: "SegmentedTabs", verb: "slide.", start: 5.35 },
+  { name: "Tabs", verb: "slide.", start: 5.35 },
   { name: "VolumeSlider", verb: "stretch.", start: 8.05 },
   { name: "CopyButton", verb: "settle.", start: 11.3 },
 ];
@@ -103,7 +102,7 @@ function reveal(el: HTMLElement, v: number) {
 }
 
 function linear(hex: string) {
-  return hex.match(/\w\w/g)!.map((h) => (parseInt(h, 16) / 255) ** 2.2);
+  return parseHex(hex)!.slice(1).match(/\w\w/g)!.map((h) => (parseInt(h, 16) / 255) ** 2.2);
 }
 
 function rgb(c: number[]) {
@@ -269,6 +268,14 @@ function seek(t: number, el: Elements, palette: Palette, zoom: number) {
 
 const tabs = ["Day", "Week", "Month"];
 
+function ReelIcon({ size, children }: { size: number; children: React.ReactNode }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" width={size} height={size} strokeWidth={36 / size} strokeLinecap="round" strokeLinejoin="round" className="block fill-none stroke-current">
+      {children}
+    </svg>
+  );
+}
+
 function tabRow(name: string, className: string) {
   return tabs.map((label, i) => (
     <span
@@ -286,11 +293,12 @@ export type ReelProps = {
   /** Index in `chapters` of the component on screen. */
   chapter: number;
   onChapterChange: (chapter: number) => void;
+  theme: "light" | "dark";
   className?: string;
 };
 
 /** One shape that turns into five components in a loop while it's on screen; the chapter bar jumps between them. */
-export function Reel({ chapter, onChapterChange, className = "" }: ReelProps) {
+export function Reel({ chapter, onChapterChange, theme, className = "" }: ReelProps) {
   const { scale, swap } = useSprings();
   const frame = useRef<HTMLDivElement>(null);
   const time = useRef(scale === 0 ? STILL : 0);
@@ -305,9 +313,9 @@ export function Reel({ chapter, onChapterChange, className = "" }: ReelProps) {
     for (const node of frame.current!.querySelectorAll<HTMLElement>("[data-el]")) el[node.dataset.el!] = node;
     const style = getComputedStyle(frame.current!);
     const palette = {
-      ink: linear(style.getPropertyValue("--color-ink")),
-      paper: linear(style.getPropertyValue("--color-paper")),
-      accent: linear(style.getPropertyValue("--color-accent")),
+      ink: linear(style.getPropertyValue("--tn-color-ink")),
+      paper: linear(style.getPropertyValue("--tn-color-paper")),
+      accent: linear(style.getPropertyValue("--tn-color-accent")),
     };
 
     seek(time.current, el, palette, zoom);
@@ -322,7 +330,7 @@ export function Reel({ chapter, onChapterChange, className = "" }: ReelProps) {
       id = requestAnimationFrame(tick);
     });
     return () => cancelAnimationFrame(id);
-  }, [scale, paused, inView, chapter, zoom]);
+  }, [scale, paused, inView, chapter, zoom, theme]);
 
   return (
     <div ref={frame} className={`relative h-80 overflow-hidden rounded-dialog bg-paper/50 sm:h-96 ${className}`}>
@@ -336,37 +344,34 @@ export function Reel({ chapter, onChapterChange, className = "" }: ReelProps) {
                   {tabRow("pill", "text-paper")}
                 </div>
                 <span data-el="speaker" className="absolute text-paper" style={{ left: 10 }}>
-                  <Icon size={16}>
+                  <ReelIcon size={16}>
                     <path d="M11 5 6 9H2v6h4l5 4z" />
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                     <path data-el="wave" d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                  </Icon>
+                  </ReelIcon>
                 </span>
               </div>
               <span data-el="label" className="absolute grid place-items-center text-body font-medium whitespace-nowrap text-paper" style={{ left: -69, top: -22, width: 138, height: 44 }}>
                 Save changes
               </span>
               <span data-el="spinner" className="absolute text-paper" style={{ left: -9, top: -9 }}>
-                <Icon size={18}>
+                <ReelIcon size={18}>
                   <circle cx="12" cy="12" r="9" pathLength="1" strokeDasharray="0.28 1" />
-                </Icon>
+                </ReelIcon>
               </span>
               <span data-el="check" className="absolute text-on-accent" style={{ left: -10, top: -10 }}>
-                <Icon size={20}>
+                <ReelIcon size={20}>
                   <path data-el="checkPath" d="M4 12.5l5 5L20 6.5" pathLength="1" strokeDasharray="1 1" />
-                </Icon>
+                </ReelIcon>
               </span>
               <span data-el="copy" className="absolute text-paper" style={{ left: -9, top: -9 }}>
-                <Icon size={18}>
-                  <rect x="8" y="8" width="13" height="13" rx="2.5" />
-                  <path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8" />
-                </Icon>
+                <Icon name="copy" size={18} />
               </span>
               <span data-el="copied" className="absolute flex items-center justify-center gap-1.5 text-body font-medium whitespace-nowrap text-paper" style={{ left: -58, top: -22, width: 116, height: 44 }}>
-                <span className="text-accent">
-                  <Icon size={18}>
+                <span>
+                  <ReelIcon size={18}>
                     <path data-el="copiedPath" d="M4 12.5l5 5L20 6.5" pathLength="1" strokeDasharray="1 1" />
-                  </Icon>
+                  </ReelIcon>
                 </span>
                 Copied
               </span>
@@ -405,11 +410,17 @@ export function Reel({ chapter, onChapterChange, className = "" }: ReelProps) {
           ))}
         </div>
         {scale !== 0 && (
-          <IconButton label={paused ? "Play the reel" : "Pause the reel"} variant="secondary" size="sm" onClick={() => setPaused(!paused)}>
-            <Icon size={16}>
-              <path d={playPausePath(paused ? 0 : 1)} className="fill-current" />
-            </Icon>
-          </IconButton>
+          <IconButton
+            label={paused ? "Play the reel" : "Pause the reel"}
+            variant="secondary"
+            size="sm"
+            onClick={() => setPaused(!paused)}
+            icon={
+              <ReelIcon size={16}>
+                <path d={playPausePath(paused ? 0 : 1)} className="fill-current" />
+              </ReelIcon>
+            }
+          />
         )}
       </div>
     </div>

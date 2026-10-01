@@ -19,10 +19,10 @@ export default {
     "Place it in a Card with padding when it stands alone."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled navigation actions.", Demo: SidebarNavDemo, code: sidebarNavDemoCode },
-    { id: "links", title: "Links", description: "Link navigation.", Demo: SidebarNavLinksDemo, code: sidebarNavLinksDemoCode },
-    { id: "collapsed", title: "Collapsed", description: "Collapsed icon navigation.", Demo: SidebarNavCollapsedDemo, code: sidebarNavCollapsedDemoCode },
-    { id: "slots", title: "Content slots", description: "Leading brand and trailing account content.", Demo: SidebarNavSlotsDemo, code: sidebarNavSlotsDemoCode },
+    { id: "usage", title: "Basic usage", description: "Buttons that switch views inside an app, with the ink pill on the current one.", Demo: SidebarNavDemo, code: sidebarNavDemoCode },
+    { id: "links", title: "Links", description: "Items with an href are links for page navigation.", Demo: SidebarNavLinksDemo, code: sidebarNavLinksDemoCode },
+    { id: "collapsed", title: "Collapsed", description: "Icons only, for a narrow rail; each item keeps its accessible name.", Demo: SidebarNavCollapsedDemo, code: sidebarNavCollapsedDemoCode },
+    { id: "slots", title: "Content slots", description: "A brand above the list and an account pinned to the bottom.", Demo: SidebarNavSlotsDemo, code: sidebarNavSlotsDemoCode },
     { id: "categories", title: "Categories", description: "Destinations grouped under headings, with one pill across them.", Demo: SidebarNavCategoriesDemo, code: sidebarNavCategoriesDemoCode },
   ],
   keyboard: [
@@ -46,12 +46,13 @@ export default {
   ],
   props: {
     "items": "Destinations with values, labels, icons and optional hrefs, or categories of them with a heading label.",
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "The current destination's value. Leave it out to let the nav track it, starting from defaultValue.",
+    "defaultValue": "The current destination when the nav tracks it itself. Empty marks none.",
+    "onValueChange": "Called with an item's value when it's activated, links included.",
+    "label": "Accessible name of the navigation landmark.",
     "collapsed": "Hide visible labels while keeping accessible names.",
-    "leading": "Content before the main content.",
+    "leading": "Content above the list, such as a brand.",
     "trailing": "Pinned to the bottom, e.g. the account.",
-    "className": "Additional classes on the outer element.",
+    "className": "Classes on the nav element, for height and width, such as `h-full` or `w-8` when collapsed.",
   },
 };

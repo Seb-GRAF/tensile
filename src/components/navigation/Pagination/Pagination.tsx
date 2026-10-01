@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useMotionTemplate } from "motion/react";
+import { useControllable } from "../../../controllable";
 import { useSprings, useLiquid } from "../../../springs";
-import { icons } from "../../../icons";
 import { IconButton } from "../../actions/IconButton/IconButton";
 import { Icon } from "../../data-display/Icon/Icon";
 import { useLinkClick } from "../Link/Link";
@@ -9,8 +9,9 @@ export type PaginationProps = {
   /** Number of pages. */
   count: number;
   /** Current page, from 1 to `count`. */
-  value: number;
-  onValueChange: (value: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
   /** Slots for pages and ellipses, at least 5. */
   slots?: number;
   formatPage?: (page: number) => string;
@@ -36,16 +37,13 @@ function slotItems(count: number, page: number, slots: number): (number | "gap")
 }
 
 function Ellipsis() {
-  return (
-    <Icon size={16}>
-      <path d="M5 12h.01M12 12h.01M19 12h.01" />
-    </Icon>
-  );
+  return <Icon name="more" size={16} />;
 }
 
 export function Pagination({
   count,
-  value,
+  value: valueProp,
+  defaultValue = 1,
   onValueChange,
   slots = 7,
   formatPage = (page: number) => page.toLocaleString("en-US"),
@@ -56,6 +54,7 @@ export function Pagination({
   pageHref,
   className = "",
 }: PaginationProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const { swap } = useSprings();
   const linkClick = useLinkClick();
   const items = slotItems(count, value, slots);
@@ -64,47 +63,46 @@ export function Pagination({
   const [left, right] = useLiquid(index * step, (items.length - 1 - index) * step);
   const indicatorLeft = useMotionTemplate`${left}%`;
   const indicatorRight = useMotionTemplate`${right}%`;
-  const clip = useMotionTemplate`inset(0 ${right}% 0 ${left}% round var(--radius-control))`;
+  const clip = useMotionTemplate`inset(0 ${right}% 0 ${left}% round var(--tn-radius-control))`;
 
   return (
-    <nav aria-label={label} className={`flex rounded-control bg-paper p-[3px] shadow-control ${className}`}>
+    <nav aria-label={label} className={`tn:flex tn:rounded-control tn:bg-paper tn:p-[3px] tn:shadow-control ${className}`}>
       <IconButton
         size="sm"
         variant="ghost"
         label={previousLabel}
+        icon="chevronLeft"
         disabled={value === 1}
-        onClick={() => onValueChange(value - 1)}
-      >
-        <Icon size={16}>{icons.chevronLeft}</Icon>
-      </IconButton>
-      <div className="relative grid auto-cols-[32px] grid-flow-col text-label font-medium">
+        onClick={() => setValue(value - 1)}
+      />
+      <div className="tn:relative tn:grid tn:auto-cols-[32px] tn:grid-flow-col tn:text-label tn:font-medium">
         {items.map((item, i) => {
           const props = item === "gap" ? undefined : {
             ...swap,
             "aria-label": pageLabel(item),
             "aria-current": item === value ? "page" as const : undefined,
-            className: "col-start-1 row-start-1 grid size-8 place-content-center place-items-center rounded-control outline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-focus",
+            className: "tn:col-start-1 tn:row-start-1 tn:grid tn:size-8 tn:place-content-center tn:place-items-center tn:rounded-control tn:outline-offset-2 tn:hover:text-ink tn:focus-visible:outline-2 tn:focus-visible:outline-focus",
           };
           const content = item !== "gap" && (
             <AnimatePresence initial={false}>
-              <motion.span key={item} {...swap} className="col-start-1 row-start-1">
+              <motion.span key={item} {...swap} className="tn:col-start-1 tn:row-start-1">
                 {formatPage(item)}
               </motion.span>
             </AnimatePresence>
           );
           return (
-            <span key={i} className="grid place-content-center place-items-center text-muted">
+            <span key={i} className="tn:grid tn:place-content-center tn:place-items-center tn:text-muted">
               <AnimatePresence initial={false}>
                 {item === "gap" ? (
-                  <motion.span key="gap" aria-hidden {...swap} className="col-start-1 row-start-1">
+                  <motion.span key="gap" aria-hidden {...swap} className="tn:col-start-1 tn:row-start-1">
                     <Ellipsis />
                   </motion.span>
                 ) : pageHref ? (
-                  <motion.a key="page" {...props} href={pageHref(item)} onClick={(event) => { onValueChange(item); linkClick(event); }}>
+                  <motion.a key="page" {...props} href={pageHref(item)} onClick={(event) => { setValue(item); linkClick(event); }}>
                     {content}
                   </motion.a>
                 ) : (
-                  <motion.button key="page" {...props} type="button" onClick={() => onValueChange(item)}>
+                  <motion.button key="page" {...props} type="button" onClick={() => setValue(item)}>
                     {content}
                   </motion.button>
                 )}
@@ -115,17 +113,17 @@ export function Pagination({
         <motion.span
           aria-hidden
           style={{ left: indicatorLeft, right: indicatorRight }}
-          className="pointer-events-none absolute inset-y-0 rounded-control bg-ink"
+          className="tn:pointer-events-none tn:absolute tn:inset-y-0 tn:rounded-control tn:bg-ink"
         />
         <motion.span
           aria-hidden
           style={{ clipPath: clip }}
-          className="pointer-events-none absolute inset-0 grid auto-cols-[32px] grid-flow-col text-paper"
+          className="tn:pointer-events-none tn:absolute tn:inset-0 tn:grid tn:auto-cols-[32px] tn:grid-flow-col tn:text-paper"
         >
           {items.map((item, i) => (
-            <span key={i} className="grid place-content-center place-items-center">
+            <span key={i} className="tn:grid tn:place-content-center tn:place-items-center">
               <AnimatePresence initial={false}>
-                <motion.span key={item} {...swap} className="col-start-1 row-start-1">
+                <motion.span key={item} {...swap} className="tn:col-start-1 tn:row-start-1">
                   {item === "gap" ? <Ellipsis /> : formatPage(item)}
                 </motion.span>
               </AnimatePresence>
@@ -137,11 +135,10 @@ export function Pagination({
         size="sm"
         variant="ghost"
         label={nextLabel}
+        icon="chevronRight"
         disabled={value === count}
-        onClick={() => onValueChange(value + 1)}
-      >
-        <Icon size={16}>{icons.chevronRight}</Icon>
-      </IconButton>
+        onClick={() => setValue(value + 1)}
+      />
     </nav>
   );
 }

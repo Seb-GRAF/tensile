@@ -1,0 +1,27 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build:site",
+  "outputDirectory": "site-dist",
+  "trailingSlash": true,
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  },
+  "redirects": [
+    { "source": "/", "destination": "/tensile/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/tensile/", "destination": "/index.html" },
+    { "source": "/tensile/docs/:path*/", "destination": "/docs/:path*/index.html" },
+    { "source": "/tensile/:path*", "destination": "/:path*" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
+}

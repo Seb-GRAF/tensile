@@ -48,7 +48,7 @@ What the design system covers, how, and where each piece stands. Status is **don
 | Keyboard shortcut | done: `Kbd` | | 1 |
 | Skeleton, StatusBadge | done | | 1 |
 | EmptyState, LoadingState, NotificationList | done | | 3 |
-| Tabs with panels | done | composes SegmentedTabs or UnderlineTabs | 3 |
+| Tabs with panels | done | underline or segmented tablist | 3 |
 | Toolbar | done | roving focus; the gliding tooltip | 4 |
 | Navigation links and active states | done | SidebarNav, CollapsibleSidebar, Breadcrumbs, Pagination, TabBar | 3 |
 | PageHeader | done | | 3 |
@@ -75,9 +75,9 @@ Examples import only from `src/index.ts`; mock data and simulated network activi
 | Settings form | `examples-settings-form` | PageHeader, Card, Fieldset, Field, Input, PasswordInput, NumberInput, Select, MultiSelect, Toggle, MorphButton, Button, AlertDialog | keyboard through every control, invalid submit (errors, `aria-invalid`, focus on the first invalid control), valid FormData, save timeline, reset, AlertDialog focus; 390 px, alternate, reduced | 5 |
 | Authentication | `examples-authentication` | Card, Field, Input, PasswordInput, Link, MorphButton, OTPInput, Button | full sign-in → code → done flow by keyboard, validation and a failed password, pasted code, focus at each step; 390 px, alternate, reduced | 5 |
 | Detail page | `examples-detail-page` | LinkProvider, Breadcrumbs, PageHeader, Button, ActionMenu, Tabs, Card, DescriptionList, Carousel, Lightbox, Timeline, List, IconButton, Drawer, Field, Input, Textarea, Select, Toggle, MorphButton | keyboard through breadcrumbs, actions, tabs and each panel; Carousel keys, Lightbox by Enter with focus back on the thumbnail; the edit Drawer's empty-name error (`aria-invalid`, focus), save timeline, and focus back on Edit after Save, Cancel, Escape and close; 390 px (no overflow on any tab since the Tabs fix), 800 and 1280 px, alternate, reduced | 5 |
-| Theme and motion | `examples-theme-and-motion` | PageHeader, SegmentedTabs, Card, Button, Spinner, Toggle, Select, VolumeSlider, List, StatusBadge, Tabs, Popover, Dialog, Field, Input | local theme switch by pointer and keyboard (`data-theme`, the scale readout 1 / 1.6 / 0), overlays at both speeds, StatusBadge cycle; 390, 800 and 1280 px, alternate, reduced | 5 |
+| Theme and motion | `examples-theme-and-motion` | PageHeader, ToggleGroup, Card, Button, Spinner, Toggle, Select, VolumeSlider, List, StatusBadge, Tabs, Popover, Dialog, Field, Input | local theme switch by pointer and keyboard (`data-theme`, the scale readout 1 / 1.6 / 0), overlays at both speeds, StatusBadge cycle; 390, 800 and 1280 px, alternate, reduced | 5 |
 | Data management | `examples-data-management` | LinkProvider, AppShell, CollapsibleSidebar, TabBar, Avatar, Icon, PageHeader, Button, SearchField, ToggleGroup, Tag, StatusBadge, DataTable, EmptyState, AlertDialog | skip link; sidebar and tab bar navigation without page loads (`aria-current`); search, status chips and tag removal by keyboard, each with a 600 ms load (`aria-busy`) back to page 1; sort (`aria-sort`), selection across pages with the header's indeterminate state, Mark as paid; row menu → AlertDialog (focus on Cancel, Escape back to the row's trigger, confirm removes the row and its selection); empty state; 390 px (the table scrolls in its named region, pagination clears the tab bar), 800 and 1280 px, alternate, reduced | 6 |
-| Marketing | `examples-marketing` (Page, Hero, Features, Pricing, Testimonials, FAQ, CTA) | LinkProvider, Header, Footer, Button, Link, Card, StatusBadge, ProgressBar, AvatarGroup, StatTile, Icon, SegmentedTabs, NumberTicker, Avatar, Accordion, Field, Input | header links scroll to their sections by Enter and click, and the next Tab continues there; the 390 px drawer by pointer and keyboard (a link closes it and scrolls, Escape returns focus to Menu); billing tabs by arrows and Home/End with rolling prices and a reversal; Accordion by Enter, Space and arrows; the signup form's two errors (`aria-invalid`, focus back on the input) and its confirmation; no horizontal overflow at 390, 800 and 1280 px; alternate, reduced; each section story at 800 px | 6 |
+| Marketing | `examples-marketing` (Page, Hero, Features, Pricing, Testimonials, FAQ, CTA) | LinkProvider, Header, Footer, Button, Link, Card, StatusBadge, ProgressBar, AvatarGroup, StatTile, Icon, ToggleGroup, NumberTicker, Avatar, Accordion, Field, Input | header links scroll to their sections by Enter and click, and the next Tab continues there; the 390 px drawer by pointer and keyboard (a link closes it and scrolls, Escape returns focus to Menu); billing period by Space with rolling prices and a reversal; Accordion by Enter, Space and arrows; the signup form's two errors (`aria-invalid`, focus back on the input) and its confirmation; no horizontal overflow at 390, 800 and 1280 px; alternate, reduced; each section story at 800 px | 6 |
 
 ## Components
 
@@ -87,7 +87,7 @@ Every public component, with its story (the Controls panel shows the full API an
 |---|---|---|---|---|
 | Accordion | `components-accordion` (Default) | Icon | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | ActionMenu | `components-actionmenu` (Default, IconTrigger) | Menu, outside press, top layer | W2; W4: first measure, alternate; W5: sm size | A shifted open menu sits flush with the viewport edge. |
-| Alert | `components-alert` (Default) | Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Alert | `components-alert` (Default) | — | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | AlertDialog | `components-alertdialog` (Default, WithTrigger) | Button, Dialog | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | AppShell | `components-appshell` (Default) | — | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | Bottom padding fits a 64 px mobile nav; no safe-area inset. |
 | Avatar | `components-avatar` (Default, Initials) | Image | W1: rendering, native props, labels, focus; W4: shadow ring | An empty or oddly spaced `name` gives odd initials. |
@@ -125,8 +125,8 @@ Every public component, with its story (the Controls panel shows the full API an
 | Footer | `components-footer` (Default) | Separator | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | — |
 | Header | `components-header` (Default) | IconButton, Icon, Underline, Drawer | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | The drawer's current pill jumps to the chosen link while the drawer slides out. |
 | HoldButton | `components-holdbutton` (Default) | Check | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
-| Icon | `components-icon` (Default) | — | W0: rendering, size-derived strokes, reduced motion | — |
-| IconButton | `components-iconbutton` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | Its type still accepts `aria-label`; `label` wins at runtime. |
+| Icon | `components-icon` (Default, AllIcons) | `src/icons.tsx` | W0: rendering, size-derived strokes, reduced motion | — |
+| IconButton | `components-iconbutton` (Default) | Icon | W1: rendering, native props, labels, focus; W4: shadow ring | Its type still accepts `aria-label`; `label` wins at runtime. |
 | Image | `components-image` (Default, Fallback) | — | W1: rendering, native props, labels, focus; W4: shadow ring | Keeps its loaded or failed state when `src` changes; key it by `src`. |
 | Input | `components-input` (Default, WithIcons, DisabledAndReadOnly) | — | W1: rendering, native props, labels, focus; W4: shadow ring | Clicking the pill's padding or leading icon doesn't focus the input. |
 | Island | `components-island` (Default) | Expand, outside press | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
@@ -138,7 +138,7 @@ Every public component, with its story (the Controls panel shows the full API an
 | LoadingState | `components-loadingstate` (Default) | Spinner | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | MorphButton | `components-morphbutton` (Default, InAForm, Disabled) | Check, Spinner | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | It disables itself while busy, so a focused submit button drops focus to the page; `aria-disabled` with a cancelled click would keep focus and still block resubmits. |
 | MultiSelect | `components-multiselect` (Default, Empty, InAFieldInsideAForm, LongListNearTheBottom, InsideAClippingCard) | Check, list.tsx, outside press, top layer, Icon | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | Disabling it while open leaves it open until blur. |
-| MusicPlayer | `components-musicplayer` (Default) | Expand, SeekBar, IconButton, Icon | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| MusicPlayer | `components-musicplayer` (Default) | Expand, SeekBar, IconButton | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
 | NotificationList | `components-notificationlist` (Default, Empty) | IconButton, Avatar, Icon, ListContent, EmptyState | W3; W4: exit frames, alternate, reduced, 390 px | — |
 | NumberInput | `components-numberinput` (Default, InAForm) | Input | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | Commit clamps to min/max, so an out-of-range value never reaches the form and a range error can't show. |
 | NumberStepper | `components-numberstepper` (Default, InAForm) | IconButton, Icon, NumberTicker | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
@@ -155,7 +155,6 @@ Every public component, with its story (the Controls panel shows the full API an
 | RangeSlider | `components-rangeslider` (Default, InAForm, Disabled) | SliderTrack | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Rating | `components-rating` (Default, ReadOnly, InAForm) | Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | SearchField | `components-searchfield` (Default, InAForm) | IconButton, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | Its open state is internal: a value cleared from outside leaves it open until focus enters and leaves it. |
-| SegmentedTabs | `components-segmentedtabs` (Default, LongLabels) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Select | `components-select` (Default, Empty, InAForm, LongList, NearTheBottom, InsideAClippingCard) | Check, list.tsx, outside press, top layer, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Separator | `components-separator` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
 | SidebarNav | `components-sidebarnav` (Default, Collapsed, LongLabels, Categories, WithLinks) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
@@ -168,12 +167,12 @@ Every public component, with its story (the Controls panel shows the full API an
 | SwipeButton | `components-swipebutton` (Default) | Check, drag.ts, Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | Layouts narrower than its 280 px demo are unverified. |
 | TabBar | `components-tabbar` (Default, WithLinks) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Table | `components-table` (Default, Wide) | Skeleton, Card | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | The header sticks only when the caller gives the table a height; no sticky first column, so row headers scroll away in a narrow container. |
-| Tabs | `components-tabs` (Default, Segmented) | SegmentedTabs, UnderlineTabs | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| Tabs | `components-tabs` (Default, Segmented, LongLabels) | — | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Tag | `components-tag` (Default, Removable) | Icon | W1: rendering, native props, labels, focus; W4: shadow ring | Labels don't truncate. |
 | TagInput | `components-taginput` (Default, InAFieldInsideAForm) | Tag | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Textarea | `components-textarea` (Default) | — | W1; W4: surface growth, alternate, reduced | — |
 | TextField | `components-textfield` (Default, InAForm, Disabled) | Icon | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
-| ThemeToggle | `components-themetoggle` (Default) | Icon, Toggle | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| ThemeToggle | `components-themetoggle` (Default) | Toggle | W2: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | Timeline | `components-timeline` (Default) | — | W1: rendering, native props, labels, focus; W4: shadow ring | — |
 | TimePicker | `components-timepicker` (Default, InAFieldInsideAForm) | Popover, TimeWheel | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | Enter without a change keeps null; the trigger can't say it's required. |
 | TimeWheel | `components-timewheel` (Default, InAFieldInsideAForm) | drag.ts | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
@@ -184,9 +183,8 @@ Every public component, with its story (the Controls panel shows the full API an
 | Toolbar | `components-toolbar` (Default, Vertical, WithDisabledAction) | TooltipGroup | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
 | Tooltip | `components-tooltip` (Default, NearTheEdges, InsideAClippingCard) | top layer | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | Viewport clamping decided when it shows. |
 | TreeView | `components-treeview` (Default, SelectionInClosedFolder) | list.tsx, Icon | W5: pointer, keyboard, alternate, reduced, 390 px (and 1280 px for layout) | ArrowRight on an open, empty folder at the end throws; values must be unique across the tree. |
-| UnderlineTabs | `components-underlinetabs` (Default) | — | W3; W5: shared underline regression | — |
-| VideoControls | `components-videocontrols` (Default) | SeekBar, IconButton, Icon, VolumeSlider | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
-| VolumeSlider | `components-volumeslider` (Default, OnInk) | drag.ts, Icon | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
+| VideoControls | `components-videocontrols` (Default) | SeekBar, IconButton, VolumeSlider | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
+| VolumeSlider | `components-volumeslider` (Default, OnInk) | drag.ts | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 | WaveformScrubber | `components-waveformscrubber` (Default) | drag.ts, SeekBar | W4: pointer, keyboard, alternate, reduced, 390 px; video for drags and morphs | — |
 | WizardSteps | `components-wizardsteps` (Default, LongLabels) | Check | W3: pointer, keyboard, alternate, reduced; 390 px where responsive | — |
 
@@ -196,7 +194,7 @@ Every public component, with its story (the Controls panel shows the full API an
 - MultiSelect repeats Select's top-layer orchestration (placement, height cap, keys, typeahead, list markup) instead of a generic select abstraction, as approved; multiple selection changes picking, the summary, Enter and the hidden inputs.
 - Dialog's trigger flight and Lightbox's thumbnail flight stay separate: the Dialog panel measures its content and grows from a pill; the Lightbox animates a fixed 3:2 box with a different inset and radius.
 - Field and Fieldset repeat about 12 lines of description and error markup; share them if a third consumer appears.
-- Header measures its current link the way UnderlineTabs measures its tab (6 lines each) and shares UnderlineTabs' `Underline` for the drawing.
+- Header measures its current link the way Tabs' underline tablist measures its tab (6 lines each) and shares its `Underline` for the drawing.
 - ColorPicker and TimePicker both wrap their inner controls in `FieldContext value={{ disabled }}` (the Fieldset pattern) so the Field's label and id stay on the outer control.
 - The Data management example draws its own top bar (brand and avatar) with Header's surface classes: its navigation lives in the sidebar and tab bar, and Header always renders links and a menu drawer.
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Icon, IconButton, Toolbar, Tooltip } from "tensile";
+import { IconButton, Toolbar, Tooltip } from "tensile";
 
 export function ToolbarTooltipsDemo() {
   const [bold, setBold] = useState(false);
@@ -13,15 +13,12 @@ export function ToolbarTooltipsDemo() {
             <IconButton
               {...trigger}
               label="Bold"
+              icon="bold"
               size="sm"
               variant={bold ? "primary" : "ghost"}
               aria-pressed={bold}
               onClick={() => setBold(!bold)}
-            >
-              <Icon>
-                <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" />
-              </Icon>
-            </IconButton>
+            />
           )}
         </Tooltip>
         <Tooltip label="Italic">
@@ -29,15 +26,12 @@ export function ToolbarTooltipsDemo() {
             <IconButton
               {...trigger}
               label="Italic"
+              icon="italic"
               size="sm"
               variant={italic ? "primary" : "ghost"}
               aria-pressed={italic}
               onClick={() => setItalic(!italic)}
-            >
-              <Icon>
-                <path d="M19 4h-9M14 20H5M15 4 9 20" />
-              </Icon>
-            </IconButton>
+            />
           )}
         </Tooltip>
       </Toolbar>

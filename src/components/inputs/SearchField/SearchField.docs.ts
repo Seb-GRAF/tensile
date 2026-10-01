@@ -13,7 +13,7 @@ export default {
   ],
   examples: [
     { id: "usage", title: "Basic usage", description: "Expand, filter a small result list, clear and close.", Demo: SearchFieldDemo, code: searchFieldDemoCode },
-    { id: "form", title: "In a form", description: "Named search value submitted through a form.", Demo: SearchFieldFormDemo, code: searchFieldFormDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits the query with the form's other values.", Demo: SearchFieldFormDemo, code: searchFieldFormDemoCode },
   ],
   keyboard: [
     {
@@ -30,13 +30,14 @@ export default {
     "CommandPalette"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
-    "label": "Accessible name of the control or region.",
+    "value": "The query. Pass it to control SearchField; leave it out and SearchField keeps its own query.",
+    "defaultValue": "The query SearchField starts with when it keeps its own query.",
+    "onValueChange": "Called with the query as the user types, and with an empty string when it's cleared.",
+    "label": "Names the search input for screen readers.",
     "placeholder": "Hint shown while the value is empty.",
-    "openLabel": "Accessible name of the collapsed trigger.",
-    "clearLabel": "Accessible name of the clear action.",
+    "openLabel": "Names the round button that opens the field.",
+    "clearLabel": "Names the button that clears the query.",
     "name": "Name used for the submitted form value.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes for the outer box, to set its width or place it; the open field grows to fill it."
   },
 };

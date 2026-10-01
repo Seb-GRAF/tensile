@@ -1,12 +1,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useFocusSource } from "../../../focus";
 import { useSprings, useLiquid } from "../../../springs";
 import { useField } from "../Field/Field";
 
 export type OTPInputProps = {
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   /** Number of digits in the code. */
   length?: number;
   label?: string;
@@ -23,7 +25,8 @@ const STEP = 44;
 const moves: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
 
 export function OTPInput({
-  value,
+  value: valueProp,
+  defaultValue = "",
   onValueChange,
   length = 6,
   label = "Verification code",
@@ -35,6 +38,7 @@ export function OTPInput({
   className = "",
 }: OTPInputProps) {
   const { soft, swap } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   useFocusSource();
   const isDisabled = field?.disabled || disabled;
@@ -45,7 +49,7 @@ export function OTPInput({
 
   function fill(text: string) {
     const code = text.replace(/\D/g, "").slice(0, length);
-    onValueChange(code);
+    setValue(code);
     cells.current[Math.min(code.length, length - 1)]!.focus();
   }
 
@@ -57,7 +61,7 @@ export function OTPInput({
     }
     const digit = text.length === 2 && text[0] === value[i] ? text[1] : text[0];
     if (!/\d/.test(digit)) return;
-    onValueChange(value.slice(0, i) + digit + value.slice(i + 1));
+    setValue(value.slice(0, i) + digit + value.slice(i + 1));
     cells.current[Math.min(i + 1, length - 1)]!.focus();
   }
 
@@ -66,7 +70,7 @@ export function OTPInput({
       event.preventDefault();
       const at = i < value.length ? i : i - 1;
       if (at < 0) return;
-      onValueChange(value.slice(0, at) + value.slice(at + 1));
+      setValue(value.slice(0, at) + value.slice(at + 1));
       cells.current[at]!.focus();
       return;
     }
@@ -90,22 +94,22 @@ export function OTPInput({
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setActive(null);
       }}
-      className={`w-fit rounded-control bg-paper p-1 shadow-control outline-offset-2 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${isDisabled ? "opacity-40" : ""} ${className}`}
+      className={`tn:w-fit tn:rounded-control tn:bg-paper tn:p-1 tn:shadow-control tn:outline-offset-2 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${isDisabled ? "tn:opacity-40" : ""} ${className}`}
     >
       {name && <input type="hidden" name={name} value={value} disabled={isDisabled} />}
-      <div className="relative flex">
+      <div className="tn:relative tn:flex">
         <motion.span
           aria-hidden
           initial={false}
           animate={{ opacity: active === null ? 0 : 1 }}
           transition={soft}
           style={{ left, right }}
-          className="pointer-events-none absolute inset-y-0 rounded-control bg-hover"
+          className="tn:pointer-events-none tn:absolute tn:inset-y-0 tn:rounded-control tn:bg-hover"
         />
         {Array.from({ length }, (_, i) => {
           const digit = value.charAt(i);
           return (
-            <div key={i} className="relative grid place-content-center place-items-center">
+            <div key={i} className="tn:relative tn:grid tn:place-content-center tn:place-items-center">
               <input
                 ref={(el) => {
                   cells.current[i] = el;
@@ -125,7 +129,7 @@ export function OTPInput({
                 onFocus={() => setActive(i)}
                 onChange={(event) => onChange(event, i)}
                 onKeyDown={(event) => onKeyDown(event, i)}
-                className={`col-start-1 row-start-1 size-11 bg-transparent text-center text-xl text-transparent outline-none selection:bg-transparent ${digit ? "caret-transparent" : "caret-ink"}`}
+                className={`tn:col-start-1 tn:row-start-1 tn:size-11 tn:bg-transparent tn:text-center tn:text-xl tn:text-transparent tn:outline-none tn:selection:bg-transparent ${digit ? "tn:caret-transparent" : "tn:caret-ink"}`}
               />
               <AnimatePresence initial={false}>
                 {digit ? (
@@ -133,7 +137,7 @@ export function OTPInput({
                     key={digit}
                     aria-hidden
                     {...swap}
-                    className="pointer-events-none col-start-1 row-start-1 text-xl font-medium text-ink select-none"
+                    className="tn:pointer-events-none tn:col-start-1 tn:row-start-1 tn:text-xl tn:font-medium tn:text-ink tn:select-none"
                   >
                     {digit}
                   </motion.span>
@@ -143,7 +147,7 @@ export function OTPInput({
                       key="empty"
                       aria-hidden
                       {...swap}
-                      className="pointer-events-none col-start-1 row-start-1 size-1.5 rounded-full bg-muted"
+                      className="tn:pointer-events-none tn:col-start-1 tn:row-start-1 tn:size-1.5 tn:rounded-full tn:bg-muted"
                     />
                   )
                 )}

@@ -18,7 +18,7 @@ function StatefulTimeWheel(props: TimeWheelProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -42,7 +42,7 @@ export const Default: Story = {
       <StatefulTimeWheel
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />

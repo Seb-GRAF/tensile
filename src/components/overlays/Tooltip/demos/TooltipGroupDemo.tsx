@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tooltip, Toolbar, IconButton, Icon } from "tensile";
+import { Tooltip, Toolbar, IconButton } from "tensile";
 
 export function TooltipGroupDemo() {
   const [zoom, setZoom] = useState(100);
@@ -11,13 +11,10 @@ export function TooltipGroupDemo() {
           <IconButton
             {...trigger}
             label="Zoom out"
+            icon="minus"
             variant="ghost"
             onClick={() => setZoom(zoom - 10)}
-          >
-            <Icon>
-              <path d="M5 12h14" />
-            </Icon>
-          </IconButton>
+          />
         )}
       </Tooltip>
       <span className="text-label tabular-nums">{zoom}%</span>
@@ -26,13 +23,10 @@ export function TooltipGroupDemo() {
           <IconButton
             {...trigger}
             label="Zoom in"
+            icon="plus"
             variant="ghost"
             onClick={() => setZoom(zoom + 10)}
-          >
-            <Icon>
-              <path d="M12 5v14M5 12h14" />
-            </Icon>
-          </IconButton>
+          />
         )}
       </Tooltip>
     </Toolbar>

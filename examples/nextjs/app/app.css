@@ -1,0 +1,12 @@
+body {
+  background: var(--tn-color-canvas);
+  font-family: var(--tn-font-sans);
+}
+
+main {
+  display: grid;
+  gap: 24px;
+  max-width: 480px;
+  margin: 48px auto;
+  padding: 0 16px;
+}

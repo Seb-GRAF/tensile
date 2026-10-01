@@ -1,14 +1,16 @@
 import { AnimatePresence, motion, useIsPresent } from "motion/react";
 import { useId, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
-import { SegmentedTabs } from "../SegmentedTabs/SegmentedTabs";
-import { UnderlineTabs } from "../UnderlineTabs/UnderlineTabs";
+import { SegmentedTabList } from "./SegmentedTabList";
+import { UnderlineTabList } from "./UnderlineTabList";
 
 export type TabsProps = {
   items: { value: string; label: string; icon?: React.ReactNode; content: React.ReactNode }[];
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   label?: string;
   variant?: "underline" | "segmented";
   className?: string;
@@ -18,7 +20,7 @@ function PanelContent({ direction, measure, children }: { direction: number; mea
   const { swap } = useSprings();
   const present = useIsPresent();
   return (
-    <div ref={present ? measure : undefined} aria-hidden={!present} inert={!present} className="col-start-1 row-start-1">
+    <div ref={present ? measure : undefined} aria-hidden={!present} inert={!present} className="tn:col-start-1 tn:row-start-1">
       <motion.div
         custom={direction}
         variants={{
@@ -36,7 +38,16 @@ function PanelContent({ direction, measure, children }: { direction: number; mea
   );
 }
 
-export function Tabs({ items, value, onValueChange, label = "Sections", variant = "underline", className = "" }: TabsProps) {
+export function Tabs({
+  items,
+  value: valueProp,
+  defaultValue = items[0].value,
+  onValueChange,
+  label = "Sections",
+  variant = "underline",
+  className = "",
+}: TabsProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const { shape } = useSprings();
   const id = useId();
   const [size, measure] = useSize();
@@ -47,11 +58,11 @@ export function Tabs({ items, value, onValueChange, label = "Sections", variant 
     setPrevious(index);
     setDirection(index > previous ? 1 : -1);
   }
-  const TabList = variant === "segmented" ? SegmentedTabs : UnderlineTabs;
+  const TabList = variant === "segmented" ? SegmentedTabList : UnderlineTabList;
 
   return (
-    <div className={`grid grid-cols-1 gap-4 ${className}`}>
-      <TabList id={id} options={items} value={value} onValueChange={onValueChange} label={label} className="justify-self-start" />
+    <div className={`tn:grid tn:grid-cols-1 tn:gap-4 ${className}`}>
+      <TabList id={id} options={items} value={value} onValueChange={setValue} label={label} className="tn:justify-self-start" />
       <motion.div
         id={`${id}-${index}-panel`}
         role="tabpanel"
@@ -60,7 +71,7 @@ export function Tabs({ items, value, onValueChange, label = "Sections", variant 
         initial={false}
         animate={{ height: size?.height }}
         transition={shape}
-        className="grid grid-cols-1 items-start rounded-overlay outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
+        className="tn:grid tn:grid-cols-1 tn:items-start tn:rounded-overlay tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus"
       >
         <AnimatePresence initial={false} custom={direction}>
           <PanelContent key={value} direction={direction} measure={measure}>{items[index].content}</PanelContent>

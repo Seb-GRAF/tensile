@@ -1,5 +1,6 @@
 import { animate, motion, useMotionTemplate, useMotionValue } from "motion/react";
 import { useEffect, useId, useRef } from "react";
+import { useControllable } from "../../../controllable";
 import { useSprings } from "../../../springs";
 import { useLinkClick } from "../Link/Link";
 
@@ -8,8 +9,9 @@ type Item = { value: string; label: string; icon?: React.ReactNode; href?: strin
 export type SidebarNavProps = {
   /** Destinations, or categories of them under a heading. */
   items: (Item | { label: string; items: Item[] })[];
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   label?: string;
   collapsed?: boolean;
   leading?: React.ReactNode;
@@ -37,7 +39,8 @@ function offsetOf(items: SidebarNavProps["items"], value: string) {
 
 export function SidebarNav({
   items,
-  value,
+  value: valueProp,
+  defaultValue = "",
   onValueChange,
   label = "Main",
   collapsed = false,
@@ -45,6 +48,7 @@ export function SidebarNav({
   trailing,
   className = "",
 }: SidebarNavProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const { shape, soft, swap } = useSprings();
   const linkClick = useLinkClick();
   const id = useId();
@@ -52,7 +56,7 @@ export function SidebarNav({
   const index = flat.findIndex((item) => item.value === value);
   const offset = offsetOf(items, value);
   const top = useMotionValue(offset);
-  const clip = useMotionTemplate`inset(${top}px 0 calc(100% - ${top}px - 32px) 0 round var(--radius-control))`;
+  const clip = useMotionTemplate`inset(${top}px 0 calc(100% - ${top}px - 32px) 0 round var(--tn-radius-control))`;
   const buttons = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
   const previous = useRef(index);
 
@@ -78,24 +82,24 @@ export function SidebarNav({
       "aria-current": i === index ? "page" as const : undefined,
       "aria-label": item.label,
       onKeyDown: (event: React.KeyboardEvent) => onKeyDown(event, i),
-      className: `flex h-8 w-full items-center gap-2.5 overflow-hidden rounded-control px-2 text-label font-medium text-muted outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${i === index ? "" : "hover:bg-hover"}`,
+      className: `tn:flex tn:h-8 tn:w-full tn:items-center tn:gap-2.5 tn:overflow-hidden tn:rounded-control tn:px-2 tn:text-label tn:font-medium tn:text-muted tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${i === index ? "" : "tn:hover:bg-hover"}`,
     };
     const content = (
       <>
-        {item.icon && <span aria-hidden className="shrink-0">{item.icon}</span>}
-        <motion.span initial={false} animate={collapsed ? swap.exit : swap.animate} className="truncate">
+        {item.icon && <span aria-hidden className="tn:shrink-0">{item.icon}</span>}
+        <motion.span initial={false} animate={collapsed ? swap.exit : swap.animate} className="tn:truncate">
           {item.label}
         </motion.span>
       </>
     );
     return (
-      <li key={item.value} className="min-w-0">
+      <li key={item.value} className="tn:min-w-0">
         {item.href ? (
-          <a {...props} href={item.href} onClick={(event) => { onValueChange(item.value); linkClick(event); }}>
+          <a {...props} href={item.href} onClick={(event) => { setValue(item.value); linkClick(event); }}>
             {content}
           </a>
         ) : (
-          <button {...props} type="button" onClick={() => onValueChange(item.value)}>
+          <button {...props} type="button" onClick={() => setValue(item.value)}>
             {content}
           </button>
         )}
@@ -105,9 +109,9 @@ export function SidebarNav({
 
   function copy(item: Item) {
     return (
-      <span key={item.value} className="flex h-8 items-center gap-2.5 overflow-hidden px-2">
-        {item.icon && <span className="shrink-0">{item.icon}</span>}
-        <motion.span initial={false} animate={collapsed ? swap.exit : swap.animate} className="truncate">
+      <span key={item.value} className="tn:flex tn:h-8 tn:items-center tn:gap-2.5 tn:overflow-hidden tn:px-2">
+        {item.icon && <span className="tn:shrink-0">{item.icon}</span>}
+        <motion.span initial={false} animate={collapsed ? swap.exit : swap.animate} className="tn:truncate">
           {item.label}
         </motion.span>
       </span>
@@ -115,14 +119,14 @@ export function SidebarNav({
   }
 
   return (
-    <nav aria-label={label} className={`flex flex-col gap-2 ${className}`}>
+    <nav aria-label={label} className={`tn:flex tn:flex-col tn:gap-2 ${className}`}>
       {leading}
-      <ul role="list" className="relative grid gap-1">
+      <ul role="list" className="tn:relative tn:grid tn:gap-1">
         {items.map((entry, n) =>
           "items" in entry ? (
-            <li key={entry.label} className="min-w-0 not-first:mt-5">
-              <p id={`${id}-${n}`} className="mb-3 truncate px-2 text-label font-medium">{entry.label}</p>
-              <ul role="list" aria-labelledby={`${id}-${n}`} className="grid gap-1">
+            <li key={entry.label} className="tn:min-w-0 tn:not-first:mt-5">
+              <p id={`${id}-${n}`} className="tn:mb-3 tn:truncate tn:px-2 tn:text-label tn:font-medium">{entry.label}</p>
+              <ul role="list" aria-labelledby={`${id}-${n}`} className="tn:grid tn:gap-1">
                 {entry.items.map(row)}
               </ul>
             </li>
@@ -134,7 +138,7 @@ export function SidebarNav({
           animate={{ opacity: index === -1 ? 0 : 1 }}
           transition={soft}
           style={{ top }}
-          className="pointer-events-none absolute inset-x-0 h-8 rounded-control bg-ink"
+          className="tn:pointer-events-none tn:absolute tn:inset-x-0 tn:h-8 tn:rounded-control tn:bg-ink"
         />
         <motion.li
           aria-hidden
@@ -142,19 +146,19 @@ export function SidebarNav({
           animate={{ opacity: index === -1 ? 0 : 1 }}
           transition={soft}
           style={{ clipPath: clip }}
-          className="pointer-events-none absolute inset-0 grid gap-1 text-label font-medium text-paper"
+          className="tn:pointer-events-none tn:absolute tn:inset-0 tn:grid tn:gap-1 tn:text-label tn:font-medium tn:text-paper"
         >
           {items.map((entry) =>
             "items" in entry ? (
-              <span key={entry.label} className="not-first:mt-5">
-                <span className="mb-3 block truncate px-2">{entry.label}</span>
-                <span className="grid gap-1">{entry.items.map(copy)}</span>
+              <span key={entry.label} className="tn:not-first:mt-5">
+                <span className="tn:mb-3 tn:block tn:truncate tn:px-2">{entry.label}</span>
+                <span className="tn:grid tn:gap-1">{entry.items.map(copy)}</span>
               </span>
             ) : copy(entry),
           )}
         </motion.li>
       </ul>
-      {trailing && <div className="mt-auto flex flex-col gap-2">{trailing}</div>}
+      {trailing && <div className="tn:mt-auto tn:flex tn:flex-col tn:gap-2">{trailing}</div>}
     </nav>
   );
 }

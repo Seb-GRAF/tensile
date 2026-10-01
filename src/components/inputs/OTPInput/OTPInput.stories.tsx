@@ -18,7 +18,7 @@ function StatefulOTPInput(props: OTPInputProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -42,7 +42,7 @@ export const Default: Story = {
       <StatefulOTPInput
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />
@@ -52,7 +52,7 @@ export const Default: Story = {
 
 export const InAFieldInsideAForm: Story = {
   render: function Render(args) {
-    const [value, setValue] = useState(args.value);
+    const [value, setValue] = useState(args.value!);
     const [disabled, setDisabled] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [data, setData] = useState("");
@@ -63,7 +63,7 @@ export const InAFieldInsideAForm: Story = {
           setSubmitted(true);
           setData(JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))));
         }}
-        onReset={() => { setValue(args.value); setSubmitted(false); setData(""); }}
+        onReset={() => { setValue(args.value!); setSubmitted(false); setData(""); }}
         className="grid w-80 max-w-full gap-4"
       >
         <Field label="Verification code" description="Enter the six digits we sent." error={submitted && value.length !== 6 ? "Enter all six digits" : undefined} required disabled={disabled}>

@@ -25,6 +25,6 @@ export default {
     value: "The exact text written to the clipboard.",
     label: "Accessible name of the copy action before success.",
     copiedLabel: "Visible and announced confirmation after a successful copy.",
-    className: "Additional classes on the animated button.",
+    className: "Classes on the button, for placement, such as `absolute top-3 right-3` over a code block.",
   },
 };

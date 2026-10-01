@@ -5,59 +5,16 @@ const items = [
   {
     label: "Workspace",
     items: [
-      {
-        value: "home",
-        label: "Home",
-        icon: (
-          <Icon size={16}>
-            <path d="m3 10 9-7 9 7v10H3Z" />
-          </Icon>
-        ),
-      },
-      {
-        value: "projects",
-        label: "Projects",
-        icon: (
-          <Icon size={16}>
-            <rect x="4" y="5" width="16" height="15" rx="2" />
-            <path d="M9 5V3h6v2" />
-          </Icon>
-        ),
-      },
-      {
-        value: "notes",
-        label: "Notes",
-        icon: (
-          <Icon size={16}>
-            <path d="M5 5h14M5 12h14M5 19h8" />
-          </Icon>
-        ),
-      },
+      { value: "home", label: "Home", icon: <Icon name="home" size={16} /> },
+      { value: "projects", label: "Projects", icon: <Icon name="briefcase" size={16} /> },
+      { value: "notes", label: "Notes", icon: <Icon name="text" size={16} /> },
     ],
   },
   {
     label: "Account",
     items: [
-      {
-        value: "profile",
-        label: "Profile",
-        icon: (
-          <Icon size={16}>
-            <circle cx="12" cy="8" r="4" />
-            <path d="M5 21v-1a7 7 0 0 1 14 0v1" />
-          </Icon>
-        ),
-      },
-      {
-        value: "billing",
-        label: "Billing",
-        icon: (
-          <Icon size={16}>
-            <rect x="3" y="5" width="18" height="14" rx="2" />
-            <path d="M3 10h18" />
-          </Icon>
-        ),
-      },
+      { value: "profile", label: "Profile", icon: <Icon name="user" size={16} /> },
+      { value: "billing", label: "Billing", icon: <Icon name="creditCard" size={16} /> },
     ],
   },
 ];

@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId } from "react";
-import { icons } from "../../../icons";
+import { useControllable } from "../../../controllable";
 import type { MenuAction } from "../../../Menu";
 import { useSprings } from "../../../springs";
 import { ActionMenu } from "../../actions/ActionMenu/ActionMenu";
@@ -12,15 +12,18 @@ import { Table, type TableProps, type TableSort } from "../Table/Table";
 
 export type DataTableProps<Row> = Omit<TableProps<Row>, "columns" | "sort"> & {
   columns: (TableProps<Row>["columns"][number] & { sortable?: boolean })[];
-  sort: TableSort | null;
-  onSortChange: (sort: TableSort) => void;
+  sort?: TableSort | null;
+  defaultSort?: TableSort | null;
+  onSortChange?: (sort: TableSort) => void;
   /** Keys of the selected rows (from `rowKey`), on every page. */
-  selection: string[];
-  onSelectionChange: (selection: string[]) => void;
+  selection?: string[];
+  defaultSelection?: string[];
+  onSelectionChange?: (selection: string[]) => void;
   /** Current page, from 1 to `pageCount`. */
-  page: number;
+  page?: number;
+  defaultPage?: number;
   pageCount: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
   /** The actions in each row's menu; without it, there is no actions column. */
   rowActions?: (row: Row) => MenuAction[];
   onRowAction?: (row: Row, action: MenuAction) => void;
@@ -43,11 +46,14 @@ export function DataTable<Row>({
   rows,
   rowKey,
   caption,
-  sort,
+  sort: sortProp,
+  defaultSort = null,
   onSortChange,
-  selection,
+  selection: selectionProp,
+  defaultSelection = [],
   onSelectionChange,
-  page,
+  page: pageProp,
+  defaultPage = 1,
   pageCount,
   onPageChange,
   loading = false,
@@ -68,6 +74,9 @@ export function DataTable<Row>({
 }: DataTableProps<Row>) {
   const { shape, swap } = useSprings();
   const id = useId();
+  const [sort, setSort] = useControllable(sortProp, defaultSort, onSortChange);
+  const [selection, setSelection] = useControllable(selectionProp, defaultSelection, onSelectionChange);
+  const [page, setPage] = useControllable(pageProp, defaultPage, onPageChange);
   const shown = rows.map(rowKey);
   const selected = shown.filter((key) => selection.includes(key));
 
@@ -82,7 +91,7 @@ export function DataTable<Row>({
           indeterminate={selected.length > 0 && selected.length < shown.length}
           disabled={loading || shown.length === 0}
           onCheckedChange={(checked) =>
-            onSelectionChange(checked ? [...selection, ...shown.filter((key) => !selection.includes(key))] : selection.filter((key) => !shown.includes(key)))
+            setSelection(checked ? [...selection, ...shown.filter((key) => !selection.includes(key))] : selection.filter((key) => !shown.includes(key)))
           }
         />
       ),
@@ -93,7 +102,7 @@ export function DataTable<Row>({
             label=""
             aria-label={selectRowLabel(row)}
             checked={selection.includes(key)}
-            onCheckedChange={(checked) => onSelectionChange(checked ? [...selection, key] : selection.filter((item) => item !== key))}
+            onCheckedChange={(checked) => setSelection(checked ? [...selection, key] : selection.filter((item) => item !== key))}
           />
         );
       },
@@ -106,24 +115,21 @@ export function DataTable<Row>({
           <button
             type="button"
             aria-describedby={`${id}-sort`}
-            onClick={() => onSortChange({ key: column.key, direction: sorted && sort.direction === "ascending" ? "descending" : "ascending" })}
-            className={`press -mx-2 inline-flex h-8 items-center gap-1 rounded-control px-2 outline-offset-2 hover:bg-hover focus-visible:outline-2 focus-visible:outline-focus ${column.align === "end" ? "flex-row-reverse" : ""}`}
+            onClick={() => setSort({ key: column.key, direction: sorted && sort.direction === "ascending" ? "descending" : "ascending" })}
+            className={`tn:press tn:-mx-2 tn:inline-flex tn:h-8 tn:items-center tn:gap-1 tn:rounded-control tn:px-2 tn:outline-offset-2 tn:hover:bg-hover tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${column.align === "end" ? "tn:flex-row-reverse" : ""}`}
           >
             {column.header}
-            <span className="grid place-content-center place-items-center">
+            <span className="tn:grid tn:place-content-center tn:place-items-center">
               <AnimatePresence initial={false}>
                 {sorted ? (
-                  <motion.span key="sorted" {...swap} className="col-start-1 row-start-1">
-                    <motion.span initial={false} animate={{ rotate: sort.direction === "descending" ? 180 : 0 }} transition={shape} className="block">
-                      <Icon size={14}>
-                        <path d="M12 19V5" />
-                        <path d="m5 12 7-7 7 7" />
-                      </Icon>
+                  <motion.span key="sorted" {...swap} className="tn:col-start-1 tn:row-start-1">
+                    <motion.span initial={false} animate={{ rotate: sort.direction === "descending" ? 180 : 0 }} transition={shape} className="tn:block">
+                      <Icon name="arrowUp" size={14} />
                     </motion.span>
                   </motion.span>
                 ) : (
-                  <motion.span key="unsorted" {...swap} className="col-start-1 row-start-1">
-                    <Icon size={14}>{icons.chevronsUpDown}</Icon>
+                  <motion.span key="unsorted" {...swap} className="tn:col-start-1 tn:row-start-1">
+                    <Icon name="chevronsUpDown" size={14} />
                   </motion.span>
                 )}
               </AnimatePresence>
@@ -138,33 +144,33 @@ export function DataTable<Row>({
   if (rowActions) {
     tableColumns.push({
       key: "actions",
-      header: <span className="sr-only">{actionsLabel}</span>,
+      header: <span className="tn:sr-only">{actionsLabel}</span>,
       cell: (row) => (
         <ActionMenu
           actions={rowActions(row)}
           onAction={(action) => onRowAction!(row, action)}
           label={rowActionsLabel(row)}
           menuLabel={rowActionsLabel(row)}
-          trigger={<Icon size={16}>{icons.more}</Icon>}
+          trigger={<Icon name="more" size={16} />}
           size="sm"
-          className="ml-auto"
+          className="tn:ml-auto"
         />
       ),
     });
   }
 
   return (
-    <div className={`grid gap-4 ${className}`}>
+    <div className={`tn:grid tn:gap-4 ${className}`}>
       <Table columns={tableColumns} rows={rows} rowKey={rowKey} caption={caption} sort={sort} loading={loading} empty={empty} />
       <Pagination
         count={pageCount}
         value={page}
-        onValueChange={onPageChange}
+        onValueChange={setPage}
         label={paginationLabel}
         previousLabel={previousPageLabel}
         nextLabel={nextPageLabel}
         pageLabel={pageLabel}
-        className="justify-self-center"
+        className="tn:justify-self-center"
       />
       <span id={`${id}-sort`} hidden>
         {sortLabel}

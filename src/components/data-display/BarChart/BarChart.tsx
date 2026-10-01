@@ -29,7 +29,7 @@ function Highlight({ left, right }: { left: number; right: number }) {
       exit={{ opacity: 0 }}
       transition={soft}
       style={{ left: insetLeft, right: insetRight }}
-      className="absolute inset-y-0 rounded-overlay bg-ink-3"
+      className="tn:absolute tn:inset-y-0 tn:rounded-overlay tn:bg-line"
     />
   );
 }
@@ -42,10 +42,10 @@ function Bubble({ text, x }: { text: string; x: string }) {
       initial={false}
       animate={{ width, x }}
       transition={shape}
-      className="grid h-6 -translate-y-[calc(100%+10px)] place-content-center place-items-center overflow-hidden rounded-control bg-paper text-label font-medium text-ink tabular-nums"
+      className="tn:grid tn:h-6 tn:-translate-y-[calc(100%+10px)] tn:place-content-center tn:place-items-center tn:overflow-hidden tn:rounded-control tn:bg-ink tn:text-label tn:font-medium tn:text-paper tn:tabular-nums"
     >
       <AnimatePresence initial={false}>
-        <motion.span key={text} ref={measure} {...swap} className="col-start-1 row-start-1 whitespace-nowrap px-2.5">
+        <motion.span key={text} ref={measure} {...swap} className="tn:col-start-1 tn:row-start-1 tn:whitespace-nowrap tn:px-2.5">
           {text}
         </motion.span>
       </AnimatePresence>
@@ -89,23 +89,23 @@ export function BarChart({
       onKeyDown={onKeyDown}
       onFocus={() => setActive((index) => index ?? 0)}
       onBlur={() => setActive(null)}
-      className={`p-5 outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+      className={`tn:p-5 tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${className}`}
     >
-      <div onPointerMove={onPointerMove} onPointerLeave={() => setActive(null)} style={{ height: HEIGHT }} className="relative">
+      <div onPointerMove={onPointerMove} onPointerLeave={() => setActive(null)} style={{ height: HEIGHT }} className="tn:relative">
         {[TOP, (TOP + HEIGHT) / 2, HEIGHT].map((y) => (
-          <span key={y} style={{ top: y }} className="absolute inset-x-0 h-px bg-ink-3" />
+          <span key={y} style={{ top: y }} className="tn:absolute tn:inset-x-0 tn:h-px tn:bg-line" />
         ))}
         <AnimatePresence>
           {active !== null && <Highlight key="highlight" left={active * slot} right={100 - (active + 1) * slot} />}
         </AnimatePresence>
-        <div className="absolute inset-0 grid auto-cols-fr grid-flow-col items-end justify-items-center">
+        <div className="tn:absolute tn:inset-0 tn:grid tn:auto-cols-fr tn:grid-flow-col tn:items-end tn:justify-items-center">
           {data.map((bar, i) => (
             <motion.div
               key={bar.label}
               initial={{ height: 0 }}
               animate={{ height: heights[i] }}
               transition={shape}
-              className="w-1/2 max-w-6 rounded-t-full bg-accent"
+              className="tn:w-1/2 tn:max-w-6 tn:rounded-t-full tn:bg-accent"
             />
           ))}
         </div>
@@ -118,19 +118,19 @@ export function BarChart({
               animate={{ opacity: 1, left: `${(active + 0.5) * slot}%`, y: HEIGHT - heights[active] }}
               exit={{ opacity: 0 }}
               transition={{ left: shape, y: shape, opacity: soft }}
-              className="pointer-events-none absolute top-0 w-0"
+              className="tn:pointer-events-none tn:absolute tn:top-0 tn:w-0"
             >
               <Bubble text={text} x={active === 0 ? "0%" : active === data.length - 1 ? "-100%" : "-50%"} />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-      <div className="mt-3 grid h-3.5 auto-cols-fr grid-flow-col text-center text-caption leading-none text-paper/55">
+      <div className="tn:mt-3 tn:grid tn:h-3.5 tn:auto-cols-fr tn:grid-flow-col tn:text-center tn:text-caption tn:leading-none tn:text-muted">
         {data.map((bar) => (
           <span key={bar.label}>{bar.label}</span>
         ))}
       </div>
-      <span role="status" className="sr-only">
+      <span role="status" className="tn:sr-only">
         {text}
       </span>
     </Card>

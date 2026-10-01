@@ -23,7 +23,7 @@ export const Default: Story = {
       <ThemeToggle
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />

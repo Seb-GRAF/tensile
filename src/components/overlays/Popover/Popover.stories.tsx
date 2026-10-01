@@ -48,7 +48,7 @@ export const Default: Story = {
       <Popover
         {...args}
         onOpenChange={(open) => {
-          args.onOpenChange(open);
+          args.onOpenChange?.(open);
           updateArgs({ open });
         }}
       />
@@ -84,14 +84,14 @@ export const NearTheEdges: Story = {
   parameters: { layout: "fullscreen" },
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <div className="fixed right-4 bottom-4"><Popover {...args} trigger="Album details" onOpenChange={(open) => { args.onOpenChange(open); updateArgs({ open }); }} /></div>;
+    return <div className="fixed right-4 bottom-4"><Popover {...args} trigger="Album details" onOpenChange={(open) => { args.onOpenChange?.(open); updateArgs({ open }); }} /></div>;
   },
 };
 
 export const InsideAClippingCard: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <Card className="h-20 w-48 overflow-hidden p-4"><Popover {...args} onOpenChange={(open) => { args.onOpenChange(open); updateArgs({ open }); }} /></Card>;
+    return <Card className="h-20 w-48 overflow-hidden p-4"><Popover {...args} onOpenChange={(open) => { args.onOpenChange?.(open); updateArgs({ open }); }} /></Card>;
   },
 };
 

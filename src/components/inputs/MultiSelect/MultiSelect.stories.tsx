@@ -3,6 +3,7 @@ import { MultiSelectSummaryDemo } from "./demos/MultiSelectSummaryDemo";
 import { MultiSelectEmptyDemo } from "./demos/MultiSelectEmptyDemo";
 import { MultiSelectDisabledDemo } from "./demos/MultiSelectDisabledDemo";
 import { MultiSelectFormDemo } from "./demos/MultiSelectFormDemo";
+import { MultiSelectGroupsDemo } from "./demos/MultiSelectGroupsDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -36,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
-    return <div className="w-80 max-w-full"><MultiSelect {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} /></div>;
+    return <div className="w-80 max-w-full"><MultiSelect {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} /></div>;
   },
 };
 
@@ -97,4 +98,9 @@ export const DisabledUsage: Story = {
 
 export const FormUsage: Story = {
   render: () => <MultiSelectFormDemo />,
+};
+
+/** Toppings under headings; the arrows move across groups and pass over the sold-out ones, which a click can't add. */
+export const GroupsUsage: Story = {
+  render: () => <div className="w-80"><MultiSelectGroupsDemo /></div>,
 };

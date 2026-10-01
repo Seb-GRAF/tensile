@@ -4,5 +4,8 @@ storybook-static
 .idea
 dist
 site-dist
+site-ssr
 *.tgz
 __pycache__/
+.vercel/
+release-artifacts/

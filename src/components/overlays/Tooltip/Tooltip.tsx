@@ -49,16 +49,16 @@ function Bubble({ id, target, root }: { id: string; target: Target; root: React.
       animate={{ opacity: 1, x, y, width: size?.width, height: size?.height }}
       exit={{ opacity: 0 }}
       transition={{ x: shape, y: shape, width: shape, height: shape, opacity: soft }}
-      className="absolute top-0 left-0 grid overflow-hidden rounded-overlay bg-ink text-label font-medium text-paper shadow-float"
+      className="tn:absolute tn:top-0 tn:left-0 tn:grid tn:overflow-hidden tn:rounded-overlay tn:bg-ink tn:text-label tn:font-medium tn:text-paper tn:shadow-float"
     >
-      <span className="sr-only">{target.label}</span>
+      <span className="tn:sr-only">{target.label}</span>
       <AnimatePresence initial={false}>
         <motion.span
           key={target.label}
           ref={measure}
           aria-hidden
           {...swap}
-          className="col-start-1 row-start-1 w-max max-w-64 px-3 py-1 text-center"
+          className="tn:col-start-1 tn:row-start-1 tn:w-max tn:max-w-64 tn:px-3 tn:py-1 tn:text-center"
         >
           {target.label}
         </motion.span>
@@ -103,9 +103,9 @@ export function TooltipGroup({ children, className = "" }: { children: React.Rea
 
   return (
     <TooltipContext.Provider value={{ id, target, show, leave }}>
-      <div ref={root} onPointerLeave={hide} onBlur={(event) => leave(event.relatedTarget)} className={`relative inline-block ${className}`}>
+      <div ref={root} onPointerLeave={hide} onBlur={(event) => leave(event.relatedTarget)} className={`tn:relative tn:inline-block ${className}`}>
         {children}
-        <div ref={frame} className="pointer-events-none absolute inset-0">
+        <div ref={frame} className="tn:pointer-events-none tn:absolute tn:inset-0">
           <AnimatePresence onExitComplete={settle}>
             {target && <Bubble key="tooltip" id={id} target={target} root={root} />}
           </AnimatePresence>
@@ -131,5 +131,5 @@ function TooltipTrigger({ label, children }: TooltipProps) {
 export function Tooltip({ label, children, className = "" }: TooltipProps) {
   const group = useContext(TooltipContext);
   const trigger = <TooltipTrigger label={label}>{children}</TooltipTrigger>;
-  return group ? <span className={`inline-flex ${className}`}>{trigger}</span> : <TooltipGroup className={className}>{trigger}</TooltipGroup>;
+  return group ? <span className={`tn:inline-flex ${className}`}>{trigger}</span> : <TooltipGroup className={className}>{trigger}</TooltipGroup>;
 }

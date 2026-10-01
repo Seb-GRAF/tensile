@@ -11,8 +11,8 @@ export default {
     "EmptyState has no card surface of its own. Wrap it in Card when the surrounding layout needs one."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Title and description.", Demo: EmptyStateDemo, code: emptyStateDemoCode },
-    { id: "action", title: "Action", description: "Icon and working recovery action.", Demo: EmptyStateActionDemo, code: emptyStateActionDemoCode },
+    { id: "usage", title: "Basic usage", description: "A title with a line of explanation in a card, for a list or search with nothing to show.", Demo: EmptyStateDemo, code: emptyStateDemoCode },
+    { id: "action", title: "Action", description: "An icon and a button that creates the first item; use it when the user can fix the empty state right away.", Demo: EmptyStateActionDemo, code: emptyStateActionDemoCode },
   ],
   keyboard: [],
   related: [
@@ -20,10 +20,10 @@ export default {
     "Card"
   ],
   props: {
-    "title": "Title displayed by the component.",
-    "description": "Supporting content explaining the control or group.",
+    "title": "Short statement of what is empty, e.g. \"No projects yet\".",
+    "description": "A line under the title on why it is empty or what to do next.",
     "icon": "Optional decorative illustration or Icon.",
     "action": "Recovery or creation control, usually a Button.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the centered column, for placement; it fills its container's width and has 24 px padding."
   },
 };

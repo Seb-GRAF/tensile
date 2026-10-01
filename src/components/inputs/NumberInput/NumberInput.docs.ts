@@ -21,12 +21,12 @@ export default {
     "Provide matching formatValue and parseValue when accepting formatted input."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Nullable numeric value and commit behavior.", Demo: NumberInputDemo, code: numberInputDemoCode },
-    { id: "bounds", title: "Bounds and steps", description: "Minimum, maximum and step.", Demo: NumberInputBoundsDemo, code: numberInputBoundsDemoCode },
-    { id: "format", title: "Custom formatting", description: "Matching custom formatting and parsing.", Demo: NumberInputFormatDemo, code: numberInputFormatDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled number entry.", Demo: NumberInputDisabledDemo, code: numberInputDisabledDemoCode },
-    { id: "readonly", title: "Read only", description: "Read-only numeric value.", Demo: NumberInputReadOnlyDemo, code: numberInputReadOnlyDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and raw numeric form value.", Demo: NumberInputFormDemo, code: numberInputFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A budget field that shows the formatted number and edits the raw one; the value changes on Enter or when focus leaves, and clearing it gives null. Start here for typed numbers.", Demo: NumberInputDemo, code: numberInputDemoCode },
+    { id: "bounds", title: "Bounds and steps", description: "Values are kept between 0 and 100, and the arrow keys step by 0.5. Use bounds for amounts with a real limit.", Demo: NumberInputBoundsDemo, code: numberInputBoundsDemoCode },
+    { id: "format", title: "Custom formatting", description: "The number shows as \"CHF 12.50\", and `parseValue` reads that text back. Change both together, so what people see can be typed back in.", Demo: NumberInputFormatDemo, code: numberInputFormatDemoCode },
+    { id: "disabled", title: "Disabled", description: "The field is dimmed and can't be focused or edited. Use it for a number that can't change in the current state.", Demo: NumberInputDisabledDemo, code: numberInputDisabledDemoCode },
+    { id: "readonly", title: "Read only", description: "The formatted number can be focused and copied but not changed, and the arrow keys do nothing. Use it for computed totals.", Demo: NumberInputReadOnlyDemo, code: numberInputReadOnlyDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits the plain number (\"1250.5\", not \"1,250.5\"), and the Field supplies the label.", Demo: NumberInputFormDemo, code: numberInputFormDemoCode },
   ],
   keyboard: [
     {
@@ -49,7 +49,7 @@ export default {
   ],
   props: {
     "form": "ID of the form that owns the visible and hidden inputs.",
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Disables the input and dims the pill; the hidden input is left out of the form. A disabled Field or Fieldset does the same.",
     "name": "Name used for the submitted form value.",
     "readOnly": "Keep the value focusable and selectable without allowing edits.",
     "inputMode": "Hints at the type of data that might be entered by the user while editing the element or its contents",
@@ -58,8 +58,9 @@ export default {
     "onKeyDown": "Native keyboard handler; preventDefault skips the built-in handling.",
     "leading": "Content before the main content.",
     "trailing": "Content after the main content.",
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "The number, or null when empty. Pass it to control NumberInput; leave it out and NumberInput keeps its own number.",
+    "defaultValue": "The number NumberInput starts with when it keeps its own number.",
+    "onValueChange": "Called with the clamped number, or null, when an edit is committed with Enter, on blur or with the arrow keys.",
     "min": "Minimum permitted value.",
     "max": "Maximum permitted value.",
     "step": "Increment used when changing the value.",

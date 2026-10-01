@@ -1,7 +1,7 @@
 {
   "name": "tensile",
   "version": "0.1.0",
-  "description": "React components with shared styling and motion, TypeScript types, and ready-to-import CSS.",
+  "description": "React components where each control is one shape that moves with its state. Accessible, and they work in forms.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -13,32 +13,40 @@
       "import": "./dist/index.js"
     },
     "./styles.css": "./dist/styles.css",
-    "./reset.css": "./dist/reset.css"
+    "./reset.css": "./dist/reset.css",
+    "./tailwind.css": "./dist/tailwind.css"
   },
   "files": [
     "dist",
     "THIRD_PARTY_NOTICES"
   ],
   "scripts": {
+    "changeset": "changeset",
+    "version:release": "changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version \"$(node -p 'require(\"./package.json\").version')\"",
+    "check": "tsc --noEmit && npm test && npm run check:consumer && npm run check:next && npm run test:keyboard && npm run build:site",
     "test": "node --test",
+    "test:keyboard": "sh tests/keyboard/run.sh",
     "storybook": "npm run build && storybook dev -p 6006",
     "build-storybook": "npm run build && storybook build",
-    "build": "vite build -c vite.lib.config.ts --mode css && vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json",
+    "build": "vite build -c vite.lib.config.ts --mode css && vite build -c vite.lib.config.ts && cp src/tailwind.css src/utilities.css dist/ && tsc -p tsconfig.build.json",
     "check:consumer": "sh examples/consumer/check.sh",
+    "check:next": "sh examples/nextjs/check.sh",
     "prepack": "npm run build",
     "docs:generate": "node scripts/generate-docs.mjs",
     "site": "npm run build && npm run docs:generate && vite --config site/vite.config.ts",
-    "build:site": "npm run build && npm run docs:generate && vite build --config site/vite.config.ts && cp LICENSE THIRD_PARTY_NOTICES site-dist/",
+    "build:site": "npm run build && npm run docs:generate && vite build --config site/vite.config.ts && node scripts/prerender.mjs && cp LICENSE THIRD_PARTY_NOTICES site-dist/",
     "preview:site": "vite preview --config site/vite.config.ts"
   },
   "dependencies": {
-    "motion": "^13.4.3"
+    "motion": "^13.4.3",
+    "prism-react-renderer": "^2.4.1"
   },
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@changesets/cli": "^3.0.3",
     "@fontsource-variable/geist": "^5.3.0",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/react-vite": "^10.6.0",
@@ -56,7 +64,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seb-graf/tensile.git"
+    "url": "git+https://github.com/Seb-GRAF/tensile.git"
   },
   "bugs": {
     "url": "https://github.com/seb-graf/tensile/issues"

@@ -28,7 +28,7 @@ export const Default: Story = {
       <NumberStepper
         {...args}
         onValueChange={(value) => {
-          args.onValueChange(value);
+          args.onValueChange?.(value);
           updateArgs({ value });
         }}
       />

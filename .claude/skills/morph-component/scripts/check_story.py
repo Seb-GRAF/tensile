@@ -5,7 +5,7 @@
 """Render one story in its own Storybook, run interaction steps and checks, save screenshots and a contact sheet.
 
     uv run check_story.py <story-id> '<steps as JSON>' --out <dir> [--viewport 390x844] [--reduced-motion] [--video]
-                          [--args 'scale:3'] [--globals 'theme:alternate']
+                          [--args 'scale:3'] [--globals 'theme:alternate'] [--browser firefox]
 
 Exits with 1 if a step fails, a check fails, or the browser console shows an error.
 """
@@ -133,6 +133,8 @@ def run(page, steps, out):
                 else:
                     print(f"step {i} {what} = {json.dumps(value)}")
             elif "visible" in step or "hidden" in step:
+                state = "visible" if "visible" in step else "hidden"
+                find(page, step[state]).wait_for(state=state)
                 value, what = read(page, step)
                 failures += check(i, what, value, True)
             else:
@@ -166,6 +168,7 @@ def main():
     parser.add_argument("--video", action="store_true", help="record the run to video.webm in the out directory")
     parser.add_argument("--args", help="story args as in the Storybook URL, e.g. 'scale:3;open:!true'")
     parser.add_argument("--globals", help="globals as in the Storybook URL, e.g. 'theme:alternate'")
+    parser.add_argument("--browser", choices=["chromium", "firefox", "webkit"], default="chromium")
     args = parser.parse_args()
     steps = json.loads(args.steps)
     args.out.mkdir(parents=True, exist_ok=True)
@@ -193,11 +196,11 @@ def main():
             wait_until_up(f"http://localhost:{port}/iframe.html", server)
             errors = []
             with sync_playwright() as p:
-                browser = p.chromium.launch()
+                browser = getattr(p, args.browser).launch()
                 context = browser.new_context(
                     viewport=args.viewport,
                     device_scale_factor=2,
-                    permissions=["clipboard-read", "clipboard-write"],
+                    permissions=["clipboard-read", "clipboard-write"] if args.browser == "chromium" else [],
                     reduced_motion="reduce" if args.reduced_motion else "no-preference",
                     record_video_dir=cache if args.video else None,
                     record_video_size=args.viewport if args.video else None,

@@ -13,9 +13,9 @@ export default {
     "Descriptions and errors describe the group. Each individual control still needs its own accessible name."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Group related fields under a legend.", Demo: FieldsetDemo, code: fieldsetDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disable all enclosed controls.", Demo: FieldsetDisabledDemo, code: fieldsetDisabledDemoCode },
-    { id: "error", title: "Validation", description: "Group description and validation error.", Demo: FieldsetErrorDemo, code: fieldsetErrorDemoCode },
+    { id: "usage", title: "Basic usage", description: "Notification channels under a legend and a description. Use a Fieldset when several controls answer one question.", Demo: FieldsetDemo, code: fieldsetDemoCode },
+    { id: "disabled", title: "Disabled", description: "`disabled` on the Fieldset disables every control inside it, native or Field-aware, with no prop on each.", Demo: FieldsetDisabledDemo, code: fieldsetDisabledDemoCode },
+    { id: "error", title: "Validation", description: "The error shows under the group while no channel is picked and clears once one is. Use it for rules about the group as a whole.", Demo: FieldsetErrorDemo, code: fieldsetErrorDemoCode },
   ],
   keyboard: [],
   related: [
@@ -28,6 +28,6 @@ export default {
     "error": "Validation message supplied by the application.",
     "disabled": "Disable native descendants and Field-aware controls.",
     "children": "The related controls.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes for the `<fieldset>`, to set its width or place it in a form layout."
   },
 };

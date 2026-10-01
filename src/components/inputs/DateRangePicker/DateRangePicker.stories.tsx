@@ -18,7 +18,7 @@ function StatefulDateRangePicker(props: DateRangePickerProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -34,13 +34,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Pick a start and an end day by click, or with the arrow keys and Enter; the range previews while you hover or move focus; PageUp and PageDown change the month. */
+/** Pick a start and an end day by click, or with the arrow keys and Enter; the band grows from the first pick toward the day you hover or focus, and the end pills move to the picked days; PageUp and PageDown change the month. */
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
     return (
-      <div className="w-68 max-w-full">
-        <StatefulDateRangePicker {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+      <div className="w-72 max-w-full">
+        <StatefulDateRangePicker {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

@@ -18,11 +18,11 @@ export default {
     "A named hidden input submits the rating, including zero. Required is an ARIA state and does not reject zero."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Interactive rating.", Demo: RatingDemo, code: ratingDemoCode },
-    { id: "readonly", title: "Read only", description: "Display-only rating.", Demo: RatingReadOnlyDemo, code: ratingReadOnlyDemoCode },
-    { id: "count", title: "Custom scale", description: "Custom rating scale.", Demo: RatingCountDemo, code: ratingCountDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled rating.", Demo: RatingDisabledDemo, code: ratingDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named rating.", Demo: RatingFormDemo, code: ratingFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A rating in a Field: hover previews the fill, a click or an arrow key sets it.", Demo: RatingDemo, code: ratingDemoCode },
+    { id: "readonly", title: "Read only", description: "readOnly shows a score as a named image with no focus, for reviews and listings.", Demo: RatingReadOnlyDemo, code: ratingReadOnlyDemoCode },
+    { id: "count", title: "Custom scale", description: "count sets a three-star scale, with valueLabel wording the value to match.", Demo: RatingCountDemo, code: ratingCountDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed rating that shows its value and takes no input.", Demo: RatingDisabledDemo, code: ratingDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A rating in a form: name submits the number of stars, and Reset restores the starting value.", Demo: RatingFormDemo, code: ratingFormDemoCode },
   ],
   keyboard: [
     {
@@ -39,16 +39,17 @@ export default {
     "NumberStepper"
   ],
   props: {
-    "value": "Whole stars, from 0 to `count`.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "Whole stars, from 0 to `count`. Leave it out to let the rating track it, starting from defaultValue.",
+    "defaultValue": "The first rating when it tracks its own value. Defaults to 0.",
+    "onValueChange": "Called with the new number of stars on a star click, an arrow key, Home or End.",
     "count": "Number of stars.",
-    "label": "Accessible name of the control or region.",
+    "label": "Accessible name of the slider when no Field labels it. A read-only rating is named by valueLabel instead.",
     "valueLabel": "Screen reader text for the value.",
     "readOnly": "Display a named image with no focus or interaction.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
     "required": "Expose the required state. See the form example for validation.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the stars and stops changes. A disabled Field or Fieldset does the same.",
+    "className": "Classes on the paper pill, for placement such as margin. It sizes to its stars."
   },
 };

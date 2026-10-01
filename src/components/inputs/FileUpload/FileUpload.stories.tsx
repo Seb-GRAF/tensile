@@ -6,9 +6,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useRef, useState } from "react";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";
-import { icons } from "../../../icons";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { List } from "../../data-display/List/List";
 import { NumberTicker } from "../../data-display/NumberTicker/NumberTicker";
 import { FileUpload, type FileUploadProps } from "./FileUpload";
@@ -51,6 +49,7 @@ function FileList(props: FileUploadProps) {
           trailing: (
             <IconButton
               label={`Remove ${file.name}`}
+              icon="close"
               variant="ghost"
               size="sm"
               onClick={(event) => {
@@ -59,9 +58,7 @@ function FileList(props: FileUploadProps) {
                 (neighbor?.querySelector("button") ?? region.current!).focus();
                 setFiles((files) => files.filter((file) => file.id !== id));
               }}
-            >
-              <Icon size={16}>{icons.close}</Icon>
-            </IconButton>
+            />
           ),
         }))}
       />

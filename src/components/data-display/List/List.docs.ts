@@ -12,8 +12,8 @@ export default {
     "The list has no surrounding surface; add Card if needed."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Titles and descriptions.", Demo: ListDemo, code: listDemoCode },
-    { id: "slots", title: "Content slots", description: "Leading and trailing content.", Demo: ListSlotsDemo, code: listSlotsDemoCode },
+    { id: "usage", title: "Basic usage", description: "Rows with a title and a line of description; use it for a short read-only list such as documents.", Demo: ListDemo, code: listDemoCode },
+    { id: "slots", title: "Content slots", description: "An Avatar in each row's leading slot and a StatusBadge in its trailing slot, for lists of people or items with a status.", Demo: ListSlotsDemo, code: listSlotsDemoCode },
   ],
   keyboard: [],
   related: [
@@ -23,6 +23,6 @@ export default {
   props: {
     "items": "Rows with stable IDs, titles and optional description, leading and trailing content.",
     "label": "Names the list when no visible heading does.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the `<ul>`, for width and placement. It draws no card; place it in a Card."
   },
 };

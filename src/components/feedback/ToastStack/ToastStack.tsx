@@ -1,9 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type ToastStackProps = {
   /** Oldest first: the last toast is in front. */
@@ -46,9 +44,9 @@ export function ToastStack({
       onMouseLeave={(event) => setExpanded(event.currentTarget.contains(document.activeElement))}
       onFocus={() => setExpanded(true)}
       onBlur={(event) => setExpanded(event.currentTarget.contains(event.relatedTarget) || event.currentTarget.matches(":hover"))}
-      className={`w-full outline-none [--color-focus:var(--color-paper)] [--ghost-hover:var(--color-ink-3)] [--color-line:var(--color-ink-3)] ${className}`}
+      className={`tn:w-full tn:outline-none tn:[--tn-color-focus:var(--tn-color-paper)] tn:[--tn-ghost-hover:var(--tn-color-ink-3)] tn:[--tn-color-line:var(--tn-color-ink-3)] ${className}`}
     >
-      <ol role="list" className="relative h-11">
+      <ol role="list" className="tn:relative tn:h-11">
         <AnimatePresence initial={false}>
           {toasts.map((toast, i) => {
             const depth = toasts.length - 1 - i;
@@ -64,33 +62,37 @@ export function ToastStack({
                 }
                 exit={swap.exit}
                 transition={{ y: shape, scale: shape, opacity: soft }}
-                className="absolute inset-x-0 bottom-0 pt-2"
+                className="tn:absolute tn:inset-x-0 tn:bottom-0 tn:pt-2"
               >
-                <div className="relative flex h-11 items-center rounded-control bg-ink text-sm font-medium text-paper shadow-float">
+                <div className="tn:relative tn:flex tn:h-11 tn:items-center tn:rounded-control tn:bg-ink tn:text-sm tn:font-medium tn:text-paper tn:shadow-float">
                   <motion.span
                     initial={false}
                     animate={{ opacity: expanded ? 0 : place * 0.12 }}
                     transition={soft}
-                    className="absolute inset-0 rounded-control bg-paper"
+                    className="tn:absolute tn:inset-0 tn:rounded-control tn:bg-paper"
                   />
                   <motion.div
                     initial={swap.initial}
                     animate={expanded || depth === 0 ? swap.animate : swap.exit}
-                    className="relative flex min-w-0 flex-1 items-center gap-2 pr-1.5 pl-4"
+                    className="tn:relative tn:flex tn:min-w-0 tn:flex-1 tn:items-center tn:gap-2 tn:pr-1.5 tn:pl-4"
                   >
-                    {toast.icon}
-                    <span role="status" className="min-w-0 flex-1 truncate">
-                      {toast.label}
+                    <span role="status" className="tn:grid tn:min-w-0 tn:flex-1 tn:grid-cols-1">
+                      <AnimatePresence initial={false}>
+                        <motion.span key={toast.label} {...swap} className="tn:col-start-1 tn:row-start-1 tn:flex tn:min-w-0 tn:items-center tn:gap-2">
+                          {toast.icon}
+                          <span className="tn:min-w-0 tn:flex-1 tn:truncate">{toast.label}</span>
+                        </motion.span>
+                      </AnimatePresence>
                     </span>
                     <IconButton
                       variant="ghost"
                       size="sm"
+                      iconSize={14}
                       label={dismissLabel(toast.label)}
+                      icon="close"
                       onClick={(event) => dismiss(event, toast.id)}
-                      className="shrink-0 text-paper/55"
-                    >
-                      <Icon size={14}>{icons.close}</Icon>
-                    </IconButton>
+                      className="tn:shrink-0 tn:text-paper/60"
+                    />
                   </motion.div>
                 </div>
               </motion.li>

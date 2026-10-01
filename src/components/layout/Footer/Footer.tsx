@@ -13,19 +13,19 @@ export type FooterProps = {
 export function Footer({ groups, note, label = "Footer", className = "" }: FooterProps) {
   const linkClick = useLinkClick();
   return (
-    <footer className={`@container ${className}`}>
-      <Card tone="ink" className="mx-auto max-w-page px-6 py-10 @3xl:p-12">
-        <nav aria-label={label} className="grid gap-x-6 gap-y-8 @md:grid-cols-2 @3xl:auto-cols-fr @3xl:grid-flow-col">
+    <footer className={`tn:@container ${className}`}>
+      <Card tone="ink" className="tn:mx-auto tn:max-w-page tn:px-6 tn:py-10 tn:@3xl:p-12">
+        <nav aria-label={label} className="tn:grid tn:gap-x-6 tn:gap-y-8 tn:@md:grid-cols-2 tn:@3xl:auto-cols-fr tn:@3xl:grid-flow-col">
           {groups.map((group) => (
             <div key={group.title}>
-              <h2 className="text-label font-semibold">{group.title}</h2>
-              <ul role="list" className="mt-3 grid gap-2">
+              <h2 className="tn:text-label tn:font-semibold">{group.title}</h2>
+              <ul role="list" className="tn:mt-3 tn:grid tn:gap-2">
                 {group.links.map((link) => (
                   <li key={link.href}>
                     <a
                       href={link.href}
                       onClick={linkClick}
-                      className="rounded-sm text-label text-paper/55 outline-offset-2 hover:text-paper focus-visible:outline-2 focus-visible:outline-focus"
+                      className="tn:rounded-sm tn:text-label tn:text-muted tn:outline-offset-2 tn:hover:text-ink tn:focus-visible:outline-2 tn:focus-visible:outline-focus"
                     >
                       {link.label}
                     </a>
@@ -37,8 +37,8 @@ export function Footer({ groups, note, label = "Footer", className = "" }: Foote
         </nav>
         {note && (
           <>
-            <Separator className="my-8" />
-            <div className="text-label text-paper/55">{note}</div>
+            <Separator className="tn:my-8" />
+            <div className="tn:text-label tn:text-muted">{note}</div>
           </>
         )}
       </Card>

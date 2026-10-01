@@ -1,5 +1,6 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { dragHandlers, rubber } from "../../../drag";
 import { useSprings } from "../../../springs";
 import { Card } from "../Card/Card";
@@ -8,8 +9,9 @@ export type SplitPaneProps = {
   left: React.ReactNode;
   right: React.ReactNode;
   /** Where the divider sits, as a fraction of the width from the left: 0..1. */
-  value: number;
-  onValueChange: (value: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
   min?: number;
   max?: number;
   label?: string;
@@ -18,8 +20,9 @@ export type SplitPaneProps = {
 
 const GAP = 16;
 
-export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 0.8, label = "Resize panes", className = "" }: SplitPaneProps) {
+export function SplitPane({ left, right, value: valueProp, defaultValue = 0.5, onValueChange, min = 0.2, max = 0.8, label = "Resize panes", className = "" }: SplitPaneProps) {
   const { shape, snap } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const root = useRef<HTMLDivElement>(null);
   const grab = useRef(0);
   const [held, setHeld] = useState(false);
@@ -34,7 +37,7 @@ export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 
       setHeld(true);
     }
     const px = event.clientX - box.left - grab.current;
-    onValueChange(Math.min(max, Math.max(min, px / box.width)));
+    setValue(Math.min(max, Math.max(min, px / box.width)));
     const over = px > max * box.width ? px - max * box.width : Math.min(0, px - min * box.width);
     stretch.set(rubber(over));
   }
@@ -49,13 +52,13 @@ export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 
     const target = targets[event.key];
     if (target === undefined) return;
     event.preventDefault();
-    onValueChange(Math.min(max, Math.max(min, target)));
+    setValue(Math.min(max, Math.max(min, target)));
   }
 
   return (
-    <div ref={root} className={`flex size-full ${className}`}>
-      <motion.div style={{ width }} className="grid">
-        <Card className="overflow-hidden">{left}</Card>
+    <div ref={root} className={`tn:flex tn:size-full ${className}`}>
+      <motion.div style={{ width }} className="tn:grid">
+        <Card className="tn:overflow-hidden">{left}</Card>
       </motion.div>
       <div
         role="separator"
@@ -67,16 +70,16 @@ export function SplitPane({ left, right, value, onValueChange, min = 0.2, max = 
         aria-valuenow={Math.round(value * 100)}
         {...dragHandlers(drag, release)}
         onKeyDown={onKeyDown}
-        className="group flex w-4 cursor-col-resize touch-none items-center justify-center outline-none"
+        className="tn:group tn:flex tn:w-4 tn:cursor-col-resize tn:touch-none tn:items-center tn:justify-center tn:outline-none"
       >
         <motion.div
           initial={false}
           animate={held ? { width: 6, height: 64 } : { width: 4, height: 32 }}
           transition={shape}
-          className={`rounded-full outline-offset-2 transition-colors duration-[calc(300ms*var(--motion-duration-scale))] group-hover:transition-none group-focus-visible:outline-2 group-focus-visible:outline-focus ${held ? "bg-ink" : "bg-muted group-hover:bg-ink"}`}
+          className={`tn:rounded-full tn:outline-offset-2 tn:transition-colors tn:duration-[calc(300ms*var(--tn-motion-duration-scale))] tn:group-hover:transition-none tn:group-focus-visible:outline-2 tn:group-focus-visible:outline-focus ${held ? "tn:bg-ink" : "tn:bg-muted tn:group-hover:bg-ink"}`}
         />
       </div>
-      <Card className="flex-1 overflow-hidden">{right}</Card>
+      <Card className="tn:flex-1 tn:overflow-hidden">{right}</Card>
     </div>
   );
 }

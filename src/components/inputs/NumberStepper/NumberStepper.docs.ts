@@ -16,10 +16,10 @@ export default {
     "Set name to include the value in FormData; reset controlled state in onReset."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled quantity.", Demo: NumberStepperDemo, code: numberStepperDemoCode },
-    { id: "bounds", title: "Bounds and steps", description: "Step and bounds.", Demo: NumberStepperBoundsDemo, code: numberStepperBoundsDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled spinbutton.", Demo: NumberStepperDisabledDemo, code: numberStepperDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named quantity.", Demo: NumberStepperFormDemo, code: numberStepperFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A guest count between 0 and 10, changed with the minus and plus buttons, with the value in the parent's state. Use it for small whole numbers.", Demo: NumberStepperDemo, code: numberStepperDemoCode },
+    { id: "bounds", title: "Bounds and steps", description: "Guests in pairs from 2 to 20. A press past a limit gives the stepper a short stretch instead of a change.", Demo: NumberStepperBoundsDemo, code: numberStepperBoundsDemoCode },
+    { id: "disabled", title: "Disabled", description: "The number shows dimmed and the buttons do nothing. Use it while the count is locked.", Demo: NumberStepperDisabledDemo, code: numberStepperDisabledDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits the number, and the Field supplies the label.", Demo: NumberStepperFormDemo, code: numberStepperFormDemoCode },
   ],
   keyboard: [
     {
@@ -36,19 +36,20 @@ export default {
     "Field"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "The number. Pass it to control NumberStepper; leave it out and NumberStepper keeps its own number.",
+    "defaultValue": "The number NumberStepper starts with when it keeps its own number.",
+    "onValueChange": "Called with the new number after a button press, an arrow key, Home or End, never past `min` or `max`.",
     "min": "Minimum permitted value.",
     "max": "Maximum permitted value.",
     "step": "Increment used when changing the value.",
     "formatValue": "Format a value for display or accessible value text.",
-    "label": "Accessible name of the control or region.",
-    "decreaseLabel": "Accessible name for the decrease button.",
-    "increaseLabel": "Accessible name for the increase button.",
+    "label": "Names the stepper for screen readers when no Field labels it.",
+    "decreaseLabel": "Names the minus button.",
+    "increaseLabel": "Names the plus button.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
     "required": "Expose the required state. See the form example for validation.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the stepper and stops its buttons and keys; the hidden input is left out of the form. A disabled Field or Fieldset does the same.",
+    "className": "Classes for the outer box, to place it in a layout."
   },
 };

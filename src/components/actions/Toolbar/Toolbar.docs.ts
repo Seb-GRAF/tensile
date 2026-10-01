@@ -34,6 +34,6 @@ export default {
     label: "Accessible name describing the group of actions.",
     children: "The buttons and tooltip wrappers that make up the toolbar.",
     orientation: "Direction of the layout and the arrow keys used to move focus.",
-    className: "Additional classes on the outer shared-tooltip container.",
+    className: "Classes on the toolbar element, for placement and gaps between groups.",
   },
 };

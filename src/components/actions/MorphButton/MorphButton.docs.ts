@@ -12,14 +12,14 @@ export default {
   usage: "Keep status in the caller. Start the task from onClick or a form submit handler, then update status when it finishes.",
   anatomy: "A native button contains the idle label. Loading swaps the label for Spinner. Success shows a Check.",
   notes: [
-    "The button cannot activate while loading or successful. Set status back to idle to allow another action.",
+    "While loading or successful the button ignores clicks and Enter, so a form can't be sent twice, but it stays focusable and keeps focus, so keyboard users don't lose their place. It reports aria-disabled meanwhile. Set status back to idle to allow another action.",
     "Use type=\"submit\" inside a form; the default is button."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "A standalone example using public component imports.", Demo: MorphButtonExample, code: existingCode },
-    { id: "states", title: "States", description: "Idle, loading and success states.", Demo: MorphButtonStatesDemo, code: morphButtonStatesDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled idle action.", Demo: MorphButtonDisabledDemo, code: morphButtonDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Submit a local form with caller-controlled status.", Demo: MorphButtonFormDemo, code: morphButtonFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "Start a task on click and show its progress in the button until it finishes.", Demo: MorphButtonExample, code: existingCode },
+    { id: "states", title: "States", description: "The three statuses side by side: the label, the spinner, and the check on the accent fill.", Demo: MorphButtonStatesDemo, code: morphButtonStatesDemoCode },
+    { id: "disabled", title: "Disabled", description: "An action that isn't available yet, such as Save before anything has changed.", Demo: MorphButtonDisabledDemo, code: morphButtonDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A submit button that shows the request's progress; Enter in the field submits too.", Demo: MorphButtonFormDemo, code: morphButtonFormDemoCode },
   ],
   keyboard: [
     {
@@ -33,13 +33,13 @@ export default {
     "HoldButton"
   ],
   props: {
-    "type": "Native input type.",
-    "children": "Content rendered inside the component.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element.",
-    "status": "Caller-controlled idle, loading or success state.",
-    "loadingLabel": "Accessible name during loading.",
-    "successLabel": "Accessible name after success.",
-    "aria-label": "Optional accessible name while idle."
+    "type": "Native button type. Use submit inside a form; the default is button.",
+    "children": "The idle label. The button narrows to a circle around the spinner and the check.",
+    "disabled": "Native disabled: dims the button and removes it from the Tab order. Loading and success block activation without this.",
+    "className": "Classes on the button, for placement, such as `justify-self-end`.",
+    "status": "idle shows the label; loading shows a spinner; success shows a check on the accent fill.",
+    "loadingLabel": "Accessible name while loading, since the spinner has no text.",
+    "successLabel": "Accessible name after success, since the check has no text.",
+    "aria-label": "Accessible name while idle, when the label alone isn't clear enough."
   },
 };

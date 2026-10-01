@@ -10,36 +10,38 @@ export type ImageProps = React.ComponentProps<"img"> & {
   className?: string;
 };
 
-export function Image({ fallback, onLoad, onError, className = "", ...props }: ImageProps) {
+export function Image({ src, fallback, onLoad, onError, className = "", ...props }: ImageProps) {
   const { soft, swap } = useSprings();
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string>();
   const box = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
     const img = box.current!.querySelector("img")!;
     if (!img.complete) return;
     if (img.naturalWidth) animate(img, { opacity: 1 }, soft);
-    else setFailed(true);
+    else setFailedSrc(src);
   }, []);
 
   return (
-    <span ref={box} className={`relative block overflow-hidden bg-hover inset-ring inset-ring-line ${className}`}>
-      {failed ? (
-        <motion.span {...swap} className="absolute inset-0 grid place-items-center">
+    <span ref={box} className={`tn:relative tn:block tn:overflow-hidden tn:bg-hover tn:inset-ring tn:inset-ring-line ${className}`}>
+      {failedSrc === src ? (
+        <motion.span {...swap} className="tn:absolute tn:inset-0 tn:grid tn:place-items-center">
           {fallback}
         </motion.span>
       ) : (
         <img
+          key={src}
           {...props}
+          src={src}
           onLoad={(event) => {
             animate(event.currentTarget, { opacity: 1 }, soft);
             onLoad?.(event);
           }}
           onError={(event) => {
-            setFailed(true);
+            setFailedSrc(src);
             onError?.(event);
           }}
-          className="absolute inset-0 size-full object-cover opacity-0"
+          className="tn:absolute tn:inset-0 tn:size-full tn:object-cover tn:opacity-0"
         />
       )}
     </span>

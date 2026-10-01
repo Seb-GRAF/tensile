@@ -12,8 +12,8 @@ export default {
     "The first tooltip appears after a short delay."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Render-function trigger bindings on an IconButton.", Demo: TooltipDemo, code: tooltipDemoCode },
-    { id: "group", title: "Group", description: "Shared tooltip behavior inside Toolbar.", Demo: TooltipGroupDemo, code: tooltipGroupDemoCode },
+    { id: "usage", title: "Basic usage", description: "An IconButton that spreads the trigger bindings and shows its name in a tooltip, the usual way to label an icon-only button.", Demo: TooltipDemo, code: tooltipDemoCode },
+    { id: "group", title: "Group", description: "Tooltips inside a Toolbar share one bubble that glides between buttons without the delay, for rows of icon buttons.", Demo: TooltipGroupDemo, code: tooltipGroupDemoCode },
   ],
   keyboard: [
     {
@@ -31,8 +31,8 @@ export default {
     "Popover"
   ],
   props: {
-    "label": "Accessible name of the control or region.",
+    "label": "Text in the bubble; also describes the trigger through aria-describedby.",
     "children": "Render function receiving ref, pointer/focus handlers and aria-describedby. Spread these onto the trigger.",
-    "className": "Additional classes on the outer element."
+    "className": "Placement of the wrapper around the trigger."
   },
 };

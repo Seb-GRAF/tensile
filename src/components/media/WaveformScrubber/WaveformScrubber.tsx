@@ -68,7 +68,7 @@ export function WaveformScrubber({
   }
 
   return (
-    <Card tone="ink" className={`px-8 py-4 ${className}`}>
+    <Card tone="ink" className={`tn:px-8 tn:py-4 ${className}`}>
       <div
         role="slider"
         tabIndex={0}
@@ -79,26 +79,26 @@ export function WaveformScrubber({
         aria-valuetext={formatTime(value)}
         {...dragHandlers(drag, release)}
         onKeyDown={onKeyDown}
-        className="relative flex h-11 cursor-pointer touch-none items-center rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
+        className="tn:relative tn:flex tn:h-11 tn:cursor-pointer tn:touch-none tn:items-center tn:rounded-control tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus"
       >
         <motion.div
           initial={false}
           animate={{ height: scrubbing ? 44 : 32 }}
           transition={shape}
           style={{ left, right }}
-          className="absolute"
+          className="tn:absolute"
         >
-          <div className="absolute inset-0 flex items-center gap-0.5">
+          <div className="tn:absolute tn:inset-0 tn:flex tn:items-center tn:gap-0.5">
             {peaks.map((peak, i) => (
-              <span key={i} style={{ height: `${peak * 100}%` }} className="flex-1 rounded-full bg-paper/25" />
+              <span key={i} style={{ height: `${peak * 100}%` }} className="tn:flex-1 tn:rounded-full tn:bg-ink/25" />
             ))}
           </div>
           <div
             style={{ clipPath: `inset(0 ${(1 - value / duration) * 100}% 0 0)` }}
-            className="absolute inset-0 flex items-center gap-0.5"
+            className="tn:absolute tn:inset-0 tn:flex tn:items-center tn:gap-0.5"
           >
             {peaks.map((peak, i) => (
-              <span key={i} style={{ height: `${peak * 100}%` }} className="flex-1 rounded-full bg-paper" />
+              <span key={i} style={{ height: `${peak * 100}%` }} className="tn:flex-1 tn:rounded-full tn:bg-ink" />
             ))}
           </div>
         </motion.div>

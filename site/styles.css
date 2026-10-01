@@ -1,22 +1,21 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
-@import "../src/theme.css";
+@import "../src/tailwind.css";
 @source "./";
-@source "../src";
+@source "../src/components/**/demos/**";
 
-html {
+html:not(.dark) {
   color-scheme: light;
-  scroll-padding-top: 6rem;
 }
 
 body {
-  background: var(--color-canvas);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
+  background: var(--tn-color-canvas);
+  color: var(--tn-color-ink);
+  font-family: var(--tn-font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--tn-color-accent);
+  color: var(--tn-color-on-accent);
 }

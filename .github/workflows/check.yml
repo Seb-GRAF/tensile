@@ -4,22 +4,33 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: check-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
+      - uses: astral-sh/setup-uv@v7
       - run: npm ci
-      - run: npx tsc --noEmit
-      - run: npm test
-      - run: npm run check:consumer
-      - run: npm run build:site
+      - run: uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
+      - run: npm run check
       - run: npm pack --dry-run --json --ignore-scripts
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: keyboard-failures
+          path: /tmp/keyboard
+          retention-days: 7

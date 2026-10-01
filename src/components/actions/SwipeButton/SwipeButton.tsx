@@ -54,16 +54,16 @@ function SwipeTrack({ confirmed, onConfirm, label, confirmedLabel, width }: Swip
     <motion.span
       style={style}
       initial={false}
-      animate={{ backgroundColor: confirmed ? "var(--color-accent)" : "var(--color-paper)" }}
+      animate={{ backgroundColor: confirmed ? "var(--tn-color-accent)" : "var(--tn-color-paper)" }}
       transition={soft}
-      className="absolute top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-control shadow-control"
+      className="tn:absolute tn:top-1/2 tn:left-0 tn:-translate-y-1/2 tn:overflow-hidden tn:rounded-control tn:shadow-control"
     >
       <AnimatePresence initial={false}>
         {!confirmed && (
           <motion.span
             key="label"
             {...swap}
-            className="absolute inset-y-0 right-0 left-10 grid place-items-center text-body font-medium whitespace-nowrap text-muted"
+            className="tn:absolute tn:inset-0 tn:grid tn:place-items-center tn:text-body tn:font-medium tn:whitespace-nowrap tn:text-muted"
           >
             {label}
           </motion.span>
@@ -72,31 +72,16 @@ function SwipeTrack({ confirmed, onConfirm, label, confirmedLabel, width }: Swip
       <motion.span
         {...dragHandlers(drag, release)}
         style={{ width: fill }}
-        className="absolute inset-y-1 left-1 cursor-grab touch-none overflow-hidden rounded-control"
+        className="tn:absolute tn:inset-y-1 tn:left-1 tn:cursor-grab tn:touch-none tn:overflow-hidden tn:rounded-control"
       >
-        <motion.span style={{ opacity: trail }} className="absolute inset-y-0 right-4.5 left-0 bg-accent" />
-        <AnimatePresence initial={false}>
-          {!confirmed && (
-            <motion.span
-              key="label"
-              aria-hidden
-              {...swap}
-              style={{ width: width - INSET - KNOB }}
-              className="absolute inset-y-0 left-9 grid place-items-center text-body font-medium whitespace-nowrap text-on-accent"
-            >
-              {label}
-            </motion.span>
-          )}
-        </AnimatePresence>
-        <span className="absolute inset-y-0 right-0 grid w-9 place-content-center place-items-center rounded-control bg-ink text-paper">
+        <motion.span style={{ opacity: trail }} className="tn:absolute tn:inset-y-0 tn:right-4.5 tn:left-0 tn:bg-accent" />
+        <span className="tn:absolute tn:inset-y-0 tn:right-0 tn:grid tn:w-9 tn:place-content-center tn:place-items-center tn:rounded-control tn:bg-ink tn:text-paper">
           <AnimatePresence initial={false}>
-            <motion.span key={confirmed ? "check" : "arrow"} {...swap} className="col-start-1 row-start-1">
+            <motion.span key={confirmed ? "check" : "arrow"} {...swap} className="tn:col-start-1 tn:row-start-1">
               {confirmed ? (
                 <Check size={18} />
               ) : (
-                <Icon size={16}>
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </Icon>
+                <Icon name="arrowRight" size={16} />
               )}
             </motion.span>
           </AnimatePresence>
@@ -107,7 +92,7 @@ function SwipeTrack({ confirmed, onConfirm, label, confirmedLabel, width }: Swip
           <motion.span
             key="confirmed"
             {...swap}
-            className="absolute inset-y-0 right-10 left-0 grid place-items-center text-body font-medium whitespace-nowrap text-on-accent"
+            className="tn:absolute tn:inset-0 tn:grid tn:place-items-center tn:text-body tn:font-medium tn:whitespace-nowrap tn:text-on-accent"
           >
             {confirmedLabel}
           </motion.span>
@@ -135,11 +120,11 @@ export function SwipeButton({
         onClick={(event) => {
           if (event.detail === 0 && !confirmed) onConfirm();
         }}
-        className={`relative h-11 w-full rounded-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+        className={`tn:relative tn:h-11 tn:w-full tn:rounded-control tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${className}`}
       >
         {size && <SwipeTrack width={size.width} confirmed={confirmed} onConfirm={onConfirm} label={label} confirmedLabel={confirmedLabel} />}
       </button>
-      <span role="status" className="sr-only">
+      <span role="status" className="tn:sr-only">
         {confirmed && confirmedLabel}
       </span>
     </>

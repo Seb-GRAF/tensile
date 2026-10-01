@@ -26,7 +26,7 @@ export function HoldButton({
 }: HoldButtonProps) {
   const { shape, snap, soft, swap } = useSprings();
   const progress = useMotionValue(0);
-  const clip = useTransform(progress, (p) => `inset(0 ${(1 - p) * 100}% 0 -100% round var(--radius-control))`);
+  const clip = useTransform(progress, (p) => `inset(0 ${(1 - p) * 100}% 0 -100% round var(--tn-radius-control))`);
 
   useEffect(() => {
     if (!done) progress.set(0);
@@ -65,22 +65,22 @@ export function HoldButton({
         initial={false}
         animate={{
           width: done ? 44 : "auto",
-          backgroundColor: done ? "var(--color-accent)" : "var(--color-ink)",
+          backgroundColor: done ? "var(--tn-color-accent)" : "var(--tn-color-ink)",
         }}
         transition={{ width: shape, backgroundColor: soft }}
-        className={`relative grid h-11 place-content-center place-items-center overflow-hidden rounded-control text-body font-medium text-paper shadow-control outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+        className={`tn:relative tn:grid tn:h-11 tn:place-content-center tn:place-items-center tn:overflow-hidden tn:rounded-control tn:text-body tn:font-medium tn:text-paper tn:shadow-control tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${className}`}
       >
         <AnimatePresence initial={false}>
           {!done && (
-            <motion.span key="idle" {...swap} className="col-start-1 row-start-1 whitespace-nowrap px-5">
+            <motion.span key="idle" {...swap} className="tn:col-start-1 tn:row-start-1 tn:whitespace-nowrap tn:px-5">
               {children}
             </motion.span>
           )}
         </AnimatePresence>
-        <motion.span style={{ clipPath: clip }} className="absolute inset-0 bg-accent" />
+        <motion.span style={{ clipPath: clip }} className="tn:absolute tn:inset-0 tn:bg-accent" />
         <AnimatePresence initial={false}>
           {done ? (
-            <motion.span key="done" {...swap} className="relative col-start-1 row-start-1 text-on-accent">
+            <motion.span key="done" {...swap} className="tn:relative tn:col-start-1 tn:row-start-1 tn:text-on-accent">
               <Check size={20} />
             </motion.span>
           ) : (
@@ -89,14 +89,14 @@ export function HoldButton({
               aria-hidden
               {...swap}
               style={{ clipPath: clip }}
-              className="absolute inset-0 grid place-content-center whitespace-nowrap text-on-accent"
+              className="tn:absolute tn:inset-0 tn:grid tn:place-content-center tn:whitespace-nowrap tn:text-on-accent"
             >
               {children}
             </motion.span>
           )}
         </AnimatePresence>
       </motion.button>
-      <span role="status" className="sr-only">
+      <span role="status" className="tn:sr-only">
         {done && doneLabel}
       </span>
     </>

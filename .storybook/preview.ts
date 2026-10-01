@@ -2,10 +2,12 @@ import type { Decorator, Preview } from "@storybook/react-vite";
 import { createElement } from "react";
 import { Controls, Description, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
 import { create } from "storybook/theming";
+import "../src/index.css";
 import "./preview.css";
 
 const withTheme: Decorator = (Story, { globals }) => {
   document.documentElement.dataset.theme = globals.theme;
+  document.documentElement.classList.toggle("dark", globals.theme === "dark");
   return createElement(Story, { key: globals.theme });
 };
 
@@ -21,6 +23,7 @@ const preview: Preview = {
         items: [
           { value: "default", title: "Default" },
           { value: "alternate", title: "Alternate" },
+          { value: "dark", title: "Dark" },
         ],
         dynamicTitle: true,
       },
@@ -36,7 +39,7 @@ const preview: Preview = {
         createElement(Title),
         createElement(Subtitle),
         createElement(Description),
-        createElement("p", {}, "Import this component from tensile and load tensile/styles.css once in your app. Values and callbacks are controlled by your application."),
+        createElement("p", {}, "Import this component from tensile and load tensile/styles.css once in your app. Pass a value and its callback to control it, or a default value to let it keep its own."),
         createElement(Primary),
         createElement("h2", {}, "Props"),
         createElement(Controls),

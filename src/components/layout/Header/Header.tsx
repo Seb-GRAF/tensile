@@ -3,10 +3,9 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useLiquid, useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { useLinkClick } from "../../navigation/Link/Link";
 import { SidebarNav } from "../../navigation/SidebarNav/SidebarNav";
-import { Underline } from "../../navigation/UnderlineTabs/UnderlineTabs";
+import { Underline } from "../../navigation/Tabs/UnderlineTabList";
 import { Drawer } from "../../overlays/Drawer/Drawer";
 
 export type HeaderProps = {
@@ -27,14 +26,14 @@ export type HeaderProps = {
 function Highlight({ left, right, links }: { left: number; right: number; links: HeaderProps["links"] }) {
   const [l, r] = useLiquid(left, -right);
   const width = useTransform(() => -r.get() - l.get());
-  const clip = useMotionTemplate`inset(0 calc(100% + ${r}px) 0 ${l}px round var(--radius-control))`;
+  const clip = useMotionTemplate`inset(0 calc(100% + ${r}px) 0 ${l}px round var(--tn-radius-control))`;
   return (
     <>
-      <motion.span aria-hidden style={{ left: l, width }} className="pointer-events-none absolute inset-y-0 rounded-control bg-ink" />
-      <motion.span aria-hidden style={{ clipPath: clip }} className="pointer-events-none absolute inset-0 flex text-sm font-medium text-paper">
+      <motion.span aria-hidden style={{ left: l, width }} className="tn:pointer-events-none tn:absolute tn:inset-y-0 tn:rounded-control tn:bg-ink" />
+      <motion.span aria-hidden style={{ clipPath: clip }} className="tn:pointer-events-none tn:absolute tn:inset-0 tn:flex tn:text-sm tn:font-medium tn:text-paper">
         {links.map((link) => (
-          <span key={link.href} className="flex min-w-0 items-center px-4">
-            <span className="truncate">{link.label}</span>
+          <span key={link.href} className="tn:flex tn:min-w-0 tn:items-center tn:px-4">
+            <span className="tn:truncate">{link.label}</span>
           </span>
         ))}
       </motion.span>
@@ -74,23 +73,20 @@ export function Header({
   }, [index, links, navSize]);
 
   return (
-    <header className={`sticky z-(--layer-sticky) ${floating ? "top-3 mx-3 mt-3" : "top-0 border-b border-line bg-paper surface"} ${className}`}>
-      <div className={`mx-auto flex max-w-page items-center ${floating ? "h-13 gap-2 rounded-control bg-paper py-1 pr-1 pl-4 shadow-float surface" : "h-16 gap-4 px-6"}`}>
+    <header className={`tn:sticky tn:z-(--tn-layer-sticky) ${floating ? "tn:top-3 tn:mx-3 tn:mt-3" : "tn:top-0 tn:border-b tn:border-line tn:bg-paper tn:surface"} ${className}`}>
+      <div className={`tn:mx-auto tn:flex tn:max-w-page tn:items-center ${floating ? "tn:h-13 tn:gap-2 tn:rounded-control tn:bg-paper tn:py-1 tn:pr-1 tn:pl-4 tn:shadow-float tn:surface" : "tn:h-16 tn:gap-4 tn:px-6"}`}>
         <IconButton
           label={menuLabel}
+          icon="menu"
           variant="ghost"
           aria-haspopup="dialog"
           aria-expanded={open}
           onClick={() => setOpen(true)}
-          className="-ml-3 md:hidden"
-        >
-          <Icon size={20}>
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </Icon>
-        </IconButton>
+          className="tn:-ml-3 tn:md:hidden"
+        />
         {brand}
-        <nav ref={measureNav} aria-label={navLabel} className="relative hidden min-w-0 md:block">
-          <ul role="list" className="flex">
+        <nav ref={measureNav} aria-label={navLabel} className="tn:relative tn:hidden tn:min-w-0 tn:md:block">
+          <ul role="list" className="tn:flex">
             {links.map((link, i) => {
               const props = {
                 ref: (el: HTMLAnchorElement | null) => {
@@ -100,21 +96,21 @@ export function Header({
                 "aria-current": i === index ? "page" as const : undefined,
                 onClick: linkClick,
               };
-              const label = <span className="truncate">{link.label}</span>;
+              const label = <span className="tn:truncate">{link.label}</span>;
               return (
-                <li key={link.href} className="min-w-0">
+                <li key={link.href} className="tn:min-w-0">
                   {floating ? (
-                    <a {...props} className="flex h-11 items-center rounded-control px-4 text-sm font-medium text-muted outline-offset-2 hover:bg-hover focus-visible:outline-2 focus-visible:outline-focus">
+                    <a {...props} className="tn:flex tn:h-11 tn:items-center tn:rounded-control tn:px-4 tn:text-sm tn:font-medium tn:text-muted tn:outline-offset-2 tn:hover:bg-hover tn:focus-visible:outline-2 tn:focus-visible:outline-focus">
                       {label}
                     </a>
                   ) : (
                     <motion.a
                       {...props}
                       initial={false}
-                      animate={{ color: i === index ? "var(--color-ink)" : "var(--color-muted)" }}
-                      whileHover={{ color: "var(--color-ink)" }}
+                      animate={{ color: i === index ? "var(--tn-color-ink)" : "var(--tn-color-muted)" }}
+                      whileHover={{ color: "var(--tn-color-ink)" }}
                       transition={soft}
-                      className="flex h-8 items-center rounded-control px-3 text-label font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
+                      className="tn:flex tn:h-8 tn:items-center tn:rounded-control tn:px-3 tn:text-label tn:font-medium tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus"
                     >
                       {label}
                     </motion.a>
@@ -125,7 +121,7 @@ export function Header({
           </ul>
           {edges && (floating ? <Highlight {...edges} links={links} /> : <Underline left={edges.left + 12} right={edges.right - 12} />)}
         </nav>
-        {actions && <div className="ml-auto flex items-center gap-2">{actions}</div>}
+        {actions && <div className="tn:ml-auto tn:flex tn:items-center tn:gap-2">{actions}</div>}
       </div>
       <Drawer open={open} onOpenChange={setOpen} title={menuLabel} side="left" closeLabel={closeLabel}>
         <SidebarNav
@@ -133,7 +129,7 @@ export function Header({
           value={value}
           onValueChange={() => setOpen(false)}
           label={navLabel}
-          className="-mx-2"
+          className="tn:-mx-2"
         />
       </Drawer>
     </header>

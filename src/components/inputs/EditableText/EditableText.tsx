@@ -1,14 +1,16 @@
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { useControllable } from "../../../controllable";
 import { useFocusSource } from "../../../focus";
 import { useSprings } from "../../../springs";
 import { useWidth } from "../../../useWidth";
 import { Button } from "../../actions/Button/Button";
 
 export type EditableTextProps = {
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   label: string;
   placeholder?: string;
   editLabel?: (label: string, value: string) => string;
@@ -16,7 +18,8 @@ export type EditableTextProps = {
 };
 
 export function EditableText({
-  value,
+  value: valueProp,
+  defaultValue = "",
   onValueChange,
   label,
   placeholder = "Empty",
@@ -24,6 +27,7 @@ export function EditableText({
   className = "",
 }: EditableTextProps) {
   const { shape, soft } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   useFocusSource();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(value);
@@ -43,7 +47,7 @@ export function EditableText({
 
   function finishEditing(save: boolean) {
     flushSync(() => {
-      if (save) onValueChange(draft);
+      if (save) setValue(draft);
       setEditing(false);
     });
     button.current!.focus();
@@ -54,10 +58,10 @@ export function EditableText({
       initial={false}
       animate={{ width: width === undefined ? undefined : width + 1 }}
       transition={shape}
-      className={`relative inline-block h-11 max-w-full rounded-control outline-offset-2 has-keyboard-focus:outline-2 has-keyboard-focus:outline-focus ${className}`}
+      className={`tn:relative tn:inline-block tn:h-11 tn:max-w-full tn:rounded-control tn:outline-offset-2 tn:has-keyboard-focus:outline-2 tn:has-keyboard-focus:outline-focus ${className}`}
     >
-      <div aria-hidden="true" className="invisible absolute inset-0 overflow-hidden">
-        <span key={text} ref={measure} className="inline-block whitespace-pre px-5 text-body font-medium">
+      <div aria-hidden="true" className="tn:invisible tn:absolute tn:inset-0 tn:overflow-hidden">
+        <span key={text} ref={measure} className="tn:inline-block tn:whitespace-pre tn:px-5 tn:text-body tn:font-medium">
           {text}
         </span>
       </div>
@@ -66,7 +70,7 @@ export function EditableText({
         initial={false}
         animate={{ opacity: editing ? 1 : 0 }}
         transition={soft}
-        className="pointer-events-none absolute inset-0 rounded-control bg-paper shadow-control"
+        className="tn:pointer-events-none tn:absolute tn:inset-0 tn:rounded-control tn:bg-paper tn:shadow-control"
       />
       <input
         ref={input}
@@ -81,16 +85,16 @@ export function EditableText({
             finishEditing(event.key !== "Escape");
           }
         }}
-        className={`absolute inset-0 w-full bg-transparent px-5 text-body font-medium text-ink outline-none placeholder:text-muted ${editing ? "" : "invisible"}`}
+        className={`tn:absolute tn:inset-0 tn:w-full tn:bg-transparent tn:px-5 tn:text-body tn:font-medium tn:text-ink tn:outline-none tn:placeholder:text-muted ${editing ? "" : "tn:invisible"}`}
       />
       <Button
         ref={button}
         variant="ghost"
         aria-label={editLabel(label, value)}
         onClick={startEditing}
-        className={`relative w-full ${editing ? "invisible" : ""}`}
+        className={`tn:relative tn:w-full ${editing ? "tn:invisible" : ""}`}
       >
-        <span className={`truncate ${value ? "" : "text-muted"}`}>{value || placeholder}</span>
+        <span className={`tn:truncate ${value ? "" : "tn:text-muted"}`}>{value || placeholder}</span>
       </Button>
     </motion.div>
   );

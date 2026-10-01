@@ -3,7 +3,6 @@ import { TooltipGroupDemo } from "./demos/TooltipGroupDemo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../../actions/Button/Button";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { Card } from "../../layout/Card/Card";
 import { Tooltip } from "./Tooltip";
 
@@ -13,7 +12,7 @@ const meta = {
   component: Tooltip,
   args: {
     label: "Bold",
-    children: (trigger) => <IconButton {...trigger} label="Bold" variant="secondary" size="sm"><Icon size={16}><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" /></Icon></IconButton>,
+    children: (trigger) => <IconButton {...trigger} label="Bold" variant="secondary" size="sm" icon="bold" />,
   },
 } satisfies Meta<typeof Tooltip>;
 

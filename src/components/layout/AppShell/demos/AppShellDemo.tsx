@@ -10,24 +10,8 @@ import {
 } from "tensile";
 
 const items = [
-  {
-    value: "home",
-    label: "Home",
-    icon: (
-      <Icon size={16}>
-        <path d="m3 10 9-7 9 7v10H3Z" />
-      </Icon>
-    ),
-  },
-  {
-    value: "projects",
-    label: "Projects",
-    icon: (
-      <Icon size={16}>
-        <rect x="4" y="5" width="16" height="15" rx="2" />
-      </Icon>
-    ),
-  },
+  { value: "home", label: "Home", icon: <Icon name="home" size={16} /> },
+  { value: "projects", label: "Projects", icon: <Icon name="briefcase" size={16} /> },
 ];
 
 export function AppShellDemo() {

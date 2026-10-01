@@ -17,10 +17,10 @@ export default {
     "The knobs cannot cross. FormData.getAll(name) returns the lower value followed by the upper value."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled lower and upper values.", Demo: RangeSliderDemo, code: rangeSliderDemoCode },
-    { id: "steps", title: "Steps", description: "Bounds, steps and value labels.", Demo: RangeSliderStepsDemo, code: rangeSliderStepsDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled range.", Demo: RangeSliderDisabledDemo, code: rangeSliderDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Named values in lower-upper order.", Demo: RangeSliderFormDemo, code: rangeSliderFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A price range in a Field: a press moves the nearer knob, and the knobs stop at each other.", Demo: RangeSliderDemo, code: rangeSliderDemoCode },
+    { id: "steps", title: "Steps", description: "step moves the knobs by five, formatValue reads them as prices, and the knob labels say which end is which.", Demo: RangeSliderStepsDemo, code: rangeSliderStepsDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed range that shows its values and takes no input.", Demo: RangeSliderDisabledDemo, code: rangeSliderDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A range in a form: name submits two entries, lower first, and Reset restores the starting range.", Demo: RangeSliderFormDemo, code: rangeSliderFormDemoCode },
   ],
   keyboard: [
     {
@@ -37,8 +37,9 @@ export default {
     "Field"
   ],
   props: {
-    "value": "Ordered pair: lower value, then upper value.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "Ordered pair: lower value, then upper value. Leave it out to let the slider track it, starting from defaultValue.",
+    "defaultValue": "The first pair when the slider tracks it itself. Defaults to [min, max].",
+    "onValueChange": "Called with the new pair while a knob is dragged, and on a track press or key press.",
     "min": "Minimum permitted value.",
     "max": "Maximum permitted value.",
     "step": "Increment used when changing the value.",
@@ -48,7 +49,7 @@ export default {
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
     "required": "Expose the required state. See the form example for validation.",
-    "disabled": "Disable interaction with this control.",
-    "className": "Additional classes on the outer element."
+    "disabled": "Dims the slider and stops drags and keys. A disabled Field or Fieldset does the same.",
+    "className": "Classes on the 44 px track area, for placement. The track fills its container's width."
   },
 };

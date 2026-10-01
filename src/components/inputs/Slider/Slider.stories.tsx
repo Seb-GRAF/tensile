@@ -19,7 +19,7 @@ function StatefulSlider(props: SliderProps) {
       value={value}
       onValueChange={(value) => {
         setValue(value);
-        props.onValueChange(value);
+        props.onValueChange?.(value);
       }}
     />
   );
@@ -65,7 +65,7 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
     return (
       <div className="w-60 max-w-full">
-        <StatefulSlider {...args} onValueChange={(value) => { args.onValueChange(value); updateArgs({ value }); }} />
+        <StatefulSlider {...args} onValueChange={(value) => { args.onValueChange?.(value); updateArgs({ value }); }} />
       </div>
     );
   },

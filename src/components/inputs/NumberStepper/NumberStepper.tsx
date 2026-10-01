@@ -1,15 +1,15 @@
 import { animate, motion } from "motion/react";
+import { useControllable } from "../../../controllable";
 import { useStretch } from "../../../drag";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { NumberTicker } from "../../data-display/NumberTicker/NumberTicker";
 import { useField } from "../Field/Field";
 
 export type NumberStepperProps = {
-  value: number;
-  onValueChange: (value: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
@@ -29,7 +29,8 @@ const HEIGHT = 44;
 const KICK = 480;
 
 export function NumberStepper({
-  value,
+  value: valueProp,
+  defaultValue = 0,
   onValueChange,
   min = 0,
   max = 10,
@@ -45,13 +46,14 @@ export function NumberStepper({
   className = "",
 }: NumberStepperProps) {
   const { snap, scale } = useSprings();
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   disabled = field?.disabled || disabled;
   const [stretch, style] = useStretch(WIDTH, HEIGHT);
 
   function stepTo(target: number) {
     const next = Math.min(max, Math.max(min, target));
-    if (next !== value) onValueChange(next);
+    if (next !== value) setValue(next);
     else if (target !== value && scale > 0) animate(stretch, 0, { ...snap, velocity: (target > value ? KICK : -KICK) / scale });
   }
 
@@ -64,22 +66,21 @@ export function NumberStepper({
   }
 
   return (
-    <div role="group" aria-label={field?.labelId ? undefined : label} onKeyDown={disabled ? undefined : onKeyDown} className={`relative h-11 w-32 ${disabled ? "opacity-40" : ""} ${className}`}>
+    <div role="group" aria-label={field?.labelId ? undefined : label} onKeyDown={disabled ? undefined : onKeyDown} className={`tn:relative tn:h-11 tn:w-32 ${disabled ? "tn:opacity-40" : ""} ${className}`}>
       {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
       <motion.div
         style={style}
-        className="absolute top-1/2 left-0 flex -translate-y-1/2 items-center justify-between rounded-control bg-paper px-1.5 text-body font-medium text-ink shadow-control outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus"
+        className="tn:absolute tn:top-1/2 tn:left-0 tn:flex tn:-translate-y-1/2 tn:items-center tn:justify-between tn:rounded-control tn:bg-paper tn:px-1.5 tn:text-body tn:font-medium tn:text-ink tn:shadow-control tn:outline-offset-2 tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus"
       >
         <IconButton
           variant="ghost"
           size="sm"
           tabIndex={-1}
           label={decreaseLabel}
+          icon="minus"
           disabled={disabled}
           onClick={() => stepTo(value - step)}
-        >
-          <Icon size={16}>{icons.minus}</Icon>
-        </IconButton>
+        />
         <span
           id={field?.id ?? id}
           role="spinbutton"
@@ -94,7 +95,7 @@ export function NumberStepper({
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuetext={formatValue(value)}
-          className="outline-none"
+          className="tn:outline-none"
         >
           <NumberTicker value={value} format={formatValue} />
         </span>
@@ -103,11 +104,10 @@ export function NumberStepper({
           size="sm"
           tabIndex={-1}
           label={increaseLabel}
+          icon="plus"
           disabled={disabled}
           onClick={() => stepTo(value + step)}
-        >
-          <Icon size={16}>{icons.plus}</Icon>
-        </IconButton>
+        />
       </motion.div>
     </div>
   );

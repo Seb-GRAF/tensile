@@ -1,9 +1,11 @@
+import { useControllable } from "../../../controllable";
 import { SliderTrack } from "../../../SliderTrack";
 import { useField } from "../Field/Field";
 
 export type RangeSliderProps = {
-  value: [number, number];
-  onValueChange: (value: [number, number]) => void;
+  value?: [number, number];
+  defaultValue?: [number, number];
+  onValueChange?: (value: [number, number]) => void;
   min?: number;
   max?: number;
   step?: number;
@@ -18,10 +20,11 @@ export type RangeSliderProps = {
 };
 
 export function RangeSlider({
-  value,
+  value: valueProp,
   onValueChange,
   min = 0,
   max = 100,
+  defaultValue = [min, max],
   step = 1,
   formatValue = (value: number) => value.toLocaleString("en-US"),
   lowerLabel = "Minimum",
@@ -32,13 +35,14 @@ export function RangeSlider({
   disabled = false,
   className = "",
 }: RangeSliderProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const field = useField();
   const isDisabled = field?.disabled || disabled;
   return (
     <>
       <SliderTrack
         value={value}
-        onValueChange={(i, next) => onValueChange(i === 0 ? [next, value[1]] : [value[0], next])}
+        onValueChange={(i, next) => setValue(i === 0 ? [next, value[1]] : [value[0], next])}
         min={min}
         max={max}
         step={step}

@@ -12,8 +12,8 @@ export default {
     "Keep messages short enough for the available width."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Success message.", Demo: ToastDemo, code: toastDemoCode },
-    { id: "loading", title: "Loading", description: "Loading message.", Demo: ToastLoadingDemo, code: toastLoadingDemoCode },
+    { id: "usage", title: "Basic usage", description: "A single success pill confirming that something finished, such as a save.", Demo: ToastDemo, code: toastDemoCode },
+    { id: "loading", title: "Loading", description: "The loading pill with a spinner; set status to \"success\" with a new message when the work is done, and the pill blur-swaps and resizes.", Demo: ToastLoadingDemo, code: toastLoadingDemoCode },
   ],
   keyboard: [],
   related: [
@@ -23,6 +23,6 @@ export default {
   props: {
     "status": "Loading shows Spinner; success shows the completion icon.",
     "children": "Short message announced by the status region.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the pill, for placement; its width follows the message."
   },
 };

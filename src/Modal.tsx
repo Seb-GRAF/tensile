@@ -52,7 +52,7 @@ export function Modal({ open, onClose, children, className = "", ...props }: Mod
         event.preventDefault();
         onClose();
       }}
-      className={`fixed inset-0 m-0 size-full max-h-none max-w-none overflow-visible border-0 bg-transparent p-0 backdrop:bg-transparent [&:not([open])]:pointer-events-none [&:not([open])]:z-(--layer-overlay) [&:not([open])]:block ${className}`}
+      className={`tn:fixed tn:inset-0 tn:m-0 tn:size-full tn:max-h-none tn:max-w-none tn:overflow-visible tn:border-0 tn:bg-transparent tn:p-0 tn:backdrop:bg-transparent tn:[&:not([open])]:pointer-events-none tn:[&:not([open])]:z-(--tn-layer-overlay) tn:[&:not([open])]:block ${className}`}
       {...props}
     >
       <AnimatePresence onExitComplete={() => setPresent(false)}>{open && children}</AnimatePresence>

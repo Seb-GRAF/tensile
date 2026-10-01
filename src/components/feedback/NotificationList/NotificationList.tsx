@@ -1,10 +1,8 @@
 import { AnimatePresence, motion, useIsPresent } from "motion/react";
 import { useRef } from "react";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
 import { Avatar } from "../../data-display/Avatar/Avatar";
-import { Icon } from "../../data-display/Icon/Icon";
 import { ListContent } from "../../data-display/List/List";
 import { EmptyState } from "../EmptyState/EmptyState";
 
@@ -42,9 +40,9 @@ function NotificationRow({ notification, onRead, onDismiss, readLabel, dismissLa
       initial={{ ...swap.initial, height: 0 }}
       animate={{ ...swap.animate, height: "auto", transition: { ...swap.animate.transition, height: shape } }}
       exit={{ ...swap.exit, height: 0, transition: { ...swap.exit.transition, height: shape } }}
-      className="[clip-path:inset(0_-4px)]"
+      className="tn:[clip-path:inset(0_-4px)]"
     >
-      <div className="flex items-center gap-3 border-line py-2.5 [li:not([inert])~li>&]:border-t">
+      <div className="tn:flex tn:items-center tn:gap-3 tn:border-line tn:py-2.5 tn:[li:not([inert])~li>&]:border-t">
         <ListContent
           item={{
             id: notification.id,
@@ -52,42 +50,42 @@ function NotificationRow({ notification, onRead, onDismiss, readLabel, dismissLa
             description: (
               <>
                 {notification.description && <div>{notification.description}</div>}
-                <div className="mt-0.5 text-caption">{notification.time}</div>
+                <div className="tn:mt-0.5 tn:text-caption">{notification.time}</div>
               </>
             ),
             leading: (
-              <div className="flex items-center gap-2">
+              <div className="tn:flex tn:items-center tn:gap-3">
                 <motion.span
                   initial={false}
                   animate={{ opacity: notification.read ? 0 : 1 }}
                   transition={soft}
-                  className="size-2 rounded-full bg-ink"
+                  className="tn:size-2 tn:rounded-full tn:bg-ink"
                 />
-                <div className="size-8">{notification.avatar && <Avatar {...notification.avatar} />}</div>
+                <div className="tn:size-8">{notification.avatar && <Avatar {...notification.avatar} />}</div>
               </div>
             ),
             trailing: (
-              <div className="flex gap-1">
+              <div className="tn:flex tn:gap-1">
                 <IconButton
                   variant="ghost"
                   size="sm"
+                  iconSize={14}
                   label={readLabel(notification.title)}
+                  icon="check"
                   disabled={notification.read}
                   onClick={(event) => {
                     (event.currentTarget.nextElementSibling as HTMLButtonElement).focus();
                     onRead(notification.id);
                   }}
-                >
-                  <Icon size={14}><path d="m5 12 4 4 10-10" /></Icon>
-                </IconButton>
+                />
                 <IconButton
                   variant="ghost"
                   size="sm"
+                  iconSize={14}
                   label={dismissLabel(notification.title)}
+                  icon="close"
                   onClick={(event) => onDismiss(event, notification.id)}
-                >
-                  <Icon size={14}>{icons.close}</Icon>
-                </IconButton>
+                />
               </div>
             ),
           }}
@@ -120,8 +118,8 @@ export function NotificationList({
   }
 
   return (
-    <section ref={region} aria-label={label} tabIndex={-1} className={`grid w-full outline-none ${className}`}>
-      <ul role="list" className="-my-2.5">
+    <section ref={region} aria-label={label} tabIndex={-1} className={`tn:grid tn:w-full tn:outline-none ${className}`}>
+      <ul role="list" className="tn:-my-2.5">
         <AnimatePresence initial={false}>
           {notifications.map((notification) => (
             <NotificationRow key={notification.id} notification={notification} onRead={onRead} onDismiss={dismiss} readLabel={readLabel} dismissLabel={dismissLabel} />
@@ -135,7 +133,7 @@ export function NotificationList({
             initial={{ ...swap.initial, height: 0 }}
             animate={{ ...swap.animate, height: "auto", transition: { ...swap.animate.transition, height: shape } }}
             exit={{ ...swap.exit, height: 0, transition: { ...swap.exit.transition, height: shape } }}
-            className="overflow-hidden"
+            className="tn:overflow-hidden"
           >
             <EmptyState title={emptyText} />
           </motion.div>

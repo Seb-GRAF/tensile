@@ -32,14 +32,14 @@ export const Default: Story = {
   },
 };
 
-/** Press Tab to focus the link: on ink, the focus ring is paper and the separator ink-3. */
+/** Press Tab to focus the link: the ink card applies the dark tokens, so the ring and the separator follow them. */
 export const Ink: Story = {
   args: {
     tone: "ink",
     children: (
       <>
         <h2 className="text-body font-semibold">Pro plan</h2>
-        <p className="mt-1 text-label text-paper/55">Renews on October 12 for $12 a month, billed to the card ending in 4242.</p>
+        <p className="mt-1 text-label text-muted">Renews on October 12 for $12 a month, billed to the card ending in 4242.</p>
         <Separator className="my-4" />
         <p className="text-label">
           <Link href="/settings/billing">Change plan</Link>

@@ -17,10 +17,10 @@ export default {
     "Opening the picker does not commit a time; changing a wheel does."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Nullable time in a popover.", Demo: TimePickerDemo, code: timePickerDemoCode },
-    { id: "steps", title: "Steps", description: "Custom minute step.", Demo: TimePickerStepsDemo, code: timePickerStepsDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled time picker.", Demo: TimePickerDisabledDemo, code: timePickerDisabledDemoCode },
-    { id: "form", title: "In a form", description: "Field composition and named HH:MM value.", Demo: TimePickerFormDemo, code: timePickerFormDemoCode },
+    { id: "usage", title: "Basic usage", description: "A time field that starts empty and opens into wheels; the trigger shows the time once one is picked.", Demo: TimePickerDemo, code: timePickerDemoCode },
+    { id: "steps", title: "Steps", description: "minuteStep of 15 leaves four rows on the minutes wheel, for slots such as reminders.", Demo: TimePickerStepsDemo, code: timePickerStepsDemoCode },
+    { id: "disabled", title: "Disabled", description: "A dimmed trigger that can't open.", Demo: TimePickerDisabledDemo, code: timePickerDisabledDemoCode },
+    { id: "form", title: "In a form", description: "A time in a form: name submits it as HH:MM, and Reset clears it.", Demo: TimePickerFormDemo, code: timePickerFormDemoCode },
   ],
   keyboard: [
     {
@@ -45,10 +45,11 @@ export default {
     "Field"
   ],
   props: {
-    "value": "Hours 0–23, or null while no time is chosen.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "Hours 0–23, or null while no time is chosen. Leave it out to let the picker track it, starting from defaultValue.",
+    "defaultValue": "The first time when the picker tracks it itself. Defaults to null, no time.",
+    "onValueChange": "Called with the new { hours, minutes } each time a wheel changes while the panel is open.",
     "placeholder": "Hint shown while the value is empty.",
-    "label": "Accessible name of the control or region.",
+    "label": "Accessible name of the open panel, and of the trigger when no Field labels it.",
     "formatTime": "Format the selected hours and minutes on the closed trigger.",
     "minuteStep": "Minutes between two rows of the minutes wheel.",
     "formatNumber": "Format the numbers shown in the wheels.",
@@ -59,8 +60,8 @@ export default {
     "periodLabel": "Accessible name of the AM/PM wheel.",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the trigger and keeps the panel closed. A disabled Field or Fieldset does the same.",
     "required": "Expose the required state. See the form example for validation.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the wrapper, for width and placement. The trigger fills it, and the panel opens at its width."
   },
 };

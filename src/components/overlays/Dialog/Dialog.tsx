@@ -1,16 +1,16 @@
 import { motion, useIsPresent } from "motion/react";
 import { useId, useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { Modal } from "../../../Modal";
-import { icons } from "../../../icons";
 import { useSprings } from "../../../springs";
 import { useSize } from "../../../useSize";
 import { Button } from "../../actions/Button/Button";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 
 export type DialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   children: React.ReactNode;
   trigger?: React.ReactNode;
   title?: string;
@@ -21,7 +21,8 @@ export type DialogProps = {
 };
 
 export function Dialog({
-  open,
+  open: openProp,
+  defaultOpen = false,
   onOpenChange,
   children,
   trigger = "Open dialog",
@@ -32,6 +33,7 @@ export function Dialog({
   className = "",
 }: DialogProps) {
   const { soft } = useSprings();
+  const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
   const button = useRef<HTMLButtonElement>(null);
   const titleId = useId();
   const [present, setPresent] = useState(open);
@@ -47,22 +49,22 @@ export function Dialog({
           aria-expanded={open}
           onClick={(event) => {
             event.currentTarget.focus();
-            onOpenChange(true);
+            setOpen(true);
           }}
-          className={`${present ? "opacity-0" : ""} ${className}`}
+          className={`${present ? "tn:opacity-0" : ""} ${className}`}
         >
           {trigger}
         </Button>
       )}
-      <Modal open={open} onClose={() => onOpenChange(false)} role={role} aria-labelledby={titleId} aria-describedby={describedBy}>
+      <Modal open={open} onClose={() => setOpen(false)} role={role} aria-labelledby={titleId} aria-describedby={describedBy}>
         <motion.div
           key="backdrop"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={soft}
-          onClick={role === "dialog" ? () => onOpenChange(false) : undefined}
-          className="absolute inset-0 bg-ink/40"
+          onClick={role === "dialog" ? () => setOpen(false) : undefined}
+          className="tn:absolute tn:inset-0 tn:bg-scrim/40"
         />
         <DialogPanel
           key="panel"
@@ -72,7 +74,7 @@ export function Dialog({
           closeLabel={closeLabel}
           role={role}
           trigger={trigger}
-          onClose={() => onOpenChange(false)}
+          onClose={() => setOpen(false)}
           onClosed={() => setPresent(false)}
         >
           {children}
@@ -114,43 +116,43 @@ function DialogPanel({
   const [origin] = useState(() => {
     if (button.current) {
       const { left, top, width, height } = button.current.getBoundingClientRect();
-      return { left, top, width, height, borderRadius: "var(--radius-control)" };
+      return { left, top, width, height, borderRadius: "var(--tn-radius-control)" };
     }
-    return { ...centered(0, 0), borderRadius: "var(--radius-dialog)", opacity: 0 };
+    return { borderRadius: "var(--tn-radius-dialog)", opacity: 0, scale: 0.96 };
   });
+  const [placed, setPlaced] = useState(button.current !== null);
 
   return (
     <motion.div
       initial={origin}
-      animate={size ? { ...centered(size.width, size.height), borderRadius: "var(--radius-dialog)", opacity: 1 } : origin}
+      animate={size ? { ...centered(size.width, size.height), borderRadius: "var(--tn-radius-dialog)", opacity: 1, scale: 1 } : origin}
       exit={origin}
-      transition={{ default: shape, opacity: soft }}
+      transition={placed ? { default: shape, opacity: soft } : { default: { duration: 0 }, opacity: soft, scale: shape }}
       onAnimationComplete={() => {
         if (!present) onClosed();
+        else setPlaced(true);
       }}
       tabIndex={-1}
       data-autofocus={role === "dialog" ? "" : undefined}
-      className="absolute overflow-hidden bg-paper text-ink shadow-float surface outline-none"
+      className="tn:absolute tn:overflow-hidden tn:bg-paper tn:text-ink tn:shadow-float tn:surface tn:outline-none"
     >
       {trigger !== null && (
-        <motion.div aria-hidden="true" initial={swap.animate} animate={swap.exit} exit={swap.animate} className="absolute inset-0 grid place-items-center whitespace-nowrap text-body font-medium">
+        <motion.div aria-hidden="true" initial={swap.animate} animate={swap.exit} exit={swap.animate} className="tn:absolute tn:inset-0 tn:grid tn:place-items-center tn:whitespace-nowrap tn:text-body tn:font-medium">
           {trigger}
         </motion.div>
       )}
       <motion.div
         ref={measure}
         {...swap}
-        className="absolute top-1/2 left-1/2 flex max-h-[calc(100dvh-2rem)] w-[min(420px,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 flex-col"
+        className="tn:absolute tn:top-1/2 tn:left-1/2 tn:flex tn:max-h-[calc(100dvh-2rem)] tn:w-[min(420px,calc(100vw-2rem))] tn:-translate-x-1/2 tn:-translate-y-1/2 tn:flex-col"
       >
-        <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-5">
-          <h2 id={titleId} className="text-body font-semibold">{title}</h2>
+        <div className="tn:flex tn:shrink-0 tn:items-center tn:justify-between tn:gap-3 tn:px-5 tn:pt-5">
+          <h2 id={titleId} className="tn:text-body tn:font-semibold">{title}</h2>
           {role === "dialog" && (
-            <IconButton label={closeLabel} variant="ghost" size="sm" onClick={onClose} className="-my-1.5 -mr-2 shrink-0 text-muted">
-              <Icon size={16}>{icons.close}</Icon>
-            </IconButton>
+            <IconButton label={closeLabel} variant="ghost" size="sm" onClick={onClose} className="tn:-my-1.5 tn:-mr-2 tn:shrink-0 tn:text-muted" icon="close" />
           )}
         </div>
-        <div className="scroll-fade min-h-0 overflow-y-auto px-5 pt-1 pb-5">{children}</div>
+        <div className="tn:scroll-fade tn:min-h-0 tn:overflow-y-auto tn:px-5 tn:pt-1 tn:pb-5">{children}</div>
       </motion.div>
     </motion.div>
   );

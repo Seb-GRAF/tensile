@@ -9,7 +9,7 @@ export function Check({ size }: { size: number }) {
       viewBox="0 0 24 24"
       width={size}
       height={size}
-      className="block fill-none stroke-current"
+      className="tn:block tn:fill-none tn:stroke-current"
       strokeWidth={36 / size}
       strokeLinecap="round"
       strokeLinejoin="round"

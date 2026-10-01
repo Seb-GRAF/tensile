@@ -9,10 +9,7 @@ export function PopoverIconTriggerDemo() {
       open={open}
       onOpenChange={setOpen}
       trigger={
-        <Icon>
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 11v6m0-10v1" />
-        </Icon>
+        <Icon name="info" />
       }
       label="Project details"
       panelLabel="Project details"

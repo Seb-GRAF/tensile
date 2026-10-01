@@ -28,7 +28,7 @@ export const Default: Story = {
       <Toggle
         {...args}
         onCheckedChange={(checked) => {
-          args.onCheckedChange(checked);
+          args.onCheckedChange?.(checked);
           updateArgs({ checked });
         }}
       />

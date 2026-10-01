@@ -17,10 +17,10 @@ export default {
     "Six digits occupy 272px. These demos allow local horizontal scrolling in narrower containers."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled one-time code with paste support.", Demo: OTPInputDemo, code: oTPInputDemoCode },
-    { id: "length", title: "Code length", description: "Custom code length.", Demo: OTPInputLengthDemo, code: oTPInputLengthDemoCode },
-    { id: "form", title: "In a form", description: "Field validation and named form value.", Demo: OTPInputFormDemo, code: oTPInputFormDemoCode },
-    { id: "disabled", title: "Disabled", description: "Disabled code entry.", Demo: OTPInputDisabledDemo, code: oTPInputDisabledDemoCode },
+    { id: "usage", title: "Basic usage", description: "A six-digit code with the value in the parent's state; pasting a code fills every slot. Use it for codes sent by text or email.", Demo: OTPInputDemo, code: oTPInputDemoCode },
+    { id: "length", title: "Code length", description: "`length={4}` shows four slots. Set it to match the codes your service sends.", Demo: OTPInputLengthDemo, code: oTPInputLengthDemoCode },
+    { id: "form", title: "In a form", description: "Inside a form, `name` submits the code as one value, and the Field shows an error until all digits are in.", Demo: OTPInputFormDemo, code: oTPInputFormDemoCode },
+    { id: "disabled", title: "Disabled", description: "The slots are dimmed and can't be focused. Use it while a new code is on its way.", Demo: OTPInputDisabledDemo, code: oTPInputDisabledDemoCode },
   ],
   keyboard: [
     {
@@ -41,15 +41,16 @@ export default {
     "PasswordInput"
   ],
   props: {
-    "value": "Current value, controlled by the parent.",
-    "onValueChange": "Called with the next value when the user makes a change.",
+    "value": "The digits entered so far. Pass it to control OTPInput; leave it out and OTPInput keeps its own code.",
+    "defaultValue": "The code OTPInput starts with when it keeps its own code.",
+    "onValueChange": "Called with the whole code each time a digit is typed, deleted or pasted.",
     "length": "Number of digit cells.",
-    "label": "Accessible name of the control or region.",
-    "cellLabel": "Accessible name for each one-based cell position and total length.",
+    "label": "Names the group of slots for screen readers when no Field labels it.",
+    "cellLabel": "Names each slot, given its position from 1 and the code length, e.g. \"Digit 2 of 6\".",
     "id": "Control ID; Field supplies an ID when it wraps this control.",
     "name": "Name used for the submitted form value.",
-    "disabled": "Disable interaction with this control.",
+    "disabled": "Dims the slots and disables their inputs; the hidden input is left out of the form. A disabled Field or Fieldset does the same.",
     "required": "Expose the required state. See the form example for validation.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes for the outer box, to place it in a layout."
   },
 };

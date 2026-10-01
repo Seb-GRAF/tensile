@@ -22,7 +22,7 @@ export const Default: Story = {
       <MusicPlayer
         {...args}
         onExpandedChange={(expanded) => {
-          args.onExpandedChange(expanded);
+          args.onExpandedChange?.(expanded);
           updateArgs({ expanded });
         }}
       />

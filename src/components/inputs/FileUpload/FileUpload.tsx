@@ -40,16 +40,16 @@ function UploadShape({
   const [over, setOver] = useState(false);
   const [name, setName] = useState("");
   const [left, right] = useLiquid(INSET, INSET + (1 - progress) * (width - 2 * INSET - FILL_MIN));
-  const clipPath = useMotionTemplate`inset(0px ${right}px 0px ${left}px round var(--radius-control))`;
+  const clipPath = useMotionTemplate`inset(0px ${right}px 0px ${left}px round var(--tn-radius-control))`;
   const shapes = {
-    idle: { width, height: 128, borderRadius: "var(--radius-card)", backgroundColor: "var(--color-paper)" },
-    over: { width: width + 16, height: 144, borderRadius: "var(--radius-card)", backgroundColor: "var(--color-accent)" },
-    uploading: { width, height: 44, borderRadius: "var(--radius-control)", backgroundColor: "var(--color-paper)" },
-    done: { width, height: 44, borderRadius: "var(--radius-control)", backgroundColor: "var(--color-accent)" },
+    idle: { width, height: 128, borderRadius: "var(--tn-radius-card)", backgroundColor: "var(--tn-color-paper)" },
+    over: { width: width + 16, height: 144, borderRadius: "var(--tn-radius-card)", backgroundColor: "var(--tn-color-accent)" },
+    uploading: { width, height: 44, borderRadius: "var(--tn-radius-control)", backgroundColor: "var(--tn-color-paper)" },
+    done: { width, height: 44, borderRadius: "var(--tn-radius-control)", backgroundColor: "var(--tn-color-accent)" },
   };
   const content = (
     <>
-      <span className="min-w-0 flex-1 truncate">{uploadingLabel(name)}</span>
+      <span className="tn:min-w-0 tn:flex-1 tn:truncate">{uploadingLabel(name)}</span>
       <NumberTicker value={progress} format={formatProgress} />
     </>
   );
@@ -72,11 +72,11 @@ function UploadShape({
         initial={false}
         animate={shapes[over ? "over" : status]}
         transition={{ width: shape, height: shape, borderRadius: shape, backgroundColor: soft }}
-        className={`relative grid place-content-center place-items-center overflow-hidden shadow-control outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-focus ${status === "idle" && !disabled ? "press" : ""}`}
+        className={`tn:relative tn:grid tn:place-content-center tn:place-items-center tn:overflow-hidden tn:shadow-control tn:outline-offset-2 tn:has-focus-visible:outline-2 tn:has-focus-visible:outline-focus ${status === "idle" && !disabled ? "tn:press" : ""}`}
       >
         <AnimatePresence initial={false}>
           {status !== "idle" && (
-            <motion.span key="fill" {...swap} style={{ left, right }} className="absolute inset-y-0 my-auto h-9 rounded-control bg-accent" />
+            <motion.span key="fill" {...swap} style={{ left, right }} className="tn:absolute tn:inset-y-0 tn:my-auto tn:h-9 tn:rounded-control tn:bg-accent" />
           )}
         </AnimatePresence>
         <AnimatePresence initial={false}>
@@ -96,13 +96,10 @@ function UploadShape({
                 setOver(false);
                 if (!disabled) take(event.dataTransfer.files);
               }}
-              className="absolute inset-0 grid place-content-center place-items-center outline-none enabled:hover:bg-hover"
+              className="tn:absolute tn:inset-0 tn:grid tn:place-content-center tn:place-items-center tn:outline-none tn:enabled:hover:bg-hover"
             >
-              <span style={{ width }} className={`flex flex-col items-center gap-2.5 px-6 text-center text-body font-medium ${over ? "text-on-accent" : "text-ink"}`}>
-                <Icon size={24}>
-                  <path d="M12 15V4m-5 5 5-5 5 5" />
-                  <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
-                </Icon>
+              <span style={{ width }} className={`tn:flex tn:flex-col tn:items-center tn:gap-2.5 tn:px-6 tn:text-center tn:text-body tn:font-medium ${over ? "tn:text-on-accent" : "tn:text-ink"}`}>
+                <Icon name="upload" size={24} />
                 {label}
               </span>
             </UploadTrigger>
@@ -118,16 +115,16 @@ function UploadShape({
               aria-valuenow={Math.round(progress * 100)}
               aria-valuetext={formatProgress(progress)}
               style={{ width }}
-              className="relative col-start-1 row-start-1 h-11 text-sm font-medium"
+              className="tn:relative tn:col-start-1 tn:row-start-1 tn:h-11 tn:text-sm tn:font-medium"
             >
-              <span className="absolute inset-0 flex items-center gap-3 pr-4 pl-13 text-ink">{content}</span>
-              <motion.span aria-hidden style={{ clipPath }} className="absolute inset-0 flex items-center gap-3 pr-4 pl-13 text-on-accent">{content}</motion.span>
+              <span className="tn:absolute tn:inset-0 tn:flex tn:items-center tn:gap-3 tn:pr-4 tn:pl-13 tn:text-ink">{content}</span>
+              <motion.span aria-hidden style={{ clipPath }} className="tn:absolute tn:inset-0 tn:flex tn:items-center tn:gap-3 tn:pr-4 tn:pl-13 tn:text-on-accent">{content}</motion.span>
             </motion.div>
           )}
           {status === "done" && (
-            <motion.span key="done" {...swap} style={{ width }} className="relative col-start-1 row-start-1 flex h-11 items-center gap-5 pr-4 pl-3 text-sm font-medium text-on-accent">
+            <motion.span key="done" {...swap} style={{ width }} className="tn:relative tn:col-start-1 tn:row-start-1 tn:flex tn:h-11 tn:items-center tn:gap-5 tn:pr-4 tn:pl-3 tn:text-sm tn:font-medium tn:text-on-accent">
               <Check size={20} />
-              <span className="min-w-0 flex-1 truncate">{name}</span>
+              <span className="tn:min-w-0 tn:flex-1 tn:truncate">{name}</span>
             </motion.span>
           )}
         </AnimatePresence>
@@ -144,7 +141,7 @@ function UploadShape({
           event.target.value = "";
         }}
       />
-      <span role="status" className="sr-only">{status === "done" && doneLabel}</span>
+      <span role="status" className="tn:sr-only">{status === "done" && doneLabel}</span>
     </>
   );
 }
@@ -164,7 +161,7 @@ export function FileUpload({
 }: FileUploadProps) {
   const [size, measure] = useSize();
   return (
-    <div ref={measure} className={`grid h-32 w-full place-content-center place-items-center ${disabled ? "opacity-40" : ""} ${className}`}>
+    <div ref={measure} className={`tn:grid tn:h-32 tn:w-full tn:place-content-center tn:place-items-center ${disabled ? "tn:opacity-40" : ""} ${className}`}>
       {size && <UploadShape width={size.width} status={status} progress={progress} onFiles={onFiles} label={label} uploadingLabel={uploadingLabel} formatProgress={formatProgress} doneLabel={doneLabel} accept={accept} multiple={multiple} disabled={disabled} />}
     </div>
   );

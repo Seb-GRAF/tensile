@@ -12,8 +12,8 @@ export default {
     "Time is caller-provided content; the component does not calculate relative dates."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Read and dismiss local notifications.", Demo: NotificationListDemo, code: notificationListDemoCode },
-    { id: "empty", title: "Empty state", description: "Empty list state.", Demo: NotificationListEmptyDemo, code: notificationListEmptyDemoCode },
+    { id: "usage", title: "Basic usage", description: "A list in a card where each row can be marked read or dismissed, as in an inbox or a notifications panel.", Demo: NotificationListDemo, code: notificationListDemoCode },
+    { id: "empty", title: "Empty state", description: "What the list shows once there is nothing left, with emptyText in place of the rows.", Demo: NotificationListEmptyDemo, code: notificationListEmptyDemoCode },
   ],
   keyboard: [
     {
@@ -33,10 +33,10 @@ export default {
     "notifications": "Notifications with stable IDs, titles, times, optional descriptions, read state and avatars.",
     "onRead": "Mark the notification with this ID as read.",
     "onDismiss": "Remove the notification with this ID.",
-    "label": "Accessible name of the control or region.",
-    "emptyText": "Message shown when there are no options or results.",
+    "label": "Name of the notifications region, which takes focus when the last row is dismissed.",
+    "emptyText": "Message shown when there are no notifications.",
     "readLabel": "Accessible label for an item’s mark-read action.",
     "dismissLabel": "Accessible label for an item’s dismissal.",
-    "className": "Additional classes on the outer element."
+    "className": "Classes on the region, for placement; it fills its container's width and draws no card, so put it in one."
   },
 };

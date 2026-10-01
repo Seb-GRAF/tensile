@@ -41,11 +41,13 @@ const cases = {
   ColorPicker: { value: "#3a7bd5", onValueChange: noop },
   ColorSwatches: { options: [{ value: "ink", label: "Ink", color: "#111110" }], value: "ink", onValueChange: noop },
   Combobox: { options, value: null, onValueChange: noop },
+  CodeBlock: { code: "npm install tensile" },
   CommandPalette: { commands: [{ label: "Open" }], onSelect: noop },
   CompareSlider: { before: "Before", after: "After", value: 0.5, onValueChange: noop },
   ContextMenu: { actions: [{ label: "Rename" }], onAction: noop, children: "Target" },
   CopyButton: { value: "text" },
   DataTable: { ...table, sort: null, onSortChange: noop, selection: [], onSelectionChange: noop, page: 1, pageCount: 1, onPageChange: noop },
+  DateField: { defaultValue: "2026-10-01" },
   DatePicker: { value: "2026-09-18", onValueChange: noop },
   DateRangePicker: { value: { start: "2026-09-18", end: "2026-09-22" }, onValueChange: noop },
   DescriptionList: { items: [{ label: "Status", value: "Shipped" }] },
@@ -61,8 +63,9 @@ const cases = {
   Footer: { groups: [{ title: "Product", links: [{ label: "Docs", href: "/docs" }] }] },
   Header: { brand: "Brand", links: [{ label: "Home", href: "/" }], value: "/" },
   HoldButton: { done: false, onDone: noop },
-  Icon: { children: h("path", { d: "M5 12h14" }) },
-  IconButton: { label: "Close", children: icon },
+  HoverCard: { content: "Maya Chen, designer", children: (trigger) => h(ui.Link, { ...trigger, href: "/maya" }, "Maya") },
+  Icon: { name: "minus" },
+  IconButton: { label: "Close", icon: "close" },
   Image: { src: "data:,", alt: "" },
   Input: { value: "", onValueChange: noop },
   Island: { activity: "Timer", leading: "4:59", trailing: "", children: "Panel", expanded: false, onExpandedChange: noop },
@@ -76,6 +79,7 @@ const cases = {
   MorphButton: { status: "idle", onClick: noop },
   MultiSelect: { options, value: ["a"], onValueChange: noop },
   MusicPlayer: { title: "Song", artist: "Artist", duration: 120, expanded: false, onExpandedChange: noop },
+  NavigationMenu: { items: [{ label: "Products", links: [{ label: "Analytics", href: "/analytics" }] }, { label: "Pricing", href: "/pricing" }] },
   NotificationList: { notifications: [{ id: "1", title: "Updated", time: "Today" }], onRead: noop, onDismiss: noop },
   NumberInput: { value: 1200, onValueChange: noop },
   NumberStepper: { value: 1, onValueChange: noop },
@@ -92,7 +96,6 @@ const cases = {
   RangeSlider: { value: [20, 80], onValueChange: noop },
   Rating: { value: 3, onValueChange: noop },
   SearchField: { value: "", onValueChange: noop },
-  SegmentedTabs: { options, value: "a", onValueChange: noop },
   Select: { options, value: null, onValueChange: noop },
   SelectionBar: { count: 2, onClear: noop, children: h(ui.Button, {}, "Archive") },
   Separator: {},
@@ -105,6 +108,7 @@ const cases = {
   StatusBadge: { status: "success", label: "Done" },
   SwipeButton: { confirmed: false, onConfirm: noop },
   Table: table,
+  TableOfContents: { items: [{ id: "usage", label: "Usage" }] },
   Tabs: { items: [{ value: "a", label: "First", content: "Panel" }], value: "a", onValueChange: noop },
   TabBar: { items: nav, value: "a", onValueChange: noop },
   Tag: { label: "Design", onRemove: noop },
@@ -117,12 +121,12 @@ const cases = {
   TimeWheel: { value: { hours: 9, minutes: 30 }, onValueChange: noop },
   Toast: { status: "success" },
   ToastStack: { toasts: [{ id: "1", label: "Saved" }], onDismiss: noop },
+  Toaster: {},
   Toggle: { checked: true, onCheckedChange: noop },
   ToggleGroup: { options, value: ["a"], onValueChange: noop },
   Toolbar: { label: "Actions", children: h(ui.Button, {}, "Copy") },
   Tooltip: { label: "Copy", children: (trigger) => h(ui.Button, trigger, "Copy") },
   TreeView: { items: [{ value: "a", label: "First", children: [{ value: "b", label: "Second" }] }], value: "b", onValueChange: noop, expanded: ["a"], onExpandedChange: noop },
-  UnderlineTabs: { options, value: "a", onValueChange: noop },
   VideoControls: {
     duration: 60,
     playing: false,
@@ -137,7 +141,7 @@ const cases = {
   WizardSteps: { steps: [{ label: "One" }, { label: "Two" }], value: 0 },
 };
 
-const missing = Object.keys(ui).filter((name) => !(name in cases));
+const missing = Object.keys(ui).filter((name) => /^[A-Z]/.test(name) && !(name in cases));
 if (missing.length) throw new Error(`No server-render case for: ${missing.join(", ")}`);
 
 for (const [name, props] of Object.entries(cases)) {

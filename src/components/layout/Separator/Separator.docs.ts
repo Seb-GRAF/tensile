@@ -13,13 +13,13 @@ export default {
     "Inside an ink Card, the line token changes automatically to suit the surface.",
   ],
   examples: [
-    { id: "usage", title: "Horizontal", description: "Separate a report summary from its content with caller-supplied spacing.", Demo: SeparatorDemo, code: separatorCode },
-    { id: "vertical", title: "Vertical", description: "Decorative rules stretch between metadata labels in a flex row.", Demo: SeparatorVerticalDemo, code: verticalCode },
+    { id: "usage", title: "Horizontal", description: "A rule between a report summary and its details, spaced with className, to split one surface into parts.", Demo: SeparatorDemo, code: separatorCode },
+    { id: "vertical", title: "Vertical", description: "Vertical rules between metadata labels in a row, for inline lists that need more than a comma.", Demo: SeparatorVerticalDemo, code: verticalCode },
   ],
   keyboard: [],
   related: ["Card", "DescriptionList", "List"],
   props: {
     orientation: "Horizontal rule or vertical rule that stretches to its flex or grid row.",
-    className: "Additional classes on the native hr, including spacing utilities.",
+    className: "Spacing around the rule, such as my-4, and its placement in a flex or grid row.",
   },
 };

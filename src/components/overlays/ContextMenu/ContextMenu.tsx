@@ -83,12 +83,12 @@ export function ContextMenu({ actions, onAction, children, menuLabel = "Actions"
       onTouchEnd={(event) => {
         if (press.current.held) event.preventDefault();
       }}
-      className={`rounded-card outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus ${className}`}
+      className={`tn:rounded-card tn:outline-offset-2 tn:focus-visible:outline-2 tn:focus-visible:outline-focus ${className}`}
     >
       {children}
       {position && createPortal(
-        <div className="fixed size-0" style={{ left: position.x, top: position.y }}>
-          <div ref={frame} className="absolute inset-0">
+        <div className="tn:fixed tn:size-0" style={{ left: position.x, top: position.y }}>
+          <div ref={frame} className="tn:absolute tn:inset-0">
             <motion.div
               inert={!open}
               aria-hidden={!open}
@@ -97,7 +97,7 @@ export function ContextMenu({ actions, onAction, children, menuLabel = "Actions"
               transition={open ? soft : spring(0.12)}
               onAnimationComplete={settle}
               style={{ width: position.width }}
-              className="absolute top-0 left-0 origin-top-left select-none rounded-overlay bg-paper shadow-float"
+              className="tn:absolute tn:top-0 tn:left-0 tn:origin-top-left tn:select-none tn:rounded-overlay tn:bg-paper tn:shadow-float"
             >
               <Menu actions={actions} onAction={onAction} onClose={close} open={open} id={menuId} label={menuLabel} initialIndex={0} maxHeight={position.maxHeight} />
             </motion.div>

@@ -11,19 +11,20 @@ import disabledCode from "./demos/IconButtonDisabledDemo.tsx?raw";
 
 export default {
   description: "A square native button for an icon-only action, with a required accessible label.",
-  usage: "Give every IconButton a label describing its action, and pass an Icon as its child. Handle activation with onClick. Use aria-pressed when the action toggles a persistent state.",
+  usage: "Give every IconButton a label describing its action and the name of its icon. Handle activation with onClick. Use aria-pressed when the action toggles a persistent state.",
   anatomy: "IconButton renders one native button with label applied as aria-label. It shares Button's visual variants and native props, with equal width and height.",
   notes: [
     "The label names the action for assistive technology; it is not drawn beside the icon. Use Button when the action needs visible text.",
-    "Icon size is independent of button size. These demos use a 20px icon in a 44px button and a 16px icon in a 32px button.",
+    "The icon defaults to 20px in a 44px button and 16px in a 32px button. Use iconSize to change the named icon without shrinking the click target. For content the set doesn't hold, such as an animated icon, pass an element as icon instead of a name.",
     "Wrap IconButton in Tooltip for a visible explanation on hover or focus. Spread Tooltip's trigger bindings onto IconButton and keep its required label.",
+    "With an href, IconButton renders a link with the same look, such as a GitHub icon in a header; inside a LinkProvider, same-origin clicks go to your router.",
     "For a toggle, keep a stable action label and expose the selected state through aria-pressed. The application owns that state.",
   ],
   examples: [
     { id: "usage", title: "Primary", description: "Save or unsave an article with a named icon action.", Demo: IconButtonDemo, code: iconButtonCode },
     { id: "secondary", title: "Secondary", description: "A paper surface for a supporting icon action.", Demo: IconButtonSecondaryDemo, code: secondaryCode },
     { id: "ghost", title: "Ghost", description: "A toggle action without a resting surface.", Demo: IconButtonGhostDemo, code: ghostCode },
-    { id: "sizes", title: "Sizes", description: "Choose a 44px or 32px button, and size the child icon separately.", Demo: IconButtonSizesDemo, code: sizesCode },
+    { id: "sizes", title: "Sizes", description: "Choose a 44px or 32px button; the icon is 20px or 16px to match.", Demo: IconButtonSizesDemo, code: sizesCode },
     { id: "disabled", title: "Disabled", description: "The icon and accessible label remain present while activation is disabled.", Demo: IconButtonDisabledDemo, code: disabledCode },
   ],
   keyboard: [
@@ -32,13 +33,15 @@ export default {
   ],
   related: ["Button", "Icon", "Tooltip", "Toolbar"],
   props: {
-    label: "Required accessible name, applied as aria-label to the button.",
-    children: "Icon content. The button's label names the action.",
+    label: "Required accessible name, applied as aria-label to the button or link.",
+    href: "Render a link to this URL instead of a button, with the same look.",
+    icon: "The name of an icon in the set, or an element to draw instead. The button's label names the action.",
+    iconSize: "Size in pixels for a named icon. Custom elements keep their own size.",
     variant: "Visual treatment: primary, secondary, or ghost.",
     size: "Button width and height: md is 44px and sm is 32px.",
-    type: "Native button type. Defaults to button to avoid accidental form submission.",
+    type: "Native button type. Defaults to button to avoid accidental form submission. Ignored with href.",
     disabled: "Prevent activation and remove the button from the Tab order.",
     onClick: "Native click handler, also called by keyboard activation.",
-    className: "Additional classes on the native button.",
+    className: "Classes on the native button or link, for placement, such as `absolute top-3 right-3`.",
   },
 };

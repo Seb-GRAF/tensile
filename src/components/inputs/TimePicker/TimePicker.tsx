@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useId, useRef, useState } from "react";
+import { useControllable } from "../../../controllable";
 import { Expand } from "../../../Expand";
 import { useOutsidePress } from "../../../overlay";
 import { useSprings } from "../../../springs";
@@ -12,8 +13,9 @@ type Time = { hours: number; minutes: number };
 
 export type TimePickerProps = {
   /** Hours 0–23, or null while no time is chosen. */
-  value: Time | null;
-  onValueChange: (value: Time) => void;
+  value?: Time | null;
+  defaultValue?: Time | null;
+  onValueChange?: (value: Time) => void;
   placeholder?: string;
   label?: string;
   formatTime?: (value: Time) => string;
@@ -33,7 +35,8 @@ export type TimePickerProps = {
 };
 
 export function TimePicker({
-  value,
+  value: valueProp,
+  defaultValue = null,
   onValueChange,
   placeholder = "Select time",
   label = "Time",
@@ -52,6 +55,7 @@ export function TimePicker({
   required = false,
   className = "",
 }: TimePickerProps) {
+  const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const { shape, swap } = useSprings();
   const field = useField();
   const inside = field?.inside;
@@ -66,7 +70,7 @@ export function TimePicker({
   useOutsidePress(root, open, () => setOpen(false));
   const text = value ? formatTime(value) : placeholder;
   const floated = focused || value !== null;
-  const height = (inside ? 52 : 44) + (inside?.error && errorSize ? errorSize.height : 0);
+  const height = (inside ? 48 : 44) + (inside?.error && errorSize ? errorSize.height : 0);
 
   return (
     <motion.div
@@ -93,8 +97,8 @@ export function TimePicker({
           <Expand
             open={open}
             onOpenChange={setOpen}
-            closed={{ width: size.width, height, radius: inside?.error ? "var(--radius-overlay)" : "var(--radius-control)" }}
-            opened={{ width: size.width, height: 216, radius: "var(--radius-overlay)" }}
+            closed={{ width: size.width, height, radius: inside?.error ? "var(--tn-radius-overlay)" : "var(--tn-radius-control)" }}
+            opened={{ width: size.width, height: 216, radius: "var(--tn-radius-overlay)" }}
             anchor="bottom-left"
             id={field?.id ?? id}
             labelledBy={`${field?.labelId ?? labelId} ${valueId}`}
@@ -103,19 +107,16 @@ export function TimePicker({
             disabled={isDisabled}
             panelLabel={label}
             trigger={
-              <span className="flex h-full flex-col text-left">
-                <span className={`flex items-center gap-2.5 ${inside ? "h-13 px-5 text-body" : "h-11 px-4 text-sm font-medium"}`}>
-                  <span id={valueId} className="sr-only">{text}</span>
-                  <span aria-hidden className={`grid min-w-0 grow grid-cols-1 ${inside ? "relative h-full pt-6 pb-2" : ""}`}>
-                    {inside && <FloatingLabel floated={floated} className="left-0">{inside.label}</FloatingLabel>}
+              <span className="tn:flex tn:h-full tn:flex-col tn:text-left">
+                <span className={`tn:flex tn:items-center tn:gap-2.5 ${inside ? "tn:h-12 tn:px-5 tn:text-body" : "tn:h-11 tn:px-4 tn:text-sm tn:font-medium"}`}>
+                  <span id={valueId} className="tn:sr-only">{text}</span>
+                  <span aria-hidden className={`tn:grid tn:min-w-0 tn:grow tn:grid-cols-1 ${inside ? "tn:relative tn:h-full tn:pt-5 tn:pb-1" : ""}`}>
+                    {inside && <FloatingLabel floated={floated} className="tn:left-0">{inside.label}</FloatingLabel>}
                     <AnimatePresence initial={false}>
-                      {(!inside || floated) && <motion.span key={text} {...swap} className={`col-start-1 row-start-1 truncate ${value ? "text-ink" : "text-muted"}`}>{text}</motion.span>}
+                      {(!inside || floated) && <motion.span key={text} {...swap} className={`tn:col-start-1 tn:row-start-1 tn:truncate ${value ? "tn:text-ink" : "tn:text-muted"}`}>{text}</motion.span>}
                     </AnimatePresence>
                   </span>
-                  <Icon className="shrink-0 text-muted">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 7v5l3 2" />
-                  </Icon>
+                  <Icon name="clock" className="tn:shrink-0 tn:text-muted" />
                 </span>
                 {inside && (
                   <span ref={measureError}>
@@ -124,7 +125,7 @@ export function TimePicker({
                 )}
               </span>
             }
-            className="bg-paper text-ink"
+            className="tn:bg-paper tn:text-ink"
           >
             <div
               onKeyDown={(event) => {
@@ -133,11 +134,11 @@ export function TimePicker({
                   setOpen(false);
                 }
               }}
-              className="relative flex justify-center p-2 text-body font-medium tabular-nums"
+              className="tn:relative tn:flex tn:justify-center tn:p-2 tn:text-body tn:font-medium tn:tabular-nums"
             >
               <Wheels
                 value={value ?? { hours: 0, minutes: 0 }}
-                onValueChange={onValueChange}
+                onValueChange={setValue}
                 minuteStep={minuteStep}
                 formatNumber={formatNumber}
                 amLabel={amLabel}

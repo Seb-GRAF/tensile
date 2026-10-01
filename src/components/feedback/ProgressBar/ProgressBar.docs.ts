@@ -13,8 +13,8 @@ export default {
     "Use null when the total is unknown. Reduced motion keeps the indeterminate segment still."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Controlled determinate progress.", Demo: ProgressBarDemo, code: progressBarDemoCode },
-    { id: "indeterminate", title: "Indeterminate", description: "Unknown progress.", Demo: ProgressBarIndeterminateDemo, code: progressBarIndeterminateDemoCode },
+    { id: "usage", title: "Basic usage", description: "A bar that fills as an export advances, for work whose share done is known.", Demo: ProgressBarDemo, code: progressBarDemoCode },
+    { id: "indeterminate", title: "Indeterminate", description: "A null value sweeps a segment back and forth, for work with no known length yet.", Demo: ProgressBarIndeterminateDemo, code: progressBarIndeterminateDemoCode },
   ],
   keyboard: [],
   related: [
@@ -23,8 +23,8 @@ export default {
   ],
   props: {
     "value": "0..1, or null while the length is unknown.",
-    "label": "Accessible name of the control or region.",
-    "formatValue": "Format a value for display or accessible value text.",
-    "className": "Additional classes on the outer element."
+    "label": "Name of the progress bar, e.g. \"Export progress\".",
+    "formatValue": "Turns the value into the text read out for it, \"45%\" by default.",
+    "className": "Classes on the 44 px track, for placement; it fills its container's width."
   },
 };

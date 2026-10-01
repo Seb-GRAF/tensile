@@ -4,7 +4,6 @@ import { clock, playPausePath } from "../../../playback";
 import { SeekBar, TimeReadout } from "../../../SeekBar";
 import { useSprings } from "../../../springs";
 import { IconButton } from "../../actions/IconButton/IconButton";
-import { Icon } from "../../data-display/Icon/Icon";
 import { VolumeSlider } from "../VolumeSlider/VolumeSlider";
 
 export type VideoControlsProps = {
@@ -53,18 +52,28 @@ export function VideoControls({
   }, [playing, morph]);
 
   return (
-    <div className={`flex h-13 w-full items-center rounded-control bg-ink p-1 text-paper shadow-float surface [--color-focus:var(--color-paper)] [--ghost-hover:var(--color-ink-3)] [--color-line:var(--color-ink-3)] ${className}`}>
+    <div className={`tn:flex tn:h-13 tn:w-full tn:items-center tn:rounded-control dark tn:bg-paper tn:p-1 tn:text-ink tn:shadow-float tn:surface ${className}`}>
       <IconButton
         variant="ghost"
         label={playing ? pauseLabel : playLabel}
         onClick={() => onPlayingChange(!playing)}
-        className="shrink-0"
-      >
-        <Icon size={24}>
-          <motion.path d={d} className="fill-current" />
-        </Icon>
-      </IconButton>
-      <div className="mr-6 ml-3 min-w-0 grow">
+        icon={
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            width={24}
+            height={24}
+            strokeWidth={36 / 24}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="tn:block tn:fill-none tn:stroke-current"
+          >
+            <motion.path d={d} className="tn:fill-current" />
+          </svg>
+        }
+        className="tn:shrink-0"
+      />
+      <div className="tn:mr-6 tn:ml-3 tn:min-w-0 tn:grow">
         <SeekBar
           value={currentTime}
           duration={duration}
@@ -75,7 +84,7 @@ export function VideoControls({
         />
         <TimeReadout value={currentTime} duration={duration} formatTime={formatTime} />
       </div>
-      <div className="w-30 shrink-0">
+      <div className="tn:w-30 tn:shrink-0">
         <VolumeSlider value={volume} onValueChange={onVolumeChange} label={volumeLabel} tone="ink" />
       </div>
     </div>

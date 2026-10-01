@@ -25,7 +25,7 @@ export function FieldExample() {
         <Input ref={input} name="displayName" autoComplete="nickname" value={name} onValueChange={setName} />
       </Field>
       <Button type="submit" variant="secondary" className="justify-self-start">Try validation</Button>
-      <p role="status" style={{ color: "var(--color-muted)", fontSize: 13 }}>
+      <p role="status" style={{ color: "var(--tn-color-muted)", fontSize: 13 }}>
         {saved ? `Looks good, ${name}. Nothing was submitted.` : "Try submitting with the field empty."}
       </p>
     </form>

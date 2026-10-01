@@ -12,8 +12,8 @@ export default {
     "value must follow navigation; Header does not own routing."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Brand, active navigation and actions with responsive menu.", Demo: HeaderDemo, code: headerDemoCode },
-    { id: "bar", title: "Bar", description: "Full-width bar with an underline.", Demo: HeaderBarDemo, code: headerBarDemoCode },
+    { id: "usage", title: "Basic usage", description: "The floating pill with a brand, links that mark the current page and a primary action; below 768 px the links move into a menu. The default for app and marketing pages.", Demo: HeaderDemo, code: headerDemoCode },
+    { id: "bar", title: "Bar", description: "A full-width bar that underlines the current link, for denser pages where a floating pill would cover content.", Demo: HeaderBarDemo, code: headerBarDemoCode },
   ],
   keyboard: [
     {
@@ -37,8 +37,8 @@ export default {
     "actions": "Controls aligned at the end of the header.",
     "variant": "Floating is an inset pill with a sliding ink pill on the current link; bar is a full-width bar with an underline.",
     "menuLabel": "Names the menu button and titles the drawer it opens.",
-    "navLabel": "Accessible name for desktop and mobile navigation.",
-    "closeLabel": "Accessible label for the close action.",
-    "className": "Additional classes on the outer element."
+    "navLabel": "Accessible name of the link navigation, in the header and in the menu drawer.",
+    "closeLabel": "Accessible name of the × button in the menu drawer.",
+    "className": "Placement of the header, which sticks to the top of its scroll container."
   },
 };

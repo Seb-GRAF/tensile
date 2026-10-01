@@ -12,8 +12,8 @@ export default {
     "The fallback replaces the img; include accessible text in it when the image’s meaning matters."
   ],
   examples: [
-    { id: "usage", title: "Basic usage", description: "Sized image with alt text.", Demo: ImageDemo, code: imageDemoCode },
-    { id: "fallback", title: "Fallback", description: "Failed image with explicit fallback content.", Demo: ImageFallbackDemo, code: imageFallbackDemoCode },
+    { id: "usage", title: "Basic usage", description: "A photo sized and rounded by className that fades in over the placeholder once it loads; the usual way to show an image.", Demo: ImageDemo, code: imageDemoCode },
+    { id: "fallback", title: "Fallback", description: "A source that fails to load, so the fallback shows in its place; use it for remote or user-supplied images that may be missing.", Demo: ImageFallbackDemo, code: imageFallbackDemoCode },
   ],
   keyboard: [],
   related: [
@@ -26,6 +26,6 @@ export default {
     "onLoad": "Native image load handler, after the fade starts.",
     "onError": "Native image error handler, after switching to fallback.",
     "fallback": "Shown, centered, in place of the image if it fails to load.",
-    "src": "Image source URL."
+    "src": "Image source URL. A new src starts over: the placeholder shows until it loads or fails."
   },
 };
