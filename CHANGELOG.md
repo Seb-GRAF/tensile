@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+### Patch Changes
+
+- 8d37303: Update Motion to 13.5.0. Public component APIs are unchanged.
+
 ## 0.2.0
 
 ### Minor Changes
