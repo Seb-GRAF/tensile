@@ -38,7 +38,7 @@
     "preview:site": "vite preview --config site/vite.config.ts"
   },
   "dependencies": {
-    "motion": "^13.5.0",
+    "motion": "^14.0.0",
     "prism-react-renderer": "^2.4.1"
   },
   "peerDependencies": {
