@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -55,13 +55,13 @@ jobs:
           publish-plan-artifact-id: ${{ steps.mode.outputs.publish-plan-artifact-id }}
         env:
           npm_config_ignore_scripts: true
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         if: steps.mode.outputs.mode == 'publish'
         with:
           artifact-ids: ${{ steps.pack.outputs.pack-dir-artifact-id }}
           path: release-artifacts
           merge-multiple: true
-      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
         if: steps.mode.outputs.mode == 'publish'
       - run: uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
         if: steps.mode.outputs.mode == 'publish'
@@ -71,7 +71,7 @@ jobs:
           export TENSILE_TARBALL="$PWD/release-artifacts/packages/tensile-$(node -p 'require("./package.json").version').tgz"
           tar -tzf "$TENSILE_TARBALL"
           npm run check
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always() && steps.mode.outputs.mode == 'publish'
         with:
           name: release-keyboard-results
@@ -89,7 +89,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -116,11 +116,11 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version-file: .nvmrc
           cache: npm
-      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
       - run: npm ci
       - run: uv run --with playwright==1.63.0 playwright install --with-deps chromium firefox webkit
       - name: Version the prerelease
@@ -134,7 +134,7 @@ jobs:
           echo "TENSILE_TARBALL=$RUNNER_TEMP/tensile-$(node -p 'require("./package.json").version').tgz" >> "$GITHUB_ENV"
       - run: npm run check
       - run: npm publish "$TENSILE_TARBALL" --tag next --access public --ignore-scripts
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: next-keyboard-results
